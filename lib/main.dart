@@ -2,11 +2,14 @@
 
 import 'dart:async';
 
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/app.dart';
 import 'package:flutter_chatgpt/core/analysis.dart';
+import 'package:flutter_chatgpt/core/build_mode.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/provider/all.dart';
 import 'package:flutter_chatgpt/data/provider/debug.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
@@ -53,12 +56,23 @@ Future<void> _initApp() async {
   await _initDb();
   await _loadStores();
   _setupLogger();
+
+  OpenAI.showLogs = !BuildMode.isRelease;
+  OpenAI.showResponsesLogs = !BuildMode.isRelease;
+  final apiUrl = Stores.setting.openaiApiUrl.fetch();
+  if (apiUrl.isNotEmpty) {
+    OpenAI.baseUrl = apiUrl;
+  }
+  OpenAI.apiKey = Stores.setting.openaiApiKey.fetch();
 }
 
 Future<void> _initDb() async {
   await Hive.initFlutter();
   // Ordered by typeId
-  //Hive.registerAdapter(PrivateKeyInfoAdapter()); // 1
+  Hive.registerAdapter(ChatHistoryAdapter());
+  Hive.registerAdapter(ChatContentAdapter());
+  Hive.registerAdapter(ChatContentTypeAdapter());
+  Hive.registerAdapter(ChatRoleAdapter());
 }
 
 void _setupLogger() {

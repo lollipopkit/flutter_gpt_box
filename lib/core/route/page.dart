@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/analysis.dart';
-import 'package:flutter_chatgpt/view/page/chat.dart';
 import 'package:flutter_chatgpt/view/page/debug.dart';
 import 'package:flutter_chatgpt/view/page/setting.dart';
 
@@ -37,13 +36,5 @@ sealed class Routes {
   static const debug = AppRoute(
     page: DebugPage.new,
     path: '/debug',
-  );
-
-  static const chat = AppRoute(
-    page: ChatPage.new,
-    path: '/chat',
-    middlewares: [
-      ChatPage.hasCfgApi,
-    ],
   );
 }

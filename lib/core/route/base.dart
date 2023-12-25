@@ -1,18 +1,12 @@
-/// Make these class private, so that we can only use [Routes] to navigate.
-
 part of 'page.dart';
 
-typedef _PageBuilder<Args> = Widget Function({Key? key, Args? args});
-
-typedef MiddlewareArgs = ({BuildContext context, AppRoute route});
-
-/// If [Middleware] returns false, the navigation will be canceled.
-typedef Middleware<T> = bool Function(MiddlewareArgs);
+/// Define it as a named record, makes it easier for refactor.
+typedef MiddlewareArg<Ret, Arg> = ({BuildContext context, AppRoute<Ret, Arg> route});
 
 class AppRoute<Ret, Arg> {
-  // ignore: library_private_types_in_public_api
-  final _PageBuilder<Arg> page;
-  final List<Middleware<Arg>>? middlewares;
+  final Widget Function({Key? key, Arg? args}) page;
+  /// If [middlewares] returns false, the navigation will be canceled.
+  final List<bool Function(MiddlewareArg<Ret, Arg>)>? middlewares;
   final String path;
 
   const AppRoute({

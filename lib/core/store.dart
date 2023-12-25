@@ -23,6 +23,7 @@ class Store {
   }
 }
 
+/// DO NOT use getter and setter which can't be use async.
 abstract class StorePropertyBase<T> {
   ValueListenable<T> listenable();
   T fetch();
