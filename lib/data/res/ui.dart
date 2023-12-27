@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/data/model/app/dyn_color.dart';
 
 abstract final class UIs {
   /// Font style
@@ -71,4 +72,12 @@ abstract final class UIs {
       child: CircularProgressIndicator(),
     ),
   );
+
+  /// Colors
+
+  static var colorSeed = const Color.fromARGB(255, 72, 15, 15);
+
+  static const bgColor = DynColor(light: Colors.white, dark: Colors.black);
+
+  static const textColor = DynColor(light: Colors.black, dark: Colors.white);
 }

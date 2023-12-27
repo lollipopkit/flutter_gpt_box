@@ -28,3 +28,18 @@ class AppRoute<Ret, Arg> {
     );
   }
 }
+
+// class PopTime {
+//   static const none = PopTime._(0);
+//   static const before = PopTime._(1 << 1);
+//   static const after = PopTime._(1);
+//   static const all = PopTime._(1 << 2 - 1);
+
+//   final int val;
+
+//   const PopTime._(this.val);
+
+//   operator |(PopTime other) => PopTime._(val | other.val);
+
+//   bool should(PopTime time) => time.val & PopTime.before.val != 0;
+// }

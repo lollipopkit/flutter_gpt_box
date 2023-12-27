@@ -18,6 +18,7 @@ class Input extends StatefulWidget {
   final bool suggestiion;
   final String? errorText;
   final Widget? prefix;
+  final Widget? suffix;
   final bool autoFocus;
   final void Function(bool)? onViewPwdTap;
   final bool noWrap;
@@ -42,7 +43,11 @@ class Input extends StatefulWidget {
     this.autoFocus = false,
     this.onViewPwdTap,
     this.noWrap = false,
-  });
+    this.suffix,
+  }) : assert(
+          !(obscureText && suffix != null),
+          'suffix != null && obscureText',
+        );
 
   @override
   State<StatefulWidget> createState() => _InputState();
@@ -59,6 +64,24 @@ class _InputState extends State<Input> {
 
   @override
   Widget build(BuildContext context) {
+    final suffix = switch (widget.suffix) {
+      null => widget.obscureText
+          ? IconButton(
+              icon: Icon(
+                _obscureText ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+                if (widget.onViewPwdTap != null) {
+                  widget.onViewPwdTap?.call(_obscureText);
+                }
+              },
+            )
+          : null,
+      final val => val,
+    };
     final child = TextField(
       controller: widget.controller,
       maxLines: widget.maxLines,
@@ -71,21 +94,7 @@ class _InputState extends State<Input> {
         border: InputBorder.none,
         prefixIcon: widget.icon == null ? null : Icon(widget.icon),
         prefix: widget.prefix,
-        suffixIcon: widget.obscureText
-            ? IconButton(
-                icon: Icon(
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
-                  if (widget.onViewPwdTap != null) {
-                    widget.onViewPwdTap?.call(_obscureText);
-                  }
-                },
-              )
-            : null,
+        suffixIcon: suffix,
       ),
       keyboardType: widget.type,
       focusNode: widget.node,

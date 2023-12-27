@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/util/func.dart';
+import 'package:flutter_chatgpt/view/widget/card.dart';
 
 extension WidgetX on Widget {
   Widget padding(EdgeInsetsGeometry padding) {
@@ -29,4 +30,6 @@ extension WidgetX on Widget {
       child: this,
     );
   }
+
+  Widget get card => CardX(child: this);
 }

@@ -16,9 +16,10 @@ class RebuildNode implements Listenable {
   }
 
   void rebuild() {
-    for (var listener in _listeners) {
+    for (final listener in _listeners) {
       listener();
     }
   }
-}
 
+  static final app = RebuildNode();
+}

@@ -8,9 +8,9 @@ import 'package:flutter_chatgpt/app.dart';
 import 'package:flutter_chatgpt/core/analysis.dart';
 import 'package:flutter_chatgpt/core/build_mode.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
+import 'package:flutter_chatgpt/core/util/datetime.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
-import 'package:flutter_chatgpt/data/provider/all.dart';
 import 'package:flutter_chatgpt/data/provider/debug.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
@@ -24,10 +24,7 @@ part 'store.dart';
 Future<void> main() async {
   _runInZone(() async {
     await _initApp();
-    runApp(UncontrolledProviderScope(
-      container: providerContainer,
-      child: const MyApp(),
-    ));
+    runApp(const ProviderScope(child: MyApp()));
   });
 }
 
@@ -50,12 +47,12 @@ void _runInZone(void Function() body) {
 
 Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+  _setupLogger();
   await _initDesktopWindow();
 
   // Base of all data.
   await _initDb();
   await _loadStores();
-  _setupLogger();
 
   OpenAI.showLogs = !BuildMode.isRelease;
   OpenAI.showResponsesLogs = !BuildMode.isRelease;
@@ -68,17 +65,20 @@ Future<void> _initApp() async {
 
 Future<void> _initDb() async {
   await Hive.initFlutter();
-  // Ordered by typeId
-  Hive.registerAdapter(ChatHistoryAdapter());
+  /// It's used by [ChatHistoryAdapter]
+  Hive.registerAdapter(DateTimeAdapter());
   Hive.registerAdapter(ChatContentAdapter());
   Hive.registerAdapter(ChatContentTypeAdapter());
   Hive.registerAdapter(ChatRoleAdapter());
+  Hive.registerAdapter(ChatHistoryItemAdapter());
+  /// MUST put it back of all history adapters.
+  Hive.registerAdapter(ChatHistoryAdapter());
 }
 
 void _setupLogger() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
-    providerContainer.read(debugProvider.notifier).addLog(record);
+    DebugNotifier.addLog(record);
     print(record);
     if (record.error != null) print(record.error);
     if (record.stackTrace != null) print(record.stackTrace);

@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/data/provider/debug.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DebugPage extends ConsumerWidget {
+class DebugPage extends StatelessWidget {
   final Never? args;
 
   const DebugPage({super.key, this.args});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final widgets = ref.watch(debugProvider);
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         leading: IconButton(
@@ -21,7 +19,9 @@ class DebugPage extends ConsumerWidget {
         title: const Text('Logs', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.black,
       ),
-      body: _buildTerminal(widgets),
+      body: ListenableBuilder(
+          listenable: DebugNotifier.node,
+          builder: (_, __) => _buildTerminal(DebugNotifier.state)),
       backgroundColor: Colors.black,
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 
 const _kMaxDebugLogLines = 177;
@@ -9,17 +9,13 @@ const _level2Color = {
   'WARNING': Colors.yellow,
 };
 
-final debugProvider = StateNotifierProvider<DebugNotifier, List<Widget>>((ref) {
-  return DebugNotifier();
-});
+abstract final class DebugNotifier {
+  static final node = RebuildNode();
+  static final state = <Widget>[];
 
-class DebugNotifier extends StateNotifier<List<Widget>> {
-  DebugNotifier() : super([]);
-
-  void addLog(LogRecord record) {
+  static void addLog(LogRecord record) {
     final color = _level2Color[record.level.name] ?? Colors.blue;
-    state = [
-      ...state,
+    state.addAll([
       Text.rich(TextSpan(
         children: [
           TextSpan(
@@ -47,14 +43,12 @@ class DebugNotifier extends StateNotifier<List<Widget>> {
           ),
         ),
       UIs.height13,
-    ];
+    ]);
 
     if (state.length > _kMaxDebugLogLines) {
-      state = state.sublist(state.length - _kMaxDebugLogLines);
+      state.sublist(state.length - _kMaxDebugLogLines);
     }
-  }
-
-  void clear() {
-    state = [];
+    
+    node.rebuild();
   }
 }
