@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
+import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/page/home/home.dart';
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
+    final app = ListenableBuilder(
       listenable: RebuildNode.app,
       builder: (_, __) {
         UIs.colorSeed = Color(Stores.setting.themeColorSeed.fetch());
@@ -30,6 +31,11 @@ class MyApp extends StatelessWidget {
         );
       },
     );
+    if (!isWeb) return app;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 500),
+      child: app,
+    );
   }
 }
 
@@ -41,7 +47,7 @@ ThemeData _getAmoledTheme(ThemeData darkTheme) => darkTheme.copyWith(
       dialogTheme: const DialogTheme(backgroundColor: Colors.black),
       bottomSheetTheme:
           const BottomSheetThemeData(backgroundColor: Colors.black),
-      listTileTheme: const ListTileThemeData(tileColor: Colors.black12),
+      listTileTheme: const ListTileThemeData(tileColor: Colors.transparent),
       cardTheme: const CardTheme(color: Colors.black12),
       navigationBarTheme:
           const NavigationBarThemeData(backgroundColor: Colors.black),

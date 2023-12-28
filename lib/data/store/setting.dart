@@ -14,4 +14,8 @@ class SettingStore extends Store {
   late final openaiModel = property('openaiModel', 'gpt-3.5-turbo-1106');
 
   late final autoGenTitle = property('autoGenTitle', true);
+
+  late final prompt = property('prompt', '');
+
+  late final historyLength = property('historyLength', 7);
 }

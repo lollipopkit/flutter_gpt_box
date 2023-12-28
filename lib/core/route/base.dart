@@ -1,10 +1,14 @@
 part of 'page.dart';
 
 /// Define it as a named record, makes it easier for refactor.
-typedef MiddlewareArg<Ret, Arg> = ({BuildContext context, AppRoute<Ret, Arg> route});
+typedef MiddlewareArg<Ret, Arg> = ({
+  BuildContext context,
+  AppRoute<Ret, Arg> route
+});
 
 class AppRoute<Ret, Arg> {
   final Widget Function({Key? key, Arg? args}) page;
+
   /// If [middlewares] returns false, the navigation will be canceled.
   final List<bool Function(MiddlewareArg<Ret, Arg>)>? middlewares;
   final String path;

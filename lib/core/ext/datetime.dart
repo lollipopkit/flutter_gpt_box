@@ -1,24 +1,32 @@
 extension DatetimeX on DateTime {
   /// eg: 1 min ago, 2 days ago
-  String get toHuman {
+  String get toAgo {
     final now = DateTime.now();
     final diff = now.difference(this);
 
-    if (diff.inDays > 0) {
-      return '${diff.inDays} days ago';
+    final days = diff.inDays;
+    if (days >= 7) {
+      return '${days ~/ 7} weeks ago';
+    }
+    if (days > 0) {
+      return '$days days ago';
     }
 
-    if (diff.inHours > 0) {
-      return '${diff.inHours} hours ago';
+    final hours = diff.inHours;
+    if (hours >= 23) {
+      return '1 day ago';
+    } 
+    if (hours > 0) {
+      return '$hours hours ago';
     }
 
-    if (diff.inMinutes > 0) {
-      return '${diff.inMinutes} mins ago';
+    final minutes = diff.inMinutes;
+    if (minutes >= 53) {
+      return '1 hour ago';
     }
-
-    // if (diff.inSeconds > 0) {
-    //   return '${diff.inSeconds} secs ago';
-    // }
+    if (minutes > 0) {
+      return '$minutes mins ago';
+    }
 
     return 'just now';
   }

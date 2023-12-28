@@ -1,3 +1,1 @@
-abstract final class Api {
-  
-}
+abstract final class Api {}

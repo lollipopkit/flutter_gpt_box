@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/analysis.dart';
 import 'package:flutter_chatgpt/view/page/about.dart';
+import 'package:flutter_chatgpt/view/page/backup.dart';
 import 'package:flutter_chatgpt/view/page/debug.dart';
 import 'package:flutter_chatgpt/view/page/setting.dart';
 
@@ -26,5 +27,10 @@ sealed class Routes {
   static const about = AppRoute(
     page: AboutPage.new,
     path: '/about',
+  );
+
+  static const backup = AppRoute(
+    page: BackupPage.new,
+    path: '/backup',
   );
 }

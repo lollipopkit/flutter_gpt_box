@@ -1,12 +1,53 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
 part of 'history.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
+
+class ChatHistoryAdapter extends TypeAdapter<ChatHistory> {
+  @override
+  final int typeId = 5;
+
+  @override
+  ChatHistory read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ChatHistory(
+      name: fields[2] as String,
+      items: (fields[1] as List).cast<ChatHistoryItem>(),
+      id: fields[0] as String,
+      config: fields[3] as ChatConfig?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, ChatHistory obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.items)
+      ..writeByte(2)
+      ..write(obj.name)
+      ..writeByte(3)
+      ..write(obj.config);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ChatHistoryAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
 
 class ChatHistoryItemAdapter extends TypeAdapter<ChatHistoryItem> {
   @override
@@ -84,46 +125,6 @@ class ChatContentAdapter extends TypeAdapter<ChatContent> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ChatContentAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class ChatHistoryAdapter extends TypeAdapter<ChatHistory> {
-  @override
-  final int typeId = 5;
-
-  @override
-  ChatHistory read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return ChatHistory(
-      name: fields[2] as String,
-      items: (fields[1] as List).cast<ChatHistoryItem>(),
-      id: fields[0] as String,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, ChatHistory obj) {
-    writer
-      ..writeByte(3)
-      ..writeByte(0)
-      ..write(obj.id)
-      ..writeByte(1)
-      ..write(obj.items)
-      ..writeByte(2)
-      ..write(obj.name);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ChatHistoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

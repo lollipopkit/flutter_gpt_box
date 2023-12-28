@@ -23,6 +23,41 @@ class Store {
   }
 }
 
+extension BoxX on Box {
+  static const _internalPreffix = '_sbi_';
+
+  /// Last modified timestamp
+  static const String lastModifiedKey = '${_internalPreffix}lastModified';
+  int? get lastModified {
+    final val = get(lastModifiedKey);
+    if (val == null || val is! int) {
+      final time = DateTime.now().millisecondsSinceEpoch;
+      put(lastModifiedKey, time);
+      return time;
+    }
+    return val;
+  }
+
+  Future<void> updateLastModified([int? time]) => put(
+        lastModifiedKey,
+        time ?? DateTime.now().millisecondsSinceEpoch,
+      );
+
+  /// Convert db to json
+  Map<String, dynamic> toJson({bool includeInternal = true}) {
+    final json = <String, dynamic>{};
+    for (final key in keys) {
+      if (key is String &&
+          key.startsWith(_internalPreffix) &&
+          !includeInternal) {
+        continue;
+      }
+      json[key] = get(key);
+    }
+    return json;
+  }
+}
+
 /// DO NOT use getter and setter which can't be use async.
 abstract class StorePropertyBase<T> {
   ValueListenable<T> listenable();

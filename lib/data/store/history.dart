@@ -4,16 +4,15 @@ import 'package:flutter_chatgpt/data/model/chat/history.dart';
 class HistoryStore extends Store {
   HistoryStore() : super('history');
 
-  void createDefault() {
-    if (box.keys.isEmpty) {
-      put(ChatHistory.noid(name: 'Default', items: []));
+  Map<String, ChatHistory> fetchAll() {
+    final map = <String, ChatHistory>{};
+    for (final key in box.keys) {
+      final item = box.get(key);
+      if (item != null && item is ChatHistory) {
+        map[key] = item;
+      }
     }
-  }
-
-  List<ChatHistory> fetchAll() {
-    createDefault();
-    final val = List<ChatHistory>.from(box.values);
-    return val;
+    return map;
   }
 
   void put(ChatHistory history) {

@@ -1,10 +1,58 @@
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:hive_flutter/adapters.dart';
 
 part 'history.g.dart';
+
+@HiveType(typeId: 5)
+final class ChatHistory {
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final List<ChatHistoryItem> items;
+  @HiveField(2)
+  String name;
+  @HiveField(3)
+  ChatConfig? config;
+
+  ChatHistory({
+    required this.name,
+    required this.items,
+    required this.id,
+    this.config,
+  });
+
+  ChatHistory.noid({
+    required this.name,
+    required this.items,
+    this.config,
+  }) : id = uuid.v4();
+
+  static ChatHistory get empty => ChatHistory.noid(name: '', items: []);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'items': items.map((e) => e.toJson()).toList(),
+      'config': config?.toJson(),
+    };
+  }
+
+  static ChatHistory fromJson(Map<String, dynamic> json) {
+    return ChatHistory(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      items: (json['items'] as List)
+          .map((e) => ChatHistoryItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      config: json['config'] == null
+          ? null
+          : ChatConfig.fromJson(json['config'] as Map<String, dynamic>),
+    );
+  }
+}
 
 @HiveType(typeId: 0)
 final class ChatHistoryItem {
@@ -27,24 +75,13 @@ final class ChatHistoryItem {
   ChatHistoryItem.noid({
     required this.role,
     required this.content,
-    required this.createdAt,
-  }) : id = uuid.v4();
+  })  : id = uuid.v4(),
+        createdAt = DateTime.now();
 
   OpenAIChatCompletionChoiceMessageModel get toOpenAI {
     return OpenAIChatCompletionChoiceMessageModel(
       role: role.toOpenAI,
-      content: content.map((e) {
-        switch (e.type) {
-          case ChatContentType.text:
-            return OpenAIChatCompletionChoiceMessageContentItemModel.text(
-                e.raw);
-          case ChatContentType.image:
-            return OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(
-                e.raw);
-          default:
-            throw UnimplementedError();
-        }
-      }).toList(),
+      content: content.map((e) => e.toOpenAI).toList(),
     );
   }
 
@@ -69,8 +106,27 @@ final class ChatHistoryItem {
           )
         ],
         role: ChatRole.assist,
-        createdAt: DateTime.now(),
       );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'role': role.index,
+      'content': content.map((e) => e.toJson()).toList(),
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'id': id,
+    };
+  }
+
+  static ChatHistoryItem fromJson(Map<String, dynamic> json) {
+    return ChatHistoryItem(
+      role: ChatRole.values[json['role'] as int],
+      content: (json['content'] as List)
+          .map((e) => ChatContent.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
+      id: json['id'] as String,
+    );
+  }
 }
 
 @HiveType(typeId: 1)
@@ -85,6 +141,7 @@ enum ChatContentType {
   audio,
   @HiveField(4)
   file,
+  ;
 }
 
 @HiveType(typeId: 2)
@@ -95,6 +152,29 @@ final class ChatContent {
   String raw;
 
   ChatContent({required this.type, required this.raw});
+
+  OpenAIChatCompletionChoiceMessageContentItemModel get toOpenAI =>
+      switch (type) {
+        ChatContentType.text =>
+          OpenAIChatCompletionChoiceMessageContentItemModel.text(raw),
+        ChatContentType.image =>
+          OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(raw),
+        _ => throw UnimplementedError(),
+      };
+
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type.index,
+      'raw': raw,
+    };
+  }
+
+  static ChatContent fromJson(Map<String, dynamic> json) {
+    return ChatContent(
+      type: ChatContentType.values[json['type'] as int],
+      raw: json['raw'] as String,
+    );
+  }
 }
 
 @HiveType(typeId: 3)
@@ -118,42 +198,5 @@ enum ChatRole {
       default:
         throw UnimplementedError();
     }
-  }
-}
-
-@HiveType(typeId: 5)
-final class ChatHistory {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  final List<ChatHistoryItem> items;
-  @HiveField(2)
-  final String name;
-
-  const ChatHistory({
-    required this.name,
-    required this.items,
-    required this.id,
-  });
-
-  ChatHistory.noid({
-    required this.name,
-    required this.items,
-  }) : id = uuid.v4();
-
-  static ChatHistory get empty => ChatHistory.noid(
-        name: 'Empty',
-        items: [],
-      );
-
-  ChatHistory copyWith({
-    String? name,
-    List<ChatHistoryItem>? items,
-  }) {
-    return ChatHistory(
-      name: name ?? this.name,
-      items: items ?? this.items,
-      id: id,
-    );
   }
 }

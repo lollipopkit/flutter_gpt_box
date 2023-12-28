@@ -10,7 +10,6 @@ dependencies:
   countly_flutter: ^23.12.0
   flutter:
     sdk: flutter
-  flutter_riverpod: ^2.4.9
   hive_flutter: ^1.1.0
   logging: ^1.2.0
   path_provider: ^2.1.1
@@ -22,15 +21,13 @@ dependencies:
   uuid: ^4.2.2
   choice: ^2.3.0
   file_picker: ^6.1.1
+  file_saver: ^0.2.9
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  riverpod_generator: ^2.3.9
   build_runner: ^2.4.7
-  custom_lint: ^0.5.7
-  riverpod_lint: ^2.3.7
   hive_generator: ^2.0.1
 
 flutter:

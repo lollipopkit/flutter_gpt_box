@@ -10,11 +10,11 @@ import 'package:flutter_chatgpt/core/build_mode.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/util/datetime.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/provider/debug.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
 import 'package:window_manager/window_manager.dart';
@@ -24,7 +24,7 @@ part 'store.dart';
 Future<void> main() async {
   _runInZone(() async {
     await _initApp();
-    runApp(const ProviderScope(child: MyApp()));
+    runApp(const MyApp());
   });
 }
 
@@ -56,22 +56,20 @@ Future<void> _initApp() async {
 
   OpenAI.showLogs = !BuildMode.isRelease;
   OpenAI.showResponsesLogs = !BuildMode.isRelease;
-  final apiUrl = Stores.setting.openaiApiUrl.fetch();
-  if (apiUrl.isNotEmpty) {
-    OpenAI.baseUrl = apiUrl;
-  }
-  OpenAI.apiKey = Stores.setting.openaiApiKey.fetch();
 }
 
 Future<void> _initDb() async {
   await Hive.initFlutter();
+
   /// It's used by [ChatHistoryAdapter]
   Hive.registerAdapter(DateTimeAdapter());
   Hive.registerAdapter(ChatContentAdapter());
   Hive.registerAdapter(ChatContentTypeAdapter());
   Hive.registerAdapter(ChatRoleAdapter());
   Hive.registerAdapter(ChatHistoryItemAdapter());
-  /// MUST put it back of all history adapters.
+  Hive.registerAdapter(ChatConfigAdapter());
+
+  /// MUST put it back of all chat related adapters.
   Hive.registerAdapter(ChatHistoryAdapter());
 }
 

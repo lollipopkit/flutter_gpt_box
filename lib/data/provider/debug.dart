@@ -48,7 +48,7 @@ abstract final class DebugNotifier {
     if (state.length > _kMaxDebugLogLines) {
       state.sublist(state.length - _kMaxDebugLogLines);
     }
-    
+
     node.rebuild();
   }
 }
