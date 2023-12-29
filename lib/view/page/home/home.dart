@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:dart_openai/dart_openai.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
@@ -48,10 +45,11 @@ class _HomePageState extends State<HomePage> {
   // For page body chat view
   final _bodyRN = RebuildNode();
   final _panelRN = RebuildNode();
+  final _chatTitleRN = RebuildNode();
 
   late final Map<String, ChatHistory> _allHistories;
   String _curChatId = 'fake-non-exist-id';
-  List<ChatHistoryItem>? get _curHistories => _allHistories[_curChatId]?.items;
+  ChatHistory? get _curChat => _allHistories[_curChatId];
 
   MediaQueryData? _media;
   Timer? _refreshTimeTimer;
@@ -91,15 +89,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _buildDrawer(context),
-      appBar: CustomAppBar(
-        title: const Text('GPT'),
-        actions: [
-          IconButton(
-            onPressed: () => Routes.debug.go(context),
-            icon: const Icon(Icons.developer_board),
-          )
-        ],
-      ),
+      appBar: _buildAppBar(),
       body: SlidingUpPanel(
         body: ListenableBuilder(
           listenable: _bodyRN,
@@ -116,8 +106,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  CustomAppBar _buildAppBar() {
+    return CustomAppBar(
+      title: ListenableBuilder(
+        listenable: _chatTitleRN,
+        builder: (_, __) => Column(
+          children: [
+            Text(
+              _curChat?.name ?? 'Untitled',
+              style: UIs.text13,
+            ),
+            const Text('GPT Box', style: UIs.text11Grey),
+          ],
+        ),
+      ),
+      centerTitle: true,
+      actions: [
+        IconButton(
+          onPressed: () => Routes.debug.go(context),
+          icon: const Icon(Icons.developer_board),
+        )
+      ],
+    );
+  }
+
   Widget _buildBody() {
-    final item = _curHistories;
+    final item = _curChat?.items;
     return ListView.builder(
       padding: EdgeInsets.only(
         left: 7,
@@ -132,24 +146,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBottomPanel(ScrollController sc) {
-    return ListenableBuilder(
-      listenable: _panelRN,
-      builder: (_, __) {
-        final keys = _allHistories.keys.toList();
-        return ListView.builder(
-          controller: sc,
-          padding: const EdgeInsets.symmetric(horizontal: 11),
-          itemCount: keys.length + 3,
-          itemBuilder: (_, index) {
-            return switch (index) {
-              0 => _buildDragHandle(),
-              1 => _buildInput(),
-              2 => _buildAddChat(),
-              final val => _buildHistoryListItem(keys[val - 3]),
-            };
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        ListenableBuilder(
+          listenable: _panelRN,
+          builder: (_, __) {
+            final keys = _allHistories.keys.toList();
+            return ListView.builder(
+              controller: sc,
+              padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 11),
+              itemCount: keys.length + 2,
+              itemBuilder: (_, index) {
+                return switch (index) {
+                  0 => _buildInput(),
+                  1 => SizedBox(height: 20 + (_media?.padding.bottom ?? 0)),
+                  final val => _buildHistoryListItem(keys[val - 2]),
+                };
+              },
+            );
           },
-        );
-      },
+        ),
+        _buildDragHandle(),
+      ],
     );
   }
 
@@ -175,14 +194,12 @@ class _HomePageState extends State<HomePage> {
       leading: Text('#${entity.items.length}', style: UIs.textGrey),
       title: ListenableBuilder(
         listenable: node,
-        builder: (_, __) => Text(
-          entity.name.isEmpty ? 'Untitled' : entity.name,
-        ),
+        builder: (_, __) => Text(entity.name ?? 'Untitled'),
       ),
       subtitle: ListenableBuilder(
         listenable: _timeRN,
         builder: (_, __) => Text(
-          (entity.items.lastOrNull?.createdAt ?? DateTime.now()).toAgo,
+          entity.items.lastOrNull?.createdAt.toAgo ?? 'just now',
           style: UIs.textGrey,
         ),
       ),
@@ -203,17 +220,6 @@ class _HomePageState extends State<HomePage> {
         _switchChat(chatId);
       },
     ).card;
-  }
-
-  Widget _buildAddChat() {
-    return ListTile(
-      leading: const Icon(Icons.add),
-      title: const Text('New'),
-      onTap: () async {
-        _switchChat(_newChat().id);
-        _panelRN.rebuild();
-      },
-    ).card.padding(EdgeInsets.only(top: 20 + (_media?.padding.bottom ?? 0)));
   }
 
   Widget _buildChatItemBtn(
@@ -278,13 +284,27 @@ class _HomePageState extends State<HomePage> {
         children: [
           Row(
             children: [
-              IconButton(
-                onPressed: _onImgPick,
-                icon: const Icon(Icons.photo, size: 19),
-              ),
+              // IconButton(
+              //   onPressed: _onImgPick,
+              //   icon: const Icon(Icons.photo, size: 19),
+              // ),
               IconButton(
                 onPressed: _onTapSetting,
                 icon: const Icon(Icons.settings, size: 19),
+              ),
+              // ListenableBuilder(
+              //   listenable: _stopStreamBtnRN,
+              //   builder: (_, __) => IconButton(
+              //     onPressed: () {},
+              //     icon: const Icon(Icons.stop),
+              //   ),
+              // ),
+              IconButton(
+                onPressed: () {
+                  _switchChat(_newChat().id);
+                  _panelRN.rebuild();
+                },
+                icon: const Icon(Icons.add),
               ),
               const Spacer(),
               if (isMobile)
@@ -354,23 +374,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _onImgPick() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-    final path = result?.files.single.path;
-    if (path == null) return;
-    final b64 = base64Encode(await File(path).readAsBytes());
-    _curHistories?.add(ChatHistoryItem.noid(
-      content: [
-        ChatContent(
-          type: ChatContentType.image,
-          raw: 'base64://$b64',
-        ),
-      ],
-      role: ChatRole.user,
-    ));
-  }
+  // Future<void> _onImgPick() async {
+  //   final result = await FilePicker.platform.pickFiles(
+  //     type: FileType.image,
+  //   );
+  //   final path = result?.files.single.path;
+  //   if (path == null) return;
+  //   final b64 = base64Encode(await File(path).readAsBytes());
+  //   _curHistories?.add(ChatHistoryItem.noid(
+  //     content: [
+  //       ChatContent(
+  //         type: ChatContentType.image,
+  //         raw: 'base64://$b64',
+  //       ),
+  //     ],
+  //     role: ChatRole.user,
+  //   ));
+  // }
 
   Future<void> _onSend(String chatId) async {
     if (_inputCtrl.text.isEmpty) return;
@@ -459,6 +479,7 @@ class _HomePageState extends State<HomePage> {
     _applyChatConfig(_getChatConfig(_curChatId));
     _mdRNMap.clear();
     _bodyRN.rebuild();
+    _chatTitleRN.rebuild();
   }
 
   ChatHistory _newChat() {
@@ -509,7 +530,7 @@ class _HomePageState extends State<HomePage> {
       context.showSnackBar(msg);
       return;
     }
-    final name = entity.name.isEmpty ? 'Untitled' : entity.name;
+    final name = entity.name ?? 'Untitled';
     context.showRoundDialog(
       title: 'Attention',
       child: Text('Delete chat [$name]?'),
@@ -522,6 +543,8 @@ class _HomePageState extends State<HomePage> {
               _switchChat();
             }
             _panelRN.rebuild();
+            _chatTitleRN.rebuild();
+            context.pop();
           },
           child: const Text('Yes'),
         ),
@@ -546,5 +569,6 @@ class _HomePageState extends State<HomePage> {
     entity.name = title;
     node.rebuild();
     _storeChat(chatId);
+    _chatTitleRN.rebuild();
   }
 }

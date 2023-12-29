@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 extension SnackBarX on BuildContext {
-  void showSnackBar(String text) =>
+  void showSnackBar(String text, {EdgeInsetsGeometry? margin}) =>
       ScaffoldMessenger.of(this).showSnackBar(SnackBar(
         content: Text(text),
         behavior: SnackBarBehavior.floating,
+        margin: margin,
       ));
 
   void showSnackBarWithAction({

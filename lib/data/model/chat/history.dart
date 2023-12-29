@@ -12,24 +12,24 @@ final class ChatHistory {
   @HiveField(1)
   final List<ChatHistoryItem> items;
   @HiveField(2)
-  String name;
+  String? name;
   @HiveField(3)
   ChatConfig? config;
 
   ChatHistory({
-    required this.name,
     required this.items,
     required this.id,
+    this.name,
     this.config,
   });
 
   ChatHistory.noid({
-    required this.name,
     required this.items,
+    this.name,
     this.config,
   }) : id = uuid.v4();
 
-  static ChatHistory get empty => ChatHistory.noid(name: '', items: []);
+  static ChatHistory get empty => ChatHistory.noid(items: []);
 
   Map<String, dynamic> toJson() {
     return {

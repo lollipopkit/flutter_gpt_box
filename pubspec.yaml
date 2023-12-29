@@ -21,7 +21,8 @@ dependencies:
   uuid: ^4.2.2
   choice: ^2.3.0
   file_picker: ^6.1.1
-  file_saver: ^0.2.9
+  share_plus: ^7.2.1
+  universal_html: ^2.2.4
 
 dev_dependencies:
   flutter_test:

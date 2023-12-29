@@ -17,9 +17,9 @@ class ChatHistoryAdapter extends TypeAdapter<ChatHistory> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ChatHistory(
-      name: fields[2] as String,
       items: (fields[1] as List).cast<ChatHistoryItem>(),
       id: fields[0] as String,
+      name: fields[2] as String?,
       config: fields[3] as ChatConfig?,
     );
   }

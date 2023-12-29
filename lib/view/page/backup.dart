@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
@@ -64,12 +63,7 @@ final class BackupPage extends StatelessWidget {
             trailing: const Icon(Icons.save),
             onTap: () async {
               final content = await Backup.backup();
-              await FileSaver.instance.saveFile(
-                name: 'gptbox_bak',
-                bytes: utf8.encode(content),
-                ext: 'json',
-                mimeType: MimeType.json,
-              );
+              await FileUtil.save('gptbox_bak.json', content);
             },
           ),
           ListTile(
@@ -180,7 +174,7 @@ final class BackupPage extends StatelessWidget {
   // }
 
   Future<void> _onTapFileRestore(BuildContext context) async {
-    final data = await pickOneFile();
+    final data = await FileUtil.pick();
     if (data == null) return;
 
     final text = utf8.decode(data);
