@@ -19,6 +19,7 @@ import 'package:flutter_chatgpt/data/res/build_data.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
+import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -36,6 +37,8 @@ class _HomePageState extends State<HomePage> {
   static const _kPanelMinHeight = 167.0;
 
   final _inputCtrl = TextEditingController();
+  final _panelCtrl = PanelController();
+  final _scrollCtrl = ScrollController();
 
   final _timeRN = RebuildNode();
   // Map for markdown rebuild nodes
@@ -46,10 +49,12 @@ class _HomePageState extends State<HomePage> {
   final _bodyRN = RebuildNode();
   final _panelRN = RebuildNode();
   final _chatTitleRN = RebuildNode();
+  final _btnsRN = RebuildNode();
 
   late final Map<String, ChatHistory> _allHistories;
   String _curChatId = 'fake-non-exist-id';
   ChatHistory? get _curChat => _allHistories[_curChatId];
+  final _chatStreamSubs = <String, StreamSubscription>{};
 
   MediaQueryData? _media;
   Timer? _refreshTimeTimer;
@@ -68,6 +73,14 @@ class _HomePageState extends State<HomePage> {
       const Duration(seconds: 10),
       (_) => _timeRN.rebuild(),
     );
+
+    if (Stores.setting.scrollBottom.fetch()) return;
+    _scrollCtrl.addListener(() {
+      // If is listening to chat stream, scroll to bottom
+      if (_chatStreamSubs.containsKey(_curChatId)) {
+        _scrollCtrl.jumpTo(_scrollCtrl.position.maxScrollExtent);
+      }
+    });
   }
 
   @override
@@ -83,6 +96,9 @@ class _HomePageState extends State<HomePage> {
     _media = MediaQuery.of(context);
     _isDark = context.isDark;
     _bg = UIs.bgColor.fromBool(_isDark);
+    if ((_media?.viewInsets.bottom ?? 0) > 0) {
+      _panelCtrl.close();
+    }
   }
 
   @override
@@ -91,6 +107,7 @@ class _HomePageState extends State<HomePage> {
       drawer: _buildDrawer(context),
       appBar: _buildAppBar(),
       body: SlidingUpPanel(
+        controller: _panelCtrl,
         body: ListenableBuilder(
           listenable: _bodyRN,
           builder: (_, __) => _buildBody(),
@@ -114,9 +131,9 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text(
               _curChat?.name ?? 'Untitled',
-              style: UIs.text13,
+              style: UIs.text15,
             ),
-            const Text('GPT Box', style: UIs.text11Grey),
+            Text(_getChatConfig(_curChatId).model, style: UIs.text13Grey),
           ],
         ),
       ),
@@ -133,6 +150,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBody() {
     final item = _curChat?.items;
     return ListView.builder(
+      controller: _scrollCtrl,
       padding: EdgeInsets.only(
         left: 7,
         right: 7,
@@ -155,19 +173,31 @@ class _HomePageState extends State<HomePage> {
             final keys = _allHistories.keys.toList();
             return ListView.builder(
               controller: sc,
-              padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 11),
-              itemCount: keys.length + 2,
-              itemBuilder: (_, index) {
-                return switch (index) {
-                  0 => _buildInput(),
-                  1 => SizedBox(height: 20 + (_media?.padding.bottom ?? 0)),
-                  final val => _buildHistoryListItem(keys[val - 2]),
-                };
-              },
+              padding: const EdgeInsets.only(
+                top: _kPanelMinHeight,
+                left: 11,
+                right: 11,
+              ),
+              itemCount: keys.length,
+              itemBuilder: (_, index) => _buildHistoryListItem(keys[index]),
             );
           },
         ),
-        _buildDragHandle(),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 11),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
+            color: _bg,
+          ),
+          height: _kPanelMinHeight,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildDragHandle(),
+              _buildInput(),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -182,6 +212,14 @@ class _HomePageState extends State<HomePage> {
           color: _isDark ? Colors.white10 : Colors.black12,
           borderRadius: BorderRadius.circular(7),
         ),
+      ).tap(
+        onTap: () {
+          if (_panelCtrl.isPanelOpen) {
+            _panelCtrl.close();
+          } else {
+            _panelCtrl.open();
+          }
+        },
       ),
     ).padding(const EdgeInsets.only(top: 7, bottom: 3));
   }
@@ -267,7 +305,13 @@ class _HomePageState extends State<HomePage> {
         ListenableBuilder(
           listenable: node,
           builder: (_, __) {
-            return MarkdownBody(data: chatItem.toMarkdown, selectable: true);
+            return MarkdownBody(
+              data: chatItem.toMarkdown,
+              selectable: true,
+              builders: {
+                'code': CodeElementBuilder(),
+              },
+            );
           },
         ),
       ],
@@ -292,13 +336,15 @@ class _HomePageState extends State<HomePage> {
                 onPressed: _onTapSetting,
                 icon: const Icon(Icons.settings, size: 19),
               ),
-              // ListenableBuilder(
-              //   listenable: _stopStreamBtnRN,
-              //   builder: (_, __) => IconButton(
-              //     onPressed: () {},
-              //     icon: const Icon(Icons.stop),
-              //   ),
-              // ),
+              ListenableBuilder(
+                listenable: _btnsRN,
+                builder: (_, __) => _chatStreamSubs.containsKey(_curChatId)
+                    ? IconButton(
+                        onPressed: () => _onStopStreamSub(_curChatId),
+                        icon: const Icon(Icons.stop),
+                      )
+                    : UIs.placeholder,
+              ),
               IconButton(
                 onPressed: () {
                   _switchChat(_newChat().id);
@@ -394,6 +440,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _onSend(String chatId) async {
     if (_inputCtrl.text.isEmpty) return;
+    _focusNode.unfocus();
     final workingChat = _allHistories[chatId];
     if (workingChat == null) {
       final msg = 'Chat($chatId) not found';
@@ -441,7 +488,7 @@ class _HomePageState extends State<HomePage> {
     workingChat.items.add(assistReply);
     _bodyRN.rebuild();
     try {
-      chatStream.listen(
+      final sub = chatStream.listen(
         (event) {
           final delta = event.choices.first.delta.content?.first.text ?? '';
           assistReply.content.first.raw += delta;
@@ -449,6 +496,8 @@ class _HomePageState extends State<HomePage> {
         },
         onError: (e) {
           Loggers.app.warning('Listen chat stream: $e');
+          _onStopStreamSub(chatId);
+
           // workingChat.items.add(ChatHistoryItem.noid(
           //   content: [
           //     ChatContent(type: ChatContentType.text, raw: 'Error: $e'),
@@ -461,11 +510,15 @@ class _HomePageState extends State<HomePage> {
           // _storeHistory(chatId);
         },
         onDone: () {
-          _mdRNMap[assistReply.id]?.rebuild();
+          _onStopStreamSub(chatId);
+
+          _btnsRN.rebuild();
           _storeChat(chatId);
         },
       );
+      _chatStreamSubs[chatId] = sub;
     } catch (e) {
+      _onStopStreamSub(chatId);
       final msg = 'Chat stream: $e';
       Loggers.app.warning(msg);
       context.showSnackBar(msg);
@@ -503,6 +556,7 @@ class _HomePageState extends State<HomePage> {
   void _applyChatConfig(ChatConfig config) {
     OpenAI.apiKey = config.key;
     OpenAI.baseUrl = config.url;
+    _chatTitleRN.rebuild();
   }
 
   ChatConfig _getChatConfig(String chatId) {
@@ -516,7 +570,6 @@ class _HomePageState extends State<HomePage> {
       child: _ConversationSetting(config: config),
     );
     if (result == null) return;
-    Loggers.app.info('Chat config: $result');
     _allHistories[_curChatId]?.config = result;
     _storeChat(_curChatId);
     _applyChatConfig(config);
@@ -570,5 +623,10 @@ class _HomePageState extends State<HomePage> {
     node.rebuild();
     _storeChat(chatId);
     _chatTitleRN.rebuild();
+  }
+
+  void _onStopStreamSub(String chatId) {
+    _chatStreamSubs.remove(chatId)?.cancel();
+    _btnsRN.rebuild();
   }
 }

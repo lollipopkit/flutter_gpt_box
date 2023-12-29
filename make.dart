@@ -210,11 +210,9 @@ Future<void> flutterBuildWin() async {
 }
 
 Future<void> scpApk2CDN() async {
-  final sha256 = await getFileSha256(apkPath);
-  print('SHA256: $sha256');
   final result = await Process.run(
     'scp',
-    [apkPath, 'hk:/var/www/res/$appNameLower/$sha256.apk'],
+    [apkPath, 'hk:/var/www/res/$appNameLower/$build.apk'],
     runInShell: true,
   );
   if (result.exitCode != 0) {

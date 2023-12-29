@@ -18,4 +18,7 @@ class SettingStore extends Store {
   late final prompt = property('prompt', '');
 
   late final historyLength = property('historyLength', 7);
+
+  /// Auto scroll to bottom when new message comes.
+  late final scrollBottom = property('scrollBottom', true);
 }

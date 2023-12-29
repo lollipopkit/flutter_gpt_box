@@ -23,6 +23,9 @@ dependencies:
   file_picker: ^6.1.1
   share_plus: ^7.2.1
   universal_html: ^2.2.4
+  flutter_highlighter: ^0.1.1
+  markdown: ^7.1.1
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:

@@ -12,6 +12,7 @@ import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_chatgpt/view/widget/color_picker.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
+import 'package:flutter_chatgpt/view/widget/switch.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key, Never? args});
@@ -62,6 +63,7 @@ class _SettingPageState extends State<SettingPage> {
     final children = [
       _buildColorSeed(),
       _buildThemeMode(),
+      _buildScrollBottom(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
@@ -151,6 +153,17 @@ class _SettingPageState extends State<SettingPage> {
     _store.themeColorSeed.put(color.value);
     context.pop();
     RebuildNode.app.rebuild();
+  }
+
+  Widget _buildScrollBottom() {
+    return ListTile(
+      leading: const Icon(Icons.keyboard_arrow_down),
+      title: const Text('Auto scroll to bottom'),
+      subtitle: const Text('Restart app to take effect', style: UIs.textGrey),
+      trailing: StoreSwitch(
+        prop: _store.scrollBottom,
+      ),
+    );
   }
 
   Widget _buildConversation() {
@@ -284,10 +297,7 @@ class _SettingPageState extends State<SettingPage> {
         leading: const Icon(Icons.text_fields),
         title: const Text('Prompt'),
         trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
-          val.isEmpty ? 'Empty' : val,
-          style: UIs.text13Grey
-        ),
+        subtitle: Text(val.isEmpty ? 'Empty' : val, style: UIs.text13Grey),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(

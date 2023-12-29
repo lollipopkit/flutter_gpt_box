@@ -64,7 +64,8 @@ class _ConversationSettingState extends State<_ConversationSetting> {
         leading: const Icon(Icons.link),
         title: const Text('API Url'),
         trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(val, style: UIs.text13Grey, maxLines: 1, softWrap: false),
+        subtitle:
+            Text(val, style: UIs.text13Grey, maxLines: 1, softWrap: false),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(

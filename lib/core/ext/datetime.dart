@@ -15,7 +15,7 @@ extension DatetimeX on DateTime {
     final hours = diff.inHours;
     if (hours >= 23) {
       return '1 day ago';
-    } 
+    }
     if (hours > 0) {
       return '$hours hours ago';
     }
