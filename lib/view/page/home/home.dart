@@ -26,6 +26,11 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 part 'misc.dart';
 
+const _genTitlePrompt = '''
+In the language of the text below, return directly to the brief topic of this sentence in 5 words or less, 
+with no explanation, no punctuation, no intonation, and no extra text:\n
+''';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -471,6 +476,7 @@ class _HomePageState extends State<HomePage> {
       role: ChatRole.user,
     );
     workingChat.items.add(question);
+    _genChatTitle(chatId);
     final historyCarried = workingChat.items.reversed
         .take(config.historyLen)
         .map(
@@ -628,5 +634,40 @@ class _HomePageState extends State<HomePage> {
   void _onStopStreamSub(String chatId) {
     _chatStreamSubs.remove(chatId)?.cancel();
     _btnsRN.rebuild();
+  }
+
+  void _genChatTitle(String chatId) async {
+    final entity = _allHistories[chatId];
+    if (entity?.items.length != 1) return;
+    if (entity == null) {
+      final msg = 'Gen Chat($chatId) not found';
+      Loggers.app.warning(msg);
+      context.showSnackBar(msg);
+      return;
+    }
+
+    final question = entity.items.first.content.first.raw;
+    final resp = await OpenAI.instance.chat.create(
+      model: 'gpt-3.5-turbo-1106',
+      messages: [
+        entity.items.first.copyWith(
+          content: [
+            ChatContent(
+              type: ChatContentType.text,
+              raw: _genTitlePrompt + question,
+            ),
+          ],
+        ).toOpenAI,
+      ],
+    );
+    final title = resp.choices.firstOrNull?.message.content?.firstOrNull?.text;
+    if (title == null) {
+      final msg = 'Gen Chat($chatId) title: null resp';
+      Loggers.app.warning(msg);
+      context.showSnackBar(msg);
+      return;
+    }
+    entity.name = title;
+    _chatRNMap[chatId]?.rebuild();
   }
 }

@@ -127,6 +127,19 @@ final class ChatHistoryItem {
       id: json['id'] as String,
     );
   }
+
+  ChatHistoryItem copyWith({
+    ChatRole? role,
+    List<ChatContent>? content,
+    DateTime? createdAt,
+  }) {
+    return ChatHistoryItem(
+      role: role ?? this.role,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      id: id,
+    );
+  }
 }
 
 @HiveType(typeId: 1)
