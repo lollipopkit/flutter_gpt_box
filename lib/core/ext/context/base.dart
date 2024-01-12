@@ -12,4 +12,8 @@ extension ContextX on BuildContext {
   bool get canPop => Navigator.of(this).canPop();
 
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
+
+  Locale get locale => Localizations.localeOf(this);
+
+  String get localeMainName => locale.languageCode;
 }

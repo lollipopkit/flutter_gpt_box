@@ -10,6 +10,8 @@ dependencies:
   countly_flutter: ^23.12.0
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   hive_flutter: ^1.1.0
   logging: ^1.2.0
   path_provider: ^2.1.1
@@ -26,6 +28,8 @@ dependencies:
   flutter_highlighter: ^0.1.1
   markdown: ^7.1.1
   google_fonts: ^6.1.0
+  intl: ^0.18.0
+  url_launcher: ^6.2.3
 
 dev_dependencies:
   flutter_test:
@@ -33,9 +37,10 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   build_runner: ^2.4.7
   hive_generator: ^2.0.1
+  flutter_native_splash: ^2.3.9
 
 flutter:
+  generate: true
   uses-material-design: true
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/

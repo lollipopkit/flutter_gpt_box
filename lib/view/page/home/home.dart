@@ -7,7 +7,6 @@ import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/datetime.dart';
-import 'package:flutter_chatgpt/core/ext/string.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
@@ -16,20 +15,17 @@ import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/res/build_data.dart';
+import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 part 'misc.dart';
-
-const _genTitlePrompt = '''
-In the language of the text below, return directly to the brief topic of this sentence in 5 words or less, 
-with no explanation, no punctuation, no intonation, and no extra text:\n
-''';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -78,14 +74,6 @@ class _HomePageState extends State<HomePage> {
       const Duration(seconds: 10),
       (_) => _timeRN.rebuild(),
     );
-
-    if (Stores.setting.scrollBottom.fetch()) return;
-    _scrollCtrl.addListener(() {
-      // If is listening to chat stream, scroll to bottom
-      if (_chatStreamSubs.containsKey(_curChatId)) {
-        _scrollCtrl.jumpTo(_scrollCtrl.position.maxScrollExtent);
-      }
-    });
   }
 
   @override
@@ -99,8 +87,11 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _media = MediaQuery.of(context);
+
+    l10n = AppLocalizations.of(context)!;
     _isDark = context.isDark;
     _bg = UIs.bgColor.fromBool(_isDark);
+    CodeElementBuilder.isDark = _isDark;
     if ((_media?.viewInsets.bottom ?? 0) > 0) {
       _panelCtrl.close();
     }
@@ -135,7 +126,7 @@ class _HomePageState extends State<HomePage> {
         builder: (_, __) => Column(
           children: [
             Text(
-              _curChat?.name ?? 'Untitled',
+              _curChat?.name ?? l10n.untitled,
               style: UIs.text15,
             ),
             Text(_getChatConfig(_curChatId).model, style: UIs.text13Grey),
@@ -175,7 +166,7 @@ class _HomePageState extends State<HomePage> {
         ListenableBuilder(
           listenable: _panelRN,
           builder: (_, __) {
-            final keys = _allHistories.keys.toList();
+            final keys = _allHistories.keys.toList().reversed.toList();
             return ListView.builder(
               controller: sc,
               padding: const EdgeInsets.only(
@@ -242,10 +233,11 @@ class _HomePageState extends State<HomePage> {
       subtitle: ListenableBuilder(
         listenable: _timeRN,
         builder: (_, __) => Text(
-          entity.items.lastOrNull?.createdAt.toAgo ?? 'just now',
+          entity.items.lastOrNull?.createdAt.toAgo ?? l10n.empty,
           style: UIs.textGrey,
         ),
       ),
+      contentPadding: const EdgeInsets.only(left: 17, right: 11),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -271,7 +263,7 @@ class _HomePageState extends State<HomePage> {
   ) {
     return Row(
       children: [
-        Text(chatItem.role.name.upperFirst, style: UIs.text13Grey),
+        Text(chatItem.role.name, style: UIs.text13Grey),
         const Spacer(),
         IconButton(
           onPressed: () {
@@ -288,7 +280,6 @@ class _HomePageState extends State<HomePage> {
         IconButton(
           onPressed: () {
             Clipboard.setData(ClipboardData(text: chatItem.toMarkdown));
-            context.showSnackBar('Copied');
           },
           padding: EdgeInsets.zero,
           icon: const Icon(
@@ -307,17 +298,18 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildChatItemBtn(chatItems, chatItem),
-        ListenableBuilder(
-          listenable: node,
-          builder: (_, __) {
-            return MarkdownBody(
-              data: chatItem.toMarkdown,
-              selectable: true,
-              builders: {
-                'code': CodeElementBuilder(),
-              },
-            );
-          },
+        SelectionArea(
+          child: ListenableBuilder(
+            listenable: node,
+            builder: (_, __) {
+              return MarkdownBody(
+                data: chatItem.toMarkdown,
+                builders: {
+                  'code': CodeElementBuilder(),
+                },
+              );
+            },
+          ),
         ),
       ],
     ).padding(const EdgeInsets.all(7));
@@ -369,7 +361,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Input(
             controller: _inputCtrl,
-            label: 'Message',
+            label: l10n.message,
             node: _focusNode,
             type: TextInputType.multiline,
             maxLines: 2,
@@ -392,7 +384,11 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const FlutterLogo(size: 57),
+          SizedBox(
+            height: 47,
+            width: 47,
+            child: UIs.appIcon,
+          ),
           UIs.height13,
           const Text(
             'GPT Box\nv1.0.${BuildData.build}',
@@ -401,21 +397,21 @@ class _HomePageState extends State<HomePage> {
           UIs.height77,
           ListTile(
             leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
+            title: Text(l10n.settings),
             onTap: () {
               Routes.setting.go(context);
             },
           ).card,
           ListTile(
             leading: const Icon(Icons.backup),
-            title: const Text('Backup'),
+            title: Text(l10n.backup),
             onTap: () {
               Routes.backup.go(context);
             },
           ).card,
           ListTile(
             leading: const Icon(Icons.info),
-            title: const Text('About'),
+            title: Text(l10n.about),
             onTap: () {
               Routes.about.go(context);
             },
@@ -499,6 +495,15 @@ class _HomePageState extends State<HomePage> {
           final delta = event.choices.first.delta.content?.first.text ?? '';
           assistReply.content.first.raw += delta;
           _mdRNMap[assistReply.id]?.rebuild();
+
+          if (Stores.setting.scrollBottom.fetch()) {
+            // Only scroll to bottom when current chat is the working chat
+            final isWorking = chatId == _curChatId;
+            final isSubscribed = _chatStreamSubs.containsKey(chatId);
+            if (isWorking && isSubscribed) {
+              _scrollCtrl.jumpTo(_scrollCtrl.position.maxScrollExtent);
+            }
+          }
         },
         onError: (e) {
           Loggers.app.warning('Listen chat stream: $e');
@@ -572,8 +577,8 @@ class _HomePageState extends State<HomePage> {
   void _onTapSetting() async {
     final config = _getChatConfig(_curChatId);
     final result = await context.showRoundDialog<ChatConfig>(
-      title: 'Current chat',
-      child: _ConversationSetting(config: config),
+      title: '${l10n.settings}(${l10n.current})',
+      child: _CurrentChatSettings(config: config),
     );
     if (result == null) return;
     _allHistories[_curChatId]?.config = result;
@@ -591,8 +596,8 @@ class _HomePageState extends State<HomePage> {
     }
     final name = entity.name ?? 'Untitled';
     context.showRoundDialog(
-      title: 'Attention',
-      child: Text('Delete chat [$name]?'),
+      title: l10n.attention,
+      child: Text(l10n.delChatFmt(name)),
       actions: [
         TextButton(
           onPressed: () {
@@ -605,7 +610,7 @@ class _HomePageState extends State<HomePage> {
             _chatTitleRN.rebuild();
             context.pop();
           },
-          child: const Text('Yes'),
+          child: Text(l10n.ok),
         ),
       ],
     );
@@ -618,11 +623,17 @@ class _HomePageState extends State<HomePage> {
   ) async {
     final ctrl = TextEditingController(text: entity.name);
     final title = await context.showRoundDialog<String>(
-      title: 'Rename',
+      title: l10n.rename,
       child: Input(
         controller: ctrl,
         onSubmitted: (p0) => context.pop(p0),
       ),
+      actions: [
+        TextButton(
+          onPressed: () => context.pop(ctrl.text),
+          child: Text(l10n.ok),
+        ),
+      ],
     );
     if (title == null || title.isEmpty) return;
     entity.name = title;
@@ -637,6 +648,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _genChatTitle(String chatId) async {
+    if (!Stores.setting.autoGenTitle.fetch()) return;
     final entity = _allHistories[chatId];
     if (entity?.items.length != 1) return;
     if (entity == null) {
@@ -648,13 +660,13 @@ class _HomePageState extends State<HomePage> {
 
     final question = entity.items.first.content.first.raw;
     final resp = await OpenAI.instance.chat.create(
-      model: 'gpt-3.5-turbo-1106',
+      model: 'gpt-3.5-turbo',
       messages: [
         entity.items.first.copyWith(
           content: [
             ChatContent(
               type: ChatContentType.text,
-              raw: _genTitlePrompt + question,
+              raw: l10n.genTitlePrompt + question,
             ),
           ],
         ).toOpenAI,

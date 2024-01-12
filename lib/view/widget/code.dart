@@ -1,26 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_highlighter/flutter_highlighter.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
 
-final _textStyle = GoogleFonts.robotoMono().copyWith(fontSize: 11);
+final _textStyle = GoogleFonts.robotoMono();
 
 class CodeElementBuilder extends MarkdownElementBuilder {
+  static bool isDark = false;
+
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    var language = '';
+    // Can't be null
+    String language = '';
 
     if (element.attributes['class'] != null) {
       String lg = element.attributes['class'] as String;
       language = lg.substring(9);
     }
-    return HighlightView(
-      element.textContent,
-      language: language,
-      theme: _darkTheme,
-      textStyle: _textStyle,
-      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+    final child = ValueListenableBuilder(
+      valueListenable: Stores.setting.fontSize.listenable(),
+      builder: (_, val, __) => HighlightView(
+        element.textContent,
+        language: language,
+        theme: isDark ? _darkTheme : _lightTheme,
+        textStyle: _textStyle.copyWith(fontSize: val),
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+      ),
+    );
+
+    if (!element.textContent.contains('\n')) return child;
+
+    return Stack(
+      children: [
+        child,
+        Positioned(
+          right: 0,
+          top: 0,
+          child: IconButton(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: element.textContent));
+            },
+            padding: EdgeInsets.zero,
+            icon: const Icon(
+              Icons.copy,
+              size: 15,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -56,6 +86,42 @@ const _darkTheme = {
   'root': TextStyle(
     backgroundColor: Colors.transparent,
     color: Color.fromARGB(255, 184, 184, 181),
+  ),
+  'emphasis': TextStyle(fontStyle: FontStyle.italic),
+  'strong': TextStyle(fontWeight: FontWeight.bold),
+};
+
+const _lightTheme = {
+  'comment': TextStyle(color: Color(0xff696969)),
+  'quote': TextStyle(color: Color(0xff696969)),
+  'variable': TextStyle(color: Color(0xffd91e18)),
+  'template-variable': TextStyle(color: Color(0xffd91e18)),
+  'tag': TextStyle(color: Color(0xffd91e18)),
+  'name': TextStyle(color: Color(0xffd91e18)),
+  'selector-id': TextStyle(color: Color(0xffd91e18)),
+  'selector-class': TextStyle(color: Color(0xffd91e18)),
+  'regexp': TextStyle(color: Color(0xffd91e18)),
+  'deletion': TextStyle(color: Color(0xffd91e18)),
+  'number': TextStyle(color: Color(0xffaa5d00)),
+  'built_in': TextStyle(color: Color(0xffaa5d00)),
+  'builtin-name': TextStyle(color: Color(0xffaa5d00)),
+  'literal': TextStyle(color: Color(0xffaa5d00)),
+  'type': TextStyle(color: Color(0xffaa5d00)),
+  'params': TextStyle(color: Color(0xffaa5d00)),
+  'meta': TextStyle(color: Color(0xffaa5d00)),
+  'link': TextStyle(color: Color(0xffaa5d00)),
+  'attribute': TextStyle(color: Color(0xffaa5d00)),
+  'string': TextStyle(color: Color(0xff008000)),
+  'symbol': TextStyle(color: Color(0xff008000)),
+  'bullet': TextStyle(color: Color(0xff008000)),
+  'addition': TextStyle(color: Color(0xff008000)),
+  'title': TextStyle(color: Color(0xff007faa)),
+  'section': TextStyle(color: Color(0xff007faa)),
+  'keyword': TextStyle(color: Color(0xff7928a1)),
+  'selector-tag': TextStyle(color: Color(0xff7928a1)),
+  'root': TextStyle(
+    backgroundColor: Colors.transparent,
+    color: Color(0xff545454),
   ),
   'emphasis': TextStyle(fontStyle: FontStyle.italic),
   'strong': TextStyle(fontWeight: FontWeight.bold),

@@ -4,8 +4,10 @@ import 'package:flutter_chatgpt/core/ext/color.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
+import 'package:flutter_chatgpt/core/ext/locale.dart';
 import 'package:flutter_chatgpt/core/ext/string.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
+import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_chatgpt/view/widget/color_picker.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/switch.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key, Never? args});
@@ -27,8 +30,8 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: Text('Settings'),
+      appBar: CustomAppBar(
+        title: Text(l10n.settings),
       ),
       body: _buildBody(),
     );
@@ -40,8 +43,8 @@ class _SettingPageState extends State<SettingPage> {
       children: [
         _buildTitle('App'),
         _buildApp(),
-        _buildTitle('Conversation'),
-        _buildConversation(),
+        _buildTitle(l10n.chat),
+        _buildChat(),
         const SizedBox(height: 37),
       ],
     );
@@ -61,9 +64,12 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildApp() {
     final children = [
+      _buildLocale(),
       _buildColorSeed(),
       _buildThemeMode(),
+      _buildFontSize(),
       _buildScrollBottom(),
+      _buildAutoGenTitle(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
@@ -75,19 +81,19 @@ class _SettingPageState extends State<SettingPage> {
       valueListenable: _store.themeMode.listenable(),
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.sunny),
-        title: const Text('Theme Mode'),
+        title: Text(l10n.themeMode),
         onTap: () async {
           final result = await context.showPickSingleDialog(
             items: ThemeMode.values,
             name: (e) => e.name,
+            initial: ThemeMode.values[val],
           );
           if (result != null) {
             _store.themeMode.put(result.index);
             RebuildNode.app.rebuild();
           }
         },
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
+        trailing: Text(
           ThemeMode.values[val].name,
           style: UIs.text13Grey,
         ),
@@ -102,18 +108,14 @@ class _SettingPageState extends State<SettingPage> {
         final primaryColor = Color(val);
         return ListTile(
           leading: const Icon(Icons.colorize),
-          title: const Text('Theme color seed'),
-          subtitle: Text(
-            primaryColor.toHex,
-            style: UIs.text13Grey,
-          ),
+          title: Text(l10n.themeColorSeed),
           trailing: ClipOval(
             child: Container(color: primaryColor, height: 27, width: 27),
           ),
           onTap: () async {
             final ctrl = TextEditingController(text: primaryColor.toHex);
             await context.showRoundDialog(
-              title: 'Select',
+              title: l10n.select,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -158,15 +160,76 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildScrollBottom() {
     return ListTile(
       leading: const Icon(Icons.keyboard_arrow_down),
-      title: const Text('Auto scroll to bottom'),
-      subtitle: const Text('Restart app to take effect', style: UIs.textGrey),
-      trailing: StoreSwitch(
-        prop: _store.scrollBottom,
+      title: Text(l10n.autoScrollBottom),
+      trailing: StoreSwitch(prop: _store.scrollBottom),
+    );
+  }
+
+  Widget _buildFontSize() {
+    return ValueListenableBuilder(
+      valueListenable: _store.fontSize.listenable(),
+      builder: (_, val, __) => ListTile(
+        leading: const Icon(Icons.text_fields),
+        title: Text(l10n.fontSize),
+        trailing: Text(
+          val.toString(),
+          style: UIs.text13Grey,
+        ),
+        subtitle: Text(l10n.fontSizeSettingTip, style: UIs.text13Grey),
+        onTap: () async {
+          final ctrl = TextEditingController(text: val.toString());
+          final result = await context.showRoundDialog<String>(
+            title: l10n.fontSize,
+            child: Input(
+              controller: ctrl,
+              hint: '13',
+              type: TextInputType.number,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => context.pop(ctrl.text),
+                child: Text(l10n.ok),
+              ),
+            ],
+          );
+          if (result == null) return;
+          final newVal = double.tryParse(result);
+          if (newVal == null) {
+            context.showSnackBar('Invalid number: $result');
+            return;
+          }
+          _store.fontSize.put(newVal);
+        },
       ),
     );
   }
 
-  Widget _buildConversation() {
+  Widget _buildLocale() {
+    return ValueListenableBuilder(
+      valueListenable: _store.locale.listenable(),
+      builder: (_, val, __) => ListTile(
+        leading: const Icon(Icons.language),
+        title: Text(l10n.lang),
+        trailing: Text(
+          val.isEmpty ? l10n.localeName : val,
+          style: UIs.text13Grey,
+        ),
+        onTap: () async {
+          final result = await context.showPickSingleDialog<Locale>(
+            items: AppLocalizations.supportedLocales,
+            name: (e) => e.toLanguageTag(),
+            initial: val.toLocale,
+          );
+          if (result != null) {
+            _store.locale.put(result.toLanguageTag());
+            RebuildNode.app.rebuild();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildChat() {
     final children = [
       _buildOpenAIKey(),
       _buildOpenAIUrl(),
@@ -179,18 +242,26 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  Widget _buildAutoGenTitle() {
+    return ListTile(
+      leading: const Icon(Icons.title),
+      title: Text(l10n.genChatTitle),
+      trailing: StoreSwitch(prop: _store.autoGenTitle),
+    );
+  }
+
   Widget _buildOpenAIKey() {
     return ValueListenableBuilder(
       valueListenable: _store.openaiApiKey.listenable(),
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.vpn_key),
-        title: const Text('Secret Key'),
+        title: Text(l10n.secretKey),
         trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(val, style: UIs.text13Grey),
+        subtitle: Text(val.isEmpty ? l10n.empty : val, style: UIs.text13Grey),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(
-            title: 'Edit Key',
+            title: l10n.edit,
             child: Input(
               controller: ctrl,
               hint: 'sk-xxx',
@@ -199,7 +270,7 @@ class _SettingPageState extends State<SettingPage> {
             actions: [
               TextButton(
                 onPressed: () => context.pop(ctrl.text),
-                child: const Text('Ok'),
+                child: Text(l10n.ok),
               ),
             ],
           );
@@ -216,13 +287,13 @@ class _SettingPageState extends State<SettingPage> {
       valueListenable: _store.openaiApiUrl.listenable(),
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.link),
-        title: const Text('API Url'),
+        title: Text(l10n.apiUrl),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(val, style: UIs.text13Grey),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(
-            title: 'Edit URL',
+            title: l10n.edit,
             child: Input(
               controller: ctrl,
               hint: 'https://api.openai.com/v1',
@@ -231,7 +302,7 @@ class _SettingPageState extends State<SettingPage> {
             actions: [
               TextButton(
                 onPressed: () => context.pop(ctrl.text),
-                child: const Text('Ok'),
+                child: Text(l10n.ok),
               ),
             ],
           );
@@ -248,7 +319,7 @@ class _SettingPageState extends State<SettingPage> {
       valueListenable: _store.openaiModel.listenable(),
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.model_training),
-        title: const Text('Model'),
+        title: Text(l10n.model),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
           val,
@@ -257,7 +328,14 @@ class _SettingPageState extends State<SettingPage> {
         onTap: () async {
           if (_store.openaiApiKey.fetch().isEmpty) {
             context.showRoundDialog(
-              title: 'Please input OpenAI Key first.',
+              title: l10n.attention,
+              child: Text(l10n.needOpenAIKey),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(),
+                  child: Text(l10n.ok),
+                ),
+              ],
             );
             return;
           }
@@ -294,14 +372,14 @@ class _SettingPageState extends State<SettingPage> {
     return ValueListenableBuilder(
       valueListenable: _store.prompt.listenable(),
       builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.text_fields),
+        leading: const Icon(Icons.abc),
         title: const Text('Prompt'),
         trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(val.isEmpty ? 'Empty' : val, style: UIs.text13Grey),
+        subtitle: Text(val.isEmpty ? l10n.empty : val, style: UIs.text13Grey),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(
-            title: 'Edit Prompt',
+            title: l10n.edit,
             child: Input(
               controller: ctrl,
               maxLines: 3,
@@ -309,7 +387,7 @@ class _SettingPageState extends State<SettingPage> {
             actions: [
               TextButton(
                 onPressed: () => context.pop(ctrl.text),
-                child: const Text('Ok'),
+                child: Text(l10n.ok),
               ),
             ],
           );
@@ -325,16 +403,16 @@ class _SettingPageState extends State<SettingPage> {
       valueListenable: _store.historyLength.listenable(),
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.history),
-        title: const Text('History Length'),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
+        title: Text(l10n.chatHistoryLength),
+        trailing: Text(
           val.toString(),
           style: UIs.text13Grey,
         ),
+        subtitle: Text(l10n.chatHistoryTip, style: UIs.textGrey),
         onTap: () async {
           final ctrl = TextEditingController(text: val.toString());
           final result = await context.showRoundDialog<String>(
-            title: 'History Length',
+            title: l10n.edit,
             child: Input(
               controller: ctrl,
               hint: '7',
@@ -343,7 +421,7 @@ class _SettingPageState extends State<SettingPage> {
             actions: [
               TextButton(
                 onPressed: () => context.pop(ctrl.text),
-                child: const Text('Ok'),
+                child: Text(l10n.ok),
               ),
             ],
           );

@@ -7,7 +7,10 @@ class SettingStore extends Store {
 
   late final themeColorSeed = property('themeColorSeed', 4287106639);
 
-  late final openaiApiUrl = property('openaiApiUrl', '');
+  late final openaiApiUrl = property(
+    'openaiApiUrl',
+    'https://api.openai.com/v1',
+  );
 
   late final openaiApiKey = property('openaiApiKey', '');
 
@@ -21,4 +24,8 @@ class SettingStore extends Store {
 
   /// Auto scroll to bottom when new message comes.
   late final scrollBottom = property('scrollBottom', true);
+
+  late final fontSize = property('fontSize', 12.0);
+
+  late final locale = property('locale', '');
 }

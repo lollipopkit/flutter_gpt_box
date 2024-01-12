@@ -1,6 +1,7 @@
 import 'package:choice/choice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
+import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/choice.dart';
 
@@ -36,14 +37,17 @@ extension DialogX on BuildContext {
     required List<T?> items,
     required String Function(T) name,
     bool multi = true,
+    List<T>? initial,
+    bool clearable = false,
   }) async {
-    var vals = <T>[];
+    var vals = initial ?? <T>[];
     final sure = await showRoundDialog<bool>(
-      title: "Choose ${multi ? 'multiple' : 'single'}",
+      title: l10n.choose,
       child: Choice<T>(
         onChanged: (value) => vals = value,
         multiple: multi,
-        clearable: true,
+        clearable: clearable,
+        value: vals,
         builder: (state, _) {
           return Wrap(
             children: List<Widget>.generate(
@@ -77,11 +81,14 @@ extension DialogX on BuildContext {
   Future<T?> showPickSingleDialog<T>({
     required List<T?> items,
     required String Function(T) name,
+    T? initial,
+    bool clearable = false,
   }) async {
     final vals = await showPickDialog<T>(
       items: items,
       name: name,
       multi: false,
+      initial: initial == null ? null : [initial],
     );
     if (vals != null && vals.isNotEmpty) {
       return vals.first;

@@ -1,5 +1,6 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
+import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -86,16 +87,13 @@ final class ChatHistoryItem {
   }
 
   String get toMarkdown {
-    return content.map((e) {
+    return content.map((e) => 
       switch (e.type) {
-        case ChatContentType.text:
-          return e.raw;
-        case ChatContentType.image:
-          return '![](${e.raw})';
-        default:
-          throw UnimplementedError();
+        ChatContentType.text => e.raw,
+        ChatContentType.image => '![](${e.raw})',
+        final type => throw UnimplementedError('type: $type'),
       }
-    }).join('\n');
+    ).join('\n');
   }
 
   static ChatHistoryItem get emptyAssist => ChatHistoryItem.noid(
@@ -212,4 +210,10 @@ enum ChatRole {
         throw UnimplementedError();
     }
   }
+
+  String get name => switch (this) {
+        user => l10n.user,
+        assist => l10n.assistant,
+        system => l10n.system,
+      };
 }

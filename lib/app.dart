@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/core/ext/locale.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/page/home/home.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -20,7 +22,10 @@ class MyApp extends StatelessWidget {
           _ => ThemeMode.system,
         };
         return MaterialApp(
-          title: 'Flutter Demo',
+          title: 'GPT Box',
+          locale: Stores.setting.locale.fetch().toLocale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           themeMode: themeMode,
           theme: ThemeData(colorSchemeSeed: UIs.colorSeed),
           darkTheme: _getAmoledTheme(ThemeData(

@@ -10,24 +10,24 @@ const _boxShadow = [
 
 const _boxShadowDark = [
   BoxShadow(
-    color: Colors.white24,
+    color: Colors.white12,
     blurRadius: 7,
     offset: Offset(0, -1),
   ),
 ];
 
-class _ConversationSetting extends StatefulWidget {
+class _CurrentChatSettings extends StatefulWidget {
   final ChatConfig config;
 
-  const _ConversationSetting({
+  const _CurrentChatSettings({
     required this.config,
   });
 
   @override
-  State<StatefulWidget> createState() => _ConversationSettingState();
+  State<StatefulWidget> createState() => _CurrentChatSettingsState();
 }
 
-class _ConversationSettingState extends State<_ConversationSetting> {
+class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
   late var url = ValueNotifier(widget.config.url);
   late var key = ValueNotifier(widget.config.key);
   late var model = ValueNotifier(widget.config.model);

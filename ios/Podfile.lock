@@ -45,6 +45,8 @@ PODS:
   - share_plus (0.0.1):
     - Flutter
   - SwiftyGif (5.4.4)
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - countly_flutter (from `.symlinks/plugins/countly_flutter/ios`)
@@ -52,6 +54,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -71,18 +74,21 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   countly_flutter: 72d4b7ed3921f0dfbf1c0ab8b356e3ecb91bdd74
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 15fd9539e4eb735dc54bae8c0534a7a9511a03de
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   SDWebImage: 96e0c18ef14010b7485210e92fac888587ebb958
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
+  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
 
-PODFILE CHECKSUM: aa3b1d9cb94e8055dc6468141196cf9e4c8e33df
+PODFILE CHECKSUM: 075ddf6b19cdcced44581bd8fbdfb58404a78f8a
 
 COCOAPODS: 1.13.0

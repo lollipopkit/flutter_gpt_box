@@ -8,6 +8,7 @@ import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/util/platform/file.dart';
 import 'package:flutter_chatgpt/data/model/app/backup.dart';
+import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
@@ -19,8 +20,8 @@ final class BackupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: Text('Backup'),
+      appBar: CustomAppBar(
+        title: Text(l10n.backup),
       ),
       body: _buildBody(context),
     );
@@ -39,14 +40,11 @@ final class BackupPage extends StatelessWidget {
   }
 
   Widget _buildTip() {
-    return const CardX(
+    return CardX(
       child: ListTile(
-        leading: Icon(Icons.warning),
-        title: Text('Attention'),
-        subtitle: Text(
-          'The exported data is simply encrypted. \nPlease keep it safe.',
-          style: UIs.textGrey,
-        ),
+        leading: const Icon(Icons.warning),
+        title: Text(l10n.attention),
+        subtitle: Text(l10n.backupTip, style: UIs.textGrey),
       ),
     );
   }
@@ -55,11 +53,11 @@ final class BackupPage extends StatelessWidget {
     return CardX(
       child: ExpandTile(
         leading: const Icon(Icons.file_open),
-        title: const Text('File'),
+        title: Text(l10n.file),
         initiallyExpanded: true,
         children: [
           ListTile(
-            title: const Text('Backup'),
+            title: Text(l10n.backup),
             trailing: const Icon(Icons.save),
             onTap: () async {
               final content = await Backup.backup();
@@ -68,7 +66,7 @@ final class BackupPage extends StatelessWidget {
           ),
           ListTile(
             trailing: const Icon(Icons.restore),
-            title: const Text('Restore'),
+            title: Text(l10n.restore),
             onTap: () async => _onTapFileRestore(context),
           ),
         ],
@@ -188,15 +186,15 @@ final class BackupPage extends StatelessWidget {
 
       final time = DateTime.fromMillisecondsSinceEpoch(backup.date);
       await context.showRoundDialog(
-        title: 'Restore',
-        child: Text('Are you sure to restore [$time]?'),
+        title: l10n.attention,
+        child: Text(l10n.sureRestoreFmt(time)),
         actions: [
           TextButton(
             onPressed: () async {
               await backup.restore(force: true);
               context.pop();
             },
-            child: const Text('Ok'),
+            child: Text(l10n.backup),
           ),
         ],
       );
