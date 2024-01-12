@@ -7,7 +7,7 @@ import 'dart:io';
 const appName = 'GPT';
 final appNameLower = appName.toLowerCase();
 
-const buildDataFilePath = 'lib/data/res/build_data.dart';
+const buildDataFilePath = 'lib/data/res/build.dart';
 const apkPath = 'build/app/outputs/flutter-apk/app-release.apk';
 const appleXCConfigPath = 'Runner.xcodeproj/project.pbxproj';
 const macOSArchievePath = 'build/macos/Build/Products/Release/Runner.app';
@@ -98,7 +98,7 @@ Future<void> updateBuildData() async {
   print('Updating BuildData...');
   final data = await getBuildData();
   print(jsonEncodeWithIndent(data));
-  await writeStaicConfigFile(data, 'BuildData', buildDataFilePath);
+  await writeStaicConfigFile(data, 'Build', buildDataFilePath);
 }
 
 Future<void> dartFormat() async {

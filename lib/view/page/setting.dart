@@ -70,6 +70,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildFontSize(),
       _buildScrollBottom(),
       _buildAutoGenTitle(),
+      _buildSoftWrap(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
@@ -229,6 +230,23 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  Widget _buildAutoGenTitle() {
+    return ListTile(
+      leading: const Icon(Icons.title),
+      title: Text(l10n.genChatTitle),
+      trailing: StoreSwitch(prop: _store.autoGenTitle),
+    );
+  }
+
+  Widget _buildSoftWrap() {
+    return ListTile(
+      leading: const Icon(Icons.wrap_text),
+      title: Text(l10n.softWrap),
+      subtitle: Text(l10n.needRestart, style: UIs.textGrey),
+      trailing: StoreSwitch(prop: _store.softWrap),
+    );
+  }
+
   Widget _buildChat() {
     final children = [
       _buildOpenAIKey(),
@@ -239,14 +257,6 @@ class _SettingPageState extends State<SettingPage> {
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
-    );
-  }
-
-  Widget _buildAutoGenTitle() {
-    return ListTile(
-      leading: const Icon(Icons.title),
-      title: Text(l10n.genChatTitle),
-      trailing: StoreSwitch(prop: _store.autoGenTitle),
     );
   }
 

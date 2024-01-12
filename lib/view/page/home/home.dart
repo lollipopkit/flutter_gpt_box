@@ -14,7 +14,7 @@ import 'package:flutter_chatgpt/core/route/page.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
-import 'package:flutter_chatgpt/data/res/build_data.dart';
+import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
@@ -199,25 +199,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDragHandle() {
-    return UnconstrainedBox(
-      child: Container(
-        width: 37,
-        height: 3,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: _isDark ? Colors.white10 : Colors.black12,
-          borderRadius: BorderRadius.circular(7),
+    return Padding(
+      padding: const EdgeInsets.only(top: 7, bottom: 3),
+      child: UnconstrainedBox(
+        child: Container(
+          width: 37,
+          height: 3,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: _isDark ? Colors.white10 : Colors.black12,
+            borderRadius: BorderRadius.circular(7),
+          ),
+        ).tap(
+          onTap: () {
+            if (_panelCtrl.isPanelOpen) {
+              _panelCtrl.close();
+            } else {
+              _panelCtrl.open();
+            }
+          },
         ),
-      ).tap(
-        onTap: () {
-          if (_panelCtrl.isPanelOpen) {
-            _panelCtrl.close();
-          } else {
-            _panelCtrl.open();
-          }
-        },
       ),
-    ).padding(const EdgeInsets.only(top: 7, bottom: 3));
+    );
   }
 
   Widget _buildHistoryListItem(String chatId) {
@@ -278,9 +281,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         IconButton(
-          onPressed: () {
-            Clipboard.setData(ClipboardData(text: chatItem.toMarkdown));
-          },
+          onPressed: () => _onCopy(chatItem.toMarkdown),
           padding: EdgeInsets.zero,
           icon: const Icon(
             Icons.copy,
@@ -294,25 +295,32 @@ class _HomePageState extends State<HomePage> {
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
     final node = _mdRNMap.putIfAbsent(chatItem.id, () => RebuildNode());
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildChatItemBtn(chatItems, chatItem),
-        SelectionArea(
-          child: ListenableBuilder(
-            listenable: node,
-            builder: (_, __) {
-              return MarkdownBody(
-                data: chatItem.toMarkdown,
-                builders: {
-                  'code': CodeElementBuilder(),
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    ).padding(const EdgeInsets.all(7));
+    final md = ListenableBuilder(
+      listenable: node,
+      builder: (_, __) {
+        return MarkdownBody(
+          data: chatItem.toMarkdown,
+          builders: {
+            'code': CodeElementBuilder(onCopy: _onCopy),
+          },
+        );
+      },
+    );
+    return Padding(
+      padding: const EdgeInsets.all(7),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildChatItemBtn(chatItems, chatItem),
+          Stores.setting.softWrap.fetch()
+              ? md
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: md,
+                ),
+        ],
+      ),
+    );
   }
 
   Widget _buildInput() {
@@ -381,43 +389,46 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: (_media?.size.width ?? 300) * 0.7,
       color: _bg,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 47,
-            width: 47,
-            child: UIs.appIcon,
-          ),
-          UIs.height13,
-          const Text(
-            'GPT Box\nv1.0.${BuildData.build}',
-            textAlign: TextAlign.center,
-          ),
-          UIs.height77,
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: Text(l10n.settings),
-            onTap: () {
-              Routes.setting.go(context);
-            },
-          ).card,
-          ListTile(
-            leading: const Icon(Icons.backup),
-            title: Text(l10n.backup),
-            onTap: () {
-              Routes.backup.go(context);
-            },
-          ).card,
-          ListTile(
-            leading: const Icon(Icons.info),
-            title: Text(l10n.about),
-            onTap: () {
-              Routes.about.go(context);
-            },
-          ).card,
-        ],
-      ).padding(const EdgeInsets.symmetric(horizontal: 13)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 17),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 47,
+              width: 47,
+              child: UIs.appIcon,
+            ),
+            UIs.height13,
+            const Text(
+              'GPT Box\nv1.0.${Build.build}',
+              textAlign: TextAlign.center,
+            ),
+            UIs.height77,
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: Text(l10n.settings),
+              onTap: () {
+                Routes.setting.go(context);
+              },
+            ).card,
+            ListTile(
+              leading: const Icon(Icons.backup),
+              title: Text(l10n.backup),
+              onTap: () {
+                Routes.backup.go(context);
+              },
+            ).card,
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: Text(l10n.about),
+              onTap: () {
+                Routes.about.go(context);
+              },
+            ).card,
+          ],
+        ),
+      ),
     );
   }
 
@@ -681,5 +692,10 @@ class _HomePageState extends State<HomePage> {
     }
     entity.name = title;
     _chatRNMap[chatId]?.rebuild();
+  }
+
+  void _onCopy(String content) {
+    Clipboard.setData(ClipboardData(text: content));
+    context.showSnackBar(l10n.copied);
   }
 }

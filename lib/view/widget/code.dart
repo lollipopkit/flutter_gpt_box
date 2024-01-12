@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_highlighter/flutter_highlighter.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -9,6 +10,10 @@ import 'package:markdown/markdown.dart' as md;
 final _textStyle = GoogleFonts.robotoMono();
 
 class CodeElementBuilder extends MarkdownElementBuilder {
+  final void Function(String)? onCopy;
+
+  CodeElementBuilder({this.onCopy});
+  
   static bool isDark = false;
 
   @override
@@ -33,24 +38,10 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     if (!element.textContent.contains('\n')) return child;
 
-    return Stack(
-      children: [
-        child,
-        Positioned(
-          right: 0,
-          top: 0,
-          child: IconButton(
-            onPressed: () {
-              Clipboard.setData(ClipboardData(text: element.textContent));
-            },
-            padding: EdgeInsets.zero,
-            icon: const Icon(
-              Icons.copy,
-              size: 15,
-            ),
-          ),
-        ),
-      ],
+    return child.tap(
+      onLongTap: () {
+        Clipboard.setData(ClipboardData(text: element.textContent));
+      },
     );
   }
 }
