@@ -23,7 +23,6 @@ import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 part 'misc.dart';
 
@@ -35,10 +34,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const _kPanelMinHeight = 167.0;
-
   final _inputCtrl = TextEditingController();
-  final _panelCtrl = PanelController();
   final _scrollCtrl = ScrollController();
 
   final _timeRN = RebuildNode();
@@ -50,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   final _bodyRN = RebuildNode();
   final _panelRN = RebuildNode();
   final _chatTitleRN = RebuildNode();
-  final _btnsRN = RebuildNode();
+  final _sendBtnRN = RebuildNode();
 
   late final Map<String, ChatHistory> _allHistories;
   String _curChatId = 'fake-non-exist-id';
@@ -92,30 +88,18 @@ class _HomePageState extends State<HomePage> {
     _isDark = context.isDark;
     _bg = UIs.bgColor.fromBool(_isDark);
     CodeElementBuilder.isDark = _isDark;
-    if ((_media?.viewInsets.bottom ?? 0) > 0) {
-      _panelCtrl.close();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: _buildDrawer(context),
+      drawer: _buildDrawer(),
       appBar: _buildAppBar(),
-      body: SlidingUpPanel(
-        controller: _panelCtrl,
-        body: ListenableBuilder(
-          listenable: _bodyRN,
-          builder: (_, __) => _buildBody(),
-        ),
-        panelBuilder: _buildBottomPanel,
-        maxHeight: (_media?.size.height ?? 500) * 0.7,
-        minHeight: _kPanelMinHeight,
-        backdropEnabled: true,
-        color: _bg,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
-        boxShadow: _isDark ? _boxShadowDark : _boxShadow,
+      body: ListenableBuilder(
+        listenable: _bodyRN,
+        builder: (_, __) => _buildBody(),
       ),
+      bottomNavigationBar: _buildInput(),
     );
   }
 
@@ -147,10 +131,9 @@ class _HomePageState extends State<HomePage> {
     final item = _curChat?.items;
     return ListView.builder(
       controller: _scrollCtrl,
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 7,
         right: 7,
-        bottom: _kPanelMinHeight + 100 + (_media?.padding.bottom ?? 0),
       ),
       itemCount: item?.length ?? 0,
       itemBuilder: (_, index) {
@@ -159,76 +142,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBottomPanel(ScrollController sc) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        ListenableBuilder(
-          listenable: _panelRN,
-          builder: (_, __) {
-            final keys = _allHistories.keys.toList().reversed.toList();
-            return ListView.builder(
-              controller: sc,
-              padding: const EdgeInsets.only(
-                top: _kPanelMinHeight,
-                left: 11,
-                right: 11,
-              ),
-              itemCount: keys.length,
-              itemBuilder: (_, index) => _buildHistoryListItem(keys[index]),
-            );
-          },
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 11),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
-            color: _bg,
-          ),
-          height: _kPanelMinHeight,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildDragHandle(),
-              _buildInput(),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDragHandle() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 7, bottom: 3),
-      child: UnconstrainedBox(
-        child: Container(
-          width: 37,
-          height: 3,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: _isDark ? Colors.white10 : Colors.black12,
-            borderRadius: BorderRadius.circular(7),
-          ),
-        ).tap(
-          onTap: () {
-            if (_panelCtrl.isPanelOpen) {
-              _panelCtrl.close();
-            } else {
-              _panelCtrl.open();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
   Widget _buildHistoryListItem(String chatId) {
     final entity = _allHistories[chatId];
     if (entity == null) return UIs.placeholder;
     final node = _chatRNMap.putIfAbsent(chatId, () => RebuildNode());
     return ListTile(
-      leading: Text('#${entity.items.length}', style: UIs.textGrey),
+      //leading: Text('#${entity.items.length}', style: UIs.textGrey),
       title: ListenableBuilder(
         listenable: node,
         builder: (_, __) => Text(entity.name ?? 'Untitled'),
@@ -241,23 +160,10 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       contentPadding: const EdgeInsets.only(left: 17, right: 11),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            onPressed: () => _onTapRenameChat(chatId, entity, node),
-            icon: const Icon(Icons.edit),
-          ),
-          IconButton(
-            onPressed: () => _onTapDeleteChat(chatId),
-            icon: const Icon(Icons.delete),
-          ),
-        ],
-      ),
       onTap: () {
         _switchChat(chatId);
       },
-    ).card;
+    );
   }
 
   Widget _buildChatItemBtn(
@@ -324,68 +230,86 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildInput() {
-    return AnimatedPadding(
-      padding: EdgeInsets.only(bottom: _media?.viewInsets.bottom ?? 0),
-      curve: Curves.fastEaseInToSlowEaseOut,
-      duration: Durations.short1,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              // IconButton(
-              //   onPressed: _onImgPick,
-              //   icon: const Icon(Icons.photo, size: 19),
-              // ),
-              IconButton(
-                onPressed: _onTapSetting,
-                icon: const Icon(Icons.settings, size: 19),
-              ),
-              ListenableBuilder(
-                listenable: _btnsRN,
+    return Container(
+      padding: isDesktop
+          ? const EdgeInsets.only(left: 11, right: 11, top: 7, bottom: 17)
+          : const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
+        color: _bg,
+        boxShadow: _isDark ? _boxShadowDark : _boxShadow,
+      ),
+      child: AnimatedPadding(
+        padding: EdgeInsets.only(bottom: _media?.viewInsets.bottom ?? 0),
+        curve: Curves.fastEaseInToSlowEaseOut,
+        duration: Durations.short1,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                // IconButton(
+                //   onPressed: _onImgPick,
+                //   icon: const Icon(Icons.photo, size: 19),
+                // ),
+                IconButton(
+                  onPressed: _onTapSetting,
+                  icon: const Icon(Icons.settings, size: 19),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _switchChat(_newChat().id);
+                    _panelRN.rebuild();
+                  },
+                  icon: const Icon(Icons.add),
+                ),
+                IconButton(
+                  onPressed: () => _onTapRenameChat(_curChatId),
+                  icon: const Icon(Icons.edit, size: 19),
+                ),
+                IconButton(
+                  onPressed: () => _onTapDeleteChat(_curChatId),
+                  icon: const Icon(Icons.delete, size: 19),
+                ),
+                const Spacer(),
+                if (isMobile)
+                  IconButton(
+                    onPressed: () {
+                      _focusNode.unfocus();
+                    },
+                    icon: const Icon(Icons.keyboard_hide, size: 19),
+                  ),
+              ],
+            ),
+            Input(
+              controller: _inputCtrl,
+              label: l10n.message,
+              node: _focusNode,
+              type: TextInputType.multiline,
+              maxLines: 5,
+              minLines: 1,
+              suffix: ListenableBuilder(
+                listenable: _sendBtnRN,
                 builder: (_, __) => _chatStreamSubs.containsKey(_curChatId)
                     ? IconButton(
                         onPressed: () => _onStopStreamSub(_curChatId),
                         icon: const Icon(Icons.stop),
                       )
-                    : UIs.placeholder,
+                    : IconButton(
+                        icon: const Icon(Icons.send),
+                        // Capture here
+                        onPressed: () => _onSend(_curChatId),
+                      ),
               ),
-              IconButton(
-                onPressed: () {
-                  _switchChat(_newChat().id);
-                  _panelRN.rebuild();
-                },
-                icon: const Icon(Icons.add),
-              ),
-              const Spacer(),
-              if (isMobile)
-                IconButton(
-                  onPressed: () {
-                    _focusNode.unfocus();
-                  },
-                  icon: const Icon(Icons.keyboard_hide, size: 19),
-                ),
-            ],
-          ),
-          Input(
-            controller: _inputCtrl,
-            label: l10n.message,
-            node: _focusNode,
-            type: TextInputType.multiline,
-            maxLines: 2,
-            minLines: 2,
-            suffix: IconButton(
-              icon: const Icon(Icons.send),
-              // Capture here
-              onPressed: () => _onSend(_curChatId),
             ),
-          ),
-        ],
+            SizedBox(height: _media?.padding.bottom),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDrawer(BuildContext context) {
+  Widget _buildDrawer() {
     return Container(
       width: (_media?.size.width ?? 300) * 0.7,
       color: _bg,
@@ -394,6 +318,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            UIs.height77,
             SizedBox(
               height: 47,
               width: 47,
@@ -404,28 +329,47 @@ class _HomePageState extends State<HomePage> {
               'GPT Box\nv1.0.${Build.build}',
               textAlign: TextAlign.center,
             ),
-            UIs.height77,
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: Text(l10n.settings),
-              onTap: () {
-                Routes.setting.go(context);
-              },
+            UIs.height13,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () => Routes.setting.go(context),
+                    icon: const Icon(Icons.settings),
+                  ),
+                  IconButton(
+                    onPressed: () => Routes.backup.go(context),
+                    icon: const Icon(Icons.backup),
+                  ),
+                  IconButton(
+                    onPressed: () => Routes.about.go(context),
+                    icon: const Icon(Icons.info),
+                  ),
+                ],
+              ),
             ).card,
-            ListTile(
-              leading: const Icon(Icons.backup),
-              title: Text(l10n.backup),
-              onTap: () {
-                Routes.backup.go(context);
-              },
-            ).card,
-            ListTile(
-              leading: const Icon(Icons.info),
-              title: Text(l10n.about),
-              onTap: () {
-                Routes.about.go(context);
-              },
-            ).card,
+            UIs.height13,
+            const Divider(),
+            UIs.height13,
+            Expanded(
+              child: ListenableBuilder(
+                listenable: _panelRN,
+                builder: (_, __) {
+                  final keys = _allHistories.keys.toList().reversed.toList();
+                  return ListView.builder(
+                    itemCount: keys.length,
+                    itemBuilder: (_, index) {
+                      final chatId = keys.elementAt(index);
+                      return _buildHistoryListItem(chatId).card;
+                    },
+                  );
+                },
+              ),
+            ),
+            UIs.height13,
+            SizedBox(height: _media?.padding.bottom)
           ],
         ),
       ),
@@ -516,25 +460,20 @@ class _HomePageState extends State<HomePage> {
             }
           }
         },
-        onError: (e) {
+        onError: (e, trace) {
           Loggers.app.warning('Listen chat stream: $e');
           _onStopStreamSub(chatId);
 
-          // workingChat.items.add(ChatHistoryItem.noid(
-          //   content: [
-          //     ChatContent(type: ChatContentType.text, raw: 'Error: $e'),
-          //   ],
-          //   role: ChatRole.system,
-          //   createdAt: DateTime.now(),
-          // ));
-          // _rebuildMap[assistReply.id]?.rebuild();
-          // _generatingMap.remove(chatId);
-          // _storeHistory(chatId);
+          final msg = 'Error: $e\nTrace:\n$trace';
+          workingChat.items.add(ChatHistoryItem.noid(
+            content: [ChatContent(type: ChatContentType.text, raw: msg)],
+            role: ChatRole.system,
+          ));
+          _bodyRN.rebuild();
+          _storeChat(chatId);
         },
         onDone: () {
           _onStopStreamSub(chatId);
-
-          _btnsRN.rebuild();
           _storeChat(chatId);
         },
       );
@@ -554,6 +493,7 @@ class _HomePageState extends State<HomePage> {
     _applyChatConfig(_getChatConfig(_curChatId));
     _mdRNMap.clear();
     _bodyRN.rebuild();
+    _sendBtnRN.rebuild();
     _chatTitleRN.rebuild();
   }
 
@@ -627,11 +567,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _onTapRenameChat(
-    String chatId,
-    ChatHistory entity,
-    RebuildNode node,
-  ) async {
+  void _onTapRenameChat(String chatId) async {
+    final entity = _allHistories[chatId];
+    if (entity == null) {
+      final msg = 'Rename Chat($chatId) not found';
+      Loggers.app.warning(msg);
+      context.showSnackBar(msg);
+      return;
+    }
     final ctrl = TextEditingController(text: entity.name);
     final title = await context.showRoundDialog<String>(
       title: l10n.rename,
@@ -648,14 +591,13 @@ class _HomePageState extends State<HomePage> {
     );
     if (title == null || title.isEmpty) return;
     entity.name = title;
-    node.rebuild();
+    _chatRNMap[chatId]?.rebuild();
     _storeChat(chatId);
     _chatTitleRN.rebuild();
   }
 
   void _onStopStreamSub(String chatId) {
     _chatStreamSubs.remove(chatId)?.cancel();
-    _btnsRN.rebuild();
   }
 
   void _genChatTitle(String chatId) async {

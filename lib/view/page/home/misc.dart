@@ -3,16 +3,16 @@ part of 'home.dart';
 const _boxShadow = [
   BoxShadow(
     color: Colors.black12,
-    blurRadius: 7,
-    offset: Offset(0, -1),
+    blurRadius: 3,
+    offset: Offset(0, -0.5),
   ),
 ];
 
 const _boxShadowDark = [
   BoxShadow(
     color: Colors.white12,
-    blurRadius: 7,
-    offset: Offset(0, -1),
+    blurRadius: 3,
+    offset: Offset(0, -0.5),
   ),
 ];
 

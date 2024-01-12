@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_highlighter/flutter_highlighter.dart';
@@ -13,7 +12,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
   final void Function(String)? onCopy;
 
   CodeElementBuilder({this.onCopy});
-  
+
   static bool isDark = false;
 
   @override
@@ -39,9 +38,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     if (!element.textContent.contains('\n')) return child;
 
     return child.tap(
-      onLongTap: () {
-        Clipboard.setData(ClipboardData(text: element.textContent));
-      },
+      onLongTap: () => onCopy?.call(element.textContent),
     );
   }
 }
