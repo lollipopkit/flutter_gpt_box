@@ -12,7 +12,16 @@ class HistoryStore extends Store {
         map[key] = item;
       }
     }
-    return map;
+    // Sort by last modified time
+    final now = DateTime.now();
+    final sorted = map.entries.toList();
+    sorted.sort(
+      (a, b) =>
+          b.value.items.lastOrNull?.createdAt
+              .compareTo(a.value.items.lastOrNull?.createdAt ?? now) ??
+          0,
+    );
+    return Map.fromEntries(sorted);
   }
 
   void put(ChatHistory history) {

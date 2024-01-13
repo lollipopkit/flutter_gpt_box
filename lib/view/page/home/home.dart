@@ -36,22 +36,28 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _inputCtrl = TextEditingController();
   final _scrollCtrl = ScrollController();
+  late final _pageCtrl = PageController(initialPage: _curPageIdx);
 
   final _timeRN = RebuildNode();
-  // Map for markdown rebuild nodes
+
+  /// Map for markdown rebuild nodes
   final _mdRNMap = <String, RebuildNode>{};
-  // RebuildNodes for chat history panel list items
+
+  /// RebuildNodes for chat history list items
   final _chatRNMap = <String, RebuildNode>{};
-  // For page body chat view
+
+  /// For page body chat view
   final _bodyRN = RebuildNode();
   final _panelRN = RebuildNode();
   final _chatTitleRN = RebuildNode();
   final _sendBtnRN = RebuildNode();
+  final _pageIndicatorRN = RebuildNode();
 
   late final Map<String, ChatHistory> _allHistories;
   String _curChatId = 'fake-non-exist-id';
   ChatHistory? get _curChat => _allHistories[_curChatId];
   final _chatStreamSubs = <String, StreamSubscription>{};
+  int _curPageIdx = 1;
 
   MediaQueryData? _media;
   Timer? _refreshTimeTimer;
@@ -95,10 +101,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: _buildDrawer(),
       appBar: _buildAppBar(),
-      body: ListenableBuilder(
-        listenable: _bodyRN,
-        builder: (_, __) => _buildBody(),
-      ),
+      body: _buildBody(),
       bottomNavigationBar: _buildInput(),
     );
   }
@@ -122,22 +125,77 @@ class _HomePageState extends State<HomePage> {
         IconButton(
           onPressed: () => Routes.debug.go(context),
           icon: const Icon(Icons.developer_board),
+          tooltip: 'Debug',
         )
       ],
     );
   }
 
   Widget _buildBody() {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        PageView(
+          controller: _pageCtrl,
+          children: [
+            _buildChatHistoryPage(),
+            ListenableBuilder(
+              listenable: _bodyRN,
+              builder: (_, __) => _buildChatPage(),
+            ),
+          ],
+          onPageChanged: (value) {
+            _curPageIdx = value;
+            _pageIndicatorRN.rebuild();
+          },
+        ),
+        Positioned(
+          bottom: 13,
+          child: ListenableBuilder(
+            listenable: _pageIndicatorRN,
+            builder: (_, __) => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildIndicator(0),
+                _buildIndicator(1),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChatHistoryPage() {
+    return ListenableBuilder(
+      listenable: _panelRN,
+      builder: (_, __) {
+        final keys = _allHistories.keys.toList();
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
+          reverse: true,
+          itemCount: keys.length,
+          itemBuilder: (_, index) {
+            final chatId = keys.elementAt(index);
+            return _buildHistoryListItem(chatId).card;
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildChatPage() {
     final item = _curChat?.items;
+    if (item == null) return UIs.placeholder;
     return ListView.builder(
       controller: _scrollCtrl,
       padding: const EdgeInsets.only(
         left: 7,
         right: 7,
       ),
-      itemCount: item?.length ?? 0,
+      itemCount: item.length,
       itemBuilder: (_, index) {
-        return _buildChatItem(item!, index);
+        return _buildChatItem(item, index);
       },
     );
   }
@@ -147,10 +205,10 @@ class _HomePageState extends State<HomePage> {
     if (entity == null) return UIs.placeholder;
     final node = _chatRNMap.putIfAbsent(chatId, () => RebuildNode());
     return ListTile(
-      //leading: Text('#${entity.items.length}', style: UIs.textGrey),
+      leading: Text('#${entity.items.length}', style: UIs.textGrey),
       title: ListenableBuilder(
         listenable: node,
-        builder: (_, __) => Text(entity.name ?? 'Untitled'),
+        builder: (_, __) => Text(entity.name ?? l10n.untitled),
       ),
       subtitle: ListenableBuilder(
         listenable: _timeRN,
@@ -160,8 +218,29 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       contentPadding: const EdgeInsets.only(left: 17, right: 11),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () => _onTapRenameChat(chatId),
+            icon: const Icon(Icons.abc, size: 19),
+            tooltip: l10n.rename,
+          ),
+          IconButton(
+            onPressed: () => _onTapDeleteChat(chatId),
+            icon: const Icon(Icons.delete, size: 19),
+          ),
+        ],
+      ),
       onTap: () {
         _switchChat(chatId);
+        if (_pageCtrl.page == 0) {
+          _pageCtrl.animateToPage(
+            1,
+            duration: Durations.medium3,
+            curve: Curves.fastEaseInToSlowEaseOut,
+          );
+        }
       },
     );
   }
@@ -175,7 +254,18 @@ class _HomePageState extends State<HomePage> {
         Text(chatItem.role.name, style: UIs.text13Grey),
         const Spacer(),
         IconButton(
-          onPressed: () {
+          onPressed: () async {
+            final result = await context.showRoundDialog<bool>(
+              title: l10n.attention,
+              child: Text(l10n.delFmt(l10n.chat, chatItem.id)),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(true),
+                  child: Text(l10n.ok),
+                ),
+              ],
+            );
+            if (result != true) return;
             chatItems.remove(chatItem);
             _storeChat(_curChatId);
             _bodyRN.rebuild();
@@ -255,6 +345,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: _onTapSetting,
                   icon: const Icon(Icons.settings, size: 19),
+                  tooltip: l10n.settings,
                 ),
                 IconButton(
                   onPressed: () {
@@ -262,14 +353,17 @@ class _HomePageState extends State<HomePage> {
                     _panelRN.rebuild();
                   },
                   icon: const Icon(Icons.add),
+                  tooltip: l10n.newChat,
                 ),
                 IconButton(
                   onPressed: () => _onTapRenameChat(_curChatId),
-                  icon: const Icon(Icons.edit, size: 19),
+                  icon: const Icon(Icons.abc, size: 19),
+                  tooltip: l10n.rename,
                 ),
                 IconButton(
                   onPressed: () => _onTapDeleteChat(_curChatId),
                   icon: const Icon(Icons.delete, size: 19),
+                  tooltip: l10n.delete,
                 ),
                 const Spacer(),
                 if (isMobile)
@@ -290,20 +384,55 @@ class _HomePageState extends State<HomePage> {
               minLines: 1,
               suffix: ListenableBuilder(
                 listenable: _sendBtnRN,
-                builder: (_, __) => _chatStreamSubs.containsKey(_curChatId)
-                    ? IconButton(
-                        onPressed: () => _onStopStreamSub(_curChatId),
-                        icon: const Icon(Icons.stop),
-                      )
-                    : IconButton(
-                        icon: const Icon(Icons.send),
-                        // Capture here
-                        onPressed: () => _onSend(_curChatId),
-                      ),
+                builder: (_, __) {
+                  final isWorking = _chatStreamSubs.containsKey(_curChatId);
+                  return isWorking
+                      ? IconButton(
+                          onPressed: () => _onStopStreamSub(_curChatId),
+                          icon: const Icon(Icons.stop),
+                        )
+                      : IconButton(
+                          icon: const Icon(Icons.send),
+                          onPressed: () => _onSend(_curChatId),
+                        );
+                },
               ),
             ),
             SizedBox(height: _media?.padding.bottom),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIndicator(int idx) {
+    final isActive = idx == _curPageIdx;
+    return AnimatedContainer(
+      key: ValueKey('btm-page-indicator-$idx'),
+      height: isActive ? 20 : 13,
+      duration: const Duration(milliseconds: 150),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(17),
+        color: Colors.white12,
+        boxShadow: _isDark ? _boxShadowDark : _boxShadow,
+      ),
+      child: Padding(
+        padding: isActive
+            ? const EdgeInsets.symmetric(horizontal: 7)
+            : EdgeInsets.zero,
+        child: Center(
+          child: switch ((isActive, idx)) {
+            (true, 0) => Text(l10n.history, style: UIs.text13),
+            (true, 1) => Text(l10n.chat, style: UIs.text13),
+            _ => UIs.width13,
+          },
+        ),
+      ).tap(
+        onTap: () => _pageCtrl.animateToPage(
+          idx,
+          duration: Durations.medium1,
+          curve: Curves.fastEaseInToSlowEaseOut,
         ),
       ),
     );
@@ -318,7 +447,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            UIs.height77,
+            UIs.height13,
             SizedBox(
               height: 47,
               width: 47,
@@ -329,47 +458,23 @@ class _HomePageState extends State<HomePage> {
               'GPT Box\nv1.0.${Build.build}',
               textAlign: TextAlign.center,
             ),
-            UIs.height13,
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    onPressed: () => Routes.setting.go(context),
-                    icon: const Icon(Icons.settings),
-                  ),
-                  IconButton(
-                    onPressed: () => Routes.backup.go(context),
-                    icon: const Icon(Icons.backup),
-                  ),
-                  IconButton(
-                    onPressed: () => Routes.about.go(context),
-                    icon: const Icon(Icons.info),
-                  ),
-                ],
-              ),
+            UIs.height77,
+            ListTile(
+              onTap: () => Routes.setting.go(context),
+              leading: const Icon(Icons.settings),
+              title: Text(l10n.settings),
             ).card,
-            UIs.height13,
-            const Divider(),
-            UIs.height13,
-            Expanded(
-              child: ListenableBuilder(
-                listenable: _panelRN,
-                builder: (_, __) {
-                  final keys = _allHistories.keys.toList().reversed.toList();
-                  return ListView.builder(
-                    itemCount: keys.length,
-                    itemBuilder: (_, index) {
-                      final chatId = keys.elementAt(index);
-                      return _buildHistoryListItem(chatId).card;
-                    },
-                  );
-                },
-              ),
-            ),
-            UIs.height13,
-            SizedBox(height: _media?.padding.bottom)
+            ListTile(
+              onTap: () => Routes.backup.go(context),
+              leading: const Icon(Icons.backup),
+              title: Text(l10n.backup),
+            ).card,
+            ListTile(
+              onTap: () => Routes.about.go(context),
+              leading: const Icon(Icons.info),
+              title: Text(l10n.about),
+            ).card,
+            SizedBox(height: (_media?.padding.bottom ?? 0) + 13),
           ],
         ),
       ),
@@ -471,19 +576,23 @@ class _HomePageState extends State<HomePage> {
           ));
           _bodyRN.rebuild();
           _storeChat(chatId);
+          _sendBtnRN.rebuild();
         },
         onDone: () {
           _onStopStreamSub(chatId);
           _storeChat(chatId);
+          _sendBtnRN.rebuild();
         },
       );
       _chatStreamSubs[chatId] = sub;
+      _sendBtnRN.rebuild();
     } catch (e) {
       _onStopStreamSub(chatId);
       final msg = 'Chat stream: $e';
       Loggers.app.warning(msg);
       context.showSnackBar(msg);
       assistReply.content.first.raw += '\n$msg';
+      _sendBtnRN.rebuild();
     }
   }
 
@@ -545,26 +654,37 @@ class _HomePageState extends State<HomePage> {
       context.showSnackBar(msg);
       return;
     }
+
+    /// If config is null and items is empty, delete it directly
+    if (entity.config == null && entity.items.isEmpty) {
+      _onDeleteChat(chatId);
+      return;
+    }
+
     final name = entity.name ?? 'Untitled';
     context.showRoundDialog(
       title: l10n.attention,
-      child: Text(l10n.delChatFmt(name)),
+      child: Text(l10n.delFmt(l10n.chat, name)),
       actions: [
         TextButton(
           onPressed: () {
-            Stores.history.delete(chatId);
-            _allHistories.remove(chatId);
-            if (_curChatId == chatId) {
-              _switchChat();
-            }
-            _panelRN.rebuild();
-            _chatTitleRN.rebuild();
+            _onDeleteChat(chatId);
             context.pop();
           },
           child: Text(l10n.ok),
         ),
       ],
     );
+  }
+
+  void _onDeleteChat(String chatId) {
+    Stores.history.delete(chatId);
+    _allHistories.remove(chatId);
+    if (_curChatId == chatId) {
+      _switchChat();
+    }
+    _panelRN.rebuild();
+    _chatTitleRN.rebuild();
   }
 
   void _onTapRenameChat(String chatId) async {

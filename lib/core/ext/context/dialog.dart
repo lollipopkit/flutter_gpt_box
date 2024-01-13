@@ -68,7 +68,7 @@ extension DialogX on BuildContext {
       actions: [
         TextButton(
           onPressed: () => pop(true),
-          child: const Text('Ok'),
+          child: Text(l10n.ok),
         ),
       ],
     );

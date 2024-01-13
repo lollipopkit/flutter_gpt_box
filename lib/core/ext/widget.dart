@@ -8,14 +8,24 @@ extension WidgetX on Widget {
     bool disable = false,
     VoidCallback? onLongTap,
     VoidCallback? onDoubleTap,
+    bool clip = true,
   }) {
     if (disable) return this;
 
-    return InkWell(
+    final child = InkWell(
       onTap: () => Funcs.throttle(onTap),
       onLongPress: onLongTap,
       onDoubleTap: onDoubleTap,
       child: this,
+    );
+    if (!clip) return child;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(17),
+      child: Material(
+        color: Colors.transparent,
+        child: child,
+      ),
     );
   }
 

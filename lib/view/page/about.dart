@@ -49,6 +49,7 @@ class AboutPage extends StatelessWidget {
   Widget _buildOther() {
     return CardX(
       child: ExpandTile(
+        initiallyExpanded: true,
         leading: const Icon(Icons.more, size: 19),
         title: Text(l10n.other),
         children: [
@@ -59,7 +60,7 @@ class AboutPage extends StatelessWidget {
 ### 🥳 ${l10n.contributor}
 ～
 
-### 🥺 ${l10n.participant}
+### 🙌🏻 ${l10n.participant}
 ～
 
 ### 🗂️ ${l10n.privacy}
@@ -79,7 +80,7 @@ GPL v3 lollipopkit
     return CardX(
       child: ListTile(
         leading: const Icon(Icons.description),
-        title: Text(l10n.license),
+        title: Text('${l10n.license} of libs'),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => showLicensePage(context: context),
       ),

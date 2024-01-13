@@ -62,14 +62,14 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       valueListenable: url,
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.link),
-        title: const Text('API Url'),
+        title: Text(l10n.apiUrl),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle:
             Text(val, style: UIs.text13Grey, maxLines: 1, softWrap: false),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(
-            title: 'Edit URL',
+            title: l10n.edit,
             child: Input(
               controller: ctrl,
               hint: 'https://api.openai.com/v1',
@@ -78,7 +78,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
             actions: [
               TextButton(
                 onPressed: () => context.pop(ctrl.text),
-                child: const Text('Ok'),
+                child: Text(l10n.ok),
               ),
             ],
           );
@@ -95,13 +95,13 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       valueListenable: key,
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.vpn_key),
-        title: const Text('Secret Key'),
+        title: Text(l10n.secretKey),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(val, style: UIs.text13Grey, maxLines: 1),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(
-            title: 'Edit Key',
+            title: l10n.edit,
             child: Input(
               controller: ctrl,
               hint: 'sk-xxx',
@@ -110,7 +110,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
             actions: [
               TextButton(
                 onPressed: () => context.pop(ctrl.text),
-                child: const Text('Ok'),
+                child: Text(l10n.ok),
               ),
             ],
           );
@@ -127,7 +127,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       valueListenable: model,
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.model_training),
-        title: const Text('Model'),
+        title: Text(l10n.model),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
           val,
@@ -135,16 +135,14 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
         ),
         onTap: () async {
           if (key.value.isEmpty) {
-            context.showRoundDialog(
-              title: 'Please input OpenAI Key first.',
-            );
+            context.showRoundDialog(title: l10n.needOpenAIKey);
             return;
           }
           context.showLoadingDialog();
           final models = await OpenAI.instance.model.list();
           context.pop();
           final modelStr = await context.showRoundDialog<String>(
-            title: 'Select',
+            title: l10n.select,
             child: SizedBox(
               height: 300,
               width: 300,
@@ -177,13 +175,13 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
         title: const Text('Prompt'),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
-          val.isEmpty ? 'Empty' : val,
+          val.isEmpty ? l10n.empty : val,
           style: UIs.text13Grey,
         ),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(
-            title: 'Edit Prompt',
+            title: l10n.edit,
             child: Input(
               controller: ctrl,
               hint: 'You are a efficient expert.',
@@ -192,7 +190,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
             actions: [
               TextButton(
                 onPressed: () => context.pop(ctrl.text),
-                child: const Text('Ok'),
+                child: Text(l10n.ok),
               ),
             ],
           );
@@ -208,7 +206,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       valueListenable: historyCount,
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.history),
-        title: const Text('History Length'),
+        title: Text(l10n.chatHistoryLength),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
           val.toString(),
@@ -217,7 +215,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
         onTap: () async {
           final ctrl = TextEditingController(text: val.toString());
           final result = await context.showRoundDialog<String>(
-            title: 'History Length',
+            title: l10n.chatHistoryLength,
             child: Input(
               controller: ctrl,
               hint: '7',
@@ -226,7 +224,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
             actions: [
               TextButton(
                 onPressed: () => context.pop(ctrl.text),
-                child: const Text('Ok'),
+                child: Text(l10n.ok),
               ),
             ],
           );
@@ -253,7 +251,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
         );
         context.pop(config);
       },
-      child: const Text('Save'),
+      child: Text(l10n.ok),
     );
   }
 }
