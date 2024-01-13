@@ -299,7 +299,10 @@ class _SettingPageState extends State<SettingPage> {
         leading: const Icon(Icons.link),
         title: Text(l10n.apiUrl),
         trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(val, style: UIs.text13Grey),
+        subtitle: Text(
+          val.isEmpty ? 'https://api.openai.com/v1' : val,
+          style: UIs.text13Grey,
+        ),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
           final result = await context.showRoundDialog<String>(
