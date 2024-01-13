@@ -6,7 +6,7 @@ import 'package:flutter_chatgpt/core/util/platform/base.dart';
 
 class Analysis {
   static const _url = 'https://countly.xuty.cc';
-  static const _key = '80372a2a66424b32d0ac8991bfa1ef058bd36b1f';
+  static const _key = '6344c39659b1dcca4f1fc8692399bfc1021f69fd';
 
   static bool enabled = false;
 

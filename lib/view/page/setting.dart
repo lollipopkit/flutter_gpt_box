@@ -242,7 +242,6 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Icons.wrap_text),
       title: Text(l10n.softWrap),
-      subtitle: Text(l10n.needRestart, style: UIs.textGrey),
       trailing: StoreSwitch(prop: _store.softWrap),
     );
   }

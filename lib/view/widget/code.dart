@@ -36,24 +36,28 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     );
 
     if (!element.textContent.contains('\n')) return child;
-    if (Stores.setting.softWrap.fetch()) {
-      return Stack(
-        children: [
-          child,
-          Positioned(
-            right: 0,
-            top: 0,
-            child: IconButton(
-              icon: const Icon(Icons.copy, size: 17),
-              onPressed: () => onCopy?.call(element.textContent),
-            ),
-          ),
-        ],
-      );
-    }
-
-    return child.tap(
-      onLongTap: () => onCopy?.call(element.textContent),
+    return ValueListenableBuilder(
+      valueListenable: Stores.setting.softWrap.listenable(),
+      builder: (_, val, __) {
+        if (val) {
+          return Stack(
+            children: [
+              child,
+              Positioned(
+                right: 0,
+                top: 0,
+                child: IconButton(
+                  icon: const Icon(Icons.copy, size: 17),
+                  onPressed: () => onCopy?.call(element.textContent),
+                ),
+              ),
+            ],
+          );
+        }
+        return child.tap(
+          onLongTap: () => onCopy?.call(element.textContent),
+        );
+      },
     );
   }
 }

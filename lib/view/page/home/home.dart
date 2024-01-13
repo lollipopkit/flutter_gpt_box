@@ -132,37 +132,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody() {
-    return Stack(
-      alignment: Alignment.bottomCenter,
+    return PageView(
+      controller: _pageCtrl,
       children: [
-        PageView(
-          controller: _pageCtrl,
-          children: [
-            _buildChatHistoryPage(),
-            ListenableBuilder(
-              listenable: _bodyRN,
-              builder: (_, __) => _buildChatPage(),
-            ),
-          ],
-          onPageChanged: (value) {
-            _curPageIdx = value;
-            _pageIndicatorRN.rebuild();
-          },
-        ),
-        Positioned(
-          bottom: 13,
-          child: ListenableBuilder(
-            listenable: _pageIndicatorRN,
-            builder: (_, __) => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildIndicator(0),
-                _buildIndicator(1),
-              ],
-            ),
-          ),
+        _buildChatHistoryPage(),
+        ListenableBuilder(
+          listenable: _bodyRN,
+          builder: (_, __) => _buildChatPage(),
         ),
       ],
+      onPageChanged: (value) {
+        _curPageIdx = value;
+        _pageIndicatorRN.rebuild();
+      },
     );
   }
 
@@ -366,6 +348,29 @@ class _HomePageState extends State<HomePage> {
                   tooltip: l10n.delete,
                 ),
                 const Spacer(),
+                ListenableBuilder(
+                  listenable: _pageIndicatorRN,
+                  builder: (_, __) {
+                    if (_curPageIdx == 0) {
+                      return IconButton(
+                        onPressed: () => _pageCtrl.animateToPage(
+                          1,
+                          duration: Durations.medium1,
+                          curve: Curves.fastEaseInToSlowEaseOut,
+                        ),
+                        icon: const Icon(Icons.chat, size: 19),
+                      );
+                    }
+                    return IconButton(
+                      onPressed: () => _pageCtrl.animateToPage(
+                        0,
+                        duration: Durations.medium1,
+                        curve: Curves.fastEaseInToSlowEaseOut,
+                      ),
+                      icon: const Icon(Icons.history, size: 19),
+                    );
+                  },
+                ),
                 if (isMobile)
                   IconButton(
                     onPressed: () {
@@ -400,39 +405,6 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: _media?.padding.bottom),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildIndicator(int idx) {
-    final isActive = idx == _curPageIdx;
-    return AnimatedContainer(
-      key: ValueKey('btm-page-indicator-$idx'),
-      height: isActive ? 20 : 13,
-      duration: const Duration(milliseconds: 150),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(17),
-        color: Colors.white12,
-        boxShadow: _isDark ? _boxShadowDark : _boxShadow,
-      ),
-      child: Padding(
-        padding: isActive
-            ? const EdgeInsets.symmetric(horizontal: 7)
-            : EdgeInsets.zero,
-        child: Center(
-          child: switch ((isActive, idx)) {
-            (true, 0) => Text(l10n.history, style: UIs.text13),
-            (true, 1) => Text(l10n.chat, style: UIs.text13),
-            _ => UIs.width13,
-          },
-        ),
-      ).tap(
-        onTap: () => _pageCtrl.animateToPage(
-          idx,
-          duration: Durations.medium1,
-          curve: Curves.fastEaseInToSlowEaseOut,
         ),
       ),
     );
