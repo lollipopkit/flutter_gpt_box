@@ -10,7 +10,7 @@ class SettingStore extends Store {
 
   late final openaiApiUrl = property(
     'openaiApiUrl',
-    'https://api.openai.com/v1',
+    'https://api.openai.com',
   );
 
   late final openaiApiKey = property('openaiApiKey', '');

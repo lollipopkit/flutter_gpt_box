@@ -299,7 +299,7 @@ class _SettingPageState extends State<SettingPage> {
         title: Text(l10n.apiUrl),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
-          val.isEmpty ? 'https://api.openai.com/v1' : val,
+          val.isEmpty ? l10n.empty : val,
           style: UIs.text13Grey,
         ),
         onTap: () async {
@@ -308,7 +308,7 @@ class _SettingPageState extends State<SettingPage> {
             title: l10n.edit,
             child: Input(
               controller: ctrl,
-              hint: 'https://api.openai.com/v1',
+              hint: 'https://api.openai.com',
               maxLines: 3,
             ),
             actions: [

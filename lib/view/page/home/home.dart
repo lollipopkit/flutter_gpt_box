@@ -598,7 +598,7 @@ class _HomePageState extends State<HomePage> {
 
   void _applyChatConfig(ChatConfig config) {
     OpenAI.apiKey = config.key;
-    OpenAI.baseUrl = config.url;
+    if (config.url.isNotEmpty) OpenAI.baseUrl = config.url;
     _appbarTitleRN.rebuild();
   }
 

@@ -5,9 +5,9 @@
 </h2>
 
 <p align="center">
-一个支持 OpenAI API 的 第三方全平台客户端.
+一个支持 OpenAI API 的 第三方全平台客户端。
 <br>
-<a href="https://gpt.lolli.tech/">尝试网页版</a> 
+<a href="https://gpt.lolli.tech/">尝试网页版</a> （推荐使用客户端以获得更好的性能）
 </p>
 
 <!-- Badges-->
