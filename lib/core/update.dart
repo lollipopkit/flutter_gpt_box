@@ -27,7 +27,8 @@ abstract final class AppUpdateIface {
     }
   }
 
-  static Future<void> doUpdate(BuildContext context, {bool force = false}) async {
+  static Future<void> doUpdate(BuildContext context,
+      {bool force = false}) async {
     if (isWeb) return;
 
     await _rmDownloadApks();

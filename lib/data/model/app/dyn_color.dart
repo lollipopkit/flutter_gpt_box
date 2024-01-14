@@ -10,7 +10,4 @@ final class DynColor {
 
   Color fromBrightness(Brightness brightness) =>
       brightness == Brightness.dark ? dark : light;
-
-  Color resolve(BuildContext context) =>
-      fromBrightness(Theme.of(context).brightness);
 }
