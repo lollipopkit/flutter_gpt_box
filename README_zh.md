@@ -18,12 +18,6 @@
 </p>
 
 
-## 🔖 特点
-- [x] 基础聊天
-- [x] 本地化 ( English, 简体中文 )
-- [x] 全平台支持
-
-
 ## 🏙️ 截屏
 <table>
   <tr>
@@ -40,16 +34,14 @@
 </table>
 
 
-<!-- ## ⬇️ 使用
-平台 | 支持 | 签名
-:-: | :-: | :-:
-[iOS](https://apps.apple.com/app/id1586449703) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id1586449703) | 完整 | 个人可信签名
-[Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) | 未测试 | Flutter 默认签名
+## ⬇️ 使用
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
+- Web 性能不佳，建议使用客户端。
 - 由于中国政策原因，且**目前**无法完成[备案](https://github.com/lollipopkit/flutter_server_box/discussions/180)。请移步 AppStore 其他区下载。
 - 关于安全：
   - 为了防止注入攻击等因素，请勿从不可信来源下载。
-  - 由于 `Linux / Windows` 使用了默认签名，因此建议[自行构建](https://github.com/lollipopkit/flutter_server_box/wiki/%E4%B8%BB%E9%A1%B5#%E8%87%AA%E7%BC%96%E8%AF%91)。 -->
+  - 由于 `Linux / Windows` 使用了默认签名，因此建议[自行构建](https://github.com/lollipopkit/flutter_server_box/wiki/%E4%B8%BB%E9%A1%B5#%E8%87%AA%E7%BC%96%E8%AF%91)。
 
 
 ## 🆘 帮助

@@ -15,7 +15,7 @@ import 'package:r_upgrade/r_upgrade.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 abstract final class AppUpdateIface {
-  static final newestBuild = ValueNotifier(Build.build);
+  static final newestBuild = ValueNotifier<int?>(null);
 
   static Future<bool> _isFileAvailable(String url) async {
     try {

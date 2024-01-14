@@ -63,7 +63,6 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.link),
         title: Text(l10n.apiUrl),
-        trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle:
             Text(val, style: UIs.text13Grey, maxLines: 1, softWrap: false),
         onTap: () async {
@@ -96,7 +95,6 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.vpn_key),
         title: Text(l10n.secretKey),
-        trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(val, style: UIs.text13Grey, maxLines: 1),
         onTap: () async {
           final ctrl = TextEditingController(text: val);
@@ -128,7 +126,6 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.model_training),
         title: Text(l10n.model),
-        trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
           val,
           style: UIs.text13Grey,
@@ -173,7 +170,6 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.text_fields),
         title: const Text('Prompt'),
-        trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
           val.isEmpty ? l10n.empty : val,
           style: UIs.text13Grey,
@@ -207,7 +203,6 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.history),
         title: Text(l10n.chatHistoryLength),
-        trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
           val.toString(),
           style: UIs.text13Grey,

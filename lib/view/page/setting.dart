@@ -257,13 +257,12 @@ class _SettingPageState extends State<SettingPage> {
       subtitle: ValueListenableBuilder(
         valueListenable: AppUpdateIface.newestBuild,
         builder: (_, val, __) {
-          String display;
-          if (val > Build.build) {
-            display = l10n.versionHaveUpdate(val);
-          } else {
-            display = l10n.versionUpdated(Build.build);
-          }
-          return Text(display, style: UIs.textGrey);
+          final text = switch (val) {
+            null => '${l10n.current} v1.0.${Build.build}, ${l10n.clickToCheck}',
+            > Build.build => l10n.versionHaveUpdate(val),
+            _ => l10n.versionUpdated(Build.build),
+          };
+          return Text(text, style: UIs.textGrey);
         },
       ),
       onTap: () => Funcs.throttle(() => AppUpdateIface.doUpdate(context)),

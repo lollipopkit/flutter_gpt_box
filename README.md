@@ -18,13 +18,7 @@ A third-party GPT Client for OpenAI API on all platforms.
 </p>
 
 
-## 🔖 Feature
-- [x] Basic chat
-- [x] Localization ( English, 简体中文 )
-- [x] Platform support: `iOS / Android / macOS / Windows / Linux / Web`
-
-
-## 🏙️ ScreenShots
+## 🏙️ Screenshots
 <table>
   <tr>
     <td>
@@ -40,16 +34,14 @@ A third-party GPT Client for OpenAI API on all platforms.
 </table>
 
 
-<!-- ## ⬇️ Use
-Platform | Support | Sign
---- | --- | ---
-[iOS](https://apps.apple.com/app/id1586449703) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id1586449703) | Full | My own certificate
-[Linux](https://res.lolli.tech/serverbox/latest.AppImage) / [Windows](https://res.lolli.tech/serverbox/latest.win.zip) | Not tested | Flutter default certificate
+## ⬇️ Use
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
+- Web performance is poor, it is recommended to use the app.
 - Due to Chinese government policy and the [BEIAN](https://github.com/lollipopkit/flutter_server_box/discussions/180) issue. Please download it from other regions of AppStore.
 - Security:
   - To prevent injection attacks and etc., please don't download from untrusted sources.
-  - Since `Linux / Windows` is signed with flutter default certificate, it is recommended to [build it yourself](https://github.com/lollipopkit/flutter_server_box/wiki#compile-yourself). -->
+  - Since `Linux / Windows` is signed with flutter default certificate, it is recommended to [build it yourself](https://github.com/lollipopkit/flutter_server_box/wiki#compile-yourself).
 
 
 ## 🆘 Help

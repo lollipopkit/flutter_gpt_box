@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppUpdateIface.doUpdate(context);
+    _init(context);
     return ListenableBuilder(
       listenable: RebuildNode.app,
       builder: (_, __) {
@@ -38,6 +38,12 @@ class MyApp extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _init(BuildContext context) async {
+    if (Stores.setting.autoCheckUpdate.fetch()) {
+      AppUpdateIface.doUpdate(context);
+    }
   }
 }
 

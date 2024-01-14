@@ -24,43 +24,24 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       String lg = element.attributes['class'] as String;
       language = lg.substring(9);
     }
+    
+    final textContent = element.textContent.trim();
+    final isMultiLine = textContent.contains('\n');
     final child = ValueListenableBuilder(
       valueListenable: Stores.setting.fontSize.listenable(),
       builder: (_, val, __) => HighlightView(
-        element.textContent,
+        textContent,
         language: language,
         theme: isDark ? _darkTheme : _lightTheme,
         textStyle: _textStyle.copyWith(fontSize: val),
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+        padding: isMultiLine
+            ? const EdgeInsets.symmetric(vertical: 7, horizontal: 11)
+            : const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
       ),
     );
 
-    if (!element.textContent.contains('\n')) return child;
-    return ValueListenableBuilder(
-      valueListenable: Stores.setting.softWrap.listenable(),
-      builder: (_, val, __) {
-        if (val) {
-          return Stack(
-            children: [
-              Row(
-                children: [child],
-              ),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: IconButton(
-                  icon: const Icon(Icons.copy, size: 17),
-                  onPressed: () => onCopy?.call(element.textContent),
-                ),
-              ),
-            ],
-          );
-        }
-        return child.tap(
-          onLongTap: () => onCopy?.call(element.textContent),
-        );
-      },
-    );
+    if (!isMultiLine) return child;
+    return child.tap(onLongTap: () => onCopy?.call(textContent));
   }
 }
 
