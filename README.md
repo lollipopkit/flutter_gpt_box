@@ -6,6 +6,8 @@ English | [简体中文](README_zh.md)
 
 <p align="center">
 A third-party GPT Client for OpenAI API on all platforms.
+<br>
+<a href="https://gpt.lolli.tech/">Try on web</a> 
 </p>
 
 <!-- Badges-->

@@ -6,6 +6,8 @@
 
 <p align="center">
 一个支持 OpenAI API 的 第三方全平台客户端.
+<br>
+<a href="https://gpt.lolli.tech/">尝试网页版</a> 
 </p>
 
 <!-- Badges-->
@@ -38,7 +40,7 @@
 </table>
 
 
-<!-- ## ⬇️ 下载
+<!-- ## ⬇️ 使用
 平台 | 支持 | 签名
 :-: | :-: | :-:
 [iOS](https://apps.apple.com/app/id1586449703) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id1586449703) | 完整 | 个人可信签名

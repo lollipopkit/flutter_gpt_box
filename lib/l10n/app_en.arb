@@ -23,7 +23,7 @@
   "fontSize": "Font size",
   "fontSizeSettingTip": "Only for code block",
   "genChatTitle": "Generate chat title",
-  "genTitlePrompt": "Use four to five words to return directly to the brief subject of the sentence, no explanation, no punctuation, no intonation, no redundant text, and if there is no subject, please return directly to \"chit chat\".:\n",
+  "genTitlePrompt": "Use four to five words to return directly to the brief subject of the sentence, no explanation, no punctuation, no intonation, no redundant text, and if there is no subject, please return directly to \"chit chat\":\n",
   "history": "History",
   "hoursAgo": "{hours} hours ago",
   "justNow": "Just now",

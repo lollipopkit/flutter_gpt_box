@@ -47,9 +47,9 @@ class _HomePageState extends State<HomePage> {
   final _chatRNMap = <String, RebuildNode>{};
 
   /// For page body chat view
-  final _bodyRN = RebuildNode();
-  final _panelRN = RebuildNode();
-  final _chatTitleRN = RebuildNode();
+  final _chatRN = RebuildNode();
+  final _historyRN = RebuildNode();
+  final _appbarTitleRN = RebuildNode();
   final _sendBtnRN = RebuildNode();
   final _pageIndicatorRN = RebuildNode();
 
@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> {
   CustomAppBar _buildAppBar() {
     return CustomAppBar(
       title: ListenableBuilder(
-        listenable: _chatTitleRN,
+        listenable: _appbarTitleRN,
         builder: (_, __) => Column(
           children: [
             Text(
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         _buildChatHistoryPage(),
         ListenableBuilder(
-          listenable: _bodyRN,
+          listenable: _chatRN,
           builder: (_, __) => _buildChatPage(),
         ),
       ],
@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildChatHistoryPage() {
     return ListenableBuilder(
-      listenable: _panelRN,
+      listenable: _historyRN,
       builder: (_, __) {
         final keys = _allHistories.keys.toList();
         return ListView.builder(
@@ -250,7 +250,7 @@ class _HomePageState extends State<HomePage> {
             if (result != true) return;
             chatItems.remove(chatItem);
             _storeChat(_curChatId);
-            _bodyRN.rebuild();
+            _chatRN.rebuild();
           },
           padding: EdgeInsets.zero,
           icon: const Icon(
@@ -332,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: () {
                     _switchChat(_newChat().id);
-                    _panelRN.rebuild();
+                    _historyRN.rebuild();
                   },
                   icon: const Icon(Icons.add),
                   tooltip: l10n.newChat,
@@ -520,7 +520,7 @@ class _HomePageState extends State<HomePage> {
     );
     final assistReply = ChatHistoryItem.emptyAssist;
     workingChat.items.add(assistReply);
-    _bodyRN.rebuild();
+    _chatRN.rebuild();
     try {
       final sub = chatStream.listen(
         (event) {
@@ -546,7 +546,7 @@ class _HomePageState extends State<HomePage> {
             content: [ChatContent(type: ChatContentType.text, raw: msg)],
             role: ChatRole.system,
           ));
-          _bodyRN.rebuild();
+          _chatRN.rebuild();
           _storeChat(chatId);
           _sendBtnRN.rebuild();
         },
@@ -573,9 +573,9 @@ class _HomePageState extends State<HomePage> {
     _curChatId = id;
     _applyChatConfig(_getChatConfig(_curChatId));
     _mdRNMap.clear();
-    _bodyRN.rebuild();
+    _chatRN.rebuild();
     _sendBtnRN.rebuild();
-    _chatTitleRN.rebuild();
+    _appbarTitleRN.rebuild();
   }
 
   ChatHistory _newChat() {
@@ -599,7 +599,7 @@ class _HomePageState extends State<HomePage> {
   void _applyChatConfig(ChatConfig config) {
     OpenAI.apiKey = config.key;
     OpenAI.baseUrl = config.url;
-    _chatTitleRN.rebuild();
+    _appbarTitleRN.rebuild();
   }
 
   ChatConfig _getChatConfig(String chatId) {
@@ -655,8 +655,8 @@ class _HomePageState extends State<HomePage> {
     if (_curChatId == chatId) {
       _switchChat();
     }
-    _panelRN.rebuild();
-    _chatTitleRN.rebuild();
+    _historyRN.rebuild();
+    _appbarTitleRN.rebuild();
   }
 
   void _onTapRenameChat(String chatId) async {
@@ -685,7 +685,7 @@ class _HomePageState extends State<HomePage> {
     entity.name = title;
     _chatRNMap[chatId]?.rebuild();
     _storeChat(chatId);
-    _chatTitleRN.rebuild();
+    _appbarTitleRN.rebuild();
   }
 
   void _onStopStreamSub(String chatId) {
@@ -726,6 +726,7 @@ class _HomePageState extends State<HomePage> {
     }
     entity.name = title;
     _chatRNMap[chatId]?.rebuild();
+    _appbarTitleRN.rebuild();
   }
 
   void _onCopy(String content) {
