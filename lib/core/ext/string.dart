@@ -29,4 +29,7 @@ extension StringX on String {
     }
     return this;
   }
+
+  /// Check if a url is a file url (ends with a file extension)
+  bool get isFileUrl => split('/').lastOrNull?.contains('.') ?? false;
 }

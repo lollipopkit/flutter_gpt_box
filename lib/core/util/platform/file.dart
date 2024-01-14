@@ -28,4 +28,12 @@ abstract final class FileUtil {
       Url.revokeObjectUrl(url);
     }
   }
+
+  /// Join two paths with platform specific separator
+  static String joinPath(String path1, String path2) {
+    if (isWindows) {
+      return path1 + (path1.endsWith('\\') ? '' : '\\') + path2;
+    }
+    return path1 + (path1.endsWith('/') ? '' : '/') + path2;
+  }
 }

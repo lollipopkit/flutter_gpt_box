@@ -7,6 +7,9 @@ import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/locale.dart';
 import 'package:flutter_chatgpt/core/ext/string.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
+import 'package:flutter_chatgpt/core/update.dart';
+import 'package:flutter_chatgpt/core/util/func.dart';
+import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
@@ -67,6 +70,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildLocale(),
       _buildColorSeed(),
       _buildThemeMode(),
+      _buildCheckUpdate(),
       _buildFontSize(),
       _buildScrollBottom(),
       _buildAutoGenTitle(),
@@ -243,6 +247,27 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Icons.wrap_text),
       title: Text(l10n.softWrap),
       trailing: StoreSwitch(prop: _store.softWrap),
+    );
+  }
+
+  Widget _buildCheckUpdate() {
+    return ListTile(
+      leading: const Icon(Icons.update),
+      title: Text(l10n.autoCheckUpdate),
+      subtitle: ValueListenableBuilder(
+        valueListenable: AppUpdateIface.newestBuild,
+        builder: (_, val, __) {
+          String display;
+          if (val > Build.build) {
+            display = l10n.versionHaveUpdate(val);
+          } else {
+            display = l10n.versionUpdated(Build.build);
+          }
+          return Text(display, style: UIs.textGrey);
+        },
+      ),
+      onTap: () => Funcs.throttle(() => AppUpdateIface.doUpdate(context)),
+      trailing: StoreSwitch(prop: _store.autoCheckUpdate),
     );
   }
 

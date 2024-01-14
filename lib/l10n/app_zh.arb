@@ -3,6 +3,7 @@
   "apiUrl": "Api 地址",
   "assistant": "助手",
   "attention": "注意",
+  "autoCheckUpdate": "自动检查更新",
   "autoScrollBottom": "自动滚动到底部",
   "backup": "备份",
   "backupTip": "请保证备份文件私密且安全！",
@@ -52,6 +53,9 @@
   "themeColorSeed": "主题颜色种子",
   "themeMode": "主题模式",
   "untitled": "未命名",
+  "update": "更新",
   "user": "用户",
+  "versionHaveUpdate": "找到新版本：v1.0.{build}, 点击更新",
+  "versionUpdated": "当前：v1.0.{build}, 已是最新",
   "weeksAgo": "{weeks} 周前"
 }

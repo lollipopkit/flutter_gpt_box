@@ -3,6 +3,7 @@
   "apiUrl": "Api url",
   "assistant": "Assistant",
   "attention": "Attention",
+  "autoCheckUpdate": "Auto check update",
   "autoScrollBottom": "Auto scroll bottom",
   "backup": "Backup",
   "backupTip": "Please keep backup file private and safe!",
@@ -52,6 +53,9 @@
   "themeColorSeed": "Theme color seed",
   "themeMode": "Theme mode",
   "untitled": "Untitled",
+  "update": "Update",
   "user": "User",
+  "versionHaveUpdate": "Found: v1.0.{build}, click to update",
+  "versionUpdated": "Current: v1.0.{build}, is up to date",
   "weeksAgo": "{weeks} weeks ago"
 }

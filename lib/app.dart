@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/ext/locale.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
-import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/page/home/home.dart';
@@ -12,7 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = ListenableBuilder(
+    AppUpdateIface.doUpdate(context);
+    return ListenableBuilder(
       listenable: RebuildNode.app,
       builder: (_, __) {
         UIs.colorSeed = Color(Stores.setting.themeColorSeed.fetch());
@@ -36,11 +37,6 @@ class MyApp extends StatelessWidget {
           home: const HomePage(),
         );
       },
-    );
-    if (!isWeb) return app;
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 500),
-      child: app,
     );
   }
 }

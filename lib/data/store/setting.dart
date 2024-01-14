@@ -31,4 +31,6 @@ class SettingStore extends Store {
   late final locale = property('locale', '');
 
   late final softWrap = property('softWrap', isMobile);
+
+  late final autoCheckUpdate = property('autoCheckUpdate', true);
 }
