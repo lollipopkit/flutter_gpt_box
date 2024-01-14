@@ -42,7 +42,9 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         if (val) {
           return Stack(
             children: [
-              child,
+              Row(
+                children: [child],
+              ),
               Positioned(
                 right: 0,
                 top: 0,

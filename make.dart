@@ -22,6 +22,7 @@ const buildFuncs = {
   'mac': flutterBuildMacOS,
   'linux': flutterBuildLinux,
   'win': flutterBuildWin,
+  'web': flutterBuildWeb,
 };
 
 int? build;
@@ -209,6 +210,11 @@ Future<void> flutterBuildWin() async {
   //await scpWindows2CDN();
 }
 
+Future<void> flutterBuildWeb() async {
+  await flutterBuild('web');
+  await scpWeb2CDN();
+}
+
 Future<void> scpApk2CDN() async {
   final result = await Process.run(
     'scp',
@@ -251,6 +257,23 @@ Future<void> scpWindows2CDN() async {
     exit(1);
   }
   print('Upload Windows $build.zip finished.');
+}
+
+Future<void> scpWeb2CDN() async {
+  final result = await Process.run(
+    'scp',
+    [
+      '-r',
+      './build/web',
+      'hk:/var/www/flutter_$appNameLower/',
+    ],
+    runInShell: true,
+  );
+  if (result.exitCode != 0) {
+    print(result.stderr);
+    exit(1);
+  }
+  print('Upload Web $build finished.');
 }
 
 Future<void> changeAppleVersion() async {

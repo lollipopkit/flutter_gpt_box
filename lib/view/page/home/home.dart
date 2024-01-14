@@ -239,7 +239,7 @@ class _HomePageState extends State<HomePage> {
           onPressed: () async {
             final result = await context.showRoundDialog<bool>(
               title: l10n.attention,
-              child: Text(l10n.delFmt(l10n.chat, chatItem.id)),
+              child: Text(l10n.delFmt(chatItem.toMarkdown, chatItem.id)),
               actions: [
                 TextButton(
                   onPressed: () => context.pop(true),
@@ -636,7 +636,7 @@ class _HomePageState extends State<HomePage> {
     final name = entity.name ?? 'Untitled';
     context.showRoundDialog(
       title: l10n.attention,
-      child: Text(l10n.delFmt(l10n.chat, name)),
+      child: Text(l10n.delFmt(name, l10n.chat)),
       actions: [
         TextButton(
           onPressed: () {

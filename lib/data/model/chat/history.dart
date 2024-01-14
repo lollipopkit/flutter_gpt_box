@@ -87,13 +87,13 @@ final class ChatHistoryItem {
   }
 
   String get toMarkdown {
-    return content.map((e) => 
-      switch (e.type) {
-        ChatContentType.text => e.raw,
-        ChatContentType.image => '![](${e.raw})',
-        final type => throw UnimplementedError('type: $type'),
-      }
-    ).join('\n');
+    return content
+        .map((e) => switch (e.type) {
+              ChatContentType.text => e.raw,
+              ChatContentType.image => '![](${e.raw})',
+              final type => throw UnimplementedError('type: $type'),
+            })
+        .join('\n');
   }
 
   static ChatHistoryItem get emptyAssist => ChatHistoryItem.noid(
