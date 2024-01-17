@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/analysis.dart';
 import 'package:flutter_chatgpt/view/page/about.dart';
-import 'package:flutter_chatgpt/view/page/backup.dart';
+import 'package:flutter_chatgpt/view/page/backup/view.dart';
 import 'package:flutter_chatgpt/view/page/debug.dart';
 import 'package:flutter_chatgpt/view/page/setting.dart';
 

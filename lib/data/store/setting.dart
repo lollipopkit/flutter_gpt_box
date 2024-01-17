@@ -32,4 +32,16 @@ class SettingStore extends Store {
   late final softWrap = property('softWrap', true);
 
   late final autoCheckUpdate = property('autoCheckUpdate', true);
+
+  /// Webdav sync
+  late final webdavSync = property('webdavSync', false);
+  late final webdavUrl = property('webdavUrl', '');
+  late final webdavUser = property('webdavUser', '');
+  late final webdavPwd = property('webdavPwd', '');
+  
+  /// Only valid on iOS and macOS
+  late final icloudSync = property(
+    'icloudSync',
+    false,
+  );
 }
