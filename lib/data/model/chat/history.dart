@@ -53,6 +53,110 @@ final class ChatHistory {
           : ChatConfig.fromJson(json['config'] as Map<String, dynamic>),
     );
   }
+
+  /// session example:
+  /// ```json
+  /// {
+  ///    "id": "lwr6ZBr5KMhQrprwijlQD",
+  ///    "topic": "执行脚本路径问题",
+  ///    "memoryPrompt": "",
+  ///    "messages": [
+  ///        {
+  ///            "id": "e2XeOfnUYaheo0trvRF_U",
+  ///            "date": "2023/11/6 15:57:22",
+  ///            "role": "user",
+  ///            "content": "使用golang的exec，执行与golang程序处于不同目录的脚本，显示找不到文件，怎么解决"
+  ///        },
+  ///        {
+  ///            "id": "tgk0u_hORmQO6-vsBtXic",
+  ///            "date": "2023/11/6 15:57:22",
+  ///            "role": "assistant",
+  ///            "content": "在Go语言中，使用`os/exec`包执行脚本或程序时，需要提供完整的文件路径。如果你的脚本或程序位于与Go程序不同的目录下，你需要使用脚本或程序的绝对路径。\n\n下面是一个例子：\n\n```go\npackage main\n\nimport (\n\t\"log\"\n\t\"os/exec\"\n)\n\nfunc main() {\n\tcmd := exec.Command(\"/完整路径/到你的脚本\", \"可能的\", \"参数\")\n\terr := cmd.Run()\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n}\n```\n\n在上述代码中，替换`\"/完整路径/到你的脚本\"`为你的脚本或程序的完整路径。例如，如果你的脚本在`/home/user/scripts/myscript.sh`，你应该使用该路径。\n\n如果你不确定脚本或程序的完整路径，你可以在终端中使用`pwd`命令（在脚本或程序的目录中）来获取当前目录的路径，然后将它与脚本或程序的文件名拼接起来。\n\n如果你的脚本或程序在Go程序的子目录中，你也可以使用相对路径。例如，如果你的Go程序在`/home/user/mygoapp`，你的脚本在`/home/user/mygoapp/scripts/myscript.sh`，你可以使用`scripts/myscript.sh`作为路径。\n\n注意，你的脚本或程序需要有执行权限。你可以使用`chmod +x /完整路径/到你的脚本`来添加执行权限。",
+  ///            "streaming": false,
+  ///            "model": "gpt-4-0613"
+  ///        }
+  ///    ],
+  ///    "stat": {
+  ///        "tokenCount": 0,
+  ///        "wordCount": 0,
+  ///        "charCount": 631
+  ///    },
+  ///    "lastUpdate": 1699257480906,
+  ///    "lastSummarizeIndex": 0,
+  ///    "mask": {
+  ///        "id": "Ohw0r23BAAO1GaXcRUJEo",
+  ///        "avatar": "gpt-bot",
+  ///        "name": "新的聊天",
+  ///        "context": [],
+  ///        "syncGlobalConfig": true,
+  ///        "modelConfig": {
+  ///            "model": "gpt-4-0613",
+  ///            "temperature": 0.5,
+  ///            "top_p": 1,
+  ///            "max_tokens": 2000,
+  ///            "presence_penalty": 0,
+  ///            "frequency_penalty": 0,
+  ///            "sendMemory": true,
+  ///            "historyMessageCount": 4,
+  ///            "compressMessageLengthThreshold": 1000,
+  ///            "enableInjectSystemPrompts": true,
+  ///            "template": "{{input}}"
+  ///        },
+  ///        "lang": "cn",
+  ///        "builtin": false,
+  ///        "createdAt": 1699257396822
+  ///    }
+  /// }
+  static ChatHistory fromGPTNext(Map<String, dynamic> session) {
+    final items = <ChatHistoryItem>[];
+    final {
+      'messages': List messages,
+      'topic': String topic,
+      // There is no need to restore prompt for old chat,
+      // because prompt is only used for new chat
+      //'memoryPrompt': String prompt,
+
+      // Temporarily ignore these configs
+      // 'mask': {
+      //   'modelConfig': {
+      //     'model': String model,
+      //     'temperature': double temperature,
+      //     'historyMessageCount': int historyMessageCount,
+      //   }
+      // },
+    } = session;
+
+    for (final message in messages) {
+      final {
+        'role': String role,
+        'content': String content,
+        'date': String date,
+      } = message;
+      final roleEnum = switch (role) {
+        'user' => ChatRole.user,
+        'assistant' => ChatRole.assist,
+        'system' => ChatRole.system,
+        final role => throw UnimplementedError('role: $role'),
+      };
+      final contentEnum = ChatContent(
+        type: ChatContentType.text,
+        raw: content,
+      );
+      final dateEnum = DateTime.parse(date);
+      items.add(ChatHistoryItem(
+        id: uuid.v4(),
+        role: roleEnum,
+        content: [contentEnum],
+        createdAt: dateEnum,
+      ));
+    }
+
+    return ChatHistory(
+      id: uuid.v4(),
+      name: topic,
+      items: items,
+    );
+  }
 }
 
 @HiveType(typeId: 0)

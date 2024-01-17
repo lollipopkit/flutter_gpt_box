@@ -1,0 +1,21 @@
+## TODOs
+- [x] Basic chat (md render, history list, stream handle...)
+- [x] Chat profile (api url, model & etc. for each chat)
+- [x] User experience 
+  - [x] Theme
+  - [x] Genrate title for chat
+  - [x] Chat soft wrap
+  - [x] Auto scroll to bottom when GPT is genenrating text 
+  - [ ] Web UI max width
+- [x] Backup
+  - [x] iCloud
+  - [x] File
+  - [x] Clipboard
+  - [x] WebDAV
+- [x] Restore
+  - [x] from ChatGPT Next Web backup file
+  - [x] iCloud
+  - [x] File
+  - [x] Clipboard
+  - [x] WebDAV
+- [ ] Chat search

@@ -3,12 +3,15 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
+import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/util/platform/file.dart';
 import 'package:flutter_chatgpt/data/model/app/backup.dart';
+import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
@@ -23,9 +26,11 @@ import '../../../data/store/all.dart';
 import '../../widget/input.dart';
 import '../../widget/switch.dart';
 
+part 'func/clipboard.dart';
 part 'func/file.dart';
 part 'func/webdav.dart';
 part 'func/icloud.dart';
+part 'func/gpt_next.dart';
 
 final _icloudLoading = ValueNotifier(false);
 final _webdavLoading = ValueNotifier(false);
@@ -48,10 +53,24 @@ final class BackupPage extends StatelessWidget {
       padding: const EdgeInsets.all(17),
       children: [
         _buildTip(),
+        _buildTitle('This App'),
         if (isMacOS || isIOS) _buildIcloud(context),
         if (!isWeb) _buildWebdav(context),
+        _buildClipboard(context),
         _buildFile(context),
+        _buildTitle('Third Party'),
+        _buildGPTNext(context),
       ],
+    );
+  }
+
+  Widget _buildTitle(String title) {
+    return Align(
+      alignment: Alignment.center,
+      child: Text(
+        title,
+        style: UIs.textGrey,
+      ),
     );
   }
 

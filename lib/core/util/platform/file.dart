@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/html.dart';
+
+import '../../../data/res/l10n.dart';
+import 'base.dart';
 
 abstract final class FileUtil {
   /// Due to web platform limitation, return Uint8List instead of File.
@@ -14,18 +16,26 @@ abstract final class FileUtil {
   }
 
   static Future<void> save(String name, String data) async {
-    if (isWindows || isLinux) {
-      await Share.share(data, subject: name);
-    } else if (!isWeb) {
-      await Share.shareXFiles([XFile.fromData(utf8.encode(data), name: name)]);
-    } else {
-      final textBytes = utf8.encode(data);
-      final blob = Blob([textBytes]);
-      final url = Url.createObjectUrlFromBlob(blob);
-      AnchorElement(href: url)
-        ..setAttribute("download", name)
-        ..click();
-      Url.revokeObjectUrl(url);
+    switch (Pfs.type) {
+      case Pfs.windows || Pfs.linux:
+        await Share.share(data, subject: name);
+        break;
+      case Pfs.web:
+        final textBytes = utf8.encode(data);
+        final blob = Blob([textBytes]);
+        final url = Url.createObjectUrlFromBlob(blob);
+        AnchorElement(href: url)
+          ..setAttribute("download", name)
+          ..click();
+        Url.revokeObjectUrl(url);
+        break;
+      default:
+        await Share.shareXFiles(
+          [XFile.fromData(utf8.encode(data), name: name)],
+          text: name,
+          subject: 'GPT Box - ${l10n.backup}',
+        );
+        break;
     }
   }
 

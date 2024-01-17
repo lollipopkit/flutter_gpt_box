@@ -5,7 +5,6 @@ Widget _buildFile(BuildContext context) {
     child: ExpandTile(
       leading: const Icon(Icons.file_open),
       title: Text(l10n.file),
-      initiallyExpanded: true,
       children: [
         ListTile(
           title: Text(l10n.backup),
