@@ -24,7 +24,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       String lg = element.attributes['class'] as String;
       language = lg.substring(9);
     }
-    
+
     final textContent = element.textContent.trim();
     final isMultiLine = textContent.contains('\n');
     final child = ValueListenableBuilder(

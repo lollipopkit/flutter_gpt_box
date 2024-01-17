@@ -1,11 +1,11 @@
 {
-    "name": "flutter_chatgpt",
-    "short_name": "flutter_chatgpt",
+    "name": "GPT Box",
+    "short_name": "GPT Box",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A third-party GPT Client for OpenAI API on all platforms.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

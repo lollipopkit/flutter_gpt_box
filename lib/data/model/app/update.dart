@@ -1,30 +1,3 @@
-/*
-{
-    "changelog": {
-        "mac": "xxx",
-        "ios": "xxx",
-        "android": ""
-    },
-    "build": {
-        "min": {
-            "mac": 1,
-            "ios": 1,
-            "android": 1
-        },
-        "last": {
-            "mac": 1,
-            "ios": 1,
-            "android": 1
-        }
-    },
-    "url": {
-        "mac": "",
-        "ios": "",
-        "android": ""
-    }
-}
-*/
-
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -45,11 +18,6 @@ class AppUpdate {
     final resp = await Dio().get('https://res.lolli.tech/gpt/update.json');
     return AppUpdate.fromJson(resp.data);
   }
-
-  factory AppUpdate.fromRawJson(String str) =>
-      AppUpdate.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
 
   factory AppUpdate.fromJson(Map<String, dynamic> json) => AppUpdate(
         changelog: AppUpdatePlatformSpecific.fromJson(json["changelog"]),
@@ -96,13 +64,15 @@ class AppUpdatePlatformSpecific<T> {
     required this.android,
     required this.windows,
     required this.linux,
+    required this.web,
   });
 
-  final T mac;
-  final T ios;
-  final T android;
-  final T windows;
-  final T linux;
+  final T? mac;
+  final T? ios;
+  final T? android;
+  final T? windows;
+  final T? linux;
+  final T? web;
 
   factory AppUpdatePlatformSpecific.fromRawJson(String str) =>
       AppUpdatePlatformSpecific.fromJson(json.decode(str));
@@ -116,6 +86,7 @@ class AppUpdatePlatformSpecific<T> {
         android: json["android"],
         windows: json["windows"],
         linux: json["linux"],
+        web: json["web"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -124,24 +95,18 @@ class AppUpdatePlatformSpecific<T> {
         "android": android,
         "windows": windows,
         "linux": linux,
+        "web": web,
       };
 
   T? get current {
-    switch (OS.type) {
-      case OS.macos:
-        return mac;
-      case OS.ios:
-        return ios;
-      case OS.android:
-        return android;
-      case OS.windows:
-        return windows;
-      case OS.linux:
-        return linux;
-
-      /// Not implemented yet.
-      case OS.web || OS.fuchsia || OS.unknown:
-        return null;
-    }
+    return switch (Pfs.type) {
+      Pfs.macos => mac,
+      Pfs.ios => ios,
+      Pfs.android => android,
+      Pfs.windows => windows,
+      Pfs.linux => linux,
+      Pfs.web => web,
+      _ => null,
+    };
   }
 }

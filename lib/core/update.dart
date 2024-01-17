@@ -27,17 +27,17 @@ abstract final class AppUpdateIface {
     }
   }
 
-  static Future<void> doUpdate(BuildContext context,
-      {bool force = false}) async {
-    if (isWeb) return;
-
+  static Future<void> doUpdate(
+    BuildContext context, {
+    bool force = false,
+  }) async {
     await _rmDownloadApks();
 
     final update = await AppUpdate.fromUrl();
 
     final newest = update.build.last.current;
     if (newest == null) {
-      Loggers.app.warning('Update not available on ${OS.type}');
+      Loggers.app.warning('Update not available on ${Pfs.type}');
       return;
     }
 
@@ -51,7 +51,7 @@ abstract final class AppUpdateIface {
 
     final url = update.url.current!;
 
-    if (url.isFileUrl && !await _isFileAvailable(url)) {
+    if (Pfs.needCheckFile && url.isFileUrl && !await _isFileAvailable(url)) {
       Loggers.app.warning('Update file not available');
       return;
     }
@@ -87,13 +87,26 @@ abstract final class AppUpdateIface {
       return;
     }
 
-    if (isAndroid) {
-      final fileName = url.split('/').last;
-      await RUpgrade.upgrade(url, fileName: fileName);
-    } else if (isIOS) {
-      await RUpgrade.upgradeFromAppStore('1586449703');
-    } else {
-      await launchUrlString(url);
+    switch (Pfs.type) {
+      case Pfs.android:
+        final fileName = url.split('/').last;
+        await RUpgrade.upgrade(url, fileName: fileName);
+        break;
+      case Pfs.ios || Pfs.macos:
+        await RUpgrade.upgradeFromAppStore('6476033062');
+        break;
+      case Pfs.windows || Pfs.linux:
+        await launchUrlString(url);
+        break;
+      case Pfs.web:
+        context.showRoundDialog(
+          title: l10n.attention,
+          child: const Text('Please notify the administrator to update.'),
+        );
+        break;
+      default:
+        Loggers.app.warning('Update not supported on ${Pfs.type}');
+        break;
     }
   }
 

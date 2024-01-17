@@ -110,17 +110,10 @@ class _HomePageState extends State<HomePage> {
     return CustomAppBar(
       title: ListenableBuilder(
         listenable: _appbarTitleRN,
-        builder: (_, __) => Column(
-          children: [
-            Text(
-              _curChat?.name ?? l10n.untitled,
-              style: UIs.text15,
-            ),
-            Text(_getChatConfig(_curChatId).model, style: UIs.text13Grey),
-          ],
+        builder: (_, __) => Text(
+          _curChat?.name ?? l10n.untitled,
         ),
       ),
-      centerTitle: true,
       actions: [
         IconButton(
           onPressed: () => Routes.debug.go(context),
@@ -599,7 +592,6 @@ class _HomePageState extends State<HomePage> {
   void _applyChatConfig(ChatConfig config) {
     OpenAI.apiKey = config.key;
     if (config.url.isNotEmpty) OpenAI.baseUrl = config.url;
-    _appbarTitleRN.rebuild();
   }
 
   ChatConfig _getChatConfig(String chatId) {
@@ -656,7 +648,6 @@ class _HomePageState extends State<HomePage> {
       _switchChat();
     }
     _historyRN.rebuild();
-    _appbarTitleRN.rebuild();
   }
 
   void _onTapRenameChat(String chatId) async {
