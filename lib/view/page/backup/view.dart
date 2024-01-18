@@ -53,23 +53,26 @@ final class BackupPage extends StatelessWidget {
       padding: const EdgeInsets.all(17),
       children: [
         _buildTip(),
-        _buildTitle('This App'),
+        _buildTitle('App'),
         if (isMacOS || isIOS) _buildIcloud(context),
         if (!isWeb) _buildWebdav(context),
         _buildClipboard(context),
         _buildFile(context),
-        _buildTitle('Third Party'),
+        _buildTitle(l10n.thirdParty),
         _buildGPTNext(context),
       ],
     );
   }
 
   Widget _buildTitle(String title) {
-    return Align(
-      alignment: Alignment.center,
-      child: Text(
-        title,
-        style: UIs.textGrey,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 17),
+      child: Align(
+        alignment: Alignment.center,
+        child: Text(
+          title,
+          style: UIs.textGrey,
+        ),
       ),
     );
   }

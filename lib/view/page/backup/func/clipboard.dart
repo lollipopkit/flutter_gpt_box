@@ -4,7 +4,6 @@ Widget _buildClipboard(BuildContext context) {
   return ExpandTile(
     leading: const Icon(Icons.content_copy),
     title: Text(l10n.clipboard),
-    initiallyExpanded: true,
     children: [
       ListTile(
         title: Text(l10n.backup),

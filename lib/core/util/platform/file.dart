@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:universal_html/html.dart';
 
-import '../../../data/res/l10n.dart';
 import 'base.dart';
 
 abstract final class FileUtil {
@@ -31,9 +30,7 @@ abstract final class FileUtil {
         break;
       default:
         await Share.shareXFiles(
-          [XFile.fromData(utf8.encode(data), name: name)],
-          text: name,
-          subject: 'GPT Box - ${l10n.backup}',
+          [XFile.fromData(utf8.encode(data), name: name)]
         );
         break;
     }
