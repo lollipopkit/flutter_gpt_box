@@ -107,56 +107,6 @@ final class ChatHistory {
   ///        "createdAt": 1699257396822
   ///    }
   /// }
-  static ChatHistory fromGPTNext(Map<String, dynamic> session) {
-    final items = <ChatHistoryItem>[];
-    final {
-      'messages': List messages,
-      'topic': String topic,
-      // There is no need to restore prompt for old chat,
-      // because prompt is only used for new chat
-      //'memoryPrompt': String prompt,
-
-      // Temporarily ignore these configs
-      // 'mask': {
-      //   'modelConfig': {
-      //     'model': String model,
-      //     'temperature': double temperature,
-      //     'historyMessageCount': int historyMessageCount,
-      //   }
-      // },
-    } = session;
-
-    for (final message in messages) {
-      final {
-        'role': String role,
-        'content': String content,
-        'date': String date,
-      } = message;
-      final roleEnum = switch (role) {
-        'user' => ChatRole.user,
-        'assistant' => ChatRole.assist,
-        'system' => ChatRole.system,
-        final role => throw UnimplementedError('role: $role'),
-      };
-      final contentEnum = ChatContent(
-        type: ChatContentType.text,
-        raw: content,
-      );
-      final dateEnum = DateTime.parse(date);
-      items.add(ChatHistoryItem(
-        id: uuid.v4(),
-        role: roleEnum,
-        content: [contentEnum],
-        createdAt: dateEnum,
-      ));
-    }
-
-    return ChatHistory(
-      id: uuid.v4(),
-      name: topic,
-      items: items,
-    );
-  }
 }
 
 @HiveType(typeId: 0)

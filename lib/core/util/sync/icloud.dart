@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:computer/computer.dart';
 import 'package:icloud_storage/icloud_storage.dart';
 import 'package:logging/logging.dart';
 
@@ -204,7 +204,10 @@ abstract final class ICloud {
       return;
     }
     final dlFile = await File(await Paths.bak).readAsString();
-    final dlBak = await compute(Backup.fromJsonString, dlFile);
+    final dlBak = await Computer.shared.compute(
+      Backup.fromJsonString,
+      param: dlFile,
+    );
     final restore = await dlBak.restore();
     switch (restore) {
       case true:

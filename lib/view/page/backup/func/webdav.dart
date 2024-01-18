@@ -5,8 +5,6 @@ Widget _buildWebdav(BuildContext context) {
     child: ExpandTile(
       leading: const Icon(Icons.storage),
       title: const Text('WebDAV'),
-      initiallyExpanded:
-          !(isIOS || isMacOS) && Stores.setting.webdavSync.fetch(),
       children: [
         ListTile(
           title: Text(l10n.settings),
@@ -84,7 +82,10 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     return;
   }
   final dlFile = await File(await Paths.bak).readAsString();
-  final dlBak = await compute(Backup.fromJsonString, dlFile);
+  final dlBak = await Computer.shared.compute(
+    Backup.fromJsonString,
+    param: dlFile,
+  );
   await dlBak.restore(force: true);
   _webdavLoading.value = false;
 }

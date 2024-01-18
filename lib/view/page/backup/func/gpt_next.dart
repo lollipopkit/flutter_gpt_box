@@ -9,19 +9,31 @@ Widget _buildGPTNext(BuildContext context) {
 }
 
 void _onTapRestoreGPTNext(BuildContext context) async {
-  final data = await FileUtil.pick();
-  if (data == null) return;
+  final picked = await FileUtil.pickString();
+  if (picked == null) return;
 
-  final text = utf8.decode(data);
-  final obj = json.decode(text) as Map<String, dynamic>;
   try {
-    final {
-      'chat-next-web-store': {
-        'sessions': List<Map<String, dynamic>> sessions,
-      }
-    } = obj;
-    final chats = sessions.map((e) => ChatHistory.fromGPTNext(e)).toList();
-    await context.showRoundDialog(
+    final chats = await Computer.shared.compute(
+      (picked) async {
+        final text = await File(picked).readAsString();
+        final obj = json.decode(text) as Map<String, dynamic>;
+        final {
+          'chat-next-web-store': {
+            'sessions': List sessions,
+          }
+        } = obj;
+        final chats = <ChatHistory>[];
+
+        /// Use for-loop for exception handling
+        /// Instead of `sessions.map((e) => ChatHistory.fromGPTNext(e)).toList()`
+        for (final item in sessions) {
+          chats.add(GPTNextConvertor.toChatHistory(item));
+        }
+        return chats;
+      },
+      param: picked,
+    );
+    context.showRoundDialog(
       title: l10n.attention,
       child: Text(l10n.sureRestoreFmt('${chats.length} ${l10n.chat}')),
       actions: [
@@ -31,6 +43,7 @@ void _onTapRestoreGPTNext(BuildContext context) async {
               Stores.history.put(chat);
             }
             context.pop();
+            RebuildNode.app.rebuild();
           },
           child: Text(l10n.restore),
         ),
@@ -39,7 +52,5 @@ void _onTapRestoreGPTNext(BuildContext context) async {
   } catch (e, trace) {
     Loggers.app.warning('Import ChatGPT Next Web backup failed', e, trace);
     context.showSnackBar(e.toString());
-  } finally {
-    context.pop();
   }
 }

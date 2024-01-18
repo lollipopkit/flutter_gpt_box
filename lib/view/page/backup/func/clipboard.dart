@@ -28,7 +28,10 @@ void _onTapClipboardRestore(BuildContext context) async {
   }
   try {
     context.showLoadingDialog();
-    final backup = await compute(Backup.fromJsonString, text.trim());
+    final backup = await Computer.shared.compute(
+      Backup.fromJsonString,
+      param: text.trim(),
+    );
     if (backupFormatVersion != backup.version) {
       context.showSnackBar('Backup version not match');
       return;

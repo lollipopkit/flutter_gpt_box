@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
+import 'package:computer/computer.dart';
 import 'package:logging/logging.dart';
 import 'package:webdav_client/webdav_client.dart';
 
@@ -102,7 +102,7 @@ abstract final class Webdav {
       await backup();
       return;
     }
-    final dlFile = await compute(
+    final dlFile = await Computer.shared.compute(
       (message) async {
         try {
           final file = await File(message).readAsString();
@@ -112,7 +112,7 @@ abstract final class Webdav {
           return null;
         }
       },
-      await Paths.bak,
+      param: await Paths.bak,
     );
     if (dlFile == null) {
       await backup();

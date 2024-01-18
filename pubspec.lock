@@ -177,6 +177,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  computer:
+    dependency: "direct main"
+    description:
+      path: "../dart_computer"
+      relative: true
+    source: path
+    version: "3.2.1"
   convert:
     dependency: transitive
     description:

@@ -25,13 +25,15 @@ Widget _buildFile(BuildContext context) {
 }
 
 Future<void> _onTapFileRestore(BuildContext context) async {
-  final data = await FileUtil.pick();
-  if (data == null) return;
+  final text = await FileUtil.pickString();
+  if (text == null) return;
 
-  final text = utf8.decode(data);
   try {
     context.showLoadingDialog();
-    final backup = await compute(Backup.fromJsonString, text.trim());
+    final backup = await Computer.shared.compute(
+      Backup.fromJsonString,
+      param: text.trim(),
+    );
     if (backupFormatVersion != backup.version) {
       context.showSnackBar('Backup version not match');
       return;
