@@ -19,7 +19,7 @@ class HistoryStore extends Store {
       (a, b) =>
           b.value.items.lastOrNull?.createdAt
               .compareTo(a.value.items.lastOrNull?.createdAt ?? now) ??
-          0,
+          1,
     );
     return Map.fromEntries(sorted);
   }

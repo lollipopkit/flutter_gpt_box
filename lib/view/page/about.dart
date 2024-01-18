@@ -38,7 +38,8 @@ class AboutPage extends StatelessWidget {
           ListTile(
             title: const Text('Server Box'),
             subtitle: const Text('View status & control your server'),
-            onTap: () => launchUrlString('https://gptbox.com'),
+            onTap: () => launchUrlString(
+                'https://github.com/lollipopkit/flutter_server_box'),
             trailing: const Icon(Icons.chevron_right),
           ),
         ],
