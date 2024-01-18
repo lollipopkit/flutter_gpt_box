@@ -11,11 +11,13 @@ import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/route/page.dart';
+import 'package:flutter_chatgpt/core/util/markdown.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
+import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
@@ -321,6 +323,7 @@ class _HomePageState extends State<HomePage> {
           builders: {
             'code': CodeElementBuilder(onCopy: _onCopy),
           },
+          onTapLink: MarkdownUtils.onLinkTap,
         );
       },
     );
@@ -637,8 +640,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _applyChatConfig(ChatConfig config) {
-    OpenAI.apiKey = config.key;
-    if (config.url.isNotEmpty) OpenAI.baseUrl = config.url;
+    OpenAICfg.key = config.key;
+    OpenAICfg.url = config.url;
   }
 
   ChatConfig _getChatConfig(String chatId) {

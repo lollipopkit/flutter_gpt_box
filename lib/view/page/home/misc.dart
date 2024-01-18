@@ -83,7 +83,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
           );
           if (result == null) return;
           url.value = result;
-          OpenAI.baseUrl = result;
+          OpenAICfg.url = result;
         },
       ),
     );
@@ -114,7 +114,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
           );
           if (result == null) return;
           key.value = result;
-          OpenAI.apiKey = result;
+          OpenAICfg.key = result;
         },
       ),
     );

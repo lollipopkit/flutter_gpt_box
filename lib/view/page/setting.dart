@@ -11,6 +11,7 @@ import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
+import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
@@ -309,7 +310,7 @@ class _SettingPageState extends State<SettingPage> {
           );
           if (result == null) return;
           _store.openaiApiKey.put(result);
-          OpenAI.apiKey = result;
+          OpenAICfg.key = result;
         },
       ),
     );
@@ -344,7 +345,7 @@ class _SettingPageState extends State<SettingPage> {
           );
           if (result == null) return;
           _store.openaiApiUrl.put(result);
-          OpenAI.baseUrl = result;
+          OpenAICfg.url = result;
         },
       ),
     );
