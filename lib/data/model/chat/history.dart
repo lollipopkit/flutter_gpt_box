@@ -1,8 +1,14 @@
 import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
+import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/res/uuid.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/adapters.dart';
+
+import '../../../view/widget/code.dart';
+import '../../res/build.dart';
 
 part 'history.g.dart';
 
@@ -54,59 +60,47 @@ final class ChatHistory {
     );
   }
 
-  /// session example:
-  /// ```json
-  /// {
-  ///    "id": "lwr6ZBr5KMhQrprwijlQD",
-  ///    "topic": "执行脚本路径问题",
-  ///    "memoryPrompt": "",
-  ///    "messages": [
-  ///        {
-  ///            "id": "e2XeOfnUYaheo0trvRF_U",
-  ///            "date": "2023/11/6 15:57:22",
-  ///            "role": "user",
-  ///            "content": "使用golang的exec，执行与golang程序处于不同目录的脚本，显示找不到文件，怎么解决"
-  ///        },
-  ///        {
-  ///            "id": "tgk0u_hORmQO6-vsBtXic",
-  ///            "date": "2023/11/6 15:57:22",
-  ///            "role": "assistant",
-  ///            "content": "在Go语言中，使用`os/exec`包执行脚本或程序时，需要提供完整的文件路径。如果你的脚本或程序位于与Go程序不同的目录下，你需要使用脚本或程序的绝对路径。\n\n下面是一个例子：\n\n```go\npackage main\n\nimport (\n\t\"log\"\n\t\"os/exec\"\n)\n\nfunc main() {\n\tcmd := exec.Command(\"/完整路径/到你的脚本\", \"可能的\", \"参数\")\n\terr := cmd.Run()\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n}\n```\n\n在上述代码中，替换`\"/完整路径/到你的脚本\"`为你的脚本或程序的完整路径。例如，如果你的脚本在`/home/user/scripts/myscript.sh`，你应该使用该路径。\n\n如果你不确定脚本或程序的完整路径，你可以在终端中使用`pwd`命令（在脚本或程序的目录中）来获取当前目录的路径，然后将它与脚本或程序的文件名拼接起来。\n\n如果你的脚本或程序在Go程序的子目录中，你也可以使用相对路径。例如，如果你的Go程序在`/home/user/mygoapp`，你的脚本在`/home/user/mygoapp/scripts/myscript.sh`，你可以使用`scripts/myscript.sh`作为路径。\n\n注意，你的脚本或程序需要有执行权限。你可以使用`chmod +x /完整路径/到你的脚本`来添加执行权限。",
-  ///            "streaming": false,
-  ///            "model": "gpt-4-0613"
-  ///        }
-  ///    ],
-  ///    "stat": {
-  ///        "tokenCount": 0,
-  ///        "wordCount": 0,
-  ///        "charCount": 631
-  ///    },
-  ///    "lastUpdate": 1699257480906,
-  ///    "lastSummarizeIndex": 0,
-  ///    "mask": {
-  ///        "id": "Ohw0r23BAAO1GaXcRUJEo",
-  ///        "avatar": "gpt-bot",
-  ///        "name": "新的聊天",
-  ///        "context": [],
-  ///        "syncGlobalConfig": true,
-  ///        "modelConfig": {
-  ///            "model": "gpt-4-0613",
-  ///            "temperature": 0.5,
-  ///            "top_p": 1,
-  ///            "max_tokens": 2000,
-  ///            "presence_penalty": 0,
-  ///            "frequency_penalty": 0,
-  ///            "sendMemory": true,
-  ///            "historyMessageCount": 4,
-  ///            "compressMessageLengthThreshold": 1000,
-  ///            "enableInjectSystemPrompts": true,
-  ///            "template": "{{input}}"
-  ///        },
-  ///        "lang": "cn",
-  ///        "builtin": false,
-  ///        "createdAt": 1699257396822
-  ///    }
-  /// }
+  Widget get forShare {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 17),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      width: 577,
+      child: Theme(
+        data: ThemeData(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              name ?? l10n.untitled,
+              style: const TextStyle(fontSize: 21, color: Colors.black),
+            ),
+            UIs.height13,
+            MarkdownBody(
+              data: items
+                  .map((e) => '##### ${e.role.toSingleChar}${e.toMarkdown}')
+                  .join('\n\n'),
+              shrinkWrap: true,
+              builders: {
+                'code': CodeElementBuilder(brightness: Brightness.light),
+              },
+            ),
+            UIs.height13,
+            Text(
+              '${l10n.shareFrom} GPT Box v1.0.${Build.build}',
+              style: const TextStyle(
+                fontSize: 9,
+                color: Colors.grey,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 @HiveType(typeId: 0)
@@ -264,6 +258,12 @@ enum ChatRole {
         throw UnimplementedError();
     }
   }
+
+  String get toSingleChar => switch (this) {
+        user => 'Q: ',
+        assist => 'A: ',
+        system => 'S: ',
+      };
 
   String get name => switch (this) {
         user => l10n.user,

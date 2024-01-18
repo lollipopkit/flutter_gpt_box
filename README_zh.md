@@ -19,27 +19,23 @@
 ## 🪄 特性
 - 从 [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) 恢复
 - 与 WebDAV / iCloud 同步
+- 以图片形式分享聊天
 - 全平台支持
 
 
 ## 🏙️ 截屏
 <table>
   <tr>
-    <td>
-	    <img width="277px" src="media/main.png">
-    </td>
-    <td>
-	    <img width="277px" src="media/history.png">
-    </td>
-    <td>
-	    <img width="277px" src="media/settings.png">
-    </td>
+    <td><img width="277px" src="media/main.png"></td>
+    <td><img width="277px" src="media/history.png"></td>
+    <td><img width="277px" src="media/settings.png"></td>
+    <td><img width="277px" src="media/share.png"></td>
   </tr>
 </table>
 
 
 ## ⬇️ 使用
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux（即将上线）](https://res.lolli.tech/gpt/latest.AppImage) / [Windows（即将上线）](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
 - 由于中国政策原因，且**目前**无法完成[备案](https://github.com/lollipopkit/flutter_server_box/discussions/180)。请移步 AppStore 其他区下载。
 - 关于安全：

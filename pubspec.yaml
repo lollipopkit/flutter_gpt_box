@@ -38,7 +38,10 @@ dependencies:
       url: https://github.com/lollipopkit/webdav_client
   icloud_storage: ^2.2.0
   computer:
-    path: ../dart_computer
+    git:
+      ref: master
+      url: https://github.com/lollipopkit/dart_computer
+  screenshot: ^2.1.0
 
 dev_dependencies:
   flutter_test:

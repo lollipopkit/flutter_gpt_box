@@ -19,27 +19,23 @@ A third-party GPT Client for OpenAI API on all platforms.
 ## 🪄 Features
 - Restore from [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
 - Sync with WebDAV / iCloud.
+- Share chat by picture.
 - All platforms support.
 
 
 ## 🏙️ Screenshots
 <table>
   <tr>
-    <td>
-	    <img width="277px" src="media/main.png">
-    </td>
-    <td>
-	    <img width="277px" src="media/history.png">
-    </td>
-    <td>
-	    <img width="277px" src="media/settings.png">
-    </td>
+    <td><img width="277px" src="media/main.png"></td>
+    <td><img width="277px" src="media/history.png"></td>
+    <td><img width="277px" src="media/settings.png"></td>
+    <td><img width="277px" src="media/share.png"></td>
   </tr>
 </table>
 
 
 ## ⬇️ Use
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux(Coming)](https://res.lolli.tech/gpt/latest.AppImage) / [Windows(Coming)](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
 - Due to Chinese government policy and the [BEIAN](https://github.com/lollipopkit/flutter_server_box/discussions/180) issue. Please download it from other regions of AppStore.
 - Security:

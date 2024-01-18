@@ -23,6 +23,8 @@ import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 
 part 'misc.dart';
 
@@ -37,6 +39,7 @@ class _HomePageState extends State<HomePage> {
   final _inputCtrl = TextEditingController();
   final _scrollCtrl = ScrollController();
   late final _pageCtrl = PageController(initialPage: _curPageIdx);
+  final _screenshotCtrl = ScreenshotController();
 
   final _timeRN = RebuildNode();
 
@@ -119,7 +122,47 @@ class _HomePageState extends State<HomePage> {
           onPressed: () => Routes.debug.go(context),
           icon: const Icon(Icons.developer_board),
           tooltip: 'Debug',
-        )
+        ),
+        PopupMenuButton<_MoreAction>(
+          icon: const Icon(Icons.more_vert),
+          tooltip: l10n.more,
+          onSelected: (value) => value.onTap(),
+          itemBuilder: (context) {
+            /// Put it here, or it's l10n string won't rebuild every time
+            final moreActions = [
+              _MoreAction(
+                title: l10n.rmDuplication,
+                icon: Icons.delete,
+                onTap: _onRmDup,
+                onPageIdxs: [0],
+              ),
+              _MoreAction(
+                title: l10n.share,
+                icon: Icons.share,
+                onTap: _onShareChat,
+                onPageIdxs: [1],
+              ),
+            ];
+
+            final items = <PopupMenuEntry<_MoreAction>>[];
+            for (final item in moreActions) {
+              if (!item.onPageIdxs.contains(_curPageIdx)) continue;
+              items.add(
+                PopupMenuItem(
+                  value: item,
+                  child: Row(
+                    children: [
+                      Icon(item.icon),
+                      UIs.width13,
+                      Text(item.title),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return items;
+          },
+        ),
       ],
     );
   }
@@ -151,8 +194,8 @@ class _HomePageState extends State<HomePage> {
           reverse: true,
           itemCount: keys.length,
           itemBuilder: (_, index) {
-            final chatId = keys.elementAt(index);
-            return _buildHistoryListItem(chatId).card;
+            final chatId = keys[index];
+            return _buildHistoryListItem(chatId, index).card;
           },
         );
       },
@@ -175,22 +218,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHistoryListItem(String chatId) {
+  Widget _buildHistoryListItem(String chatId, int index) {
     final entity = _allHistories[chatId];
     if (entity == null) return UIs.placeholder;
     final node = _chatRNMap.putIfAbsent(chatId, () => RebuildNode());
     return ListTile(
-      leading: Text('#${entity.items.length}', style: UIs.textGrey),
+      leading: Text('#$index', style: UIs.textGrey),
       title: ListenableBuilder(
         listenable: node,
         builder: (_, __) => Text(entity.name ?? l10n.untitled),
       ),
       subtitle: ListenableBuilder(
         listenable: _timeRN,
-        builder: (_, __) => Text(
-          entity.items.lastOrNull?.createdAt.toAgo ?? l10n.empty,
-          style: UIs.textGrey,
-        ),
+        builder: (_, __) {
+          final len = '${entity.items.length} ${l10n.message}';
+          final time = entity.items.lastOrNull?.createdAt.toAgo ?? l10n.empty;
+          return Text(
+            '$len · $time',
+            style: UIs.textGrey,
+          );
+        },
       ),
       contentPadding: const EdgeInsets.only(left: 17, right: 11),
       trailing: Row(
@@ -723,5 +770,77 @@ class _HomePageState extends State<HomePage> {
   void _onCopy(String content) {
     Clipboard.setData(ClipboardData(text: content));
     context.showSnackBar(l10n.copied);
+  }
+
+  void _onRmDup() async {
+    final existTitles = <String>{};
+    final rmIds = <String>[];
+    for (final item in _allHistories.values) {
+      if (rmIds.contains(item.id)) continue;
+      final name = item.name;
+      if (name == null || name.isEmpty) continue;
+      if (existTitles.contains(item.name)) {
+        rmIds.add(item.id);
+      } else {
+        existTitles.add(name);
+      }
+    }
+
+    if (rmIds.isEmpty) {
+      context.showSnackBar(l10n.noDuplication);
+      return;
+    }
+
+    final rmCount = rmIds.length;
+    final result = await context.showRoundDialog<bool>(
+      title: l10n.attention,
+      child: Text(l10n.rmDuplicationFmt(rmCount)),
+      actions: [
+        TextButton(
+          onPressed: () => context.pop(true),
+          child: Text(l10n.ok),
+        ),
+      ],
+    );
+
+    if (result != true) return;
+
+    for (final id in rmIds) {
+      Stores.history.delete(id);
+      _allHistories.remove(id);
+    }
+    _historyRN.rebuild();
+    if (!_allHistories.keys.contains(_curChatId)) {
+      _switchChat();
+    }
+  }
+
+  void _onShareChat() async {
+    final captured = _curChat?.forShare;
+    if (captured == null) {
+      final msg = 'Share Chat($_curChatId): null';
+      Loggers.app.warning(msg);
+      context.showSnackBar(msg);
+      return;
+    }
+
+    final pic = await _screenshotCtrl.captureFromWidget(captured);
+    final title = _curChat?.name ?? l10n.untitled;
+    context.showRoundDialog(
+      title: l10n.share,
+      child: SizedBox(
+        width: (_media?.size.width ?? 350) * 0.7,
+        child: SingleChildScrollView(child: Image.memory(pic)),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Share.shareXFiles(
+            [XFile.fromData(pic, name: '$title.png', mimeType: 'image/png')],
+            subject: '$title - GPT Box',
+          ),
+          child: Text(l10n.share),
+        ),
+      ],
+    );
   }
 }

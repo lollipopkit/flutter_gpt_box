@@ -10,8 +10,9 @@ final _textStyle = GoogleFonts.robotoMono();
 
 class CodeElementBuilder extends MarkdownElementBuilder {
   final void Function(String)? onCopy;
+  final Brightness? brightness;
 
-  CodeElementBuilder({this.onCopy});
+  CodeElementBuilder({this.onCopy, this.brightness});
 
   static bool isDark = false;
 
@@ -32,7 +33,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       builder: (_, val, __) => HighlightView(
         textContent,
         language: language,
-        theme: isDark ? _darkTheme : _lightTheme,
+        theme: _theme,
         textStyle: _textStyle.copyWith(fontSize: val),
         padding: isMultiLine
             ? const EdgeInsets.symmetric(vertical: 7, horizontal: 11)
@@ -42,6 +43,13 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     if (!isMultiLine) return child;
     return child.tap(onLongTap: () => onCopy?.call(textContent));
+  }
+
+  Map<String, TextStyle> get _theme {
+    if (brightness != null) {
+      return brightness == Brightness.dark ? _darkTheme : _lightTheme;
+    }
+    return isDark ? _darkTheme : _lightTheme;
   }
 }
 
