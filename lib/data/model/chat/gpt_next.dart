@@ -1,3 +1,5 @@
+import 'package:flutter_chatgpt/data/model/chat/config.dart';
+
 import '../../res/uuid.dart';
 import 'history.dart';
 
@@ -72,5 +74,40 @@ abstract final class GPTNextConvertor {
     final second = int.parse(timeParts[2]);
 
     return DateTime(year, month, day, hour, minute, second);
+  }
+
+  static ChatConfig parseConfig(Map map, ChatConfig cfg) {
+    try {
+      final {
+        'app-config': {
+          'modelConfig': {
+            'model': String model,
+            'temperature': double temperature,
+            'historyMessageCount': int historyMessageCount,
+          }
+        },
+      } = map;
+      cfg = cfg.copyWith(
+        model: model,
+        temperature: temperature,
+        historyLen: historyMessageCount,
+      );
+    } catch (e) {
+      // ignore
+    }
+
+    try {
+      final {
+        'access-control': {
+          'openaiUrl': String url,
+          'openaiApiKey': String key,
+        },
+      } = map;
+      cfg = cfg.copyWith(url: url, key: key);
+    } catch (e) {
+      // ignore
+    }
+
+    return cfg;
   }
 }

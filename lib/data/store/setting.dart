@@ -38,10 +38,7 @@ class SettingStore extends Store {
   late final webdavUrl = property('webdavUrl', '');
   late final webdavUser = property('webdavUser', '');
   late final webdavPwd = property('webdavPwd', '');
-  
+
   /// Only valid on iOS and macOS
-  late final icloudSync = property(
-    'icloudSync',
-    false,
-  );
+  late final icloudSync = property('icloudSync', false);
 }

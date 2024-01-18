@@ -28,7 +28,7 @@ void _onTapClipboardRestore(BuildContext context) async {
   }
   try {
     context.showLoadingDialog();
-    final backup = await Computer.shared.compute(
+    final backup = await Computer.shared.start(
       Backup.fromJsonString,
       param: text.trim(),
     );

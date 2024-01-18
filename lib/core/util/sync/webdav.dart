@@ -102,7 +102,7 @@ abstract final class Webdav {
       await backup();
       return;
     }
-    final dlFile = await Computer.shared.compute(
+    final dlFile = await Computer.shared.start(
       (message) async {
         try {
           final file = await File(message).readAsString();

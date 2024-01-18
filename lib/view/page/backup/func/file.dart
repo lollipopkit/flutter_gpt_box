@@ -30,7 +30,7 @@ Future<void> _onTapFileRestore(BuildContext context) async {
 
   try {
     context.showLoadingDialog();
-    final backup = await Computer.shared.compute(
+    final backup = await Computer.shared.start(
       Backup.fromJsonString,
       param: text.trim(),
     );

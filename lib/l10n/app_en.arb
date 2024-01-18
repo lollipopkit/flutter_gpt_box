@@ -43,6 +43,7 @@
   "needRestart": "Need restart to take effect",
   "newChat": "newChat",
   "ok": "Ok",
+  "onlyRestoreHistory": "Only restore histories (exclude api url / secret key)",
   "other": "Other",
   "participant": "Participant",
   "passwd": "Password",

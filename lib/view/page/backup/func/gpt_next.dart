@@ -13,10 +13,9 @@ void _onTapRestoreGPTNext(BuildContext context) async {
   if (picked == null) return;
 
   try {
-    final chats = await Computer.shared.compute(
-      (picked) async {
-        final text = await File(picked).readAsString();
-        final obj = json.decode(text) as Map<String, dynamic>;
+    final (chats, cfg) = await Computer.shared.start(
+      (params) async {
+        final obj = json.decode(params.$1) as Map<String, dynamic>;
         final {
           'chat-next-web-store': {
             'sessions': List sessions,
@@ -29,18 +28,44 @@ void _onTapRestoreGPTNext(BuildContext context) async {
         for (final item in sessions) {
           chats.add(GPTNextConvertor.toChatHistory(item));
         }
-        return chats;
+        return (chats, GPTNextConvertor.parseConfig(obj, params.$2));
       },
-      param: picked,
+      param: (picked, ChatConfig.fromStore()),
     );
+
+    var onlyRestoreHistory = false;
     context.showRoundDialog(
       title: l10n.attention,
-      child: Text(l10n.sureRestoreFmt('${chats.length} ${l10n.chat}')),
+      child: SizedBox(
+        width: 300,
+        child: StatefulBuilder(builder: (context, setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(l10n.sureRestoreFmt('${chats.length} ${l10n.chat}')),
+              CheckboxListTile(
+                value: onlyRestoreHistory,
+                onChanged: (val) {
+                  setState(() {
+                    onlyRestoreHistory = val ?? false;
+                  });
+                },
+                title: Text(l10n.onlyRestoreHistory, style: UIs.text12),
+                controlAffinity: ListTileControlAffinity.leading,
+              ),
+            ],
+          );
+        }),
+      ),
       actions: [
         TextButton(
           onPressed: () async {
             for (final chat in chats) {
               Stores.history.put(chat);
+            }
+            if (!onlyRestoreHistory) {
+              Stores.setting.openaiApiUrl.put(cfg.url);
+              Stores.setting.openaiApiKey.put(cfg.key);
             }
             context.pop();
             RebuildNode.app.rebuild();
