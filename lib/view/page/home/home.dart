@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
 
   late final Map<String, ChatHistory> _allHistories;
 
-  /// Keep this. Dart's map is ASC order, but we need DESC order.
+  /// Keep this for sort
   late final List<String> _allChatIds;
   String _curChatId = 'fake-non-exist-id';
   ChatHistory? get _curChat => _allHistories[_curChatId];
@@ -199,10 +199,7 @@ class _HomePageState extends State<HomePage> {
       controller: _pageCtrl,
       children: [
         _buildChatHistoryPage(),
-        ListenableBuilder(
-          listenable: _chatRN,
-          builder: (_, __) => _buildChatPage(),
-        ),
+        _buildChatPage(),
       ],
       onPageChanged: (value) {
         _curPageIdx = value;
@@ -230,17 +227,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildChatPage() {
-    final item = _curChat?.items;
-    if (item == null) return UIs.placeholder;
-    return ListView.builder(
-      controller: _scrollCtrl,
-      padding: const EdgeInsets.only(
-        left: 7,
-        right: 7,
-      ),
-      itemCount: item.length,
-      itemBuilder: (_, index) {
-        return _buildChatItem(item, index);
+    return ListenableBuilder(
+      listenable: _chatRN,
+      builder: (_, __) {
+        final item = _curChat?.items;
+        if (item == null) return UIs.placeholder;
+        return ListView.builder(
+          controller: _scrollCtrl,
+          padding: const EdgeInsets.symmetric(horizontal: 7),
+          itemCount: item.length,
+          itemBuilder: (_, index) {
+            return _buildChatItem(item, index);
+          },
+        );
       },
     );
   }
@@ -259,7 +258,8 @@ class _HomePageState extends State<HomePage> {
         listenable: _timeRN,
         builder: (_, __) {
           final len = '${entity.items.length} ${l10n.message}';
-          final time = entity.items.lastOrNull?.createdAt.toAgo ?? l10n.empty;
+          final time = entity.items.lastOrNull?.createdAt.toAgo;
+          if (time == null) return Text(len, style: UIs.textGrey);
           return Text(
             '$len · $time',
             style: UIs.textGrey,
