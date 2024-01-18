@@ -1,8 +1,6 @@
 English | [简体中文](README_zh.md)
 
-<h2 align="center">
-  Flutter GPT Box
-</h2>
+<h2 align="center">Flutter GPT Box</h2>
 
 <p align="center">
 A third-party GPT Client for OpenAI API on all platforms.
@@ -16,6 +14,12 @@ A third-party GPT Client for OpenAI API on all platforms.
   <img alt="countly" src="https://img.shields.io/badge/analysis-countly-pink">
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
 </p>
+
+
+## 🪄 Features
+- Restore from [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
+- Sync with WebDAV / iCloud.
+- All platforms support.
 
 
 ## 🏙️ Screenshots
@@ -37,7 +41,6 @@ A third-party GPT Client for OpenAI API on all platforms.
 ## ⬇️ Use
 [iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
-- Web performance is poor, it is recommended to use the app.
 - Due to Chinese government policy and the [BEIAN](https://github.com/lollipopkit/flutter_server_box/discussions/180) issue. Please download it from other regions of AppStore.
 - Security:
   - To prevent injection attacks and etc., please don't download from untrusted sources.

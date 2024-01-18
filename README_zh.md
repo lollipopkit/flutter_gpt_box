@@ -1,8 +1,6 @@
 简体中文 | [English](README.md)
 
-<h2 align="center">
-  Flutter GPT Box
-</h2>
+<h2 align="center">Flutter GPT Box</h2>
 
 <p align="center">
 一个支持 OpenAI API 的 第三方全平台客户端。
@@ -16,6 +14,12 @@
   <img alt="countly" src="https://img.shields.io/badge/analysis-countly-pink">
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
 </p>
+
+
+## 🪄 特性
+- 从 [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) 恢复
+- 与 WebDAV / iCloud 同步
+- 全平台支持
 
 
 ## 🏙️ 截屏
@@ -37,7 +41,6 @@
 ## ⬇️ 使用
 [iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
-- Web 性能不佳，建议使用客户端。
 - 由于中国政策原因，且**目前**无法完成[备案](https://github.com/lollipopkit/flutter_server_box/discussions/180)。请移步 AppStore 其他区下载。
 - 关于安全：
   - 为了防止注入攻击等因素，请勿从不可信来源下载。
