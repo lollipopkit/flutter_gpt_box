@@ -5,6 +5,11 @@ abstract final class OpenAICfg {
   static String _url = Stores.setting.openaiApiUrl.fetch();
   static String _key = Stores.setting.openaiApiKey.fetch();
 
+  static void apply() {
+    OpenAI.baseUrl = _url;
+    OpenAI.apiKey = _key;
+  }
+
   static String get url => _url;
   static String get key => _key;
 

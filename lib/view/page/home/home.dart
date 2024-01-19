@@ -359,6 +359,11 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
+    // Keep this here.
+    // - If there is not chat history, [_switchChat] will create one
+    // - If the init help haven't shown, [_switchChat] will show it
+    // - Init help uses [l10n] to gen msg, so [l10n] must be ready
+    // - [l10n] is ready after first layout
     _switchChat();
   }
 }

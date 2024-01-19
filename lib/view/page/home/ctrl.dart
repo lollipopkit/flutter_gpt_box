@@ -120,7 +120,7 @@ Future<void> _onSend(String chatId, BuildContext context) async {
 
 ChatHistory _newChat() {
   late final ChatHistory newHistory;
-  if (_allHistories.isEmpty && !Stores.setting.initHelpShown.fetch()) {
+  if (!Stores.setting.initHelpShown.fetch()) {
     newHistory = ChatHistory.example;
   } else {
     newHistory = ChatHistory.empty;
