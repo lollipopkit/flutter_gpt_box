@@ -302,15 +302,19 @@ void _onRmDup(BuildContext context) async {
 }
 
 void _onShareChat(BuildContext context) async {
-  final captured = _curChat?.forShare;
-  if (captured == null) {
+  final result = _curChat?.forShare;
+  if (result == null) {
     final msg = 'Share Chat($_curChatId): null';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     return;
   }
 
-  final pic = await _screenshotCtrl.captureFromWidget(captured);
+  final pic = await _screenshotCtrl.captureFromWidget(
+    result.$1,
+    context: context,
+    targetSize: Size(500, result.$2.length * 20)
+  );
   final title = _curChat?.name ?? l10n.untitled;
   context.showRoundDialog(
     title: l10n.share,

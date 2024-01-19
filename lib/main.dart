@@ -58,7 +58,7 @@ Future<void> _initApp() async {
   OpenAI.showLogs = !BuildMode.isRelease;
   OpenAI.showResponsesLogs = !BuildMode.isRelease;
 
-  Computer.shared.turnOn(workersCount: 1, verbose: !BuildMode.isRelease);
+  Computer.shared.turnOn(workersCount: 1);
 }
 
 Future<void> _initDb() async {

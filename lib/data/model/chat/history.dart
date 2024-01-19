@@ -60,47 +60,51 @@ final class ChatHistory {
     );
   }
 
-  Widget get forShare {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 17),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      width: 577,
-      child: Theme(
-        data: ThemeData(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              name ?? l10n.untitled,
-              style: const TextStyle(fontSize: 21, color: Colors.black),
-            ),
-            UIs.height13,
-            MarkdownBody(
-              data: items
-                  .map((e) => '##### ${e.role.toSingleChar}${e.toMarkdown}')
-                  .join('\n\n'),
-              shrinkWrap: true,
-              builders: {
-                'code': CodeElementBuilder(brightness: Brightness.light),
-              },
-            ),
-            UIs.height13,
-            Text(
-              '${l10n.shareFrom} GPT Box v1.0.${Build.build}',
-              style: const TextStyle(
-                fontSize: 9,
-                color: Colors.grey,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
+  (Widget, String) get forShare {
+    final mdContent = items
+        .map((e) => '##### ${e.role.toSingleChar}${e.toMarkdown}')
+        .join('\n\n');
+    final widget = ListView(
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+      children: [
+        Text(
+          name ?? l10n.untitled,
+          style: const TextStyle(fontSize: 21),
         ),
-      ),
+        UIs.height13,
+        MarkdownBody(
+          data: mdContent,
+          shrinkWrap: true,
+          builders: {
+            'code': CodeElementBuilder(),
+          },
+        ),
+        UIs.height13,
+        Text(
+          '${l10n.shareFrom} GPT Box v1.0.${Build.build}',
+          style: const TextStyle(
+            fontSize: 9,
+            color: Colors.grey,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
     );
+    return (widget, mdContent);
   }
+
+  static ChatHistory get example => ChatHistory.noid(
+        name: l10n.help,
+        items: [
+          ChatHistoryItem.noid(role: ChatRole.system, content: [
+            ChatContent(
+              type: ChatContentType.text,
+              raw: l10n.initChatHelp,
+            )
+          ]),
+        ],
+      );
 }
 
 @HiveType(typeId: 0)

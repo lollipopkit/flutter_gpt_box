@@ -11,7 +11,7 @@ Widget _buildFile(BuildContext context) {
           trailing: const Icon(Icons.save),
           onTap: () async {
             final content = await Backup.backup();
-            await FileUtil.save('gptbox_bak.json', content);
+            await FileUtil.save('gptbox_bak.json', content, suffix: 'json');
           },
         ),
         ListTile(

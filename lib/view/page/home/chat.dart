@@ -21,7 +21,6 @@ class _ChatPageState extends State<_ChatPage>
           key: ValueKey(_curChatId),
           child: ListView.builder(
             controller: _scrollCtrl,
-            physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 7),
             itemCount: item.length,
             itemBuilder: (_, index) {

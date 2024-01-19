@@ -41,4 +41,6 @@ class SettingStore extends Store {
 
   /// Only valid on iOS and macOS
   late final icloudSync = property('icloudSync', false);
+
+  late final initHelpShown = property('initHelpShown', false);
 }

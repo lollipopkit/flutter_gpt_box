@@ -33,7 +33,6 @@ final _focusNode = FocusNode();
 
 MediaQueryData? _media;
 bool _isDark = false;
-Color _bg = UIs.bgColor.light;
 
 const _boxShadow = [
   BoxShadow(

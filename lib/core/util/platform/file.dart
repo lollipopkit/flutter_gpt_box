@@ -30,7 +30,7 @@ abstract final class FileUtil {
     }
   }
 
-  static Future<void> save(String name, String data) async {
+  static Future<void> save(String name, String data, {String? suffix}) async {
     switch (Pfs.type) {
       case Pfs.windows || Pfs.linux:
         await Share.share(data, subject: name);
@@ -45,8 +45,13 @@ abstract final class FileUtil {
         Url.revokeObjectUrl(url);
         break;
       default:
-        await Share.shareXFiles(
-            [XFile.fromData(utf8.encode(data), name: name)]);
+        await Share.shareXFiles([
+          XFile.fromData(
+            utf8.encode(data),
+            name: name,
+            mimeType: suffix,
+          )
+        ]);
         break;
     }
   }
