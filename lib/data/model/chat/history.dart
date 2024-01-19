@@ -60,36 +60,41 @@ final class ChatHistory {
     );
   }
 
-  (Widget, String) get forShare {
+  (Widget, String) gen4Share() {
     final mdContent = items
         .map((e) => '##### ${e.role.toSingleChar}${e.toMarkdown}')
         .join('\n\n');
-    final widget = ListView(
-      shrinkWrap: true,
+    final widget = Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-      children: [
-        Text(
-          name ?? l10n.untitled,
-          style: const TextStyle(fontSize: 21),
-        ),
-        UIs.height13,
-        MarkdownBody(
-          data: mdContent,
-          shrinkWrap: true,
-          builders: {
-            'code': CodeElementBuilder(),
-          },
-        ),
-        UIs.height13,
-        Text(
-          '${l10n.shareFrom} GPT Box v1.0.${Build.build}',
-          style: const TextStyle(
-            fontSize: 9,
-            color: Colors.grey,
-            fontStyle: FontStyle.italic,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            name ?? l10n.untitled,
+            style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
           ),
-        ),
-      ],
+          UIs.height13,
+          MarkdownBody(
+            data: mdContent,
+            shrinkWrap: true,
+            builders: {
+              'code': CodeElementBuilder(),
+            },
+          ),
+          UIs.height13,
+          Text(
+            '${l10n.shareFrom} GPT Box v1.0.${Build.build}',
+            style: const TextStyle(
+              fontSize: 9,
+              color: Colors.grey,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
     );
     return (widget, mdContent);
   }

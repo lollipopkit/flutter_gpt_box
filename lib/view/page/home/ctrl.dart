@@ -302,7 +302,7 @@ void _onRmDup(BuildContext context) async {
 }
 
 void _onShareChat(BuildContext context) async {
-  final result = _curChat?.forShare;
+  final result = _curChat?.gen4Share();
   if (result == null) {
     final msg = 'Share Chat($_curChatId): null';
     Loggers.app.warning(msg);
@@ -310,26 +310,16 @@ void _onShareChat(BuildContext context) async {
     return;
   }
 
-  final pic = await _screenshotCtrl.captureFromWidget(
+  final pic = await _screenshotCtrl.captureFromLongWidget(
     result.$1,
     context: context,
-    targetSize: Size(500, result.$2.length * 20)
+    constraints: const BoxConstraints(
+      maxWidth: 577
+    ),
   );
   final title = _curChat?.name ?? l10n.untitled;
-  context.showRoundDialog(
-    title: l10n.share,
-    child: SizedBox(
-      width: (_media?.size.width ?? 350) * 0.7,
-      child: SingleChildScrollView(child: Image.memory(pic)),
-    ),
-    actions: [
-      TextButton(
-        onPressed: () => Share.shareXFiles(
-          [XFile.fromData(pic, name: '$title.png', mimeType: 'image/png')],
-          subject: '$title - GPT Box',
-        ),
-        child: Text(l10n.share),
-      ),
-    ],
+  Share.shareXFiles(
+    [XFile.fromData(pic, name: '$title.png', mimeType: 'image/png')],
+    subject: '$title - GPT Box',
   );
 }

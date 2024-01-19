@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:computer/computer.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/app.dart';
@@ -57,8 +56,6 @@ Future<void> _initApp() async {
 
   OpenAI.showLogs = !BuildMode.isRelease;
   OpenAI.showResponsesLogs = !BuildMode.isRelease;
-
-  Computer.shared.turnOn(workersCount: 1);
 }
 
 Future<void> _initDb() async {

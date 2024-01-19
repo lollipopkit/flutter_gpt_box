@@ -30,10 +30,7 @@ Future<void> _onTapFileRestore(BuildContext context) async {
 
   try {
     context.showLoadingDialog();
-    final backup = await Computer.shared.start(
-      Backup.fromJsonString,
-      param: text.trim(),
-    );
+    final backup = await compute(Backup.fromJsonString, text.trim());
     if (backupFormatVersion != backup.version) {
       context.showSnackBar('Backup version not match');
       return;

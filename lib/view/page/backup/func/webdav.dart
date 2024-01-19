@@ -82,10 +82,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     return;
   }
   final dlFile = await File(await Paths.bak).readAsString();
-  final dlBak = await Computer.shared.start(
-    Backup.fromJsonString,
-    param: dlFile,
-  );
+  final dlBak = await compute(Backup.fromJsonString, dlFile);
   await dlBak.restore(force: true);
   _webdavLoading.value = false;
 }

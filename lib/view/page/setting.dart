@@ -9,6 +9,7 @@ import 'package:flutter_chatgpt/core/ext/string.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/core/util/func.dart';
+import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
@@ -49,6 +50,8 @@ class _SettingPageState extends State<SettingPage> {
         _buildApp(),
         _buildTitle(l10n.chat),
         _buildChat(),
+        // _buildTitle(l10n.more),
+        // _buildMore(),
         const SizedBox(height: 37),
       ],
     );
@@ -71,7 +74,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildLocale(),
       _buildColorSeed(),
       _buildThemeMode(),
-      _buildCheckUpdate(),
+      if (!isWeb) _buildCheckUpdate(),
       _buildFontSize(),
       _buildScrollBottom(),
       _buildAutoGenTitle(),
@@ -156,8 +159,6 @@ class _SettingPageState extends State<SettingPage> {
       context.showSnackBar('Invalid color code: $s');
       return;
     }
-    // Change [primaryColor] first, then change [_selectedColorValue],
-    // So the [ValueBuilder] will be triggered with the new value
     _store.themeColorSeed.put(color.value);
     context.pop();
     RebuildNode.app.rebuild();
@@ -287,32 +288,40 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildOpenAIKey() {
     return ValueListenableBuilder(
       valueListenable: _store.openaiApiKey.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.vpn_key),
-        title: Text(l10n.secretKey),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(val.isEmpty ? l10n.empty : val, style: UIs.text13Grey),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val);
-          final result = await context.showRoundDialog<String>(
-            title: l10n.edit,
-            child: Input(
-              controller: ctrl,
-              hint: 'sk-xxx',
-              maxLines: 3,
+      builder: (_, val, __) {
+        return ListTile(
+          leading: const Icon(Icons.vpn_key),
+          title: Text(l10n.secretKey),
+          trailing: ConstrainedBox(
+            constraints: BoxConstraints.tight(const Size(60, 17)),
+            child: Text(
+              val.isEmpty ? l10n.empty : val,
+              style: UIs.textGrey,
+              overflow: TextOverflow.ellipsis,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
+          ),
+          onTap: () async {
+            final ctrl = TextEditingController(text: val);
+            final result = await context.showRoundDialog<String>(
+              title: l10n.edit,
+              child: Input(
+                controller: ctrl,
+                hint: 'sk-xxx',
+                maxLines: 3,
               ),
-            ],
-          );
-          if (result == null) return;
-          _store.openaiApiKey.put(result);
-          OpenAICfg.key = result;
-        },
-      ),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(ctrl.text),
+                  child: Text(l10n.ok),
+                ),
+              ],
+            );
+            if (result == null) return;
+            _store.openaiApiKey.put(result);
+            OpenAICfg.key = result;
+          },
+        );
+      },
     );
   }
 
@@ -408,30 +417,39 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildPrompt() {
     return ValueListenableBuilder(
       valueListenable: _store.prompt.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.abc),
-        title: const Text('Prompt'),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(val.isEmpty ? l10n.empty : val, style: UIs.text13Grey),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val);
-          final result = await context.showRoundDialog<String>(
-            title: l10n.edit,
-            child: Input(
-              controller: ctrl,
-              maxLines: 3,
+      builder: (_, val, __) {
+        return ListTile(
+          leading: const Icon(Icons.abc),
+          title: const Text('Prompt'),
+          trailing: ConstrainedBox(
+            constraints: BoxConstraints.tight(const Size(60, 17)),
+            child: Text(
+              val.isEmpty ? l10n.empty : val,
+              style: UIs.textGrey,
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
+          ),
+          onTap: () async {
+            final ctrl = TextEditingController(text: val);
+            final result = await context.showRoundDialog<String>(
+              title: l10n.edit,
+              child: Input(
+                controller: ctrl,
+                maxLines: 3,
               ),
-            ],
-          );
-          if (result == null) return;
-          _store.prompt.put(result);
-        },
-      ),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(ctrl.text),
+                  child: Text(l10n.ok),
+                ),
+              ],
+            );
+            if (result == null) return;
+            _store.prompt.put(result);
+          },
+        );
+      },
     );
   }
 
@@ -473,4 +491,21 @@ class _SettingPageState extends State<SettingPage> {
       ),
     );
   }
+
+  // Widget _buildMore() {
+  //   final children = [
+  //     _buildIMPro(),
+  //   ];
+  //   return Column(
+  //     children: children.map((e) => CardX(child: e)).toList(),
+  //   );
+  // }
+
+  // Widget _buildIMPro() {
+  //   return ListTile(
+  //     leading: const Icon(Icons.report_problem),
+  //     title: Text(l10n.ignoreTip),
+  //     trailing: StoreSwitch(prop: _store.imPro),
+  //   );
+  // }
 }

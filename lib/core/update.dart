@@ -31,6 +31,7 @@ abstract final class AppUpdateIface {
     BuildContext context, {
     bool force = false,
   }) async {
+    if (isWeb) return;
     await _rmDownloadApks();
 
     final update = await AppUpdate.fromUrl();

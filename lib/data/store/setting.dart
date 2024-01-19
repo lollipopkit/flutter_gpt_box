@@ -43,4 +43,6 @@ class SettingStore extends Store {
   late final icloudSync = property('icloudSync', false);
 
   late final initHelpShown = property('initHelpShown', false);
+
+  //late final imPro = property('imPro', false);
 }

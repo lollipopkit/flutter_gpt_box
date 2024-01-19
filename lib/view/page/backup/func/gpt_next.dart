@@ -13,7 +13,7 @@ void _onTapRestoreGPTNext(BuildContext context) async {
   if (picked == null) return;
 
   try {
-    final (chats, cfg) = await Computer.shared.start(
+    final (chats, cfg) = await compute(
       (params) async {
         final obj = json.decode(params.$1) as Map<String, dynamic>;
         final {
@@ -30,7 +30,7 @@ void _onTapRestoreGPTNext(BuildContext context) async {
         }
         return (chats, GPTNextConvertor.parseConfig(obj, params.$2));
       },
-      param: (picked, ChatConfig.fromStore()),
+      (picked, ChatConfig.fromStore()),
     );
 
     var onlyRestoreHistory = false;
