@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:after_layout/after_layout.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,7 +43,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   Timer? _refreshTimeTimer;
 
   @override
@@ -50,7 +51,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _allHistories = Stores.history.fetchAll();
     _allChatIds = _allHistories.keys.toList();
-    _switchChat();
     _refreshTimeTimer = Timer.periodic(
       const Duration(seconds: 10),
       (_) => _timeRN.rebuild(),
@@ -67,10 +67,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     _media = MediaQuery.of(context);
-    l10n = AppLocalizations.of(context)!;
     _isDark = context.isDark;
     CodeElementBuilder.isDark = _isDark;
-
+    l10n = AppLocalizations.of(context)!;
     super.didChangeDependencies();
   }
 
@@ -358,21 +357,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Future<void> _onImgPick() async {
-  //   final result = await FilePicker.platform.pickFiles(
-  //     type: FileType.image,
-  //   );
-  //   final path = result?.files.single.path;
-  //   if (path == null) return;
-  //   final b64 = base64Encode(await File(path).readAsBytes());
-  //   _curHistories?.add(ChatHistoryItem.noid(
-  //     content: [
-  //       ChatContent(
-  //         type: ChatContentType.image,
-  //         raw: 'base64://$b64',
-  //       ),
-  //     ],
-  //     role: ChatRole.user,
-  //   ));
-  // }
+  @override
+  FutureOr<void> afterFirstLayout(BuildContext context) {
+    _switchChat();
+  }
 }

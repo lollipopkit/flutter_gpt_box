@@ -1,6 +1,5 @@
 import 'package:flutter_chatgpt/core/store.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
-import 'package:flutter_chatgpt/data/store/all.dart';
 
 class HistoryStore extends Store {
   HistoryStore() : super('history');
@@ -22,12 +21,7 @@ class HistoryStore extends Store {
               .compareTo(a.value.items.lastOrNull?.createdAt ?? now) ??
           1,
     );
-    final sortedMap = Map.fromEntries(sorted);
-    if (sortedMap.isEmpty && !Stores.setting.initHelpShown.fetch()) {
-      final initHelp = ChatHistory.example;
-      sortedMap[initHelp.id] = initHelp;
-    }
-    return sortedMap;
+    return Map.fromEntries(sorted);
   }
 
   void put(ChatHistory history) {

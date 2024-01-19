@@ -60,14 +60,15 @@ final class ChatHistory {
     );
   }
 
-  (Widget, String) gen4Share() {
+  (Widget, String) gen4Share(bool isDark) {
     final mdContent = items
         .map((e) => '##### ${e.role.toSingleChar}${e.toMarkdown}')
         .join('\n\n');
     final widget = Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(7),
+        color: isDark ? Colors.black : Colors.white,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

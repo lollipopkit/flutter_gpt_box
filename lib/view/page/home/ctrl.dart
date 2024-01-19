@@ -119,7 +119,12 @@ Future<void> _onSend(String chatId, BuildContext context) async {
 }
 
 ChatHistory _newChat() {
-  final newHistory = ChatHistory.empty;
+  late final ChatHistory newHistory;
+  if (_allHistories.isEmpty && !Stores.setting.initHelpShown.fetch()) {
+    newHistory = ChatHistory.example;
+  } else {
+    newHistory = ChatHistory.empty;
+  }
   _allHistories[newHistory.id] = newHistory;
   _allChatIds.insert(0, newHistory.id);
   Stores.history.put(newHistory);
@@ -302,7 +307,7 @@ void _onRmDup(BuildContext context) async {
 }
 
 void _onShareChat(BuildContext context) async {
-  final result = _curChat?.gen4Share();
+  final result = _curChat?.gen4Share(_isDark);
   if (result == null) {
     final msg = 'Share Chat($_curChatId): null';
     Loggers.app.warning(msg);
@@ -313,9 +318,7 @@ void _onShareChat(BuildContext context) async {
   final pic = await _screenshotCtrl.captureFromLongWidget(
     result.$1,
     context: context,
-    constraints: const BoxConstraints(
-      maxWidth: 577
-    ),
+    constraints: const BoxConstraints(maxWidth: 577),
   );
   final title = _curChat?.name ?? l10n.untitled;
   Share.shareXFiles(
@@ -323,3 +326,22 @@ void _onShareChat(BuildContext context) async {
     subject: '$title - GPT Box',
   );
 }
+
+
+  // Future<void> _onImgPick() async {
+  //   final result = await FilePicker.platform.pickFiles(
+  //     type: FileType.image,
+  //   );
+  //   final path = result?.files.single.path;
+  //   if (path == null) return;
+  //   final b64 = base64Encode(await File(path).readAsBytes());
+  //   _curHistories?.add(ChatHistoryItem.noid(
+  //     content: [
+  //       ChatContent(
+  //         type: ChatContentType.image,
+  //         raw: 'base64://$b64',
+  //       ),
+  //     ],
+  //     role: ChatRole.user,
+  //   ));
+  // }
