@@ -293,10 +293,11 @@ class _SettingPageState extends State<SettingPage> {
           leading: const Icon(Icons.vpn_key),
           title: Text(l10n.secretKey),
           trailing: ConstrainedBox(
-            constraints: BoxConstraints.tight(const Size(60, 17)),
+            constraints: const BoxConstraints(maxWidth: 60),
             child: Text(
               val.isEmpty ? l10n.empty : val,
               style: UIs.textGrey,
+              textAlign: TextAlign.end,
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -422,7 +423,7 @@ class _SettingPageState extends State<SettingPage> {
           leading: const Icon(Icons.abc),
           title: const Text('Prompt'),
           trailing: ConstrainedBox(
-            constraints: BoxConstraints.tight(const Size(60, 17)),
+            constraints: const BoxConstraints(maxWidth: 60),
             child: Text(
               val.isEmpty ? l10n.empty : val,
               style: UIs.textGrey,

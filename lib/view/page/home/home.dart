@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
               controller: _inputCtrl,
               label: l10n.message,
               node: _focusNode,
-              type: TextInputType.multiline,
+              type: TextInputType.text,
               maxLines: 5,
               minLines: 1,
               suffix: ListenableBuilder(

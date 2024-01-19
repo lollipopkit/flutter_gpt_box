@@ -319,6 +319,7 @@ void _onShareChat(BuildContext context) async {
     result.$1,
     context: context,
     constraints: const BoxConstraints(maxWidth: 577),
+    pixelRatio: _media?.devicePixelRatio ?? 1,
   );
   final title = _curChat?.name ?? l10n.untitled;
   Share.shareXFiles(
@@ -327,21 +328,20 @@ void _onShareChat(BuildContext context) async {
   );
 }
 
-
-  // Future<void> _onImgPick() async {
-  //   final result = await FilePicker.platform.pickFiles(
-  //     type: FileType.image,
-  //   );
-  //   final path = result?.files.single.path;
-  //   if (path == null) return;
-  //   final b64 = base64Encode(await File(path).readAsBytes());
-  //   _curHistories?.add(ChatHistoryItem.noid(
-  //     content: [
-  //       ChatContent(
-  //         type: ChatContentType.image,
-  //         raw: 'base64://$b64',
-  //       ),
-  //     ],
-  //     role: ChatRole.user,
-  //   ));
-  // }
+// Future<void> _onImgPick() async {
+//   final result = await FilePicker.platform.pickFiles(
+//     type: FileType.image,
+//   );
+//   final path = result?.files.single.path;
+//   if (path == null) return;
+//   final b64 = base64Encode(await File(path).readAsBytes());
+//   _curHistories?.add(ChatHistoryItem.noid(
+//     content: [
+//       ChatContent(
+//         type: ChatContentType.image,
+//         raw: 'base64://$b64',
+//       ),
+//     ],
+//     role: ChatRole.user,
+//   ));
+// }
