@@ -8,6 +8,7 @@ import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/datetime.dart';
+import 'package:flutter_chatgpt/core/ext/media_query.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   void didChangeDependencies() {
     _media = MediaQuery.of(context);
     _isDark = context.isDark;
+    _isWide.value = _media.isWide;
     CodeElementBuilder.isDark = _isDark;
     l10n = AppLocalizations.of(context)!;
     super.didChangeDependencies();
@@ -124,12 +126,26 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   }
 
   Widget _buildBody() {
+    const history = _HistoryPage();
+    const chat = _ChatPage();
+    if (_isWide.value) {
+      return const Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: history,
+          ),
+          VerticalDivider(width: 1),
+          Expanded(
+            flex: 5,
+            child: chat,
+          ),
+        ],
+      );
+    }
     return PageView(
       controller: _pageCtrl,
-      children: const [
-        _HistoryPage(),
-        _ChatPage(),
-      ],
+      children: const [history, chat],
       onPageChanged: (value) {
         _curPageIdx = value;
         _pageIndicatorRN.rebuild();
@@ -214,28 +230,33 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   }
 
   Widget _buildSwitchPageBtn() {
-    return ListenableBuilder(
-      listenable: _pageIndicatorRN,
-      builder: (_, __) {
-        if (_curPageIdx == 0) {
-          return IconButton(
-            onPressed: () => _pageCtrl.animateToPage(
-              1,
-              duration: Durations.medium1,
-              curve: Curves.fastEaseInToSlowEaseOut,
+    return ValueListenableBuilder(
+      valueListenable: _isWide,
+      builder: (_, isWide, __) => isWide
+          ? UIs.placeholder
+          : ListenableBuilder(
+              listenable: _pageIndicatorRN,
+              builder: (_, __) {
+                if (_curPageIdx == 0) {
+                  return IconButton(
+                    onPressed: () => _pageCtrl.animateToPage(
+                      1,
+                      duration: Durations.medium1,
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    ),
+                    icon: const Icon(Icons.chat, size: 19),
+                  );
+                }
+                return IconButton(
+                  onPressed: () => _pageCtrl.animateToPage(
+                    0,
+                    duration: Durations.medium1,
+                    curve: Curves.fastEaseInToSlowEaseOut,
+                  ),
+                  icon: const Icon(Icons.history, size: 19),
+                );
+              },
             ),
-            icon: const Icon(Icons.chat, size: 19),
-          );
-        }
-        return IconButton(
-          onPressed: () => _pageCtrl.animateToPage(
-            0,
-            duration: Durations.medium1,
-            curve: Curves.fastEaseInToSlowEaseOut,
-          ),
-          icon: const Icon(Icons.history, size: 19),
-        );
-      },
     );
   }
 
@@ -316,7 +337,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
 
   Widget _buildDrawer() {
     return Container(
-      width: (_media?.size.width ?? 300) * 0.7,
+      width: _isWide.value ? 270 : (_media?.size.width ?? 300) * 0.7,
       color: UIs.bgColor.fromBool(_isDark),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 17),

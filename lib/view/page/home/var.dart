@@ -33,6 +33,7 @@ final _focusNode = FocusNode();
 
 MediaQueryData? _media;
 bool _isDark = false;
+final _isWide = ValueNotifier(false);
 
 const _boxShadow = [
   BoxShadow(

@@ -68,7 +68,7 @@ class _HistoryPageState extends State<_HistoryPage>
       ),
       onTap: () {
         _switchChat(chatId);
-        if (_pageCtrl.page == 0) {
+        if (!_isWide.value && _pageCtrl.page == 0) {
           _pageCtrl.animateToPage(
             1,
             duration: Durations.medium3,
