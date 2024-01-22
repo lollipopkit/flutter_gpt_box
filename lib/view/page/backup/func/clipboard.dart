@@ -29,6 +29,7 @@ void _onTapClipboardRestore(BuildContext context) async {
   try {
     context.showLoadingDialog();
     final backup = await compute(Backup.fromJsonString, text.trim());
+    context.pop();
     if (backupFormatVersion != backup.version) {
       context.showSnackBar('Backup version not match');
       return;
@@ -51,8 +52,6 @@ void _onTapClipboardRestore(BuildContext context) async {
   } catch (e, trace) {
     Loggers.app.warning('Import backup failed', e, trace);
     context.showSnackBar(e.toString());
-  } finally {
-    context.pop();
   }
 }
 
@@ -60,12 +59,11 @@ void _onTapClipboardBackup(BuildContext context) async {
   try {
     context.showLoadingDialog();
     final backup = await Backup.backup();
+    context.pop();
     await Clipboard.setData(ClipboardData(text: backup));
     context.showSnackBar(l10n.success);
   } catch (e, trace) {
     Loggers.app.warning('Export backup failed', e, trace);
     context.showSnackBar(e.toString());
-  } finally {
-    context.pop();
   }
 }

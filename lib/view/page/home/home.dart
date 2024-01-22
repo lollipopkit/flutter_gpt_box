@@ -132,12 +132,12 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
       return const Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: history,
           ),
-          VerticalDivider(width: 1),
+          VerticalDivider(width: 1, color: Colors.white10),
           Expanded(
-            flex: 5,
+            flex: 2,
             child: chat,
           ),
         ],
@@ -188,6 +188,11 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                   },
                   icon: const Icon(Icons.add),
                   tooltip: l10n.newChat,
+                ),
+                IconButton(
+                  onPressed: () => _onTapRenameChat(_curChatId, context),
+                  icon: const Icon(Icons.abc, size: 19),
+                  tooltip: l10n.rename,
                 ),
                 _buildSwitchChatBtn(),
                 const Spacer(),

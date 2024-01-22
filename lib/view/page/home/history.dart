@@ -56,11 +56,6 @@ class _HistoryPageState extends State<_HistoryPage>
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            onPressed: () => _onTapRenameChat(chatId, context),
-            icon: const Icon(Icons.abc, size: 19),
-            tooltip: l10n.rename,
-          ),
-          IconButton(
             onPressed: () => _onTapDeleteChat(chatId, context),
             icon: const Icon(Icons.delete, size: 19),
           ),

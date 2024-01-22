@@ -41,7 +41,6 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       ),
     );
 
-    if (!isMultiLine) return child;
     return child.tap(onLongTap: () => onCopy?.call(textContent));
   }
 

@@ -13,6 +13,7 @@ void _onTapRestoreGPTNext(BuildContext context) async {
   if (picked == null) return;
 
   try {
+    context.showLoadingDialog();
     final (chats, cfg) = await compute(
       (params) async {
         final obj = json.decode(params.$1) as Map<String, dynamic>;
@@ -32,6 +33,7 @@ void _onTapRestoreGPTNext(BuildContext context) async {
       },
       (picked, ChatConfig.fromStore()),
     );
+    context.pop();
 
     var onlyRestoreHistory = false;
     context.showRoundDialog(

@@ -1,4 +1,5 @@
 {
+  "@@locale": "en",
   "about": "About",
   "apiUrl": "Api url",
   "assistant": "Assistant",
@@ -35,7 +36,7 @@
   "history": "History",
   "hoursAgo": "{hours} hours ago",
   "ignoreTip": "Ignore tips",
-  "initChatHelp": "### 📖 Tip.\n- The left drawer settings are global settings, the settings above the input box below are settings for the current conversation\n- Swipe right to enter the left side of the history page, you can modify the title of the chat, delete the chat\n- Importing data from other sources may cause duplicates, you can delete duplicates in the upper right corner of the history chat screen.\n\n### 🔍 Help\n- If GPT Box has bugs, please use [Github Issue](https://github.com/lollipopkit/flutter_gpt_box/issues)",
+  "initChatHelp": "### 📖 Tip\n- Long press code block to copy\n- The left drawer settings are global settings, the settings above the input box below are settings for the current conversation\n- Swipe right to enter the left side of the history page, you can modify the title of the chat, delete the chat\n- Importing data from other sources may cause duplicates, you can delete duplicates in the upper right corner of the history chat screen.\n\n### 🔍 Help\n- If GPT Box has bugs, please use [Github Issue](https://github.com/lollipopkit/flutter_gpt_box/issues)",
   "justNow": "Just now",
   "lang": "Language",
   "license": "License",

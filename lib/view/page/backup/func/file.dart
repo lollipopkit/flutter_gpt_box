@@ -24,13 +24,14 @@ Widget _buildFile(BuildContext context) {
   );
 }
 
-Future<void> _onTapFileRestore(BuildContext context) async {
+void _onTapFileRestore(BuildContext context) async {
   final text = await FileUtil.pickString();
   if (text == null) return;
 
   try {
     context.showLoadingDialog();
     final backup = await compute(Backup.fromJsonString, text.trim());
+    context.pop();
     if (backupFormatVersion != backup.version) {
       context.showSnackBar('Backup version not match');
       return;
@@ -46,14 +47,12 @@ Future<void> _onTapFileRestore(BuildContext context) async {
             await backup.restore(force: true);
             context.pop();
           },
-          child: Text(l10n.backup),
+          child: Text(l10n.restore),
         ),
       ],
     );
   } catch (e, trace) {
     Loggers.app.warning('Import backup failed', e, trace);
     context.showSnackBar(e.toString());
-  } finally {
-    context.pop();
   }
 }
