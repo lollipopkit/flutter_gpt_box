@@ -89,7 +89,8 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
 
 Future<void> _onTapWebdavUp(BuildContext context) async {
   _webdavLoading.value = true;
-  await Backup.backup();
+  final content = await Backup.backup();
+  await File(await Paths.bak).writeAsString(content);
   final uploadResult = await Webdav.upload(relativePath: Paths.bakName);
   if (uploadResult != null) {
     Loggers.app.warning('Upload webdav backup failed: $uploadResult');

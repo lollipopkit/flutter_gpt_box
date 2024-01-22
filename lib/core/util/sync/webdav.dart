@@ -11,7 +11,7 @@ import '../../../data/store/all.dart';
 
 abstract final class Webdav {
   /// Some WebDAV provider only support non-root path
-  static const _prefix = 'srvbox/';
+  static const _prefix = 'gptbox/';
 
   static var _client = WebdavClient(
     url: Stores.setting.webdavUrl.fetch(),
@@ -131,7 +131,8 @@ abstract final class Webdav {
 
   /// Create a local backup and upload it to WebDAV
   static Future<void> backup() async {
-    await Backup.backup();
+    final content = await Backup.backup();
+    await File(await Paths.bak).writeAsString(content);
     final uploadResult = await upload(relativePath: Paths.bakName);
     if (uploadResult != null) {
       _logger.warning('Upload failed: $uploadResult');

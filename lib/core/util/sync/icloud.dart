@@ -11,7 +11,7 @@ import '../../../data/model/app/sync.dart';
 import '../../../data/res/path.dart';
 
 abstract final class ICloud {
-  static const _containerId = 'iCloud.tech.lolli.serverbox';
+  static const _containerId = 'iCloud.tech.lolli.gptbox';
 
   static final _logger = Logger('iCloud');
 
@@ -194,7 +194,8 @@ abstract final class ICloud {
       _logger.warning('Download backup failed', e, s);
     }
     if (!dlSuccess) {
-      await Backup.backup();
+      final content = await Backup.backup();
+      await File(await Paths.bak).writeAsString(content);
       final uploadResult = await upload(relativePath: Paths.bakName);
       if (uploadResult != null) {
         _logger.warning('Upload backup failed: $uploadResult');
@@ -211,7 +212,8 @@ abstract final class ICloud {
         _logger.info('Restore from ${dlBak.lastModTime} success');
         break;
       case false:
-        await Backup.backup();
+        final content = await Backup.backup();
+        await File(await Paths.bak).writeAsString(content);
         final uploadResult = await upload(relativePath: Paths.bakName);
         if (uploadResult != null) {
           _logger.warning('Upload backup failed: $uploadResult');
