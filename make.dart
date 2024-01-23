@@ -21,7 +21,7 @@ const buildFuncs = {
   'android': flutterBuildAndroid,
   'mac': flutterBuildMacOS,
   'linux': flutterBuildLinux,
-  'win': flutterBuildWin,
+  'windows': flutterBuildWin,
   'web': flutterBuildWeb,
 };
 
@@ -288,6 +288,7 @@ Future<void> changeAppleVersion() async {
 }
 
 Future<void> killJava() async {
+  if (Platform.isWindows) return;
   final result = await Process.run('ps', ['-A']);
   final lines = (result.stdout as String).split('\n');
   for (final line in lines) {
