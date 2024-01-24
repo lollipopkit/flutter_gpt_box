@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -25,23 +26,31 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       language = lg.substring(9);
     }
 
+    if (language.isEmpty) return null;
+
     final textContent = element.textContent.trim();
     final isMultiLine = textContent.contains('\n');
-    final child = ValueListenableBuilder(
-      valueListenable: Stores.setting.fontSize.listenable(),
-      builder: (_, val, __) => HighlightView(
-        textContent,
-        language: language,
-        theme: _theme,
-        textStyle: _textStyle.copyWith(fontSize: val),
-        tabSize: 4,
-        padding: isMultiLine
-            ? const EdgeInsets.symmetric(vertical: 7, horizontal: 11)
-            : const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-      ),
-    );
 
-    return child;
+    return ValueListenableBuilder(
+      valueListenable: Stores.setting.fontSize.listenable(),
+      builder: (_, fontSize, __) => isMultiLine
+          ? HighlightView(
+              textContent,
+              language: language,
+              theme: _theme,
+              textStyle: _textStyle.copyWith(fontSize: fontSize),
+              tabSize: 4,
+              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
+            )
+          : HighlightViewSync(
+              textContent,
+              language: language,
+              theme: _theme,
+              textStyle: _textStyle.copyWith(fontSize: fontSize),
+              tabSize: 4,
+              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+            ),
+    ).tap(onLongTap: () => onCopy?.call(textContent));
   }
 
   Map<String, TextStyle> get _theme {

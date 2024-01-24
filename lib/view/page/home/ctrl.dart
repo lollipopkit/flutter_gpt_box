@@ -267,49 +267,6 @@ void _genChatTitle(String chatId, BuildContext context) async {
   _appbarTitleRN.rebuild();
 }
 
-void _onRmDup(BuildContext context) async {
-  final existTitles = <String>{};
-  final rmIds = <String>[];
-  for (final item in _allHistories.values) {
-    if (rmIds.contains(item.id)) continue;
-    final name = item.name;
-    if (name == null || name.isEmpty) continue;
-    if (existTitles.contains(item.name)) {
-      rmIds.add(item.id);
-    } else {
-      existTitles.add(name);
-    }
-  }
-
-  if (rmIds.isEmpty) {
-    context.showSnackBar(l10n.noDuplication);
-    return;
-  }
-
-  final rmCount = rmIds.length;
-  final result = await context.showRoundDialog<bool>(
-    title: l10n.attention,
-    child: Text(l10n.rmDuplicationFmt(rmCount)),
-    actions: [
-      TextButton(
-        onPressed: () => context.pop(true),
-        child: Text(l10n.ok),
-      ),
-    ],
-  );
-
-  if (result != true) return;
-
-  for (final id in rmIds) {
-    Stores.history.delete(id);
-    _allHistories.remove(id);
-  }
-  _historyRN.rebuild();
-  if (!_allHistories.keys.contains(_curChatId)) {
-    _switchChat();
-  }
-}
-
 void _onShareChat(BuildContext context) async {
   final result = _curChat?.gen4Share(_isDark);
   if (result == null) {
@@ -355,4 +312,46 @@ void loadFromStore() {
   _allChatIds = _allHistories.keys.toList();
   _historyRN.rebuild();
   _switchChat();
+}
+
+void _removeDuplicateHistory(BuildContext context) async {
+  final existTitles = <String>{};
+  final rmIds = <String>[];
+  for (final item in _allHistories.values) {
+    if (rmIds.contains(item.id)) continue;
+    final name = item.name;
+    if (name == null || name.isEmpty) continue;
+    if (existTitles.contains(item.name)) {
+      rmIds.add(item.id);
+    } else {
+      existTitles.add(name);
+    }
+  }
+
+  if (rmIds.isEmpty) {
+    return;
+  }
+
+  final rmCount = rmIds.length;
+  final result = await context.showRoundDialog<bool>(
+    title: l10n.attention,
+    child: Text(l10n.rmDuplicationFmt(rmCount)),
+    actions: [
+      TextButton(
+        onPressed: () => context.pop(true),
+        child: Text(l10n.ok),
+      ),
+    ],
+  );
+
+  if (result != true) return;
+
+  for (final id in rmIds) {
+    Stores.history.delete(id);
+    _allHistories.remove(id);
+  }
+  _historyRN.rebuild();
+  if (!_allHistories.keys.contains(_curChatId)) {
+    _switchChat();
+  }
 }

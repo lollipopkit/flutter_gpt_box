@@ -301,44 +301,40 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   }
 
   Widget _buildMoreActions() {
-    return PopupMenuButton<_MoreAction>(
-      icon: const Icon(Icons.more_vert),
-      tooltip: l10n.more,
-      onSelected: (value) => value.onTap(),
-      itemBuilder: (context) {
+    return ListenableBuilder(
+      listenable: _pageIndicatorRN,
+      builder: (_, __) {
         /// Put it here, or it's l10n string won't rebuild every time
         final moreActions = [
-          _MoreAction(
-            title: l10n.rmDuplication,
-            icon: Icons.delete,
-            onTap: () => _onRmDup(context),
-            onPageIdxs: [0],
-          ),
           _MoreAction(
             title: l10n.share,
             icon: Icons.share,
             onTap: () => _onShareChat(context),
             onPageIdxs: [1],
           ),
+          _MoreAction(
+            title: l10n.delete,
+            icon: Icons.delete,
+            onTap: () => _onDeleteChat(_curChatId),
+            onPageIdxs: [1],
+          ),
         ];
 
-        final items = <PopupMenuEntry<_MoreAction>>[];
+        final items = <IconButton>[];
         for (final item in moreActions) {
-          if (!item.onPageIdxs.contains(_curPageIdx)) continue;
-          items.add(
-            PopupMenuItem(
-              value: item,
-              child: Row(
-                children: [
-                  Icon(item.icon),
-                  UIs.width13,
-                  Text(item.title),
-                ],
-              ),
-            ),
-          );
+          if (!_isWide.value && !item.onPageIdxs.contains(_curPageIdx)) {
+            continue;
+          }
+          items.add(IconButton(
+            onPressed: item.onTap,
+            icon: Icon(item.icon),
+            tooltip: item.title,
+          ));
         }
-        return items;
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: items,
+        );
       },
     );
   }
@@ -394,5 +390,6 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     // - Init help uses [l10n] to gen msg, so [l10n] must be ready
     // - [l10n] is ready after first layout
     _switchChat();
+    _removeDuplicateHistory(context);
   }
 }

@@ -15,7 +15,10 @@ final _chatRNMap = <String, RebuildNode>{};
 
 /// For page body chat view
 final _chatRN = RebuildNode();
-final _historyRN = RebuildNode();
+final _historyRN = RebuildNode()
+  ..addListener(() {
+    _allChatIds = _allHistories.keys.toList();
+  });
 final _appbarTitleRN = RebuildNode();
 final _sendBtnRN = RebuildNode();
 final _pageIndicatorRN = RebuildNode();

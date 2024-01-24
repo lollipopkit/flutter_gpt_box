@@ -100,15 +100,18 @@ Future<void> _initDesktopWindow() async {
   await windowManager.ensureInitialized();
   await CustomAppBar.updateTitlebarHeight();
 
-  const windowOptions = WindowOptions(
-    size: Size(960, 720),
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.hidden,
-  );
-  await windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
+  /// Or it will cause stuck.
+  if (BuildMode.isRelease) {
+    const windowOptions = WindowOptions(
+      size: Size(960, 720),
+      center: true,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+    await windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
 }

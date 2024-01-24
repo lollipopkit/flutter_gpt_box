@@ -31,8 +31,8 @@ class StoreSwitch extends StatelessWidget {
           value: value,
           onChanged: (value) async {
             if (validator?.call(value) == false) return;
-            await callback?.call(value);
             prop.put(value, updateLastModified: updateLastModTime);
+            await callback?.call(value);
           },
         );
       },

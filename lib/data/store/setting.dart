@@ -25,7 +25,7 @@ class SettingStore extends Store {
   /// Auto scroll to bottom when new message comes.
   late final scrollBottom = property('scrollBottom', true);
 
-  late final fontSize = property('fontSize', 12.0);
+  late final fontSize = property('fontSize', 13.0);
 
   late final locale = property('locale', '');
 

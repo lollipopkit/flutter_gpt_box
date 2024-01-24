@@ -44,7 +44,11 @@ class _ChatPageState extends State<_ChatPage>
             'code': CodeElementBuilder(onCopy: _onCopy),
           },
           onTapLink: MarkdownUtils.onLinkTap,
+          shrinkWrap: false,
           fitContent: false,
+
+          /// User experience is better when this is false.
+          selectable: false,
         );
       },
     );
@@ -71,7 +75,17 @@ class _ChatPageState extends State<_ChatPage>
   ) {
     return Row(
       children: [
-        Text(chatItem.role.name, style: UIs.text13Grey),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(13),
+            color: Colors.grey,
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
+          child: Text(
+            chatItem.role.name,
+            style: const TextStyle(fontSize: 12, color: Colors.white),
+          ),
+        ),
         const Spacer(),
         IconButton(
           onPressed: () async {
