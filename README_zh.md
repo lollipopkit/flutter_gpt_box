@@ -35,7 +35,7 @@
 
 
 ## ⬇️ 使用
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux（即将上线）](https://res.lolli.tech/gpt/latest.AppImage) / [Windows（即将上线）](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
 - 由于中国政策原因，且**目前**无法完成[备案](https://github.com/lollipopkit/flutter_server_box/discussions/180)。请移步 AppStore 其他区下载。
 - 关于安全：
@@ -58,16 +58,14 @@
 
 
 ## 🧱 贡献
-**任何正面的贡献都欢迎**。
+- 任何正面的贡献都欢迎。
+- [本地化翻译指南](https://blog.lolli.tech/faq/) 可在我的博客中找到。
 
-### 🌍 l10n
-1. Fork 本项目，并 Clone 你 Fork 的项目至你的电脑
-2. 在 `lib/l10n/` 文件夹内创建 `.arb` 本地化文件
-   - 文件名应该类似 `intl_XX.arb`,  `XX` 是语言标识码。 例如 `intl_en.arb` 是给英语的， `intl_zh.arb` 是给中文的
-3. 向 `.arb` 本地化文件添加内容。 你可以查看 `intl_en.arb` 和 `intl_zh.arb` 的内容，并理解其含义，来创建新的本地化文件
-4. 运行 `flutter gen-l10n` 来生成所需文件
-5. Commit 变更到你 Fork 的 Repo
-6. 在我的项目中发起 Pull Request
+
+## 💡 我的其它 Apps
+- [Server Box](https://github.com/lollipopkit/flutter_gpt_box) - 服务器状态和工具。
+- [2FA Box](https://github.com/lollipopkit/flutter_2fa) - 开源的 2FA 应用。
+- [更多](https://github.com/lollipopkit) - 工具 & etc.
 
 
 ## 📝 协议

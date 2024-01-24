@@ -35,7 +35,7 @@ A third-party GPT Client for OpenAI API on all platforms.
 
 
 ## ⬇️ Use
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux(Coming)](https://res.lolli.tech/gpt/latest.AppImage) / [Windows(Coming)](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
 - Due to Chinese government policy and the [BEIAN](https://github.com/lollipopkit/flutter_server_box/discussions/180) issue. Please download it from other regions of AppStore.
 - Security:
@@ -55,17 +55,13 @@ After you read the above, you can:
 
 
 ## 🧱 Contribution
-**Any positive contribution is welcome**.
+- Any positive contribution is welcome.
+- [l10n guide](https://blog.lolli.tech/faq/) can be found in my blog.
 
-### 🌍 l10n
-1. Fork this repo and clone forked repo to your local machine.
-2. Create `arb` file in `lib/l10n/` directory
-   - File name should be `intl_XX.arb`, where `XX` is the language code. Such as `intl_en.arb` for English and `intl_zh.arb` for Chinese.
-3. Add content to the file. You can refer to `intl_en.arb` and `intl_zh.arb` for the format.
-4. Run `flutter gen-l10n` to generate files.
-5. Pull commit to your forked repo.
-6. Request a pull request on my repo.
-
+## 💡 My other apps
+- [Server Box](https://github.com/lollipopkit/flutter_gpt_box) - Server status & tools.
+- [2FA Box](https://github.com/lollipopkit/flutter_2fa) - Open source 2FA app for Android, iOS and the web.
+- [More](https://github.com/lollipopkit) - Tools & etc.
 
 ## 📝 License
 `GPL v3 lollipopkit`

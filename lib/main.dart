@@ -55,6 +55,8 @@ Future<void> _initApp() async {
   await _initDb();
   await _loadStores();
 
+  Analysis.init();
+
   OpenAI.showLogs = !BuildMode.isRelease;
   OpenAI.showResponsesLogs = !BuildMode.isRelease;
   OpenAICfg.apply();
