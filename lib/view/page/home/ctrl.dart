@@ -277,7 +277,7 @@ void _onShareChat(BuildContext context) async {
   }
 
   final pic = await _screenshotCtrl.captureFromLongWidget(
-    result.$1,
+    result,
     context: context,
     constraints: const BoxConstraints(maxWidth: 577),
     pixelRatio: _media?.devicePixelRatio ?? 1,

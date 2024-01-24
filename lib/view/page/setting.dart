@@ -99,6 +99,7 @@ class _SettingPageState extends State<SettingPage> {
           );
           if (result != null) {
             _store.themeMode.put(result.index);
+
             /// Wait for db update.
             Future.delayed(const Duration(milliseconds: 100), () {
               RebuildNode.app.rebuild();

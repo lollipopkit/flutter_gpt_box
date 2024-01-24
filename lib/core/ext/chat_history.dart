@@ -5,12 +5,34 @@ import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 
 extension ChatHistoryShare on ChatHistory {
-  (Widget, String) gen4Share(bool isDark) {
-    final mdContent = items
-        .map((e) => '##### ${e.role.toSingleChar}${e.toMarkdown}')
-        .join('\n\n');
+  Widget gen4Share(bool isDark) {
+    final children = <Widget>[];
+    for (final item in items) {
+      children.add(Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(13),
+          color: Colors.grey,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
+        child: Text(
+          item.role.name,
+          style: const TextStyle(fontSize: 12, color: Colors.white),
+        ),
+      ));
+      children.add(UIs.height13);
+      children.add(MarkdownBody(
+        data: item.toMarkdown,
+        extensionSet: md.ExtensionSet.gitHubWeb,
+        builders: {
+          'code': CodeElementBuilder(
+              brightness: isDark ? Brightness.dark : Brightness.light),
+        },
+      ));
+      children.add(UIs.height13);
+    }
     final widget = Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       decoration: BoxDecoration(
@@ -25,12 +47,10 @@ extension ChatHistoryShare on ChatHistory {
             style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
           ),
           UIs.height13,
-          MarkdownBody(
-            data: mdContent,
-            shrinkWrap: true,
-            builders: {
-              'code': CodeElementBuilder(),
-            },
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children,
           ),
           UIs.height13,
           Text(
@@ -44,6 +64,6 @@ extension ChatHistoryShare on ChatHistory {
         ],
       ),
     );
-    return (widget, mdContent);
+    return widget;
   }
 }

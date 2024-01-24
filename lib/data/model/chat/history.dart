@@ -223,12 +223,6 @@ enum ChatRole {
     }
   }
 
-  String get toSingleChar => switch (this) {
-        user => 'Q: ',
-        assist => 'A: ',
-        system => 'S: ',
-      };
-
   String get name => switch (this) {
         user => l10n.user,
         assist => l10n.assistant,
