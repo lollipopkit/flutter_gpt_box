@@ -6,7 +6,7 @@
   - [x] Genrate title for chat
   - [x] Chat soft wrap
   - [x] Auto scroll to bottom when GPT is genenrating text 
-  - [ ] Web UI max width
+  - [x] Desktop view
 - [x] Backup
   - [x] iCloud
   - [x] File
