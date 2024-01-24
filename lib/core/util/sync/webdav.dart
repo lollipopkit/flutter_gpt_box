@@ -91,9 +91,9 @@ abstract final class Webdav {
 
   static void changeClient(String url, String user, String pwd) {
     _client = WebdavClient(url: url, user: user, pwd: pwd);
-    Stores.setting.webdavUrl.put(url);
-    Stores.setting.webdavUser.put(user);
-    Stores.setting.webdavPwd.put(pwd);
+    Stores.setting.webdavUrl.put(url, updateLastModified: false);
+    Stores.setting.webdavUser.put(user, updateLastModified: false);
+    Stores.setting.webdavPwd.put(pwd, updateLastModified: false);
   }
 
   static Future<void> sync() async {

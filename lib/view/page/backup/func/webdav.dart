@@ -16,6 +16,10 @@ Widget _buildWebdav(BuildContext context) {
           trailing: StoreSwitch(
             prop: Stores.setting.webdavSync,
             validator: (p0) {
+              if (Stores.setting.icloudSync.fetch() && p0) {
+                context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
+                return false;
+              }
               if (p0) {
                 if (Stores.setting.webdavUrl.fetch().isEmpty ||
                     Stores.setting.webdavUser.fetch().isEmpty ||

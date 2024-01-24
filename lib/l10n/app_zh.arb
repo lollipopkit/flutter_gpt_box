@@ -69,6 +69,7 @@
   "softWrap": "自动换行",
   "success": "成功 🏅～",
   "sureRestoreFmt": "确定恢复备份（{time}）？",
+  "syncConflict": "冲突：不能同时开启 {a} 和 {b}",
   "system": "系统",
   "themeColorSeed": "主题颜色种子",
   "themeMode": "主题模式",

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
-import 'package:flutter_highlighter/flutter_highlighter.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -35,13 +34,14 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         language: language,
         theme: _theme,
         textStyle: _textStyle.copyWith(fontSize: val),
+        tabSize: 4,
         padding: isMultiLine
             ? const EdgeInsets.symmetric(vertical: 7, horizontal: 11)
             : const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
       ),
     );
 
-    return child.tap(onLongTap: () => onCopy?.call(textContent));
+    return child;
   }
 
   Map<String, TextStyle> get _theme {

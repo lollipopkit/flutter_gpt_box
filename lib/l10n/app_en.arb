@@ -69,6 +69,7 @@
   "softWrap": "Soft wrap",
   "success": "Success 🏅 ~",
   "sureRestoreFmt": "Are you sure to restore Backup({time})?",
+  "syncConflict": "Sync conflict: can't turn on {a} and {b} at the same time.",
   "system": "System",
   "themeColorSeed": "Theme color seed",
   "themeMode": "Theme mode",

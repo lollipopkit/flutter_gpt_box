@@ -44,8 +44,8 @@ void _onTapFileRestore(BuildContext context) async {
       actions: [
         TextButton(
           onPressed: () async {
-            await backup.restore(force: true);
             context.pop();
+            await backup.restore(force: true);
           },
           child: Text(l10n.restore),
         ),

@@ -62,7 +62,7 @@ extension BoxX on Box {
 abstract class StorePropertyBase<T> {
   ValueListenable<T> listenable();
   T fetch();
-  Future<void> put(T value);
+  Future<void> put(T value, {bool updateLastModified = true});
   Future<void> delete();
 }
 
@@ -88,7 +88,10 @@ class _StoreProperty<T> implements StorePropertyBase<T> {
   }
 
   @override
-  Future<void> put(T value) {
+  Future<void> put(T value, {bool updateLastModified = true}) async {
+    if (updateLastModified) {
+      await _box.updateLastModified();
+    }
     return _box.put(_key, value);
   }
 
@@ -122,7 +125,7 @@ class _StoreListProperty<T> implements StorePropertyBase<List<T>> {
   }
 
   @override
-  Future<void> put(List<T> value) {
+  Future<void> put(List<T> value, {bool updateLastModified = true}) async {
     return _box.put(_key, value);
   }
 

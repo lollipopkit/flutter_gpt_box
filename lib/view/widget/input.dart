@@ -13,9 +13,10 @@ class Input extends StatefulWidget {
   final bool obscureText;
   final IconData? icon;
   final TextInputType? type;
+  final TextInputAction? action;
   final FocusNode? node;
   final bool autoCorrect;
-  final bool suggestiion;
+  final bool suggestion;
   final String? errorText;
   final Widget? prefix;
   final Widget? suffix;
@@ -35,9 +36,10 @@ class Input extends StatefulWidget {
     this.obscureText = false,
     this.icon,
     this.type,
+    this.action,
     this.node,
     this.autoCorrect = false,
-    this.suggestiion = false,
+    this.suggestion = false,
     this.errorText,
     this.prefix,
     this.autoFocus = false,
@@ -97,9 +99,10 @@ class _InputState extends State<Input> {
         suffixIcon: suffix,
       ),
       keyboardType: widget.type,
+      textInputAction: widget.action,
       focusNode: widget.node,
       autocorrect: widget.autoCorrect,
-      enableSuggestions: widget.suggestiion,
+      enableSuggestions: widget.suggestion,
       autofocus: widget.autoFocus,
       onSubmitted: widget.onSubmitted,
       onChanged: widget.onChanged,

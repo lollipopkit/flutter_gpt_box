@@ -1,14 +1,8 @@
 import 'package:dart_openai/dart_openai.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/res/uuid.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:hive_flutter/adapters.dart';
-
-import '../../../view/widget/code.dart';
-import '../../res/build.dart';
 
 part 'history.g.dart';
 
@@ -52,52 +46,12 @@ final class ChatHistory {
       id: json['id'] as String,
       name: json['name'] as String,
       items: (json['items'] as List)
-          .map((e) => ChatHistoryItem.fromJson(e as Map<String, dynamic>))
+          .map((e) => ChatHistoryItem.fromJson(e.cast<String, dynamic>()))
           .toList(),
       config: json['config'] == null
           ? null
-          : ChatConfig.fromJson(json['config'] as Map<String, dynamic>),
+          : ChatConfig.fromJson(json['config'].cast<String, dynamic>()),
     );
-  }
-
-  (Widget, String) gen4Share(bool isDark) {
-    final mdContent = items
-        .map((e) => '##### ${e.role.toSingleChar}${e.toMarkdown}')
-        .join('\n\n');
-    final widget = Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(7),
-        color: isDark ? Colors.black : Colors.white,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            name ?? l10n.untitled,
-            style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
-          ),
-          UIs.height13,
-          MarkdownBody(
-            data: mdContent,
-            shrinkWrap: true,
-            builders: {
-              'code': CodeElementBuilder(),
-            },
-          ),
-          UIs.height13,
-          Text(
-            '${l10n.shareFrom} GPT Box v1.0.${Build.build}',
-            style: const TextStyle(
-              fontSize: 9,
-              color: Colors.grey,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
-      ),
-    );
-    return (widget, mdContent);
   }
 
   static ChatHistory get example => ChatHistory.noid(
@@ -177,7 +131,7 @@ final class ChatHistoryItem {
     return ChatHistoryItem(
       role: ChatRole.values[json['role'] as int],
       content: (json['content'] as List)
-          .map((e) => ChatContent.fromJson(e as Map<String, dynamic>))
+          .map((e) => ChatContent.fromJson(e.cast<String, dynamic>()))
           .toList(),
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
       id: json['id'] as String,

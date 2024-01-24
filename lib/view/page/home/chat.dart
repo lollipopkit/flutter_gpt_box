@@ -40,11 +40,11 @@ class _ChatPageState extends State<_ChatPage>
       builder: (_, __) {
         return MarkdownBody(
           data: chatItem.toMarkdown,
-          selectable: true,
           builders: {
             'code': CodeElementBuilder(onCopy: _onCopy),
           },
           onTapLink: MarkdownUtils.onLinkTap,
+          fitContent: false,
         );
       },
     );

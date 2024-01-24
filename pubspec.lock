@@ -310,14 +310,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_highlighter:
+  flutter_highlight:
     dependency: "direct main"
     description:
-      name: flutter_highlighter
-      sha256: "93173afd47a9ada53f3176371755e7ea4a1065362763976d06d6adfb4d946e10"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.1"
+      path: flutter_highlight
+      ref: master
+      resolved-ref: "8530c49a1c4bf1a59dd57784bf128c48e15f38fd"
+      url: "https://github.com/hacker1024/highlight.dart"
+    source: git
+    version: "0.7.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -397,14 +398,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
-  highlighter:
+  highlight:
     dependency: transitive
     description:
-      name: highlighter
-      sha256: "92180c72b9da8758e1acf39a45aa305a97dcfe2fdc8f3d1d2947c23f2772bfbc"
+      name: highlight
+      sha256: "5353a83ffe3e3eca7df0abfb72dcf3fa66cc56b953728e7113ad4ad88497cf21"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.7.0"
   hive:
     dependency: transitive
     description:
@@ -701,22 +702,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.8+2"
-  riverpod:
-    dependency: transitive
-    description:
-      name: riverpod
-      sha256: "942999ee48b899f8a46a860f1e13cee36f2f77609eb54c5b7a669bb20d550b11"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.9"
-  riverpod_annotation:
-    dependency: "direct main"
-    description:
-      name: riverpod_annotation
-      sha256: b70e95fbd5ca7ce42f5148092022971bb2e9843b6ab71e97d479e8ab52e98979
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.3"
   screen_retriever:
     dependency: transitive
     description:
@@ -818,14 +803,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
-  state_notifier:
-    dependency: transitive
-    description:
-      name: state_notifier
-      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:

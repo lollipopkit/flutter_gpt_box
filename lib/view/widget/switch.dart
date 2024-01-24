@@ -12,11 +12,14 @@ class StoreSwitch extends StatelessWidget {
   /// If return false, the switch will not change.
   final bool Function(bool)? validator;
 
+  final bool updateLastModTime;
+
   const StoreSwitch({
     super.key,
     required this.prop,
     this.callback,
     this.validator,
+    this.updateLastModTime = true,
   });
 
   @override
@@ -29,7 +32,7 @@ class StoreSwitch extends StatelessWidget {
           onChanged: (value) async {
             if (validator?.call(value) == false) return;
             await callback?.call(value);
-            prop.put(value);
+            prop.put(value, updateLastModified: updateLastModTime);
           },
         );
       },

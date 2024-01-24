@@ -4,6 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chatgpt/core/ext/chat_history.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
@@ -208,7 +209,8 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
               controller: _inputCtrl,
               label: l10n.message,
               node: _focusNode,
-              type: TextInputType.text,
+              type: TextInputType.multiline,
+              // action: TextInputAction.send,
               maxLines: 5,
               minLines: 1,
               suffix: ListenableBuilder(

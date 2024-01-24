@@ -345,3 +345,7 @@ void _onShareChat(BuildContext context) async {
 //     role: ChatRole.user,
 //   ));
 // }
+
+void afterRestore() {
+  _switchChat();
+}

@@ -10,6 +10,8 @@ import 'package:flutter_chatgpt/core/build_mode.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/util/datetime.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:flutter_chatgpt/core/util/sync/icloud.dart';
+import 'package:flutter_chatgpt/core/util/sync/webdav.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/provider/debug.dart';
@@ -60,6 +62,11 @@ Future<void> _initApp() async {
   OpenAI.showLogs = !BuildMode.isRelease;
   OpenAI.showResponsesLogs = !BuildMode.isRelease;
   OpenAICfg.apply();
+
+  if (isIOS || isMacOS) {
+    if (Stores.setting.icloudSync.fetch()) ICloud.sync();
+  }
+  if (Stores.setting.webdavSync.fetch()) Webdav.sync();
 }
 
 Future<void> _initDb() async {
