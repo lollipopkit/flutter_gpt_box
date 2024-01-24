@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
@@ -29,7 +28,6 @@ import '../../../data/store/all.dart';
 import '../../widget/input.dart';
 import '../../widget/switch.dart';
 
-part 'func/clipboard.dart';
 part 'func/file.dart';
 part 'func/webdav.dart';
 part 'func/icloud.dart';
@@ -59,7 +57,6 @@ final class BackupPage extends StatelessWidget {
         _buildTitle('App'),
         if (isMacOS || isIOS) _buildIcloud(context),
         if (!isWeb) _buildWebdav(context),
-        _buildClipboard(context),
         _buildFile(context),
         _buildTitle(l10n.thirdParty),
         _buildGPTNext(context),

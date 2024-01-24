@@ -168,6 +168,10 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
   }
 
   final name = entity.name ?? 'Untitled';
+  if (BuildMode.isDebug) {
+    _onDeleteChat(chatId);
+    return;
+  }
   context.showRoundDialog(
     title: l10n.attention,
     child: Text(l10n.delFmt(name, l10n.chat)),
@@ -346,6 +350,9 @@ void _onShareChat(BuildContext context) async {
 //   ));
 // }
 
-void afterRestore() {
+void loadFromStore() {
+  _allHistories = Stores.history.fetchAll();
+  _allChatIds = _allHistories.keys.toList();
+  _historyRN.rebuild();
   _switchChat();
 }

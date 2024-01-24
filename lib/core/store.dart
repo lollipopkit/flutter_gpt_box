@@ -126,6 +126,9 @@ class _StoreListProperty<T> implements StorePropertyBase<List<T>> {
 
   @override
   Future<void> put(List<T> value, {bool updateLastModified = true}) async {
+    if (updateLastModified) {
+      await _box.updateLastModified();
+    }
     return _box.put(_key, value);
   }
 

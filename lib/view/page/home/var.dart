@@ -20,10 +20,10 @@ final _appbarTitleRN = RebuildNode();
 final _sendBtnRN = RebuildNode();
 final _pageIndicatorRN = RebuildNode();
 
-late final Map<String, ChatHistory> _allHistories;
+Map<String, ChatHistory> _allHistories = {};
 
 /// Keep this for sort
-late final List<String> _allChatIds;
+List<String> _allChatIds = [];
 String _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
 final _chatStreamSubs = <String, StreamSubscription>{};

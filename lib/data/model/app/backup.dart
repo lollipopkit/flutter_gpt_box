@@ -4,6 +4,7 @@ import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/store.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
+import 'package:flutter_chatgpt/view/page/home/home.dart';
 
 const backupFormatVersion = 1;
 
@@ -67,9 +68,7 @@ class Backup {
       Stores.history.box.put(s, history[s]);
     }
 
-    // update last modified time, avoid restore again
-    Stores.setting.box.updateLastModified(lastModTime);
-
+    loadFromStore();
     RebuildNode.app.rebuild();
 
     return true;

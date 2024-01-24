@@ -36,6 +36,7 @@ class HistoryStore extends Store {
   }
 
   void put(ChatHistory history) {
+    box.updateLastModified();
     box.put(history.id, history);
   }
 

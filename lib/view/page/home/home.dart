@@ -4,6 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_chatgpt/core/build_mode.dart';
 import 'package:flutter_chatgpt/core/ext/chat_history.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
