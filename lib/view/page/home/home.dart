@@ -27,8 +27,9 @@ import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/code.dart';
-import 'package:flutter_chatgpt/view/widget/fade.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
+import 'package:flutter_chatgpt/view/widget/slide_trans.dart';
+import 'package:flutter_chatgpt/view/widget/switch_page_indicator.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:screenshot/screenshot.dart';
@@ -47,7 +48,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AfterLayoutMixin<HomePage>, TickerProviderStateMixin {
   Timer? _refreshTimeTimer;
 
   @override
@@ -92,39 +94,39 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     return CustomAppBar(
       title: ListenableBuilder(
         listenable: _appbarTitleRN,
-        builder: (_, __) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              _curChat?.name ?? l10n.untitled,
-              style: UIs.text15,
+        builder: (_, __) => AnimatedSwitcher(
+          duration: Durations.short3,
+          child: SizedBox(
+            key: Key(_curChatId),
+            width: (_media?.size.width ?? 100) * 0.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  _curChat?.name ?? l10n.untitled,
+                  style: UIs.text15,
+                ),
+                ListenableBuilder(
+                  listenable: _timeRN,
+                  builder: (_, __) {
+                    final entity = _curChat;
+                    if (entity == null) return Text(l10n.empty);
+                    final len = '${entity.items.length} ${l10n.message}';
+                    final time =
+                        entity.items.lastOrNull?.createdAt.toAgo ?? l10n.empty;
+                    return Text(
+                      '$len · $time',
+                      style: UIs.text11Grey,
+                    );
+                  },
+                )
+              ],
             ),
-            ListenableBuilder(
-              listenable: _timeRN,
-              builder: (_, __) {
-                final entity = _curChat;
-                if (entity == null) return Text(l10n.empty);
-                final len = '${entity.items.length} ${l10n.message}';
-                final time =
-                    entity.items.lastOrNull?.createdAt.toAgo ?? l10n.empty;
-                return Text(
-                  '$len · $time',
-                  style: UIs.text11Grey,
-                );
-              },
-            )
-          ],
+          ),
         ),
       ),
-      actions: [
-        IconButton(
-          onPressed: () => Routes.debug.go(context),
-          icon: const Icon(Icons.developer_board),
-          tooltip: 'Debug',
-        ),
-        _buildMoreActions(),
-      ],
+      actions: _buildAppbarActions(),
     );
   }
 
@@ -237,6 +239,42 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     );
   }
 
+  List<Widget> _buildAppbarActions() {
+    return [
+      ListenableBuilder(
+        listenable: _pageIndicatorRN,
+        builder: (_, __) {
+          final items = <IconButton>[
+            IconButton(
+              onPressed: () => Routes.debug.go(context),
+              icon: const Icon(Icons.developer_board),
+              tooltip: 'Debug',
+            ),
+          ];
+
+          /// Put it here, or it's l10n string won't rebuild every time
+          for (final item in _buildTopRightBtns()) {
+            if (!_isWide.value && !item.onPageIdxs.contains(_curPageIdx)) {
+              continue;
+            }
+            items.add(IconButton(
+              onPressed: item.onTap,
+              icon: Icon(item.icon),
+              tooltip: item.title,
+            ));
+          }
+
+          return AnimatedContainer(
+            duration: Durations.short3,
+            curve: Curves.fastEaseInToSlowEaseOut,
+            width: items.length * 50,
+            child: Row(children: items),
+          );
+        },
+      )
+    ];
+  }
+
   Widget _buildSwitchPageBtn() {
     return ValueListenableBuilder(
       valueListenable: _isWide,
@@ -265,31 +303,6 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                 );
               },
             ),
-    );
-  }
-
-  Widget _buildMoreActions() {
-    return ListenableBuilder(
-      listenable: _pageIndicatorRN,
-      builder: (_, __) {
-        final items = <IconButton>[];
-
-        /// Put it here, or it's l10n string won't rebuild every time
-        for (final item in _buildTopRightBtns()) {
-          if (!_isWide.value && !item.onPageIdxs.contains(_curPageIdx)) {
-            continue;
-          }
-          items.add(IconButton(
-            onPressed: item.onTap,
-            icon: Icon(item.icon),
-            tooltip: item.title,
-          ));
-        }
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: items,
-        );
-      },
     );
   }
 

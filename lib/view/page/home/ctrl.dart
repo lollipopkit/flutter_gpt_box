@@ -10,6 +10,18 @@ void _switchChat([String? id]) {
   _appbarTitleRN.rebuild();
 }
 
+void _switchPreviousChat() {
+  final idx = _allHistories.keys.toList().indexOf(_curChatId);
+  if (idx < 0 || idx >= _allHistories.length - 1) return;
+  _switchChat(_allHistories.keys.elementAt(idx + 1));
+}
+
+void _switchNextChat() {
+  final idx = _allHistories.keys.toList().indexOf(_curChatId);
+  if (idx <= 0) return;
+  _switchChat(_allHistories.keys.elementAt(idx - 1));
+}
+
 void _storeChat(String chatId, BuildContext context) {
   final chat = _allHistories[chatId];
   if (chat == null) {
@@ -125,6 +137,7 @@ ChatHistory _newChat() {
   } else {
     newHistory = ChatHistory.empty;
   }
+
   /// Put newHistory to the first place, the default implementation of Dart's
   /// Map will put the new item to the last place.
   _allHistories = {newHistory.id: newHistory, ..._allHistories};

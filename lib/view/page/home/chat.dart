@@ -12,23 +12,54 @@ class _ChatPageState extends State<_ChatPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ListenableBuilder(
-      listenable: _chatRN,
-      builder: (_, __) {
-        final item = _curChat?.items;
-        if (item == null) return UIs.placeholder;
-        return FadeIn(
-          key: ValueKey(_curChatId),
-          child: ListView.builder(
-            controller: _scrollCtrl,
-            padding: const EdgeInsets.symmetric(horizontal: 7),
-            itemCount: item.length,
-            itemBuilder: (_, index) {
-              return _buildChatItem(item, index);
-            },
-          ),
-        );
+    var switchDirection = SwitchPageDirection.next;
+    return SwitchPageIndicator(
+      onSwitchPage: (direction) {
+        switchDirection = direction;
+        switch (direction) {
+          case SwitchPageDirection.previous:
+            _switchPreviousChat();
+            break;
+          case SwitchPageDirection.next:
+            _switchNextChat();
+            break;
+        }
+        return Future.value();
       },
+      child: ListenableBuilder(
+        listenable: _chatRN,
+        builder: (_, __) {
+          final item = _curChat?.items;
+          if (item == null) return UIs.placeholder;
+          return AnimatedSwitcher(
+            duration: Durations.medium3,
+            switchInCurve: Easing.standardDecelerate,
+            switchOutCurve: Easing.standardDecelerate,
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SlideTransitionX(
+                position: animation,
+                direction: switchDirection == SwitchPageDirection.next
+                    ? AxisDirection.up
+                    : AxisDirection.down,
+                child: child,
+              ),
+            ),
+            child: ListView.builder(
+              key: Key(_curChatId),
+              controller: _scrollCtrl,
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
+              itemCount: item.length,
+              itemBuilder: (_, index) {
+                return _buildChatItem(item, index);
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 

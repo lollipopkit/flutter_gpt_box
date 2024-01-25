@@ -37,7 +37,7 @@
   "history": "历史",
   "hoursAgo": "{hours} 小时前",
   "ignoreTip": "忽略提示",
-  "initChatHelp": "### 📖 提示\n- 长按代码块来复制\n- 左侧抽屉设置为全局设置，下方的输入框上方的设置为当前对话的设置\n- 向右滑动可以进入左侧的历史聊天记录页面，可以修改聊天标题、删除聊天\n- 从其他数据源导入数据可能会导致重复，可以在历史聊天界面右上角删除重复\n\n### 🔍 帮助\n- 如果 GPT Box 有 bug，请使用 [Github Issue](https://github.com/lollipopkit/flutter_gpt_box/issues)\n- QQ群 762870488",
+  "initChatHelp": "### 📖 提示\n- 在聊天界面过度滑动（overscroll）可以快捷切换聊天历史记录\n- 长按代码块来复制\n- 左侧抽屉设置为全局设置，下方的输入框上方的设置为当前对话的设置\n- 向右滑动可以进入左侧的历史聊天记录页面，可以修改聊天标题、删除聊天\n\n### 🔍 帮助\n- 如果 GPT Box 有 bug，请使用 [Github Issue](https://github.com/lollipopkit/flutter_gpt_box/issues)\n- QQ群 762870488",
   "justNow": "刚刚",
   "lang": "语言",
   "license": "证书",
