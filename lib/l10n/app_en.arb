@@ -6,6 +6,7 @@
   "attention": "Attention",
   "auto": "Auto",
   "autoCheckUpdate": "Auto check update",
+  "autoRmDupChat": "Auto rm duplicate chat",
   "autoScrollBottom": "Auto scroll bottom",
   "backup": "Backup",
   "backupTip": "Please keep backup file private and safe!",

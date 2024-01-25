@@ -304,24 +304,10 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     return ListenableBuilder(
       listenable: _pageIndicatorRN,
       builder: (_, __) {
-        /// Put it here, or it's l10n string won't rebuild every time
-        final moreActions = [
-          _MoreAction(
-            title: l10n.share,
-            icon: Icons.share,
-            onTap: () => _onShareChat(context),
-            onPageIdxs: [1],
-          ),
-          _MoreAction(
-            title: l10n.delete,
-            icon: Icons.delete,
-            onTap: () => _onDeleteChat(_curChatId),
-            onPageIdxs: [1],
-          ),
-        ];
-
         final items = <IconButton>[];
-        for (final item in moreActions) {
+
+        /// Put it here, or it's l10n string won't rebuild every time
+        for (final item in _buildTopRightBtns()) {
           if (!_isWide.value && !item.onPageIdxs.contains(_curPageIdx)) {
             continue;
           }
@@ -380,6 +366,23 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
         ),
       ),
     );
+  }
+
+  List<_MoreAction> _buildTopRightBtns() {
+    return [
+      _MoreAction(
+        title: l10n.share,
+        icon: Icons.share,
+        onTap: () => _onShareChat(context),
+        onPageIdxs: [1],
+      ),
+      _MoreAction(
+        title: l10n.delete,
+        icon: Icons.delete,
+        onTap: () => _onTapDeleteChat(_curChatId, context),
+        onPageIdxs: [1],
+      ),
+    ];
   }
 
   @override

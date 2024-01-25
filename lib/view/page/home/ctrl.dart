@@ -126,7 +126,7 @@ ChatHistory _newChat() {
     newHistory = ChatHistory.empty;
   }
   _allHistories[newHistory.id] = newHistory;
-  _allChatIds.insert(0, newHistory.id);
+  _allChatIds.add(newHistory.id);
   Stores.history.put(newHistory);
   return newHistory;
 }

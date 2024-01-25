@@ -6,6 +6,7 @@
   "attention": "注意",
   "auto": "自动",
   "autoCheckUpdate": "自动检查更新",
+  "autoRmDupChat": "自动删除重复聊天",
   "autoScrollBottom": "自动滚动到底部",
   "backup": "备份",
   "backupTip": "请保证备份文件私密且安全！",

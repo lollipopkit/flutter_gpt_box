@@ -79,6 +79,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildScrollBottom(),
       _buildAutoGenTitle(),
       _buildSoftWrap(),
+      _buildAutoRmDupChat(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
@@ -192,9 +193,10 @@ class _SettingPageState extends State<SettingPage> {
           final result = await context.showRoundDialog<String>(
             title: l10n.fontSize,
             child: Input(
+              icon: Icons.text_fields,
               controller: ctrl,
-              hint: '13',
-              type: TextInputType.number,
+              hint: '12',
+              type: const TextInputType.numberWithOptions(decimal: true),
             ),
             actions: [
               TextButton(
@@ -273,6 +275,14 @@ class _SettingPageState extends State<SettingPage> {
       ),
       onTap: () => Funcs.throttle(() => AppUpdateIface.doUpdate(context)),
       trailing: StoreSwitch(prop: _store.autoCheckUpdate),
+    );
+  }
+
+  Widget _buildAutoRmDupChat() {
+    return ListTile(
+      leading: const Icon(Icons.delete),
+      title: Text(l10n.autoRmDupChat),
+      trailing: StoreSwitch(prop: _store.autoRmDupChat),
     );
   }
 
