@@ -74,7 +74,7 @@ class Backup {
         Stores.setting.box.delete(s);
       }
     }
-    
+
     // History
     final nowHistoryKeys = Stores.history.box.keys.toSet();
     final bakHistoryKeys = history.keys.toSet();

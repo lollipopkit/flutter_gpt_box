@@ -321,9 +321,11 @@ packages:
   flutter_highlight:
     dependency: "direct main"
     description:
-      path: "../highlight.dart/flutter_highlight"
-      relative: true
-    source: path
+      path: flutter_highlight
+      ref: master
+      resolved-ref: "153595f7e532d4d1fb78e115958db03a1aca1a00"
+      url: "https://github.com/lollipopkit/highlight.dart"
+    source: git
     version: "0.7.0"
   flutter_lints:
     dependency: "direct dev"
