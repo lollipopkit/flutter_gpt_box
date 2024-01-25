@@ -55,17 +55,42 @@ class Backup {
   Future<bool?> restore({bool force = false}) async {
     final curTime = Stores.lastModTime ?? 0;
     final bakTime = lastModTime ?? 0;
-    if (curTime == bakTime) {
-      return null;
-    }
-    if (curTime > bakTime && !force) {
-      return false;
-    }
-    for (final s in settings.keys) {
+    final shouldRestore = force || curTime < bakTime;
+
+    // Settings
+    final nowSettingsKeys = Stores.setting.box.keys.toSet();
+    final bakSettingsKeys = settings.keys.toSet();
+    final newSettingsKeys = bakSettingsKeys.difference(nowSettingsKeys);
+    final delSettingsKeys = nowSettingsKeys.difference(bakSettingsKeys);
+    final sameSettingsKeys = nowSettingsKeys.intersection(bakSettingsKeys);
+    for (final s in newSettingsKeys) {
       Stores.setting.box.put(s, settings[s]);
     }
-    for (final s in history.keys) {
+    if (shouldRestore) {
+      for (final s in sameSettingsKeys) {
+        Stores.setting.box.put(s, settings[s]);
+      }
+      for (final s in delSettingsKeys) {
+        Stores.setting.box.delete(s);
+      }
+    }
+    
+    // History
+    final nowHistoryKeys = Stores.history.box.keys.toSet();
+    final bakHistoryKeys = history.keys.toSet();
+    final newHistoryKeys = bakHistoryKeys.difference(nowHistoryKeys);
+    final delHistoryKeys = nowHistoryKeys.difference(bakHistoryKeys);
+    final sameHistoryKeys = nowHistoryKeys.intersection(bakHistoryKeys);
+    for (final s in newHistoryKeys) {
       Stores.history.box.put(s, history[s]);
+    }
+    if (shouldRestore) {
+      for (final s in sameHistoryKeys) {
+        Stores.history.box.put(s, history[s]);
+      }
+      for (final s in delHistoryKeys) {
+        Stores.history.box.delete(s);
+      }
     }
 
     loadFromStore();
