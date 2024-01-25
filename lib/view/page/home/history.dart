@@ -15,13 +15,14 @@ class _HistoryPageState extends State<_HistoryPage>
     return ListenableBuilder(
       listenable: _historyRN,
       builder: (_, __) {
-        final len = _allChatIds.length;
+        final keys = _allHistories.keys.toList();
+        final len = keys.length;
         return ListView.builder(
           padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
           reverse: true,
           itemCount: len,
           itemBuilder: (_, index) {
-            final chatId = _allChatIds[index];
+            final chatId = keys[index];
             return _buildHistoryListItem(chatId, len - index).card;
           },
         );

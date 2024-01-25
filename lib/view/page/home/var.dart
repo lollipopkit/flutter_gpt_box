@@ -15,18 +15,12 @@ final _chatRNMap = <String, RebuildNode>{};
 
 /// For page body chat view
 final _chatRN = RebuildNode();
-final _historyRN = RebuildNode()
-  ..addListener(() {
-    _allChatIds = _allHistories.keys.toList();
-  });
+final _historyRN = RebuildNode();
 final _appbarTitleRN = RebuildNode();
 final _sendBtnRN = RebuildNode();
 final _pageIndicatorRN = RebuildNode();
 
-Map<String, ChatHistory> _allHistories = {};
-
-/// Keep this for sort
-List<String> _allChatIds = [];
+var _allHistories = <String, ChatHistory>{};
 String _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
 final _chatStreamSubs = <String, StreamSubscription>{};

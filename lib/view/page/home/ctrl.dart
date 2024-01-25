@@ -125,8 +125,9 @@ ChatHistory _newChat() {
   } else {
     newHistory = ChatHistory.empty;
   }
-  _allHistories[newHistory.id] = newHistory;
-  _allChatIds.add(newHistory.id);
+  /// Put newHistory to the first place, the default implementation of Dart's
+  /// Map will put the new item to the last place.
+  _allHistories = {newHistory.id: newHistory, ..._allHistories};
   Stores.history.put(newHistory);
   return newHistory;
 }
@@ -190,7 +191,6 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
 void _onDeleteChat(String chatId) {
   Stores.history.delete(chatId);
   _allHistories.remove(chatId);
-  _allChatIds.remove(chatId);
   if (_curChatId == chatId) {
     _switchChat();
   }
@@ -228,6 +228,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
 
 void _onStopStreamSub(String chatId) {
   _chatStreamSubs.remove(chatId)?.cancel();
+  _sendBtnRN.rebuild();
 }
 
 void _genChatTitle(String chatId, BuildContext context) async {
@@ -309,7 +310,6 @@ void _onShareChat(BuildContext context) async {
 
 void loadFromStore() {
   _allHistories = Stores.history.fetchAll();
-  _allChatIds = _allHistories.keys.toList();
   _historyRN.rebuild();
   _switchChat();
 }

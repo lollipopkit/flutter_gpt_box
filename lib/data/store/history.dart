@@ -23,7 +23,7 @@ class HistoryStore extends Store {
       }
     }
     if (errCount > 0) Loggers.app.warning('Init history: $errCount error(s)');
-    // Sort by last modified time
+    // Sort by last modified time ASC
     final now = DateTime.now();
     final sorted = map.entries.toList();
     sorted.sort(

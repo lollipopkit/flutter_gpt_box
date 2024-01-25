@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:dart_openai/dart_openai.dart';
@@ -53,7 +54,6 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   void initState() {
     super.initState();
     _allHistories = Stores.history.fetchAll();
-    _allChatIds = _allHistories.keys.toList();
     _refreshTimeTimer = Timer.periodic(
       const Duration(seconds: 10),
       (_) => _timeRN.rebuild(),
@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   void dispose() {
     _inputCtrl.dispose();
     _refreshTimeTimer?.cancel();
+    _scrollCtrl.dispose();
     super.dispose();
   }
 
@@ -196,7 +197,6 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                   icon: const Icon(Icons.abc, size: 19),
                   tooltip: l10n.rename,
                 ),
-                _buildSwitchChatBtn(),
                 const Spacer(),
                 _buildSwitchPageBtn(),
                 if (isMobile)
@@ -265,38 +265,6 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
                 );
               },
             ),
-    );
-  }
-
-  Widget _buildSwitchChatBtn() {
-    return ListenableBuilder(
-      listenable: _pageIndicatorRN,
-      builder: (_, __) {
-        if (_curPageIdx == 0) return UIs.placeholder;
-        return ListenableBuilder(
-          listenable: _chatRN,
-          builder: (_, __) {
-            final curIdx = _allChatIds.indexOf(_curChatId);
-            final isLast = curIdx == _allChatIds.length - 1;
-            final isFirst = curIdx == 0;
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (!isLast)
-                  IconButton(
-                    onPressed: () => _switchChat(_allChatIds[curIdx + 1]),
-                    icon: const Icon(Icons.keyboard_arrow_up, size: 19),
-                  ),
-                if (!isFirst)
-                  IconButton(
-                    onPressed: () => _switchChat(_allChatIds[curIdx - 1]),
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 19),
-                  ),
-              ],
-            );
-          },
-        );
-      },
     );
   }
 
