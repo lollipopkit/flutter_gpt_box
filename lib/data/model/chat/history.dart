@@ -44,7 +44,7 @@ final class ChatHistory {
   static ChatHistory fromJson(Map<String, dynamic> json) {
     return ChatHistory(
       id: json['id'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       items: (json['items'] as List)
           .map((e) => ChatHistoryItem.fromJson(e.cast<String, dynamic>()))
           .toList(),

@@ -120,9 +120,10 @@ class _ChatPageState extends State<_ChatPage>
         const Spacer(),
         IconButton(
           onPressed: () async {
+            final idx = chatItems.indexOf(chatItem) + 1;
             final result = await context.showRoundDialog<bool>(
               title: l10n.attention,
-              child: Text(l10n.delFmt(chatItem.toMarkdown, chatItem.id)),
+              child: Text(l10n.delFmt('${chatItem.role.name}#$idx', l10n.chat)),
               actions: [
                 TextButton(
                   onPressed: () => context.pop(true),

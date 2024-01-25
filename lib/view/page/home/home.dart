@@ -93,14 +93,22 @@ class _HomePageState extends State<HomePage>
 
   CustomAppBar _buildAppBar() {
     return CustomAppBar(
-      title: ListenableBuilder(
-        listenable: _appbarTitleRN,
-        builder: (_, __) => AnimatedSwitcher(
-          duration: Durations.short3,
-          child: SizedBox(
-            key: Key(_curChatId),
-            width: (_media?.size.width ?? 100) * 0.5,
+      title: Align(
+        alignment: Alignment.centerLeft,
+        child: ListenableBuilder(
+          listenable: _appbarTitleRN,
+          builder: (_, __) => AnimatedSwitcher(
+            duration: Durations.medium1,
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: SlideTransitionX(
+                position: animation,
+                direction: AxisDirection.right,
+                child: child,
+              ),
+            ),
             child: Column(
+              key: Key(_curChatId),
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -267,12 +275,7 @@ class _HomePageState extends State<HomePage>
             ));
           }
 
-          return AnimatedContainer(
-            duration: Durations.short3,
-            curve: Curves.fastEaseInToSlowEaseOut,
-            width: items.length * 50,
-            child: Row(children: items),
-          );
+          return Row(children: items);
         },
       )
     ];

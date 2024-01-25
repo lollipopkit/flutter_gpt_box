@@ -21,5 +21,9 @@ class RebuildNode implements Listenable {
     }
   }
 
+  void linkTo(RebuildNode node) {
+    node.addListener(rebuild);
+  }
+
   static final app = RebuildNode();
 }
