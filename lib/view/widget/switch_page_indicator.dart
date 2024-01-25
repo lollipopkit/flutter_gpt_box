@@ -126,7 +126,11 @@ class _SwitchPageIndicatorState extends State<SwitchPageIndicator>
       _scrollDirection = null;
       return false;
     }
-    _scrollDirection = scrollDirection;
+    if (_scrollDirection == null) {
+      _scrollDirection = scrollDirection;
+    } else {
+      return false;
+    }
     if (scrollBottom || scrollTop) {
       _doSwitchPage();
     } else {

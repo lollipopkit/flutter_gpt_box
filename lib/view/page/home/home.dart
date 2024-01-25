@@ -16,6 +16,7 @@ import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/route/page.dart';
+import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/core/util/markdown.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
@@ -258,7 +259,9 @@ class _HomePageState extends State<HomePage>
               continue;
             }
             items.add(IconButton(
-              onPressed: item.onTap,
+              onPressed: () => Funcs.throttle(() {
+                item.onTap();
+              }),
               icon: Icon(item.icon),
               tooltip: item.title,
             ));

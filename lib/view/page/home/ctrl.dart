@@ -290,17 +290,23 @@ void _onShareChat(BuildContext context) async {
     return;
   }
 
+  context.showLoadingDialog();
   final pic = await _screenshotCtrl.captureFromLongWidget(
     result,
     context: context,
     constraints: const BoxConstraints(maxWidth: 577),
     pixelRatio: _media?.devicePixelRatio ?? 1,
+    delay: const Duration(milliseconds: 500),
   );
+  context.pop();
   final title = _curChat?.name ?? l10n.untitled;
-  Share.shareXFiles(
+  final shareResult = await Share.shareXFiles(
     [XFile.fromData(pic, name: '$title.png', mimeType: 'image/png')],
     subject: '$title - GPT Box',
   );
+  if (shareResult.status == ShareResultStatus.success) {
+    context.showSnackBar(l10n.success);
+  }
 }
 
 // Future<void> _onImgPick() async {

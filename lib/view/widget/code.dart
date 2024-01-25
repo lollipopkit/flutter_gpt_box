@@ -11,8 +11,9 @@ final _textStyle = GoogleFonts.robotoMono();
 class CodeElementBuilder extends MarkdownElementBuilder {
   final void Function(String)? onCopy;
   final Brightness? brightness;
+  final bool isForCapture;
 
-  CodeElementBuilder({this.onCopy, this.brightness});
+  CodeElementBuilder({this.onCopy, this.brightness, this.isForCapture = false});
 
   static bool isDark = false;
 
@@ -30,6 +31,17 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     final textContent = element.textContent.trim();
     final isMultiLine = textContent.contains('\n');
+
+    if (isForCapture) {
+      return HighlightViewSync(
+        textContent,
+        language: language,
+        theme: _theme,
+        textStyle: _textStyle,
+        tabSize: 4,
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
+      );
+    }
 
     return ValueListenableBuilder(
       valueListenable: Stores.setting.fontSize.listenable(),

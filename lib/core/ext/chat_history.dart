@@ -25,10 +25,12 @@ extension ChatHistoryShare on ChatHistory {
       children.add(UIs.height13);
       children.add(MarkdownBody(
         data: item.toMarkdown,
-        extensionSet: md.ExtensionSet.gitHubWeb,
+        extensionSet: md.ExtensionSet.commonMark,
         builders: {
           'code': CodeElementBuilder(
-              brightness: isDark ? Brightness.dark : Brightness.light),
+            brightness: isDark ? Brightness.dark : Brightness.light,
+            isForCapture: true,
+          ),
         },
       ));
       children.add(UIs.height13);
