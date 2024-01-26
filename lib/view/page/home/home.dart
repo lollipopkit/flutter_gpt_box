@@ -41,6 +41,7 @@ part 'chat.dart';
 part 'history.dart';
 part 'var.dart';
 part 'ctrl.dart';
+part 'enum.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -61,13 +62,29 @@ class _HomePageState extends State<HomePage>
       const Duration(seconds: 10),
       (_) => _timeRN.rebuild(),
     );
+    _historyScrollCtrl.addListener(() {
+    Funcs.throttle(
+      () {
+        // Calculate _curChatId is visible or not
+        final idx = _allHistories.keys.toList().indexOf(_curChatId);
+        final offset = _historyScrollCtrl.offset;
+        final height = _historyScrollCtrl.position.viewportDimension;
+        final visible = offset <= idx * _historyItemHeight &&
+            offset + height >= idx * _historyItemHeight;
+        _locateHistoryBtn.value = !visible;
+      },
+      id: 'calc-chat-locate-btn',
+      duration: 30,
+    );
+  });
   }
 
   @override
   void dispose() {
     _inputCtrl.dispose();
     _refreshTimeTimer?.cancel();
-    _scrollCtrl.dispose();
+    _chatScrollCtrl.dispose();
+    _historyScrollCtrl.dispose();
     super.dispose();
   }
 
@@ -88,6 +105,10 @@ class _HomePageState extends State<HomePage>
       appBar: _buildAppBar(),
       body: _buildBody(),
       bottomNavigationBar: _buildInput(),
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: _curPage,
+        builder: (_, page, __) => page.fab,
+      ),
     );
   }
 
@@ -99,6 +120,8 @@ class _HomePageState extends State<HomePage>
           listenable: _appbarTitleRN,
           builder: (_, __) => AnimatedSwitcher(
             duration: Durations.medium1,
+            switchInCurve: Easing.standardDecelerate,
+            switchOutCurve: Easing.standardDecelerate,
             transitionBuilder: (child, animation) => FadeTransition(
               opacity: animation,
               child: SlideTransitionX(
@@ -135,7 +158,12 @@ class _HomePageState extends State<HomePage>
           ),
         ),
       ),
-      actions: _buildAppbarActions(),
+      actions: [
+        ValueListenableBuilder(
+          valueListenable: _curPage,
+          builder: (_, page, __) => page.buildAppbarActions(context),
+        )
+      ],
     );
   }
 
@@ -161,8 +189,7 @@ class _HomePageState extends State<HomePage>
       controller: _pageCtrl,
       children: const [history, chat],
       onPageChanged: (value) {
-        _curPageIdx = value;
-        _pageIndicatorRN.rebuild();
+        _curPage.value = HomePageEnum.fromIdx(value);
       },
     );
   }
@@ -248,65 +275,30 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  List<Widget> _buildAppbarActions() {
-    return [
-      ListenableBuilder(
-        listenable: _pageIndicatorRN,
-        builder: (_, __) {
-          final items = <IconButton>[
-            IconButton(
-              onPressed: () => Routes.debug.go(context),
-              icon: const Icon(Icons.developer_board),
-              tooltip: 'Debug',
-            ),
-          ];
-
-          /// Put it here, or it's l10n string won't rebuild every time
-          for (final item in _buildTopRightBtns()) {
-            if (!_isWide.value && !item.onPageIdxs.contains(_curPageIdx)) {
-              continue;
-            }
-            items.add(IconButton(
-              onPressed: () => Funcs.throttle(() {
-                item.onTap();
-              }),
-              icon: Icon(item.icon),
-              tooltip: item.title,
-            ));
-          }
-
-          return Row(children: items);
-        },
-      )
-    ];
-  }
-
   Widget _buildSwitchPageBtn() {
     return ValueListenableBuilder(
       valueListenable: _isWide,
       builder: (_, isWide, __) => isWide
           ? UIs.placeholder
-          : ListenableBuilder(
-              listenable: _pageIndicatorRN,
-              builder: (_, __) {
-                if (_curPageIdx == 0) {
-                  return IconButton(
+          : ValueListenableBuilder(
+              valueListenable: _curPage,
+              builder: (_, page, __) => switch (page) {
+                HomePageEnum.history => IconButton(
                     onPressed: () => _pageCtrl.animateToPage(
                       1,
                       duration: Durations.medium1,
                       curve: Curves.fastEaseInToSlowEaseOut,
                     ),
                     icon: const Icon(Icons.chat, size: 19),
-                  );
-                }
-                return IconButton(
-                  onPressed: () => _pageCtrl.animateToPage(
-                    0,
-                    duration: Durations.medium1,
-                    curve: Curves.fastEaseInToSlowEaseOut,
                   ),
-                  icon: const Icon(Icons.history, size: 19),
-                );
+                HomePageEnum.chat => IconButton(
+                    onPressed: () => _pageCtrl.animateToPage(
+                      0,
+                      duration: Durations.medium1,
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    ),
+                    icon: const Icon(Icons.history, size: 19),
+                  ),
               },
             ),
     );
@@ -353,23 +345,6 @@ class _HomePageState extends State<HomePage>
         ),
       ),
     );
-  }
-
-  List<_MoreAction> _buildTopRightBtns() {
-    return [
-      _MoreAction(
-        title: l10n.share,
-        icon: Icons.share,
-        onTap: () => _onShareChat(context),
-        onPageIdxs: [1],
-      ),
-      _MoreAction(
-        title: l10n.delete,
-        icon: Icons.delete,
-        onTap: () => _onTapDeleteChat(_curChatId, context),
-        onPageIdxs: [1],
-      ),
-    ];
   }
 
   @override

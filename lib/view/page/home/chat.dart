@@ -47,8 +47,8 @@ class _ChatPageState extends State<_ChatPage>
             ),
             child: ListView.builder(
               key: Key(_curChatId),
-              controller: _scrollCtrl,
-              padding: const EdgeInsets.symmetric(horizontal: 7),
+              controller: _chatScrollCtrl,
+              padding: const EdgeInsets.only(left: 7, right: 7, bottom: 47),
               physics: const AlwaysScrollableScrollPhysics(
                 parent: BouncingScrollPhysics(),
               ),

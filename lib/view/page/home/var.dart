@@ -1,8 +1,9 @@
 part of 'home.dart';
 
 final _inputCtrl = TextEditingController();
-final _scrollCtrl = ScrollController();
-final _pageCtrl = PageController(initialPage: _curPageIdx);
+final _chatScrollCtrl = ScrollController();
+final _historyScrollCtrl = ScrollController();
+final _pageCtrl = PageController(initialPage: _curPage.value.index);
 final _screenshotCtrl = ScreenshotController();
 
 final _timeRN = RebuildNode();
@@ -18,13 +19,14 @@ final _chatRN = RebuildNode();
 final _historyRN = RebuildNode();
 final _appbarTitleRN = RebuildNode();
 final _sendBtnRN = RebuildNode();
-final _pageIndicatorRN = RebuildNode();
+// Default false: this item is visible, no need to locate
+final _locateHistoryBtn = ValueNotifier(false);
 
 var _allHistories = <String, ChatHistory>{};
 String _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
 final _chatStreamSubs = <String, StreamSubscription>{};
-int _curPageIdx = 1;
+final _curPage = ValueNotifier(HomePageEnum.chat);
 
 final _focusNode = FocusNode();
 
@@ -47,3 +49,6 @@ const _boxShadowDark = [
     offset: Offset(0, -0.5),
   ),
 ];
+
+/// Set it as a const, so we can scroll to it
+const _historyItemHeight = 73.0;

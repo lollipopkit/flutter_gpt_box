@@ -239,12 +239,12 @@ final class _MoreAction {
   final String title;
   final IconData icon;
   final void Function() onTap;
-  final List<int> onPageIdxs;
+  final List<HomePageEnum> onHomePage;
 
   _MoreAction({
     required this.title,
     required this.icon,
     required this.onTap,
-    this.onPageIdxs = const [],
+    this.onHomePage = const [],
   });
 }

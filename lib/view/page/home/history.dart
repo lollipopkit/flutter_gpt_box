@@ -18,8 +18,10 @@ class _HistoryPageState extends State<_HistoryPage>
         final keys = _allHistories.keys.toList();
         final len = keys.length;
         return ListView.builder(
+          controller: _historyScrollCtrl,
           padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
           reverse: true,
+          itemExtent: _historyItemHeight,
           itemCount: len,
           itemBuilder: (_, index) {
             final chatId = keys[index];
@@ -35,10 +37,17 @@ class _HistoryPageState extends State<_HistoryPage>
     if (entity == null) return UIs.placeholder;
     final node = _chatRNMap.putIfAbsent(chatId, () => RebuildNode());
     return ListTile(
-      leading: Text('#$leading', style: UIs.textGrey),
+      leading: Text(
+        '#$leading',
+        style: UIs.textGrey,
+      ),
       title: ListenableBuilder(
         listenable: node,
-        builder: (_, __) => Text(entity.name ?? l10n.untitled),
+        builder: (_, __) => Text(
+          entity.name ?? l10n.untitled,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
       subtitle: ListenableBuilder(
         listenable: _timeRN,

@@ -95,7 +95,7 @@ Future<void> _onSend(String chatId, BuildContext context) async {
           final isWorking = chatId == _curChatId;
           final isSubscribed = _chatStreamSubs.containsKey(chatId);
           if (isWorking && isSubscribed) {
-            _scrollCtrl.jumpTo(_scrollCtrl.position.maxScrollExtent);
+            _chatScrollCtrl.jumpTo(_chatScrollCtrl.position.maxScrollExtent);
           }
         }
       },
