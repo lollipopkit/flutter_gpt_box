@@ -59,9 +59,9 @@ enum HomePageEnum {
         icon: Icons.search,
         onHomePage: [HomePageEnum.history],
         onTap: () => showSearch(
-            context: context,
-            delegate: ChatSearchDelegate(),
-          ),
+          context: context,
+          delegate: ChatSearchDelegate(),
+        ),
       ),
     ]) {
       if (!_isWide.value && !item.onHomePage.contains(this)) {

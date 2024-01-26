@@ -352,27 +352,20 @@ void _removeDuplicateHistory(BuildContext context) async {
   }
 
   final rmCount = rmIds.length;
-  final result = await context.showRoundDialog<bool>(
-    title: l10n.attention,
-    child: Text(l10n.rmDuplicationFmt(rmCount)),
-    actions: [
-      TextButton(
-        onPressed: () => context.pop(true),
-        child: Text(l10n.ok),
-      ),
-    ],
+  context.showSnackBarWithAction(
+    content: l10n.rmDuplicationFmt(rmCount),
+    action: l10n.delete,
+    onTap: () {
+      for (final id in rmIds) {
+        Stores.history.delete(id);
+        _allHistories.remove(id);
+      }
+      _historyRN.rebuild();
+      if (!_allHistories.keys.contains(_curChatId)) {
+        _switchChat();
+      }
+    },
   );
-
-  if (result != true) return;
-
-  for (final id in rmIds) {
-    Stores.history.delete(id);
-    _allHistories.remove(id);
-  }
-  _historyRN.rebuild();
-  if (!_allHistories.keys.contains(_curChatId)) {
-    _switchChat();
-  }
 }
 
 void _locateHistoryListener() => Funcs.throttle(
