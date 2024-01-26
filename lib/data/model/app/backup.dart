@@ -52,7 +52,7 @@ class Backup {
   /// - Return null if same time
   /// - Return false if local is newer
   /// - Return true if restore success
-  Future<bool?> restore({bool force = false}) async {
+  Future<void> restore({bool force = false}) async {
     final curTime = Stores.lastModTime ?? 0;
     final bakTime = lastModTime ?? 0;
     final shouldRestore = force || curTime < bakTime;
@@ -95,8 +95,6 @@ class Backup {
 
     loadFromStore();
     RebuildNode.app.rebuild();
-
-    return true;
   }
 
   Backup.fromJsonString(String raw)
