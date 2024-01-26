@@ -38,7 +38,6 @@ extension ChatHistoryShare on ChatHistory {
     final widget = Container(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(7),
         color: isDark ? Colors.black : Colors.white,
       ),
       child: Column(
