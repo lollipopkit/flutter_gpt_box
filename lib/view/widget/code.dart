@@ -39,6 +39,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         theme: _theme,
         textStyle: _textStyle,
         tabSize: 4,
+        softWrap: true,
         padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
       );
     }

@@ -45,6 +45,8 @@ part 'var.dart';
 part 'ctrl.dart';
 part 'enum.dart';
 part 'search.dart';
+part 'appbar.dart';
+part 'input.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -91,67 +93,13 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _buildDrawer(),
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(context),
       body: _buildBody(),
-      bottomNavigationBar: _buildInput(),
+      bottomNavigationBar: _buildInput(context),
       floatingActionButton: ValueListenableBuilder(
         valueListenable: _curPage,
         builder: (_, page, __) => page.fab,
       ),
-    );
-  }
-
-  CustomAppBar _buildAppBar() {
-    return CustomAppBar(
-      centerTitle: false,
-      title: ListenableBuilder(
-        listenable: _appbarTitleRN,
-        builder: (_, __) {
-          return AnimatedSwitcher(
-            duration: Durations.medium1,
-            switchInCurve: Easing.standardDecelerate,
-            switchOutCurve: Easing.standardDecelerate,
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SlideTransitionX(
-                position: animation,
-                direction: AxisDirection.right,
-                child: child,
-              ),
-            ),
-            child: Column(
-              key: Key(_curChatId),
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Text(
-                  _curChat?.name ?? l10n.untitled,
-                  style: UIs.text15,
-                ),
-                ListenableBuilder(
-                  listenable: _timeRN,
-                  builder: (_, __) {
-                    final entity = _curChat;
-                    if (entity == null) return Text(l10n.empty);
-                    final len = '${entity.items.length} ${l10n.message}';
-                    final time = entity.items.lastOrNull?.createdAt.toAgo;
-                    return Text(
-                      '$len · ${time ?? l10n.empty}',
-                      style: UIs.text11Grey,
-                    );
-                  },
-                )
-              ],
-            ),
-          );
-        },
-      ),
-      actions: [
-        ValueListenableBuilder(
-          valueListenable: _curPage,
-          builder: (_, page, __) => page.buildAppbarActions(context),
-        )
-      ],
     );
   }
 
@@ -179,116 +127,6 @@ class _HomePageState extends State<HomePage>
       onPageChanged: (value) {
         _curPage.value = HomePageEnum.fromIdx(value);
       },
-    );
-  }
-
-  Widget _buildInput() {
-    return Container(
-      padding: isDesktop
-          ? const EdgeInsets.only(left: 11, right: 11, top: 7, bottom: 17)
-          : const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
-        color: UIs.bgColor.fromBool(_isDark),
-        boxShadow: _isDark ? _boxShadowDark : _boxShadow,
-      ),
-      child: AnimatedPadding(
-        padding: EdgeInsets.only(bottom: _media?.viewInsets.bottom ?? 0),
-        curve: Curves.fastEaseInToSlowEaseOut,
-        duration: Durations.short1,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                // IconButton(
-                //   onPressed: _onImgPick,
-                //   icon: const Icon(Icons.photo, size: 19),
-                // ),
-                IconButton(
-                  onPressed: () => _onTapSetting(context),
-                  icon: const Icon(Icons.settings, size: 19),
-                  tooltip: l10n.settings,
-                ),
-                IconButton(
-                  onPressed: () {
-                    _switchChat(_newChat().id);
-                    _historyRN.rebuild();
-                  },
-                  icon: const Icon(Icons.add),
-                  tooltip: l10n.newChat,
-                ),
-                IconButton(
-                  onPressed: () => _onTapRenameChat(_curChatId, context),
-                  icon: const Icon(Icons.abc, size: 19),
-                  tooltip: l10n.rename,
-                ),
-                const Spacer(),
-                _buildSwitchPageBtn(),
-                if (isMobile)
-                  IconButton(
-                    onPressed: () => _focusNode.unfocus(),
-                    icon: const Icon(Icons.keyboard_hide, size: 19),
-                  ),
-              ],
-            ),
-            Input(
-              controller: _inputCtrl,
-              label: l10n.message,
-              node: _focusNode,
-              type: TextInputType.multiline,
-              // action: TextInputAction.send,
-              maxLines: 5,
-              minLines: 1,
-              suffix: ListenableBuilder(
-                listenable: _sendBtnRN,
-                builder: (_, __) {
-                  final isWorking = _chatStreamSubs.containsKey(_curChatId);
-                  return isWorking
-                      ? IconButton(
-                          onPressed: () => _onStopStreamSub(_curChatId),
-                          icon: const Icon(Icons.stop),
-                        )
-                      : IconButton(
-                          icon: const Icon(Icons.send),
-                          onPressed: () => _onSend(_curChatId, context),
-                        );
-                },
-              ),
-            ),
-            SizedBox(height: _media?.padding.bottom),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSwitchPageBtn() {
-    return ValueListenableBuilder(
-      valueListenable: _isWide,
-      builder: (_, isWide, __) => isWide
-          ? UIs.placeholder
-          : ValueListenableBuilder(
-              valueListenable: _curPage,
-              builder: (_, page, __) => switch (page) {
-                HomePageEnum.history => IconButton(
-                    onPressed: () => _pageCtrl.animateToPage(
-                      1,
-                      duration: Durations.medium1,
-                      curve: Curves.fastEaseInToSlowEaseOut,
-                    ),
-                    icon: const Icon(Icons.chat, size: 19),
-                  ),
-                HomePageEnum.chat => IconButton(
-                    onPressed: () => _pageCtrl.animateToPage(
-                      0,
-                      duration: Durations.medium1,
-                      curve: Curves.fastEaseInToSlowEaseOut,
-                    ),
-                    icon: const Icon(Icons.history, size: 19),
-                  ),
-              },
-            ),
     );
   }
 

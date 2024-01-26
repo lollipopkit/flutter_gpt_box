@@ -22,8 +22,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
 import 'package:window_manager/window_manager.dart';
 
-part 'store.dart';
-
 Future<void> main() async {
   _runInZone(() async {
     await _initApp();
@@ -114,4 +112,9 @@ Future<void> _initDesktopWindow() async {
       await windowManager.focus();
     });
   }
+}
+
+Future<void> _loadStores() async {
+  await Stores.history.init();
+  await Stores.setting.init();
 }
