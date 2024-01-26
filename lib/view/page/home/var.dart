@@ -19,7 +19,7 @@ final _chatRN = RebuildNode();
 final _historyRN = RebuildNode();
 final _appbarTitleRN = RebuildNode();
 final _sendBtnRN = RebuildNode();
-// Default false: this item is visible, no need to locate
+// Default false: this item is visible on app start, no need to locate
 final _locateHistoryBtn = ValueNotifier(false);
 
 var _allHistories = <String, ChatHistory>{};

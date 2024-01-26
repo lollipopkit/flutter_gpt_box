@@ -20,16 +20,7 @@ enum HomePageEnum {
               child: display
                   ? FloatingActionButton(
                       key: const Key('locate-history-btn'),
-                      onPressed: () {
-                        final idx =
-                            _allHistories.keys.toList().indexOf(_curChatId);
-                        if (idx == -1) return;
-                        _historyScrollCtrl.animateTo(
-                          idx * _historyItemHeight,
-                          duration: Durations.long1,
-                          curve: Curves.easeInOut,
-                        );
-                      },
+                      onPressed: () => _gotoHistory(_curChatId),
                       child: const Icon(Icons.location_on),
                     )
                   : const SizedBox(key: Key('locate-history-btn-placeholder')),
@@ -62,6 +53,15 @@ enum HomePageEnum {
         icon: Icons.delete,
         onTap: () => _onTapDeleteChat(_curChatId, context),
         onHomePage: [HomePageEnum.chat],
+      ),
+      _MoreAction(
+        title: l10n.search,
+        icon: Icons.search,
+        onHomePage: [HomePageEnum.history],
+        onTap: () => showSearch(
+            context: context,
+            delegate: ChatSearchDelegate(),
+          ),
       ),
     ]) {
       if (!_isWide.value && !item.onHomePage.contains(this)) {

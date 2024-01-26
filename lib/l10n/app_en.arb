@@ -62,6 +62,7 @@
   "restore": "Restore",
   "rmDuplication": "Remove duplication",
   "rmDuplicationFmt": "Sure to delete [{count}] items?",
+  "search": "Search",
   "secretKey": "Secret key",
   "select": "Select",
   "settings": "Settings",

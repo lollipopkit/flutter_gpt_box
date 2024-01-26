@@ -62,6 +62,7 @@
   "restore": "恢复",
   "rmDuplication": "删除重复",
   "rmDuplicationFmt": "确定要删除 [{count}]个重复项目吗？",
+  "search": "搜索",
   "secretKey": "密钥",
   "select": "选择",
   "settings": "设置",

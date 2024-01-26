@@ -18,4 +18,5 @@
   - [x] File
   - [x] Clipboard
   - [x] WebDAV
-- [ ] Chat search
+- [x] Chat search
+- [x] History list locate

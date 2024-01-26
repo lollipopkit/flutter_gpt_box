@@ -58,6 +58,8 @@ class _HistoryPageState extends State<_HistoryPage>
           return Text(
             '$len · $time',
             style: UIs.textGrey,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           );
         },
       ),

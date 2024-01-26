@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/build_mode.dart';
@@ -28,6 +29,7 @@ import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/code.dart';
+import 'package:flutter_chatgpt/view/widget/future.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/slide_trans.dart';
 import 'package:flutter_chatgpt/view/widget/switch_page_indicator.dart';
@@ -42,6 +44,7 @@ part 'history.dart';
 part 'var.dart';
 part 'ctrl.dart';
 part 'enum.dart';
+part 'search.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -62,21 +65,7 @@ class _HomePageState extends State<HomePage>
       const Duration(seconds: 10),
       (_) => _timeRN.rebuild(),
     );
-    _historyScrollCtrl.addListener(() {
-    Funcs.throttle(
-      () {
-        // Calculate _curChatId is visible or not
-        final idx = _allHistories.keys.toList().indexOf(_curChatId);
-        final offset = _historyScrollCtrl.offset;
-        final height = _historyScrollCtrl.position.viewportDimension;
-        final visible = offset <= idx * _historyItemHeight &&
-            offset + height >= idx * _historyItemHeight;
-        _locateHistoryBtn.value = !visible;
-      },
-      id: 'calc-chat-locate-btn',
-      duration: 30,
-    );
-  });
+    _historyScrollCtrl.addListener(_locateHistoryListener);
   }
 
   @override
@@ -114,11 +103,11 @@ class _HomePageState extends State<HomePage>
 
   CustomAppBar _buildAppBar() {
     return CustomAppBar(
-      title: Align(
-        alignment: Alignment.centerLeft,
-        child: ListenableBuilder(
-          listenable: _appbarTitleRN,
-          builder: (_, __) => AnimatedSwitcher(
+      centerTitle: false,
+      title: ListenableBuilder(
+        listenable: _appbarTitleRN,
+        builder: (_, __) {
+          return AnimatedSwitcher(
             duration: Durations.medium1,
             switchInCurve: Easing.standardDecelerate,
             switchOutCurve: Easing.standardDecelerate,
@@ -145,18 +134,17 @@ class _HomePageState extends State<HomePage>
                     final entity = _curChat;
                     if (entity == null) return Text(l10n.empty);
                     final len = '${entity.items.length} ${l10n.message}';
-                    final time =
-                        entity.items.lastOrNull?.createdAt.toAgo ?? l10n.empty;
+                    final time = entity.items.lastOrNull?.createdAt.toAgo;
                     return Text(
-                      '$len · $time',
+                      '$len · ${time ?? l10n.empty}',
                       style: UIs.text11Grey,
                     );
                   },
                 )
               ],
             ),
-          ),
-        ),
+          );
+        },
       ),
       actions: [
         ValueListenableBuilder(

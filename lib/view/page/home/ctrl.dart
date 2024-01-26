@@ -374,3 +374,28 @@ void _removeDuplicateHistory(BuildContext context) async {
     _switchChat();
   }
 }
+
+void _locateHistoryListener() => Funcs.throttle(
+      () {
+        // Calculate _curChatId is visible or not
+        final idx = _allHistories.keys.toList().indexOf(_curChatId);
+        final offset = _historyScrollCtrl.offset;
+        final height = _historyScrollCtrl.position.viewportDimension;
+        const tollerance = _historyItemHeight / 3; // The pixel tollerance
+        final visible = offset - tollerance <= idx * _historyItemHeight &&
+            offset + height + tollerance >= (idx + 1) * _historyItemHeight;
+        _locateHistoryBtn.value = !visible;
+      },
+      id: 'calcChatLocateBtn',
+      duration: 30,
+    );
+
+void _gotoHistory(String chatId) {
+  final idx = _allHistories.keys.toList().indexOf(chatId);
+  if (idx == -1) return;
+  _historyScrollCtrl.animateTo(
+    idx * _historyItemHeight,
+    duration: Durations.long1,
+    curve: Curves.easeInOut,
+  );
+}
