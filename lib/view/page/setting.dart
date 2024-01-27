@@ -50,8 +50,8 @@ class _SettingPageState extends State<SettingPage> {
         _buildApp(),
         _buildTitle(l10n.chat),
         _buildChat(),
-        // _buildTitle(l10n.more),
-        // _buildMore(),
+        _buildTitle(l10n.more),
+        _buildMore(),
         const SizedBox(height: 37),
       ],
     );
@@ -75,11 +75,6 @@ class _SettingPageState extends State<SettingPage> {
       _buildColorSeed(),
       _buildThemeMode(),
       if (!isWeb) _buildCheckUpdate(),
-      _buildFontSize(),
-      _buildScrollBottom(),
-      _buildAutoGenTitle(),
-      _buildSoftWrap(),
-      _buildAutoRmDupChat(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
@@ -101,10 +96,8 @@ class _SettingPageState extends State<SettingPage> {
           if (result != null) {
             _store.themeMode.put(result.index);
 
-            /// Wait for db update.
-            Future.delayed(const Duration(milliseconds: 100), () {
-              RebuildNode.app.rebuild();
-            });
+            /// Set delay to true to wait for db update.
+            RebuildNode.app.rebuild(delay: true);
           }
         },
         trailing: Text(
@@ -166,55 +159,7 @@ class _SettingPageState extends State<SettingPage> {
     }
     _store.themeColorSeed.put(color.value);
     context.pop();
-    RebuildNode.app.rebuild();
-  }
-
-  Widget _buildScrollBottom() {
-    return ListTile(
-      leading: const Icon(Icons.keyboard_arrow_down),
-      title: Text(l10n.autoScrollBottom),
-      trailing: StoreSwitch(prop: _store.scrollBottom),
-    );
-  }
-
-  Widget _buildFontSize() {
-    return ValueListenableBuilder(
-      valueListenable: _store.fontSize.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.text_fields),
-        title: Text(l10n.fontSize),
-        trailing: Text(
-          val.toString(),
-          style: UIs.text13Grey,
-        ),
-        subtitle: Text(l10n.fontSizeSettingTip, style: UIs.text13Grey),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val.toString());
-          final result = await context.showRoundDialog<String>(
-            title: l10n.fontSize,
-            child: Input(
-              icon: Icons.text_fields,
-              controller: ctrl,
-              hint: '12',
-              type: const TextInputType.numberWithOptions(decimal: true),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
-              ),
-            ],
-          );
-          if (result == null) return;
-          final newVal = double.tryParse(result);
-          if (newVal == null) {
-            context.showSnackBar('Invalid number: $result');
-            return;
-          }
-          _store.fontSize.put(newVal);
-        },
-      ),
-    );
+    RebuildNode.app.rebuild(delay: true);
   }
 
   Widget _buildLocale() {
@@ -242,22 +187,6 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildAutoGenTitle() {
-    return ListTile(
-      leading: const Icon(Icons.title),
-      title: Text(l10n.genChatTitle),
-      trailing: StoreSwitch(prop: _store.autoGenTitle),
-    );
-  }
-
-  Widget _buildSoftWrap() {
-    return ListTile(
-      leading: const Icon(Icons.wrap_text),
-      title: Text(l10n.softWrap),
-      trailing: StoreSwitch(prop: _store.softWrap),
-    );
-  }
-
   Widget _buildCheckUpdate() {
     return ListTile(
       leading: const Icon(Icons.update),
@@ -275,14 +204,6 @@ class _SettingPageState extends State<SettingPage> {
       ),
       onTap: () => Funcs.throttle(() => AppUpdateIface.doUpdate(context)),
       trailing: StoreSwitch(prop: _store.autoCheckUpdate),
-    );
-  }
-
-  Widget _buildAutoRmDupChat() {
-    return ListTile(
-      leading: const Icon(Icons.delete),
-      title: Text(l10n.autoRmDupChat),
-      trailing: StoreSwitch(prop: _store.autoRmDupChat),
     );
   }
 
@@ -507,20 +428,88 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  // Widget _buildMore() {
-  //   final children = [
-  //     _buildIMPro(),
-  //   ];
-  //   return Column(
-  //     children: children.map((e) => CardX(child: e)).toList(),
-  //   );
-  // }
+  Widget _buildMore() {
+    final children = [
+      _buildFontSize(),
+      _buildScrollBottom(),
+      _buildAutoGenTitle(),
+      _buildSoftWrap(),
+      _buildAutoRmDupChat(),
+    ];
+    return Column(
+      children: children.map((e) => CardX(child: e)).toList(),
+    );
+  }
 
-  // Widget _buildIMPro() {
-  //   return ListTile(
-  //     leading: const Icon(Icons.report_problem),
-  //     title: Text(l10n.ignoreTip),
-  //     trailing: StoreSwitch(prop: _store.imPro),
-  //   );
-  // }
+  Widget _buildFontSize() {
+    return ValueListenableBuilder(
+      valueListenable: _store.fontSize.listenable(),
+      builder: (_, val, __) => ListTile(
+        leading: const Icon(Icons.text_fields),
+        title: Text(l10n.fontSize),
+        trailing: Text(
+          val.toString(),
+          style: UIs.text13Grey,
+        ),
+        subtitle: Text(l10n.fontSizeSettingTip, style: UIs.text13Grey),
+        onTap: () async {
+          final ctrl = TextEditingController(text: val.toString());
+          final result = await context.showRoundDialog<String>(
+            title: l10n.fontSize,
+            child: Input(
+              icon: Icons.text_fields,
+              controller: ctrl,
+              hint: '12',
+              type: const TextInputType.numberWithOptions(decimal: true),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => context.pop(ctrl.text),
+                child: Text(l10n.ok),
+              ),
+            ],
+          );
+          if (result == null) return;
+          final newVal = double.tryParse(result);
+          if (newVal == null) {
+            context.showSnackBar('Invalid number: $result');
+            return;
+          }
+          _store.fontSize.put(newVal);
+        },
+      ),
+    );
+  }
+
+  Widget _buildScrollBottom() {
+    return ListTile(
+      leading: const Icon(Icons.keyboard_arrow_down),
+      title: Text(l10n.autoScrollBottom),
+      trailing: StoreSwitch(prop: _store.scrollBottom),
+    );
+  }
+
+  Widget _buildAutoGenTitle() {
+    return ListTile(
+      leading: const Icon(Icons.title),
+      title: Text(l10n.genChatTitle),
+      trailing: StoreSwitch(prop: _store.autoGenTitle),
+    );
+  }
+
+  Widget _buildSoftWrap() {
+    return ListTile(
+      leading: const Icon(Icons.wrap_text),
+      title: Text(l10n.softWrap),
+      trailing: StoreSwitch(prop: _store.softWrap),
+    );
+  }
+
+  Widget _buildAutoRmDupChat() {
+    return ListTile(
+      leading: const Icon(Icons.delete),
+      title: Text(l10n.autoRmDupChat),
+      trailing: StoreSwitch(prop: _store.autoRmDupChat),
+    );
+  }
 }

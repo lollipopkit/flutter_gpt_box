@@ -54,6 +54,8 @@ final class BackupPage extends StatelessWidget {
       padding: const EdgeInsets.all(17),
       children: [
         _buildTip(),
+        //_buildTitle(l10n.settings),
+        //_buildSettings(context),
         _buildTitle('App'),
         if (isMacOS || isIOS) _buildIcloud(context),
         if (!isWeb) _buildWebdav(context),
@@ -83,6 +85,21 @@ final class BackupPage extends StatelessWidget {
         leading: const Icon(Icons.warning),
         title: Text(l10n.attention),
         subtitle: Text(l10n.backupTip, style: UIs.textGrey),
+      ),
+    );
+  }
+
+  Widget _buildSettings(BuildContext context) {
+    return CardX(
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.sync),
+            title: Text(l10n.onlySyncOnLaunch),
+            subtitle: Text(l10n.onlySyncOnLaunchTip, style: UIs.textGrey),
+            trailing: StoreSwitch(prop: Stores.setting.onlySyncOnLaunch),
+          ),
+        ],
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/build_mode.dart';
 import 'package:flutter_chatgpt/core/ext/chat_history.dart';
+import 'package:flutter_chatgpt/core/ext/color.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
@@ -87,6 +88,9 @@ class _HomePageState extends State<HomePage>
     CodeElementBuilder.isDark = _isDark;
     l10n = AppLocalizations.of(context)!;
     super.didChangeDependencies();
+
+    /// Must call here, or the colorSeed is not applied
+    UIs.primaryColor = Theme.of(context).colorScheme.primary;
   }
 
   @override

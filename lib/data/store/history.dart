@@ -36,11 +36,12 @@ class HistoryStore extends Store {
   }
 
   void put(ChatHistory history) {
-    box.updateLastModified();
     box.put(history.id, history);
+    box.updateLastModified();
   }
 
   void delete(String id) {
     box.delete(id);
+    box.updateLastModified();
   }
 }

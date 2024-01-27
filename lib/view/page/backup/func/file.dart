@@ -32,12 +32,16 @@ void _onTapFileRestore(BuildContext context) async {
     context.showLoadingDialog();
     final backup = await compute(Backup.fromJsonString, text.trim());
     context.pop();
+    if (backup == null) {
+      return;
+    }
+
     if (backupFormatVersion != backup.version) {
       context.showSnackBar('Backup version not match');
       return;
     }
 
-    final time = DateTime.fromMillisecondsSinceEpoch(backup.date);
+    final time = DateTime.fromMillisecondsSinceEpoch(backup.lastModTime);
     await context.showRoundDialog(
       title: l10n.attention,
       child: Text(l10n.sureRestoreFmt(time)),
@@ -45,7 +49,7 @@ void _onTapFileRestore(BuildContext context) async {
         TextButton(
           onPressed: () async {
             context.pop();
-            await backup.restore(force: true);
+            await backup.merge(force: true);
           },
           child: Text(l10n.restore),
         ),

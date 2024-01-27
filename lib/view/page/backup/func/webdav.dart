@@ -72,9 +72,7 @@ Widget _buildWebdav(BuildContext context) {
 Future<void> _onTapWebdavDl(BuildContext context) async {
   _webdavLoading.value = true;
   try {
-    final result = await Webdav.download(
-      relativePath: Paths.bakName,
-    );
+    final result = await Webdav.download(relativePath: Paths.bakName);
     if (result != null) {
       Loggers.app.warning('Download webdav backup failed: $result');
       return;
@@ -87,7 +85,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
   }
   final dlFile = await File(await Paths.bak).readAsString();
   final dlBak = await compute(Backup.fromJsonString, dlFile);
-  await dlBak.restore(force: true);
+  await dlBak?.merge(force: true);
   _webdavLoading.value = false;
 }
 

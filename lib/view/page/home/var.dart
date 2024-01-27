@@ -50,5 +50,8 @@ const _boxShadowDark = [
   ),
 ];
 
-/// Set it as a const, so we can scroll to it
-const _historyItemHeight = 73.0;
+/// Set it as final, so we can scroll to it.
+/// Mobile has higher density.
+final _historyItemHeight = isDesktop ? 73.0 : 79.0;
+// The pixel tollerance
+final _historyLocateTollerance = _historyItemHeight / 3; 

@@ -183,30 +183,15 @@ abstract final class ICloud {
   }
 
   static Future<void> sync() async {
-    var dlSuccess = false;
-    try {
-      final result = await download(relativePath: Paths.bakName);
-      if (result != null) {
-        throw result;
-      }
-      dlSuccess = true;
-    } catch (e, s) {
-      _logger.warning('Download backup failed', e, s);
-    }
-    if (!dlSuccess) {
-      final content = await Backup.backup();
-      await File(await Paths.bak).writeAsString(content);
-      final uploadResult = await upload(relativePath: Paths.bakName);
-      if (uploadResult != null) {
-        _logger.warning('Upload backup failed: $uploadResult');
-      } else {
-        _logger.info('Upload backup success');
-      }
-      return;
-    }
+    final result = await download(relativePath: Paths.bakName);
+    if (result != null) return await backup();
+
     final dlFile = await File(await Paths.bak).readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
-    await dlBak.restore();
+    if (dlBak == null) return await backup();
+    
+    await dlBak.merge();
+    await Future.delayed(const Duration(milliseconds: 37));
     await backup();
   }
 

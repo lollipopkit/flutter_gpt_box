@@ -1,120 +1,120 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/store.dart';
+import 'package:flutter_chatgpt/data/model/chat/history.dart';
+import 'package:flutter_chatgpt/data/res/path.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/page/home/home.dart';
+import 'package:logging/logging.dart';
 
-const backupFormatVersion = 1;
+const backupFormatVersion = 2;
 
 class Backup {
   final int version;
-  final int date;
-  final Map<String, dynamic> history;
+  final List<ChatHistory> history;
   final Map<String, dynamic> settings;
-  final int? lastModTime;
+  final int lastModTime;
 
   const Backup({
     required this.version,
-    required this.date,
     required this.settings,
     required this.history,
-    this.lastModTime,
+    required this.lastModTime,
   });
 
   Backup.fromJson(Map<String, dynamic> json)
       : version = json['version'] as int,
-        date = json['date'],
         lastModTime = json['lastModTime'],
         settings = json['settings'] ?? {},
-        history = json['history'] ?? {};
+        history = ((json['history'] ?? []) as List<dynamic>)
+            .map((e) => ChatHistory.fromJson(e.cast<String, dynamic>()))
+            .toList();
 
   Map<String, dynamic> toJson() => {
         'version': version,
-        'date': date,
         'settings': settings,
         'history': history,
+        'lastModTime': lastModTime,
       };
+
+  static Backup? fromJsonString(String raw) {
+    try {
+      return Backup.fromJson(json.decode(raw));
+    } catch (e, s) {
+      Logger('Backup').warning('Parse backup failed', e, s);
+    }
+    return null;
+  }
 
   Backup.loadFromStore()
       : version = backupFormatVersion,
-        date = DateTime.now().millisecondsSinceEpoch,
         lastModTime = Stores.lastModTime,
         settings = Stores.setting.box.toJson(),
-        history = Stores.history.box.toJson();
+        history = Stores.history.fetchAll().values.toList();
 
   static Future<String> backup() async {
-    final result = _diyEncrypt(json.encode(Backup.loadFromStore()));
-    return result;
+    final bak = Backup.loadFromStore();
+    return json.encode(bak);
   }
 
-  /// - Return null if same time
-  /// - Return false if local is newer
-  /// - Return true if restore success
-  Future<void> restore({bool force = false}) async {
-    final curTime = Stores.lastModTime ?? 0;
-    final bakTime = lastModTime ?? 0;
-    final shouldRestore = force || curTime < bakTime;
+  static Future<void> backupToFile() async {
+    await File(await Paths.bak).writeAsString(await backup());
+  }
 
-    // Settings
-    final nowSettingsKeys = Stores.setting.box.keys.toSet();
-    final bakSettingsKeys = settings.keys.toSet();
-    final newSettingsKeys = bakSettingsKeys.difference(nowSettingsKeys);
-    final delSettingsKeys = nowSettingsKeys.difference(bakSettingsKeys);
-    final sameSettingsKeys = nowSettingsKeys.intersection(bakSettingsKeys);
-    for (final s in newSettingsKeys) {
-      Stores.setting.box.put(s, settings[s]);
-    }
-    if (shouldRestore) {
-      for (final s in sameSettingsKeys) {
-        Stores.setting.box.put(s, settings[s]);
-      }
-      for (final s in delSettingsKeys) {
-        Stores.setting.box.delete(s);
-      }
+  /// Merge logic:
+  /// - Same id:
+  ///   - If [override], restore
+  ///   - If not [override], ignore
+  /// - New id: restore
+  /// - Deleted id:
+  ///   - If [override], delete
+  ///   - If not [override], ignore
+  Future<void> merge({bool force = false}) async {
+    final curTime = Stores.lastModTime;
+    final bakTime = lastModTime;
+    final override = force || curTime < bakTime;
+    if (!override) {
+      Logger('Backup').info('Backup is older than current, ignore');
+      return;
     }
 
     // History
     final nowHistoryKeys = Stores.history.box.keys.toSet();
-    final bakHistoryKeys = history.keys.toSet();
-    final newHistoryKeys = bakHistoryKeys.difference(nowHistoryKeys);
-    final delHistoryKeys = nowHistoryKeys.difference(bakHistoryKeys);
-    final sameHistoryKeys = nowHistoryKeys.intersection(bakHistoryKeys);
-    for (final s in newHistoryKeys) {
-      Stores.history.box.put(s, history[s]);
+    final bakHistoryKeys = history.map((e) => e.id).toSet();
+    final historyNew = bakHistoryKeys.difference(nowHistoryKeys);
+    for (final id in historyNew) {
+      Stores.history.put(history.firstWhere((e) => e.id == id));
     }
-    if (shouldRestore) {
-      for (final s in sameHistoryKeys) {
-        Stores.history.box.put(s, history[s]);
-      }
-      for (final s in delHistoryKeys) {
-        Stores.history.box.delete(s);
-      }
+    final historyDelete = nowHistoryKeys.difference(bakHistoryKeys);
+    final historyUpdate = nowHistoryKeys.intersection(bakHistoryKeys);
+    for (final id in historyDelete) {
+      Stores.history.delete(id);
+    }
+    for (final id in historyUpdate) {
+      Stores.history.put(history.firstWhere((e) => e.id == id));
+    }
+
+    // Settings
+    final nowSettingsKeys = Stores.setting.box.keys.toSet();
+    final bakSettingsKeys = settings.keys.toSet();
+    final settingsNew = bakSettingsKeys.difference(nowSettingsKeys);
+    for (final key in settingsNew) {
+      Stores.setting.box.put(key, settings[key]);
+    }
+    final settingsDelete = nowSettingsKeys.difference(bakSettingsKeys);
+    final settingsUpdate = nowSettingsKeys.intersection(bakSettingsKeys);
+    for (final key in settingsDelete) {
+      Stores.setting.box.delete(key);
+    }
+    for (final key in settingsUpdate) {
+      Stores.setting.box.put(key, settings[key]);
     }
 
     loadFromStore();
     RebuildNode.app.rebuild();
-  }
 
-  Backup.fromJsonString(String raw)
-      : this.fromJson(json.decode(_diyDecrypt(raw)));
-}
-
-String _diyEncrypt(String raw) => json.encode(
-      raw.codeUnits.map((e) => e * 2 + 1).toList(growable: false),
-    );
-
-String _diyDecrypt(String raw) {
-  try {
-    final list = json.decode(raw);
-    final sb = StringBuffer();
-    for (final e in list) {
-      sb.writeCharCode((e - 1) ~/ 2);
-    }
-    return sb.toString();
-  } catch (e, trace) {
-    Loggers.app.warning('Backup decrypt failed', e, trace);
-    rethrow;
+    Logger('Backup').info('Merge success');
   }
 }

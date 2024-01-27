@@ -67,8 +67,8 @@ abstract final class Webdav {
         _prefix + relativePath,
         localPath ?? '${await Paths.doc}/$relativePath',
       );
-    } catch (e) {
-      _logger.warning('Download $relativePath failed');
+    } catch (e, s) {
+      _logger.warning('Download $relativePath failed', e, s);
       return WebdavErr(type: WebdavErrType.generic, message: '$e');
     }
     return null;
@@ -85,47 +85,36 @@ abstract final class Webdav {
       return names;
     } catch (e, s) {
       _logger.warning('List failed', e, s);
-      return [];
     }
+    return [];
   }
 
   static void changeClient(String url, String user, String pwd) {
     _client = WebdavClient(url: url, user: user, pwd: pwd);
-    Stores.setting.webdavUrl.put(url, updateLastModified: false);
-    Stores.setting.webdavUser.put(user, updateLastModified: false);
-    Stores.setting.webdavPwd.put(pwd, updateLastModified: false);
+    Stores.setting.webdavUrl.put(url);
+    Stores.setting.webdavUser.put(user);
+    Stores.setting.webdavPwd.put(pwd);
   }
 
   static Future<void> sync() async {
-    final result = await download(relativePath: Paths.bakName);
-    if (result != null) {
-      await backup();
-      return;
-    }
-    final dlFile = await compute((message) async {
-      try {
-        final file = await File(message).readAsString();
-        final bak = Backup.fromJsonString(file);
-        return bak;
-      } catch (_) {
-        return null;
-      }
-    }, await Paths.bak);
-    if (dlFile == null) {
-      await backup();
-      return;
-    }
-    await dlFile.restore();
+    final dlErr = await download(relativePath: Paths.bakName);
+    if (dlErr != null) return await backup();
+
+    final dlFile = await File(await Paths.bak).readAsString();
+    final dlBak = await compute(Backup.fromJsonString, dlFile);
+    if (dlBak == null) return await backup();
+
+    await dlBak.merge();
+    await Future.delayed(const Duration(milliseconds: 37));
     await backup();
   }
 
   /// Create a local backup and upload it to WebDAV
   static Future<void> backup() async {
-    final content = await Backup.backup();
-    await File(await Paths.bak).writeAsString(content);
-    final uploadResult = await upload(relativePath: Paths.bakName);
-    if (uploadResult != null) {
-      _logger.warning('Upload failed: $uploadResult');
+    await Backup.backupToFile();
+    final err = await upload(relativePath: Paths.bakName);
+    if (err != null) {
+      _logger.warning('Upload failed: $err');
     } else {
       _logger.info('Upload success');
     }

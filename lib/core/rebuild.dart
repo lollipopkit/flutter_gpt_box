@@ -15,7 +15,10 @@ class RebuildNode implements Listenable {
     _listeners.remove(listener);
   }
 
-  void rebuild() {
+  /// Rebuild all listeners.
+  /// - [delay] if true, rebuild will be delayed for 100ms.
+  void rebuild({bool delay = false}) async {
+    if (delay) await Future.delayed(const Duration(milliseconds: 100));
     for (final listener in _listeners) {
       listener();
     }

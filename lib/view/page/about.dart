@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
+import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
-import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key, Never? args});
@@ -13,14 +12,13 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: Text(l10n.about),
+        title: Text(l10n.about, style: UIs.text18),
       ),
       body: Center(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 17),
           children: [
-            _buildMyOtherApps(),
-            _buildOther(),
+            _buildInfo(),
             _buildLicense(context),
           ],
         ),
@@ -28,51 +26,32 @@ class AboutPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMyOtherApps() {
+  Widget _buildInfo() {
     return CardX(
-      child: ExpandTile(
-        initiallyExpanded: true,
-        title: Text(l10n.myOtherApps),
-        leading: const Icon(Icons.apps),
-        children: [
-          ListTile(
-            title: const Text('Server Box'),
-            subtitle: const Text('View status & control your server'),
-            onTap: () => launchUrlString(
-                'https://github.com/lollipopkit/flutter_server_box'),
-            trailing: const Icon(Icons.chevron_right),
-          ),
-        ],
-      ),
-    );
-  }
+      child: Padding(
+        padding: const EdgeInsets.all(17),
+        child: MarkdownBody(
+          data: '''
+### 👋🏻 ${l10n.myOtherApps}
+- [Server Box](https://github.com/lollipopkit/flutter_server_box) - View status & control your server
 
-  Widget _buildOther() {
-    return CardX(
-      child: ExpandTile(
-        initiallyExpanded: true,
-        leading: const Icon(Icons.more, size: 19),
-        title: Text(l10n.other),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(11),
-            child: MarkdownBody(
-              data: '''
-### 🥳 ${l10n.contributor}
+
+### 🥳 ${l10n.contributor} & ${l10n.participant}
 ～
 
-### 🙌🏻 ${l10n.participant}
-～
 
 ### 🗂️ ${l10n.privacy}
 ${l10n.privacyTip}
 
+
+### 😣 ${l10n.help}
+${l10n.helpTip}
+
+
 ### 📝 ${l10n.license}
 GPL v3 lollipopkit
 ''',
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

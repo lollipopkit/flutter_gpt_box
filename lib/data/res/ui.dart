@@ -77,6 +77,8 @@ abstract final class UIs {
 
   static var colorSeed = const Color.fromARGB(255, 72, 15, 15);
 
+  static var primaryColor = colorSeed;
+
   static const bgColor = DynColor(light: Colors.white, dark: Colors.black);
 
   static const textColor = DynColor(light: Colors.black, dark: Colors.white);

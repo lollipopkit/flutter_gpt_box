@@ -6,41 +6,43 @@ CustomAppBar _buildAppBar(BuildContext context) {
     title: ListenableBuilder(
       listenable: _appbarTitleRN,
       builder: (_, __) {
+        final entity = _curChat;
+        if (entity == null) return Text(l10n.empty);
+        final len = '${entity.items.length} ${l10n.message}';
+        final time = entity.items.lastOrNull?.createdAt.toAgo;
         return AnimatedSwitcher(
           duration: Durations.medium1,
           switchInCurve: Easing.standardDecelerate,
           switchOutCurve: Easing.standardDecelerate,
-          transitionBuilder: (child, animation) => FadeTransition(
-            opacity: animation,
-            child: SlideTransitionX(
-              position: animation,
-              direction: AxisDirection.right,
+          transitionBuilder: (child, animation) => SlideTransitionX(
+            position: animation,
+            child: FadeTransition(
+              opacity: animation,
               child: child,
             ),
           ),
-          child: Column(
-            key: Key(_curChatId),
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Text(
-                _curChat?.name ?? l10n.untitled,
-                style: UIs.text15,
-              ),
-              ListenableBuilder(
-                listenable: _timeRN,
-                builder: (_, __) {
-                  final entity = _curChat;
-                  if (entity == null) return Text(l10n.empty);
-                  final len = '${entity.items.length} ${l10n.message}';
-                  final time = entity.items.lastOrNull?.createdAt.toAgo;
-                  return Text(
-                    '$len · ${time ?? l10n.empty}',
+          // Use a SizedBox to avoid the title jumping when switching chats.
+          child: SizedBox(
+            key: Key(entity.id),
+            width: (_media?.size.width ?? 300) * 0.5,
+            child: RichText(
+              maxLines: 2,
+              overflow: TextOverflow.fade,
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: _curChat?.name ?? l10n.untitled,
+                    style: UIs.text13.copyWith(
+                        color: UIs.textColor.fromBool(context.isDark)),
+                  ),
+                  TextSpan(
+                    text: '\n$len · ${time ?? l10n.empty}',
                     style: UIs.text11Grey,
-                  );
-                },
-              )
-            ],
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },

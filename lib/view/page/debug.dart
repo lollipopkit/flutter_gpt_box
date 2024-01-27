@@ -51,28 +51,27 @@ class DebugPage extends StatelessWidget {
           ),
         ],
       ),
-      body: ListenableBuilder(
-          listenable: DebugNotifier.node,
-          builder: (_, __) => _buildTerminal(DebugNotifier.state)),
+      body: _buildTerminal(),
       backgroundColor: Colors.black,
     );
   }
 
-  Widget _buildTerminal(List<Widget> widgets) {
+  Widget _buildTerminal() {
     return Container(
       padding: const EdgeInsets.all(10),
       color: Colors.black,
       child: DefaultTextStyle(
         style: const TextStyle(
-          fontFamily: 'monospace',
           color: Colors.white,
-          fontWeight: FontWeight.bold,
         ),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widgets,
+          child: ListenableBuilder(
+            listenable: DebugNotifier.node,
+            builder: (_, __) => Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: DebugNotifier.state,
+            ),
           ),
         ),
       ),

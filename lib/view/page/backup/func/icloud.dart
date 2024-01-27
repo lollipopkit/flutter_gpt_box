@@ -8,12 +8,9 @@ Widget _buildIcloud(BuildContext context) {
       trailing: ListenableBuilder(
         listenable: _icloudLoading,
         builder: (_, __) {
-          if (_icloudLoading.value) {
-            return UIs.centerSizedLoadingSmall;
-          }
+          if (_icloudLoading.value) UIs.centerSizedLoadingSmall;
           return StoreSwitch(
             prop: Stores.setting.icloudSync,
-            updateLastModTime: false,
             validator: (p0) {
               if (Stores.setting.webdavSync.fetch() && p0) {
                 context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));

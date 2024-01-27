@@ -374,13 +374,12 @@ void _locateHistoryListener() => Funcs.throttle(
         final idx = _allHistories.keys.toList().indexOf(_curChatId);
         final offset = _historyScrollCtrl.offset;
         final height = _historyScrollCtrl.position.viewportDimension;
-        const tollerance = _historyItemHeight / 3; // The pixel tollerance
-        final visible = offset - tollerance <= idx * _historyItemHeight &&
-            offset + height + tollerance >= (idx + 1) * _historyItemHeight;
+        final visible = offset - _historyLocateTollerance <= idx * _historyItemHeight &&
+            offset + height + _historyLocateTollerance >= (idx + 1) * _historyItemHeight;
         _locateHistoryBtn.value = !visible;
       },
       id: 'calcChatLocateBtn',
-      duration: 30,
+      duration: 10,
     );
 
 void _gotoHistory(String chatId) {

@@ -11,11 +11,11 @@ abstract final class Stores {
     history,
   ];
 
-  static int? get lastModTime {
-    int? lastModTime = 0;
+  static int get lastModTime {
+    int lastModTime = 0;
     for (final store in all) {
       final last = store.box.lastModified ?? 0;
-      if (last > (lastModTime ?? 0)) {
+      if (last > (lastModTime)) {
         lastModTime = last;
       }
     }

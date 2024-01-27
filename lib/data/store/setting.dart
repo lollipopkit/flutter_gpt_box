@@ -47,4 +47,6 @@ class SettingStore extends Store {
   //late final imPro = property('imPro', false);
 
   late final autoRmDupChat = property('autoRmDupChat', true);
+
+  late final onlySyncOnLaunch = property('onlySyncOnLaunch', true);
 }

@@ -32,18 +32,15 @@ class _ChatPageState extends State<_ChatPage>
           final item = _curChat?.items;
           if (item == null) return UIs.placeholder;
           return AnimatedSwitcher(
-            duration: Durations.medium3,
+            duration: Durations.short4,
             switchInCurve: Easing.standardDecelerate,
             switchOutCurve: Easing.standardDecelerate,
-            transitionBuilder: (child, animation) => FadeTransition(
-              opacity: animation,
-              child: SlideTransitionX(
-                position: animation,
-                direction: switchDirection == SwitchPageDirection.next
-                    ? AxisDirection.up
-                    : AxisDirection.down,
-                child: child,
-              ),
+            transitionBuilder: (child, animation) => SlideTransitionX(
+              position: animation,
+              direction: switchDirection == SwitchPageDirection.next
+                  ? AxisDirection.up
+                  : AxisDirection.down,
+              child: child,
             ),
             child: ListView.builder(
               key: Key(_curChatId),
@@ -104,17 +101,21 @@ class _ChatPageState extends State<_ChatPage>
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
+    final isBright = UIs.primaryColor.isBrightColor;
     return Row(
       children: [
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(13),
-            color: Colors.grey,
+            color: UIs.primaryColor,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
           child: Text(
             chatItem.role.name,
-            style: const TextStyle(fontSize: 12, color: Colors.white),
+            style: TextStyle(
+              fontSize: 12,
+              color: isBright ? Colors.black : Colors.white,
+            ),
           ),
         ),
         const Spacer(),
