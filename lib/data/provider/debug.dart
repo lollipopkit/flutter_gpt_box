@@ -11,9 +11,11 @@ const _level2Color = {
 
 abstract final class DebugNotifier {
   static final node = RebuildNode();
+  static final logs = <LogRecord>[];
   static final state = <Widget>[];
 
   static void addLog(LogRecord record) {
+    logs.add(record);
     final color = _level2Color[record.level.name] ?? Colors.blue;
     state.addAll([
       Text.rich(TextSpan(
@@ -50,5 +52,20 @@ abstract final class DebugNotifier {
     }
 
     node.rebuild();
+  }
+
+  static String get logsStr {
+    final sb = StringBuffer();
+    for (final log in logs) {
+      sb.writeln('[${log.level.name}][${log.loggerName}]: ${log.message}');
+      if (log.error != null) {
+        sb.writeln(log.error);
+      }
+      if (log.stackTrace != null) {
+        sb.writeln(log.stackTrace);
+      }
+      sb.writeln();
+    }
+    return sb.toString();
   }
 }
