@@ -1,5 +1,5 @@
 flutter_native_splash:
-  image: assets/app_icon.png
+  image: assets/app_icon_padding.png
 
   android: false
 
@@ -7,4 +7,4 @@ flutter_native_splash:
   color_ios: "#ffffff"
   color_dark_ios: "#000000"
 
-  web: true
+  web: false
