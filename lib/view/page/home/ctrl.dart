@@ -257,7 +257,7 @@ void _genChatTitle(String chatId, BuildContext context) async {
 
   final question = entity.items.first.content.first.raw;
   final resp = await OpenAI.instance.chat.create(
-    model: 'gpt-3.5-turbo',
+    model: Stores.setting.openaiGenTitleModel.fetch(),
     messages: [
       entity.items.first.copyWith(
         content: [
@@ -374,8 +374,10 @@ void _locateHistoryListener() => Funcs.throttle(
         final idx = _allHistories.keys.toList().indexOf(_curChatId);
         final offset = _historyScrollCtrl.offset;
         final height = _historyScrollCtrl.position.viewportDimension;
-        final visible = offset - _historyLocateTollerance <= idx * _historyItemHeight &&
-            offset + height + _historyLocateTollerance >= (idx + 1) * _historyItemHeight;
+        final visible =
+            offset - _historyLocateTollerance <= idx * _historyItemHeight &&
+                offset + height + _historyLocateTollerance >=
+                    (idx + 1) * _historyItemHeight;
         _locateHistoryBtn.value = !visible;
       },
       id: 'calcChatLocateBtn',

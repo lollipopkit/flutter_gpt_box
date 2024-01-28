@@ -20,3 +20,10 @@
   - [x] WebDAV
 - [x] Chat search
 - [x] History list locate
+- [ ] URL Scheme
+  - [ ] Config: `gptbox://config/set?openAiUrl=&openAiToken=&openAiModel=`
+  - [ ] Chat
+    - [ ] New: `gptbox://chat/new?msg=`
+    - [ ] Open: `gptbox://chat/open?chatId=`
+    - [ ] Search: `gptbox://chat/search?keyword=`
+    - [ ] Share: `gptbox://chat/share?chatId=`

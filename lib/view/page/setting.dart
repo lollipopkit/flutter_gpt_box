@@ -212,6 +212,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildOpenAIKey(),
       _buildOpenAIUrl(),
       _buildOpenAIModel(),
+      _buildOpenAIGenTitleModel(),
       _buildPrompt(),
       _buildHistoryLength(),
     ];
@@ -344,6 +345,61 @@ class _SettingPageState extends State<SettingPage> {
 
           if (model != null) {
             _store.openaiModel.put(model);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildOpenAIGenTitleModel() {
+    final property = _store.openaiGenTitleModel;
+    return ValueListenableBuilder(
+      valueListenable: property.listenable(),
+      builder: (_, val, __) => ListTile(
+        leading: const Icon(Icons.model_training),
+        title: Text('${l10n.genChatTitle} ${l10n.model}'),
+        trailing: const Icon(Icons.keyboard_arrow_right),
+        subtitle: Text(
+          val,
+          style: UIs.text13Grey,
+        ),
+        onTap: () async {
+          if (_store.openaiApiKey.fetch().isEmpty) {
+            context.showRoundDialog(
+              title: l10n.attention,
+              child: Text(l10n.needOpenAIKey),
+              actions: [
+                TextButton(
+                  onPressed: () => context.pop(),
+                  child: Text(l10n.ok),
+                ),
+              ],
+            );
+            return;
+          }
+          context.showLoadingDialog();
+          final models = await OpenAI.instance.model.list();
+          context.pop();
+          final model = await context.showRoundDialog<String>(
+            title: 'Select',
+            child: SizedBox(
+              height: 300,
+              width: 300,
+              child: ListView.builder(
+                itemCount: models.length,
+                itemBuilder: (_, idx) {
+                  final item = models[idx];
+                  return ListTile(
+                    title: Text(item.id),
+                    onTap: () => context.pop(item.id),
+                  );
+                },
+              ),
+            ),
+          );
+
+          if (model != null) {
+            property.put(model);
           }
         },
       ),

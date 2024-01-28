@@ -189,7 +189,7 @@ abstract final class ICloud {
     final dlFile = await File(await Paths.bak).readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     if (dlBak == null) return await backup();
-    
+
     await dlBak.merge();
     await Future.delayed(const Duration(milliseconds: 37));
     await backup();

@@ -54,4 +54,4 @@ const _boxShadowDark = [
 /// Mobile has higher density.
 final _historyItemHeight = isDesktop ? 73.0 : 79.0;
 // The pixel tollerance
-final _historyLocateTollerance = _historyItemHeight / 3; 
+final _historyLocateTollerance = _historyItemHeight / 3;
