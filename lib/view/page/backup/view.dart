@@ -55,7 +55,7 @@ final class BackupPage extends StatelessWidget {
       children: [
         _buildTip(),
         //_buildTitle(l10n.settings),
-        //_buildSettings(context),
+        _buildSettings(context),
         _buildTitle('App'),
         if (isMacOS || isIOS) _buildIcloud(context),
         if (!isWeb) _buildWebdav(context),

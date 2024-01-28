@@ -3,6 +3,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_chatgpt/core/util/sync/base.dart';
+import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Store {
@@ -38,10 +40,20 @@ extension BoxX on Box {
     return val;
   }
 
-  Future<void> updateLastModified([int? time]) => put(
-        lastModifiedKey,
-        time ?? DateTime.now().millisecondsSinceEpoch,
-      );
+  Future<void> updateLastModified({int? time, bool waitSync = true}) async {
+    await put(
+      lastModifiedKey,
+      time ?? DateTime.now().millisecondsSinceEpoch,
+    );
+
+    if (!Stores.setting.onlySyncOnLaunch.fetch()) {
+      if (waitSync) {
+        await SyncService.sync();
+      } else {
+        SyncService.sync();
+      }
+    }
+  }
 
   /// Convert db to json
   Map<String, dynamic> toJson({bool includeInternal = true}) {
