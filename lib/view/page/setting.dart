@@ -326,7 +326,7 @@ class _SettingPageState extends State<SettingPage> {
           final models = await OpenAI.instance.model.list();
           context.pop();
           final model = await context.showRoundDialog<String>(
-            title: 'Select',
+            title: l10n.select,
             child: SizedBox(
               height: 300,
               width: 300,
@@ -360,7 +360,7 @@ class _SettingPageState extends State<SettingPage> {
         title: Text('${l10n.genChatTitle} ${l10n.model}'),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
-          val,
+          l10n.genTitleTip(val.isEmpty ? l10n.empty : val),
           style: UIs.text13Grey,
         ),
         onTap: () async {
@@ -381,7 +381,7 @@ class _SettingPageState extends State<SettingPage> {
           final models = await OpenAI.instance.model.list();
           context.pop();
           final model = await context.showRoundDialog<String>(
-            title: 'Select',
+            title: l10n.select,
             child: SizedBox(
               height: 300,
               width: 300,
@@ -396,6 +396,12 @@ class _SettingPageState extends State<SettingPage> {
                 },
               ),
             ),
+            actions: [
+              TextButton(
+                onPressed: () => context.pop(''),
+                child: Text(l10n.clear),
+              ),
+            ],
           );
 
           if (model != null) {
@@ -488,7 +494,6 @@ class _SettingPageState extends State<SettingPage> {
     final children = [
       _buildFontSize(),
       _buildScrollBottom(),
-      _buildAutoGenTitle(),
       _buildSoftWrap(),
       _buildAutoRmDupChat(),
     ];
@@ -542,14 +547,6 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Icons.keyboard_arrow_down),
       title: Text(l10n.autoScrollBottom),
       trailing: StoreSwitch(prop: _store.scrollBottom),
-    );
-  }
-
-  Widget _buildAutoGenTitle() {
-    return ListTile(
-      leading: const Icon(Icons.title),
-      title: Text(l10n.genChatTitle),
-      trailing: StoreSwitch(prop: _store.autoGenTitle),
     );
   }
 

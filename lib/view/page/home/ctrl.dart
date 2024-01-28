@@ -94,7 +94,8 @@ Future<void> _onSend(String chatId, BuildContext context) async {
           // Only scroll to bottom when current chat is the working chat
           final isWorking = chatId == _curChatId;
           final isSubscribed = _chatStreamSubs.containsKey(chatId);
-          if (isWorking && isSubscribed) {
+          final isDisplaying = _chatScrollCtrl.hasClients;
+          if (isWorking && isSubscribed && isDisplaying) {
             _chatScrollCtrl.jumpTo(_chatScrollCtrl.position.maxScrollExtent);
           }
         }
@@ -245,7 +246,8 @@ void _onStopStreamSub(String chatId) {
 }
 
 void _genChatTitle(String chatId, BuildContext context) async {
-  if (!Stores.setting.autoGenTitle.fetch()) return;
+  final model = Stores.setting.openaiGenTitleModel.fetch();
+  if (model.isEmpty) return;
   final entity = _allHistories[chatId];
   if (entity?.items.length != 1) return;
   if (entity == null) {
@@ -257,7 +259,7 @@ void _genChatTitle(String chatId, BuildContext context) async {
 
   final question = entity.items.first.content.first.raw;
   final resp = await OpenAI.instance.chat.create(
-    model: Stores.setting.openaiGenTitleModel.fetch(),
+    model: model,
     messages: [
       entity.items.first.copyWith(
         content: [
@@ -276,9 +278,12 @@ void _genChatTitle(String chatId, BuildContext context) async {
     context.showSnackBar(msg);
     return;
   }
-  entity.name = title;
+
+  /// These punctions which not affect the meaning of the title will be removed
+  const punctions2Rm = ['。', '"', "'", "“", '”'];
+  entity.name = title.replaceAll(RegExp('[${punctions2Rm.join()}]'), '');
   _chatRNMap[chatId]?.rebuild();
-  _appbarTitleRN.rebuild();
+  if (chatId == _curChatId) _appbarTitleRN.rebuild();
 }
 
 void _onShareChat(BuildContext context) async {

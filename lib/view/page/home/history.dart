@@ -25,22 +25,18 @@ class _HistoryPageState extends State<_HistoryPage>
           itemCount: len,
           itemBuilder: (_, index) {
             final chatId = keys[index];
-            return _buildHistoryListItem(chatId, len - index).card;
+            return _buildHistoryListItem(chatId).card;
           },
         );
       },
     );
   }
 
-  Widget _buildHistoryListItem(String chatId, int leading) {
+  Widget _buildHistoryListItem(String chatId) {
     final entity = _allHistories[chatId];
     if (entity == null) return UIs.placeholder;
     final node = _chatRNMap.putIfAbsent(chatId, () => RebuildNode());
     return ListTile(
-      leading: Text(
-        '#$leading',
-        style: UIs.textGrey,
-      ),
       title: ListenableBuilder(
         listenable: node,
         builder: (_, __) => Text(

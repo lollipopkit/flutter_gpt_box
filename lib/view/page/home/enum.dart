@@ -21,7 +21,8 @@ enum HomePageEnum {
                   ? FloatingActionButton(
                       key: const Key('locate-history-btn'),
                       onPressed: () => _gotoHistory(_curChatId),
-                      child: const Icon(Icons.location_on),
+                      mini: true,
+                      child: const Icon(Icons.gps_fixed, size: 17),
                     )
                   : const SizedBox(key: Key('locate-history-btn-placeholder')),
             );

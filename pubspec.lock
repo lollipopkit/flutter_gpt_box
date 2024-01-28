@@ -315,7 +315,7 @@ packages:
     description:
       path: flutter_highlight
       ref: master
-      resolved-ref: "153595f7e532d4d1fb78e115958db03a1aca1a00"
+      resolved-ref: "809db08a43cf289ba73e57b5c41afcaeb15145ba"
       url: "https://github.com/lollipopkit/highlight.dart"
     source: git
     version: "0.7.0"

@@ -35,6 +35,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     if (isForCapture) {
       return HighlightViewSync(
         textContent,
+        key: ValueKey(textContent),
         language: language,
         theme: _theme,
         textStyle: _textStyle,
@@ -47,8 +48,9 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     return ValueListenableBuilder(
       valueListenable: Stores.setting.fontSize.listenable(),
       builder: (_, fontSize, __) => isMultiLine
-          ? HighlightView(
+          ? HighlightViewSync(
               textContent,
+              key: ValueKey(textContent),
               language: language,
               theme: _theme,
               textStyle: _textStyle.copyWith(fontSize: fontSize),
@@ -57,6 +59,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
             )
           : HighlightViewSync(
               textContent,
+              key: ValueKey(textContent),
               language: language,
               theme: _theme,
               textStyle: _textStyle.copyWith(fontSize: fontSize),
