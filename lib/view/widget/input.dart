@@ -23,6 +23,7 @@ class Input extends StatefulWidget {
   final bool autoFocus;
   final void Function(bool)? onViewPwdTap;
   final bool noWrap;
+  final InputCounterWidgetBuilder? counterBuilder;
 
   const Input({
     super.key,
@@ -46,6 +47,7 @@ class Input extends StatefulWidget {
     this.onViewPwdTap,
     this.noWrap = false,
     this.suffix,
+    this.counterBuilder,
   }) : assert(
           !(obscureText && suffix != null),
           'suffix != null && obscureText',
@@ -106,6 +108,7 @@ class _InputState extends State<Input> {
       autofocus: widget.autoFocus,
       onSubmitted: widget.onSubmitted,
       onChanged: widget.onChanged,
+      buildCounter: widget.counterBuilder,
     );
     if (widget.noWrap) return child;
     return CardX(

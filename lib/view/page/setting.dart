@@ -325,24 +325,12 @@ class _SettingPageState extends State<SettingPage> {
           context.showLoadingDialog();
           final models = await OpenAI.instance.model.list();
           context.pop();
-          final model = await context.showRoundDialog<String>(
-            title: l10n.select,
-            child: SizedBox(
-              height: 300,
-              width: 300,
-              child: ListView.builder(
-                itemCount: models.length,
-                itemBuilder: (_, idx) {
-                  final item = models[idx];
-                  return ListTile(
-                    title: Text(item.id),
-                    onTap: () => context.pop(item.id),
-                  );
-                },
-              ),
-            ),
+          final modelStrs = models.map((e) => e.id).toList();
+          modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+          final model = await context.showPickSingleDialog(
+            items: modelStrs,
+            initial: val,
           );
-
           if (model != null) {
             _store.openaiModel.put(model);
           }
@@ -380,22 +368,11 @@ class _SettingPageState extends State<SettingPage> {
           context.showLoadingDialog();
           final models = await OpenAI.instance.model.list();
           context.pop();
-          final model = await context.showRoundDialog<String>(
-            title: l10n.select,
-            child: SizedBox(
-              height: 300,
-              width: 300,
-              child: ListView.builder(
-                itemCount: models.length,
-                itemBuilder: (_, idx) {
-                  final item = models[idx];
-                  return ListTile(
-                    title: Text(item.id),
-                    onTap: () => context.pop(item.id),
-                  );
-                },
-              ),
-            ),
+          final modelStrs = models.map((e) => e.id).toList();
+          modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+          final model = await context.showPickSingleDialog(
+            items: modelStrs,
+            initial: val,
             actions: [
               TextButton(
                 onPressed: () => context.pop(''),
@@ -403,7 +380,6 @@ class _SettingPageState extends State<SettingPage> {
               ),
             ],
           );
-
           if (model != null) {
             property.put(model);
           }
