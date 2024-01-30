@@ -12,6 +12,7 @@ const apkPath = 'build/app/outputs/flutter-apk/app-release.apk';
 const appleXCConfigPath = 'Runner.xcodeproj/project.pbxproj';
 const macOSArchievePath = 'build/macos/Build/Products/Release/Runner.app';
 const releaseDir = '/Volumes/pm981/release/$appName';
+const uploadPathPrefix = 'cda:/var/www/res/';
 
 var regAppleProjectVer = RegExp(r'CURRENT_PROJECT_VERSION = .+;');
 var regAppleMarketVer = RegExp(r'MARKETING_VERSION = .+');
@@ -214,7 +215,7 @@ Future<void> flutterBuildWeb() async {
 Future<void> scpApk2CDN() async {
   final result = await Process.run(
     'scp',
-    [apkPath, 'hk:/var/www/res/$appNameLower/$build.apk'],
+    [apkPath, '$uploadPathPrefix$appNameLower/${appNameLower}_$build.apk'],
     runInShell: true,
   );
   if (result.exitCode != 0) {
@@ -228,7 +229,7 @@ Future<void> scpLinux2CDN() async {
     'scp',
     [
       '$appName-x86_64.AppImage',
-      'hk:/var/www/res/$appNameLower/$build.AppImage',
+      '$uploadPathPrefix$appNameLower/${appName}_$build.AppImage',
     ],
     runInShell: true,
   );
@@ -244,7 +245,7 @@ Future<void> scpWindows2CDN() async {
     'scp',
     [
       './build/windows/runner/Release/$appName.zip',
-      'hk:/var/www/res/$appNameLower/$build.zip',
+      '$uploadPathPrefix$appNameLower/${appName}_$build.zip',
     ],
     runInShell: true,
   );

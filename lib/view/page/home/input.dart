@@ -54,10 +54,11 @@ Widget _buildInput(BuildContext context) {
             controller: _inputCtrl,
             label: l10n.message,
             node: _focusNode,
-            type: TextInputType.multiline,
-            // action: TextInputAction.send,
+            action: TextInputAction.send,
             maxLines: 5,
             minLines: 1,
+            autoCorrect: true,
+            suggestion: true,
             suffix: ListenableBuilder(
               listenable: _sendBtnRN,
               builder: (_, __) {

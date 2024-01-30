@@ -46,12 +46,6 @@ enum Pfs {
         final val => val.name.upperFirst,
       };
 
-  /// Whether has platform specific settings.
-  static final hasSpecSetting = switch (type) {
-    Pfs.android || Pfs.ios => true,
-    _ => false,
-  };
-
   /// Whether need to check update file.
   static final needCheckFile = switch (type) {
     Pfs.android || Pfs.windows || Pfs.linux => true,
