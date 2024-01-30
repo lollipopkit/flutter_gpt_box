@@ -55,6 +55,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
               theme: _theme,
               textStyle: _textStyle.copyWith(fontSize: fontSize),
               tabSize: 4,
+              softWrap: true,
               padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
             )
           : HighlightViewSync(
@@ -64,6 +65,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
               theme: _theme,
               textStyle: _textStyle.copyWith(fontSize: fontSize),
               tabSize: 4,
+              softWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
             ),
     ).tap(onLongTap: () => onCopy?.call(textContent));

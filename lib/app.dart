@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/ext/locale.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
-import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/page/home/home.dart';
@@ -12,7 +11,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _init(context);
     return ListenableBuilder(
       listenable: RebuildNode.app,
       builder: (_, __) {
@@ -38,12 +36,6 @@ class MyApp extends StatelessWidget {
         );
       },
     );
-  }
-
-  void _init(BuildContext context) async {
-    if (Stores.setting.autoCheckUpdate.fetch()) {
-      AppUpdateIface.doUpdate(context);
-    }
   }
 }
 

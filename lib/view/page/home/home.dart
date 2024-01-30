@@ -18,6 +18,7 @@ import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/route/page.dart';
+import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/core/util/markdown.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
@@ -186,5 +187,9 @@ class _HomePageState extends State<HomePage>
     // - [l10n] is ready after first layout
     _switchChat();
     _removeDuplicateHistory(context);
+
+    if (Stores.setting.autoCheckUpdate.fetch()) {
+      AppUpdateIface.doUpdate(context);
+    }
   }
 }

@@ -59,6 +59,9 @@ Widget _buildInput(BuildContext context) {
             minLines: 1,
             autoCorrect: true,
             suggestion: true,
+            onSubmitted: (p0) {
+              _onSend(_curChatId, context);
+            },
             suffix: ListenableBuilder(
               listenable: _sendBtnRN,
               builder: (_, __) {
@@ -68,10 +71,7 @@ Widget _buildInput(BuildContext context) {
                         onPressed: () => _onStopStreamSub(_curChatId),
                         icon: const Icon(Icons.stop),
                       )
-                    : IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: () => _onSend(_curChatId, context),
-                      );
+                    : UIs.placeholder;
               },
             ),
           ),
