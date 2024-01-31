@@ -339,16 +339,30 @@ void loadFromStore() {
 }
 
 void _removeDuplicateHistory(BuildContext context) async {
-  final existTitles = <String>{};
+  final existTitles = <String, String>{}; // {ID: Title}
   final rmIds = <String>[];
   for (final item in _allHistories.values) {
     if (rmIds.contains(item.id)) continue;
     final name = item.name;
     if (name == null || name.isEmpty) continue;
-    if (existTitles.contains(item.name)) {
-      rmIds.add(item.id);
+    // For performance, only check the title at first
+    final titleIncluded = existTitles.values.contains(item.name);
+    if (titleIncluded) {
+      // Secondly, check the length of the history
+      final sameLen = _allHistories[item.id]?.items.length == item.items.length;
+      if (sameLen) {
+        // Thirdly, check the content of the history
+        final sameContent = _allHistories[item.id]
+                ?.items
+                .map((e) => e.content.first.raw)
+                .join() ==
+            item.items.map((e) => e.content.first.raw).join();
+        if (sameContent) {
+          rmIds.add(item.id);
+        }
+      }
     } else {
-      existTitles.add(name);
+      existTitles[item.id] = name;
     }
   }
 

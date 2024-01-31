@@ -58,7 +58,7 @@
   "ok": "好",
   "onlyRestoreHistory": "仅恢复历史聊天（不恢复 API Url 和 Secret Key）",
   "onlySyncOnLaunch": "仅在启动时同步",
-  "onlySyncOnLaunchTip": "开启后过多操作可能产生大量流量",
+  "onlySyncOnLaunchTip": "关闭后过多操作可能产生大量流量",
   "other": "其他",
   "participant": "参与者",
   "passwd": "密码",

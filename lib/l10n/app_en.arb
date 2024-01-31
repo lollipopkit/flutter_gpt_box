@@ -58,7 +58,7 @@
   "ok": "Ok",
   "onlyRestoreHistory": "Only restore histories (exclude api url / secret key)",
   "onlySyncOnLaunch": "Only sync on launch",
-  "onlySyncOnLaunchTip": "Excessive operations after opening may generate a lot of traffic",
+  "onlySyncOnLaunchTip": "Excessive operations after closing may generate a lot of traffic",
   "other": "Other",
   "participant": "Participant",
   "passwd": "Password",
