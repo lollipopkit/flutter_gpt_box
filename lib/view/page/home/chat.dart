@@ -120,13 +120,20 @@ class _ChatPageState extends State<_ChatPage>
         ),
         const Spacer(),
         if (chatItem.role == ChatRole.user)
-          IconButton(
-            onPressed: () => _onReplay(
-              context: context,
-              chatId: _curChatId,
-              item: chatItem,
-            ),
-            icon: const Icon(Icons.refresh, size: 17),
+          ListenableBuilder(
+            listenable: _sendBtnRN,
+            builder: (_, __) {
+              final isWorking = _chatStreamSubs.containsKey(_curChatId);
+              if (isWorking) return UIs.placeholder;
+              return IconButton(
+                onPressed: () => _onReplay(
+                  context: context,
+                  chatId: _curChatId,
+                  item: chatItem,
+                ),
+                icon: const Icon(Icons.refresh, size: 17),
+              );
+            },
           ),
         if (chatItem.role == ChatRole.user)
           IconButton(

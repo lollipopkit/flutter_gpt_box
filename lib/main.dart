@@ -60,7 +60,7 @@ Future<void> _initApp() async {
   OpenAI.showResponsesLogs = !BuildMode.isRelease;
   OpenAICfg.apply();
 
-  SyncService.sync();
+  SyncService.sync(force: true);
 }
 
 Future<void> _initDb() async {

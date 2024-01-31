@@ -117,6 +117,7 @@ Future<void> _onSend(String chatId, BuildContext context) async {
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
         _sendBtnRN.rebuild();
+        SyncService.sync();
       },
     );
     _chatStreamSubs[chatId] = sub;
@@ -508,6 +509,7 @@ void _onReplay({
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
         _sendBtnRN.rebuild();
+        SyncService.sync();
       },
     );
     _chatStreamSubs[chatId] = sub;
