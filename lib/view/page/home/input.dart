@@ -41,14 +41,13 @@ Widget _buildInput(BuildContext context) {
                 icon: const Icon(Icons.abc, size: 19),
                 tooltip: l10n.rename,
               ),
+              const Spacer(),
               _buildSwitchPageBtn(),
               if (isMobile)
                 IconButton(
                   onPressed: () => _focusNode.unfocus(),
                   icon: const Icon(Icons.keyboard_hide, size: 19),
                 ),
-              const Spacer(),
-              _buildCounter(context),
             ],
           ),
           Input(
@@ -118,37 +117,5 @@ Widget _buildSwitchPageBtn() {
                 ),
             },
           ),
-  );
-}
-
-Widget _buildCounter(BuildContext context) {
-  return ListenableBuilder(
-    listenable: _chatRN,
-    builder: (_, __) {
-      final curChat = _curChat;
-      if (curChat == null) return UIs.placeholder;
-      final model = _getChatConfig(_curChatId).model;
-      final tiktoken = encodingForModel(model);
-      final tokens = tiktoken
-          .encode(curChat.items.map((e) => e.toMarkdown).join(''))
-          .length;
-      if (tokens == 0) return UIs.placeholder;
-      final price = TiktokenUtils.getPrice(model);
-      return TextButton(
-        onPressed: () {
-          context.showRoundDialog(
-            title: l10n.attention,
-            child: Text(l10n.priceCounterTip),
-          );
-        },
-        child: switch (price) {
-          final double price => Text(
-              '\$ ${(tokens * price).toStringAsFixed(5)}',
-              style: UIs.text11Grey,
-            ),
-          _ => Text('$tokens tokens', style: UIs.text11Grey),
-        },
-      );
-    },
   );
 }

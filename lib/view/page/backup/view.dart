@@ -96,7 +96,6 @@ final class BackupPage extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.sync),
             title: Text(l10n.onlySyncOnLaunch),
-            subtitle: Text(l10n.onlySyncOnLaunchTip, style: UIs.textGrey),
             trailing: StoreSwitch(prop: Stores.setting.onlySyncOnLaunch),
           ),
         ],

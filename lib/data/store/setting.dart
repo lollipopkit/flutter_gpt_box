@@ -35,7 +35,7 @@ class SettingStore extends Store {
 
   /// Only valid on iOS and macOS
   late final icloudSync = property('icloudSync', false);
-  late final onlySyncOnLaunch = property('onlySyncOnLaunch', true);
+  late final onlySyncOnLaunch = property('onlySyncOnLaunch', false);
 
   late final initHelpShown = property('initHelpShown', false);
   //late final imPro = property('imPro', false);
