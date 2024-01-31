@@ -34,4 +34,6 @@ extension DatetimeX on DateTime {
   }
 
   int get toUnix => millisecondsSinceEpoch;
+
+  String get hourMinute => '$hour:$minute';
 }

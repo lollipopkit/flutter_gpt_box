@@ -66,6 +66,7 @@
   "privacy": "隐私",
   "privacyTip": "此 app 不搜集任何隐私信息。所搜集的信息只用于改进 app。",
   "rename": "重命名",
+  "replay": "重放",
   "restore": "恢复",
   "rmDuplication": "删除重复",
   "rmDuplicationFmt": "确定要删除 [{count}]个重复项目吗？",

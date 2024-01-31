@@ -96,6 +96,13 @@ class ChatSearchDelegate extends SearchDelegate<ChatHistory> {
                 context.pop();
                 _gotoHistory(chat.id);
                 _switchChat(chat.id);
+                if (_curPage.value != HomePageEnum.chat) {
+                  _pageCtrl.animateToPage(
+                    HomePageEnum.chat.index,
+                    duration: Durations.medium1,
+                    curve: Curves.fastEaseInToSlowEaseOut,
+                  );
+                }
               },
             ).card;
           },

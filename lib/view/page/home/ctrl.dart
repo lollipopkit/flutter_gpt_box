@@ -412,3 +412,112 @@ void _gotoHistory(String chatId) {
     curve: Curves.easeInOut,
   );
 }
+
+/// Remove the [ChatHistoryItem] behind this [item], and resend the [item] like
+/// [_onSend], but append the result after this [item] instead of at the end.
+void _onReplay({
+  required BuildContext context,
+  required String chatId,
+  required ChatHistoryItem item,
+}) async {
+  // If is receiving the reply, ignore this action
+  if (_chatStreamSubs.containsKey(chatId)) {
+    final msg = 'Replay Chat($chatId) is receiving reply';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+
+  final chatHistory = _allHistories[chatId];
+  if (chatHistory == null) {
+    final msg = 'Replay Chat($chatId) not found';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+
+  final itemIdx = chatHistory.items.indexOf(item);
+  if (itemIdx == -1) {
+    final msg = 'Replay Chat($chatId) item($item) not found';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+
+  // remove exist reply
+  chatHistory.items.removeAt(itemIdx + 1);
+
+  final config = _getChatConfig(chatId);
+  final questionContent = switch ((
+    config.prompt,
+    config.historyLen,
+    chatHistory.items.length,
+  )) {
+    ('', _, _) => item.toMarkdown,
+
+    /// If prompt is not empty and historyCount == null || 0,
+    /// append it to the input
+    (final prompt, 0, _) => '$prompt\n${item.toMarkdown}',
+
+    /// If this the first msg, append it to the input
+    (final prompt, _, 1) => '$prompt\n${item.toMarkdown}',
+    _ => item.content.first.raw,
+  };
+  final question = ChatHistoryItem.singleText(
+    text: questionContent,
+    role: ChatRole.user,
+  );
+
+  final historyCarried = chatHistory.items.reversed
+      .take(config.historyLen)
+      .map(
+        (e) => e.toOpenAI,
+      )
+      .toList();
+
+  final chatStream = OpenAI.instance.chat.createStream(
+    model: config.model,
+    messages: [...historyCarried.reversed, question.toOpenAI],
+    temperature: config.temperature,
+    seed: config.seed,
+  );
+  final assistReply = ChatHistoryItem.emptyAssist;
+  chatHistory.items.insert(itemIdx + 1, assistReply);
+  _chatRN.rebuild();
+  try {
+    final sub = chatStream.listen(
+      (event) {
+        final delta = event.choices.first.delta.content?.first.text ?? '';
+        assistReply.content.first.raw += delta;
+        _mdRNMap[assistReply.id]?.rebuild();
+      },
+      onError: (e, trace) {
+        Loggers.app.warning('Listen chat stream: $e');
+        _onStopStreamSub(chatId);
+
+        final msg = 'Error: $e\nTrace:\n$trace';
+        chatHistory.items.add(ChatHistoryItem.singleText(
+          text: msg,
+          role: ChatRole.system,
+        ));
+        _chatRN.rebuild();
+        _storeChat(chatId, context);
+        _sendBtnRN.rebuild();
+      },
+      onDone: () {
+        _onStopStreamSub(chatId);
+        _storeChat(chatId, context);
+        _sendBtnRN.rebuild();
+      },
+    );
+    _chatStreamSubs[chatId] = sub;
+    _sendBtnRN.rebuild();
+  } catch (e) {
+    _onStopStreamSub(chatId);
+    final msg = 'Chat stream: $e';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    assistReply.content.first.raw += '\n$msg';
+    _sendBtnRN.rebuild();
+  }
+}

@@ -119,6 +119,44 @@ class _ChatPageState extends State<_ChatPage>
           ),
         ),
         const Spacer(),
+        if (chatItem.role == ChatRole.user)
+          IconButton(
+            onPressed: () => _onReplay(
+              context: context,
+              chatId: _curChatId,
+              item: chatItem,
+            ),
+            icon: const Icon(Icons.refresh, size: 17),
+          ),
+        if (chatItem.role == ChatRole.user)
+          IconButton(
+            onPressed: () async {
+              final ctrl = TextEditingController(text: chatItem.toMarkdown);
+              await context.showRoundDialog(
+                title: l10n.edit,
+                child: Input(
+                  controller: ctrl,
+                  maxLines: 7,
+                  minLines: 1,
+                  autoCorrect: true,
+                  autoFocus: true,
+                  suggestion: true,
+                  action: TextInputAction.send,
+                  onSubmitted: (p0) {
+                    chatItem.content.clear();
+                    chatItem.content.add(ChatContent(
+                      type: ChatContentType.text,
+                      raw: p0,
+                    ));
+                    _storeChat(_curChatId, context);
+                    _chatRN.rebuild();
+                    context.pop();
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.edit, size: 17),
+          ),
         IconButton(
           onPressed: () async {
             final idx = chatItems.indexOf(chatItem) + 1;
@@ -137,19 +175,11 @@ class _ChatPageState extends State<_ChatPage>
             _storeChat(_curChatId, context);
             _chatRN.rebuild();
           },
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.delete,
-            size: 17,
-          ),
+          icon: const Icon(Icons.delete, size: 17),
         ),
         IconButton(
           onPressed: () => _onCopy(chatItem.toMarkdown),
-          padding: EdgeInsets.zero,
-          icon: const Icon(
-            Icons.copy,
-            size: 15,
-          ),
+          icon: const Icon(Icons.copy, size: 15),
         ),
       ],
     );

@@ -20,6 +20,7 @@
   - [x] WebDAV
 - [x] Chat search
 - [x] History list locate
+- [x] Replay (edit question and resend)
 - [ ] URL Scheme
   - [ ] Config: `gptbox://config/set?openAiUrl=&openAiToken=&openAiModel=`
   - [ ] Chat

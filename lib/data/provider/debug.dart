@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/core/ext/datetime.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:logging/logging.dart';
@@ -21,7 +22,7 @@ abstract final class DebugNotifier {
       Text.rich(TextSpan(
         children: [
           TextSpan(
-            text: '[${record.loggerName}]',
+            text: '[${DateTime.now().hourMinute}][${record.loggerName}]',
             style: const TextStyle(color: Colors.cyan),
           ),
           TextSpan(

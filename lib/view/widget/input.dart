@@ -24,6 +24,8 @@ class Input extends StatefulWidget {
   final void Function(bool)? onViewPwdTap;
   final bool noWrap;
   final InputCounterWidgetBuilder? counterBuilder;
+  final void Function()? onTap;
+  final void Function(PointerDownEvent)? onTapOutside;
 
   const Input({
     super.key,
@@ -48,6 +50,8 @@ class Input extends StatefulWidget {
     this.noWrap = false,
     this.suffix,
     this.counterBuilder,
+    this.onTap,
+    this.onTapOutside,
   }) : assert(
           !(obscureText && suffix != null),
           'suffix != null && obscureText',
@@ -109,6 +113,8 @@ class _InputState extends State<Input> {
       onSubmitted: widget.onSubmitted,
       onChanged: widget.onChanged,
       buildCounter: widget.counterBuilder,
+      onTap: widget.onTap,
+      onTapOutside: widget.onTapOutside,
     );
     if (widget.noWrap) return child;
     return CardX(

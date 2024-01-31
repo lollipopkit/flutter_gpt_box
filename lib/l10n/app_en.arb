@@ -66,6 +66,7 @@
   "privacy": "Privacy",
   "privacyTip": "This app does not collect any private data.\nThe data this app collects is only used for the purpose of improving the app experience.",
   "rename": "Rename",
+  "replay": "Replay",
   "restore": "Restore",
   "rmDuplication": "Remove duplication",
   "rmDuplicationFmt": "Sure to delete [{count}] items?",

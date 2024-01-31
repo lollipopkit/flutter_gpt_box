@@ -91,6 +91,25 @@ final class ChatHistoryItem {
   })  : id = uuid.v4(),
         createdAt = DateTime.now();
 
+  ChatHistoryItem.single({
+    required this.role,
+    required ChatContent content,
+  })  : id = uuid.v4(),
+        content = [content],
+        createdAt = DateTime.now();
+
+  ChatHistoryItem.singleText({
+    required this.role,
+    required String text,
+  })  : id = uuid.v4(),
+        content = [
+          ChatContent(
+            type: ChatContentType.text,
+            raw: text,
+          )
+        ],
+        createdAt = DateTime.now();
+
   OpenAIChatCompletionChoiceMessageModel get toOpenAI {
     return OpenAIChatCompletionChoiceMessageModel(
       role: role.toOpenAI,

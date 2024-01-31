@@ -63,6 +63,15 @@ Widget _buildInput(BuildContext context) {
             onSubmitted: (p0) {
               _onSend(_curChatId, context);
             },
+            onTap: () {
+              if (_curPage.value != HomePageEnum.chat) {
+                _pageCtrl.animateToPage(
+                  HomePageEnum.chat.index,
+                  duration: Durations.medium1,
+                  curve: Curves.fastEaseInToSlowEaseOut,
+                );
+              }
+            },
             suffix: ListenableBuilder(
               listenable: _sendBtnRN,
               builder: (_, __) {
@@ -93,7 +102,7 @@ Widget _buildSwitchPageBtn() {
             builder: (_, page, __) => switch (page) {
               HomePageEnum.history => IconButton(
                   onPressed: () => _pageCtrl.animateToPage(
-                    1,
+                    HomePageEnum.chat.index,
                     duration: Durations.medium1,
                     curve: Curves.fastEaseInToSlowEaseOut,
                   ),
@@ -101,7 +110,7 @@ Widget _buildSwitchPageBtn() {
                 ),
               HomePageEnum.chat => IconButton(
                   onPressed: () => _pageCtrl.animateToPage(
-                    0,
+                    HomePageEnum.history.index,
                     duration: Durations.medium1,
                     curve: Curves.fastEaseInToSlowEaseOut,
                   ),
