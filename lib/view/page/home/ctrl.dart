@@ -191,15 +191,13 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
   context.showRoundDialog(
     title: l10n.attention,
     child: Text(l10n.delFmt(name, l10n.chat)),
-    actions: [
-      TextButton(
-        onPressed: () {
-          _onDeleteChat(chatId);
-          context.pop();
-        },
-        child: Text(l10n.ok),
-      ),
-    ],
+    actions: Btns.oks(
+      onTap: () {
+        _onDeleteChat(chatId);
+        context.pop();
+      },
+      red: true,
+    ),
   );
 }
 
@@ -227,12 +225,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
       controller: ctrl,
       onSubmitted: (p0) => context.pop(p0),
     ),
-    actions: [
-      TextButton(
-        onPressed: () => context.pop(ctrl.text),
-        child: Text(l10n.ok),
-      ),
-    ],
+    actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
   );
   if (title == null || title.isEmpty) return;
   entity.name = title;

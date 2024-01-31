@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
+import 'package:flutter_chatgpt/core/util/ui.dart';
 import 'package:flutter_chatgpt/data/provider/debug.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
@@ -27,12 +28,7 @@ class DebugPage extends StatelessWidget {
             onPressed: () async {
               final sure = await context.showRoundDialog(
                 title: l10n.delFmt('#${DebugNotifier.logs.length}', 'logs'),
-                actions: [
-                  TextButton(
-                    onPressed: () => context.pop(true),
-                    child: Text(l10n.ok),
-                  ),
-                ],
+                actions: Btns.oks(onTap: () => context.pop(true), red: true),
               );
               if (sure == true) {
                 DebugNotifier.logs.clear();

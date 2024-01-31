@@ -25,4 +25,6 @@ abstract final class OpenAICfg {
     _key = key;
     OpenAI.apiKey = key;
   }
+
+  static final apiUrlReg = RegExp(r'^https?://[0-9A-Za-z\.]+(:\d+)?$');
 }

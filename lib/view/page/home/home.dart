@@ -23,6 +23,7 @@ import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/core/util/markdown.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/core/util/sync/base.dart';
+import 'package:flutter_chatgpt/core/util/ui.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';

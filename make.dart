@@ -215,7 +215,7 @@ Future<void> flutterBuildWeb() async {
 Future<void> scpApk2CDN() async {
   final result = await Process.run(
     'scp',
-    [apkPath, '$uploadPathPrefix$appNameLower/${appNameLower}_$build.apk'],
+    [apkPath, '$uploadPathPrefix$appNameLower/${appName}_$build.apk'],
     runInShell: true,
   );
   if (result.exitCode != 0) {

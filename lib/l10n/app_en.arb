@@ -2,6 +2,7 @@
   "@@locale": "en",
   "about": "About",
   "apiUrl": "Api url",
+  "apiUrlTip": "Should the API Url be similar to `https://api.openai.com` and without the final `/v1`. Continue to use this URL ?",
   "assistant": "Assistant",
   "attention": "Attention",
   "auto": "Auto",

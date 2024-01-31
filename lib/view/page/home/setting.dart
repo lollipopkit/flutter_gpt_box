@@ -55,17 +55,20 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
             title: l10n.edit,
             child: Input(
               controller: ctrl,
-              hint: 'https://api.openai.com/v1',
+              hint: 'https://api.openai.com',
               maxLines: 3,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
-              ),
-            ],
+            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
           );
           if (result == null) return;
+          if (result.contains('/v1') || !OpenAICfg.apiUrlReg.hasMatch(result)) {
+            final sure = await context.showRoundDialog(
+              title: l10n.attention,
+              child: Text(l10n.apiUrlTip),
+              actions: Btns.oks(onTap: () => context.pop(true), red: true),
+            );
+            if (sure != true) return;
+          }
           url.value = result;
           OpenAICfg.url = result;
         },
@@ -89,12 +92,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
               hint: 'sk-xxx',
               maxLines: 3,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
-              ),
-            ],
+            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
           );
           if (result == null) return;
           key.value = result;
@@ -122,22 +120,11 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
           context.showLoadingDialog();
           final models = await OpenAI.instance.model.list();
           context.pop();
-          final modelStr = await context.showRoundDialog<String>(
-            title: l10n.select,
-            child: SizedBox(
-              height: 300,
-              width: 300,
-              child: ListView.builder(
-                itemCount: models.length,
-                itemBuilder: (_, idx) {
-                  final item = models[idx];
-                  return ListTile(
-                    title: Text(item.id),
-                    onTap: () => context.pop(item.id),
-                  );
-                },
-              ),
-            ),
+          final modelStrs = models.map((e) => e.id).toList();
+          modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+          final modelStr = await context.showPickSingleDialog(
+            items: modelStrs,
+            initial: val,
           );
 
           if (modelStr != null) {
@@ -167,12 +154,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
               hint: 'You are a efficient expert.',
               maxLines: 3,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
-              ),
-            ],
+            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
           );
           if (result == null) return;
           prompt.value = result;
@@ -200,12 +182,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
               hint: '7',
               type: TextInputType.number,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
-              ),
-            ],
+            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
           );
           if (result == null) return;
           final newVal = int.tryParse(result);
@@ -220,17 +197,13 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
   }
 
   Widget _buildSave() {
-    return TextButton(
-      onPressed: () {
-        final config = widget.config.copyWith(
-          prompt: prompt.value,
-          url: url.value,
-          key: key.value,
-          model: model.value,
-        );
-        context.pop(config);
-      },
-      child: Text(l10n.ok),
+    return Btns.ok(
+      onTap: () => context.pop(widget.config.copyWith(
+        prompt: prompt.value,
+        url: url.value,
+        key: key.value,
+        model: model.value,
+      )),
     );
   }
 }

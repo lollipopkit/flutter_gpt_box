@@ -10,6 +10,7 @@ import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:flutter_chatgpt/core/util/ui.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
@@ -138,12 +139,12 @@ class _SettingPageState extends State<SettingPage> {
                   )
                 ],
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => _onSaveColor(ctrl.text),
-                  child: const Text('Ok'),
-                ),
-              ],
+              actions: Btns.oks(
+                onTap: () {
+                  _onSaveColor(ctrl.text);
+                  context.pop();
+                },
+              ),
             );
           },
         );
@@ -246,12 +247,7 @@ class _SettingPageState extends State<SettingPage> {
                 hint: 'sk-xxx',
                 maxLines: 3,
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop(ctrl.text),
-                  child: Text(l10n.ok),
-                ),
-              ],
+              actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
             );
             if (result == null) return;
             _store.openaiApiKey.put(result);
@@ -282,14 +278,17 @@ class _SettingPageState extends State<SettingPage> {
               hint: 'https://api.openai.com',
               maxLines: 3,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
-              ),
-            ],
+            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
           );
           if (result == null) return;
+          if (result.contains('/v1') || !OpenAICfg.apiUrlReg.hasMatch(result)) {
+            final sure = await context.showRoundDialog(
+              title: l10n.attention,
+              child: Text(l10n.apiUrlTip),
+              actions: Btns.oks(onTap: () => context.pop(true), red: true),
+            );
+            if (sure != true) return;
+          }
           _store.openaiApiUrl.put(result);
           OpenAICfg.url = result;
         },
@@ -313,12 +312,7 @@ class _SettingPageState extends State<SettingPage> {
             context.showRoundDialog(
               title: l10n.attention,
               child: Text(l10n.needOpenAIKey),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop(),
-                  child: Text(l10n.ok),
-                ),
-              ],
+              actions: Btns.oks(onTap: () => context.pop()),
             );
             return;
           }
@@ -356,12 +350,7 @@ class _SettingPageState extends State<SettingPage> {
             context.showRoundDialog(
               title: l10n.attention,
               child: Text(l10n.needOpenAIKey),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop(),
-                  child: Text(l10n.ok),
-                ),
-              ],
+              actions: Btns.oks(onTap: () => context.pop()),
             );
             return;
           }
@@ -412,12 +401,7 @@ class _SettingPageState extends State<SettingPage> {
                 controller: ctrl,
                 maxLines: 3,
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => context.pop(ctrl.text),
-                  child: Text(l10n.ok),
-                ),
-              ],
+              actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
             );
             if (result == null) return;
             _store.prompt.put(result);
@@ -447,12 +431,7 @@ class _SettingPageState extends State<SettingPage> {
               hint: '7',
               type: TextInputType.number,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
-              ),
-            ],
+            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
           );
           if (result == null) return;
           final newVal = int.tryParse(result);
@@ -499,12 +478,7 @@ class _SettingPageState extends State<SettingPage> {
               hint: '12',
               type: const TextInputType.numberWithOptions(decimal: true),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(ctrl.text),
-                child: Text(l10n.ok),
-              ),
-            ],
+            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
           );
           if (result == null) return;
           final newVal = double.tryParse(result);

@@ -132,14 +132,7 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
         ),
       ],
     ),
-    actions: [
-      TextButton(
-        onPressed: () {
-          context.pop(true);
-        },
-        child: Text(l10n.ok),
-      ),
-    ],
+    actions: Btns.oks(onTap: () => context.pop(true)),
   );
   if (result == true) {
     final result = await Webdav.test(urlCtrl.text, userCtrl.text, pwdCtrl.text);
