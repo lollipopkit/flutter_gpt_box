@@ -159,7 +159,7 @@ ChatConfig _getChatConfig(String chatId) {
 void _onTapSetting(BuildContext context) async {
   final config = _getChatConfig(_curChatId);
   final result = await context.showRoundDialog<ChatConfig>(
-    title: '${l10n.settings}(${l10n.current})',
+    title: '${l10n.settings} (${l10n.current})',
     child: _CurrentChatSettings(config: config),
   );
   if (result == null) return;

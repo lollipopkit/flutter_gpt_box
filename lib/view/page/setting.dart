@@ -394,7 +394,7 @@ class _SettingPageState extends State<SettingPage> {
       builder: (_, val, __) {
         return ListTile(
           leading: const Icon(Icons.abc),
-          title: const Text('Prompt'),
+          title: Text(l10n.promptsSettingsItem),
           trailing: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 60),
             child: Text(

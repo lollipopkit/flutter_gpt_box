@@ -151,7 +151,7 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
             title: l10n.edit,
             child: Input(
               controller: ctrl,
-              hint: 'You are a efficient expert.',
+              hint: 'You are an efficient expert.',
               maxLines: 3,
             ),
             actions: Btns.oks(onTap: () => context.pop(ctrl.text)),

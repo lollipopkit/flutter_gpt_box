@@ -60,7 +60,7 @@ GPL v3 lollipopkit
     return CardX(
       child: ListTile(
         leading: const Icon(Icons.description),
-        title: Text('${l10n.license} of libs'),
+        title: Text(l10n.licenseMenuItem),
         trailing: const Icon(Icons.chevron_right),
         onTap: () => showLicensePage(context: context),
       ),
