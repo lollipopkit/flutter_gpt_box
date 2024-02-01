@@ -169,8 +169,10 @@ class _ChatPageState extends State<_ChatPage>
             final idx = chatItems.indexOf(chatItem) + 1;
             final result = await context.showRoundDialog<bool>(
               title: l10n.attention,
-              child: Text(l10n.delFmt('${chatItem.role.name}#$idx', l10n.chat)),
-              actions: Btns.oks(onTap: () => context.pop(true), red: true)
+              child: Text(
+                l10n.delFmt('${chatItem.role.name}#$idx', l10n.chat),
+              ),
+              actions: Btns.oks(onTap: () => context.pop(true), red: true),
             );
             if (result != true) return;
             chatItems.remove(chatItem);

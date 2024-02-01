@@ -19,6 +19,7 @@ import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_chatgpt/view/widget/color_picker.dart';
+import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/switch.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
@@ -212,8 +213,7 @@ class _SettingPageState extends State<SettingPage> {
     final children = [
       _buildOpenAIKey(),
       _buildOpenAIUrl(),
-      _buildOpenAIModel(),
-      _buildOpenAIGenTitleModel(),
+      _buildOpenAIModels(),
       _buildPrompt(),
       _buildHistoryLength(),
     ];
@@ -296,12 +296,23 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildOpenAIModel() {
+  Widget _buildOpenAIModels() {
+    return ExpandTile(
+      leading: const Icon(Icons.model_training),
+      title: Text(l10n.model),
+      children: [
+        _buildOpenAIChatModel(),
+        _buildOpenAIGenTitleModel(),
+      ],
+    );
+  }
+
+  Widget _buildOpenAIChatModel() {
     return ValueListenableBuilder(
       valueListenable: _store.openaiModel.listenable(),
       builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.model_training),
-        title: Text(l10n.model),
+        leading: const Icon(Icons.chat),
+        title: Text(l10n.chat),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
           val,
@@ -338,8 +349,8 @@ class _SettingPageState extends State<SettingPage> {
     return ValueListenableBuilder(
       valueListenable: property.listenable(),
       builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.model_training),
-        title: Text('${l10n.genChatTitle} ${l10n.model}'),
+        leading: const Icon(Icons.title),
+        title: Text(l10n.genChatTitle),
         trailing: const Icon(Icons.keyboard_arrow_right),
         subtitle: Text(
           l10n.genTitleTip(val.isEmpty ? l10n.empty : val),
