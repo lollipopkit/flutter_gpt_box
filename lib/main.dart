@@ -19,6 +19,7 @@ import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
+import 'package:uni_links_desktop/uni_links_desktop.dart';
 import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
@@ -61,6 +62,10 @@ Future<void> _initApp() async {
   OpenAICfg.apply();
 
   SyncService.sync(force: true);
+
+  if (isWindows) {
+    registerProtocol('lk-gptbox');
+  }
 }
 
 Future<void> _initDb() async {

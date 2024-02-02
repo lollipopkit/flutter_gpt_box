@@ -41,6 +41,7 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:uni_links/uni_links.dart';
 
 part 'setting.dart';
 part 'chat.dart';
@@ -51,6 +52,7 @@ part 'enum.dart';
 part 'search.dart';
 part 'appbar.dart';
 part 'input.dart';
+part 'uni_link.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -72,6 +74,7 @@ class _HomePageState extends State<HomePage>
       (_) => _timeRN.rebuild(),
     );
     _historyScrollCtrl.addListener(_locateHistoryListener);
+    _initUniLinks();
   }
 
   @override
@@ -182,16 +185,31 @@ class _HomePageState extends State<HomePage>
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    // Keep this here.
-    // - If there is not chat history, [_switchChat] will create one
-    // - If the init help haven't shown, [_switchChat] will show it
-    // - Init help uses [l10n] to gen msg, so [l10n] must be ready
-    // - [l10n] is ready after first layout
+    /// Keep this here.
+    /// - If there is not chat history, [_switchChat] will create one
+    /// - If the init help haven't shown, [_switchChat] will show it
+    /// - Init help uses [l10n] to gen msg, so [l10n] must be ready
+    /// - [l10n] is ready after first layout
     _switchChat();
     _removeDuplicateHistory(context);
 
     if (Stores.setting.autoCheckUpdate.fetch()) {
       AppUpdateIface.doUpdate(context);
     }
+  }
+
+  void _initUniLinks() async {
+    uriLinkStream.listen((Uri? uri) {
+      if (uri == null) return;
+      if (!mounted) return;
+      AppLink.handle(context, uri);
+    }, onError: (err) {
+      final msg = l10n.invalidLinkFmt(err);
+      Loggers.app.warning(msg);
+      context.showRoundDialog(
+        title: l10n.attention,
+        child: Text(msg),
+      );
+    });
   }
 }

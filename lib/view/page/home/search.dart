@@ -1,7 +1,9 @@
 part of 'home.dart';
 
 class ChatSearchDelegate extends SearchDelegate<ChatHistory> {
-  ChatSearchDelegate();
+  ChatSearchDelegate({String? initKeyword}) {
+    query = initKeyword ?? '';
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
