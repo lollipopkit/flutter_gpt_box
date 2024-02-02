@@ -439,7 +439,10 @@ void _onReplay({
   }
 
   // remove exist reply
-  chatHistory.items.removeAt(itemIdx + 1);
+  if (itemIdx + 1 < chatHistory.items.length &&
+      chatHistory.items[itemIdx + 1].role == ChatRole.assist) {
+    chatHistory.items.removeAt(itemIdx + 1);
+  }
 
   final config = _getChatConfig(chatId);
   final questionContent = switch ((
