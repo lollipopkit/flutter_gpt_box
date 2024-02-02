@@ -24,7 +24,7 @@ class RebuildNode implements Listenable {
     }
   }
 
-  void linkTo(RebuildNode node) {
+  void chain(RebuildNode node) {
     node.addListener(rebuild);
   }
 

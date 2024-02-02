@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage>
       return const Row(
         children: [
           SizedBox(
-            width : 270,
+            width: 270,
             child: history,
           ),
           Expanded(

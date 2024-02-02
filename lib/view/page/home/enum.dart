@@ -7,12 +7,13 @@ enum HomePageEnum {
 
   static HomePageEnum fromIdx(int idx) => HomePageEnum.values[idx];
 
-  HomePageEnum get next => HomePageEnum.values[(index + 1) % HomePageEnum.values.length];
+  HomePageEnum get next =>
+      HomePageEnum.values[(index + 1) % HomePageEnum.values.length];
 
   IconData get icon => switch (this) {
-    history => Icons.history,
-    chat => Icons.chat,
-  };
+        history => Icons.history,
+        chat => Icons.chat,
+      };
 
   Widget get fab {
     return switch ((this, _isWide.value)) {
@@ -69,13 +70,15 @@ enum HomePageEnum {
       if (!_isWide.value && !item.onHomePage.contains(this)) {
         continue;
       }
-      items.insert(0, IconButton(
-        onPressed: () => Funcs.throttle(() {
-          item.onTap();
-        }),
-        icon: Icon(item.icon),
-        tooltip: item.title,
-      ));
+      items.insert(
+          0,
+          IconButton(
+            onPressed: () => Funcs.throttle(() {
+              item.onTap();
+            }),
+            icon: Icon(item.icon),
+            tooltip: item.title,
+          ));
     }
 
     return Row(children: items);
