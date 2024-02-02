@@ -15,12 +15,16 @@
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
 </p>
 
+## 😣 注意
+本应用目前正在开发中，可能部分功能缺失 / 不可用。
+
 
 ## 🪄 特性
 - 从 [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) 恢复
 - 与 WebDAV / iCloud 同步
 - 以图片形式分享聊天
 - 全平台支持
+- 渲染 代码块 / LaTeX 公式
 
 
 ## 🏙️ 截屏

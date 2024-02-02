@@ -15,12 +15,16 @@ A third-party GPT Client for OpenAI API on all platforms.
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
 </p>
 
+## 😣 Attention
+This app is now under development, some features may be missing / not available.
+
 
 ## 🪄 Features
 - Restore from [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
-- Sync with WebDAV / iCloud.
 - Share chat by picture.
 - All platforms support.
+- Sync with WebDAV / iCloud.
+- Render code block / latex formula.
 
 
 ## 🏙️ Screenshots

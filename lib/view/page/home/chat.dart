@@ -63,7 +63,7 @@ class _ChatPageState extends State<_ChatPage>
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
     final node = _mdRNMap.putIfAbsent(chatItem.id, () => RebuildNode());
-    final md = ListenableBuilder(
+    final child = ListenableBuilder(
       listenable: node,
       builder: (_, __) {
         return MarkdownBody(
@@ -71,6 +71,17 @@ class _ChatPageState extends State<_ChatPage>
           builders: {
             'code': CodeElementBuilder(onCopy: _onCopy),
           },
+          extensionSet: md.ExtensionSet(
+            [
+              LatexBlockSyntax(),
+              ...md.ExtensionSet.gitHubFlavored.blockSyntaxes
+            ],
+            [
+              LatexInlineSyntax(),
+              md.EmojiSyntax(),
+              ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
+            ],
+          ),
           onTapLink: MarkdownUtils.onLinkTap,
           shrinkWrap: false,
           fitContent: false,
@@ -87,10 +98,10 @@ class _ChatPageState extends State<_ChatPage>
         children: [
           _buildChatItemBtn(chatItems, chatItem),
           Stores.setting.softWrap.fetch()
-              ? md
+              ? child
               : SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: md,
+                  child: child,
                 ),
         ],
       ),

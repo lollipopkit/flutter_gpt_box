@@ -3,6 +3,7 @@ import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -31,6 +32,28 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     final textContent = element.textContent.trim();
     final isMultiLine = textContent.contains('\n');
+
+    if (language == 'latex') {
+      /// The following control sequence is unsupported:
+      /// - \documentclass
+      /// - \title
+      /// - \author
+      /// - \begin
+      /// - more...
+      /// If [textContent] contains any of the above, it will be rendered as
+      /// plain text.
+      final isUnsupported = textContent.contains(r'\documentclass') ||
+          textContent.contains(r'\title') ||
+          textContent.contains(r'\author') ||
+          textContent.contains(r'\begin');
+      if (!isUnsupported) {
+        final String? displayMode = element.attributes['displayMode'];
+        return Math.tex(
+          textContent,
+          mathStyle: displayMode == 'true' ? MathStyle.display : MathStyle.text,
+        );
+      }
+    }
 
     if (isForCapture) {
       return HighlightViewSync(

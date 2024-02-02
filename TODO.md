@@ -1,6 +1,11 @@
 ## TODOs
-- [x] Basic chat (md render, history list, stream handle...)
-- [x] Chat profile (api url, model & etc. for each chat)
+- [x] Chat
+  - [x] Markdown render, history list, stream handle...
+  - [x] Profile (api url, model & etc. for each chat)
+  - [x] Search
+  - [x] History list locate
+  - [x] Replay (edit question and resend)
+  - [x] Latex formula render
 - [x] User experience 
   - [x] Theme
   - [x] Genrate title for chat
@@ -18,9 +23,6 @@
   - [x] File
   - [x] Clipboard
   - [x] WebDAV
-- [x] Chat search
-- [x] History list locate
-- [x] Replay (edit question and resend)
 - [ ] URL Scheme
   - [ ] Config: `gptbox://config/set?openAiUrl=&openAiToken=&openAiModel=`
   - [ ] Chat

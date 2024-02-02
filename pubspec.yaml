@@ -17,7 +17,13 @@ dependencies:
   path_provider: ^2.1.2
   window_manager: ^0.3.7
   dart_openai: ^5.0.0
+  markdown: ^7.1.1
   flutter_markdown: ^0.6.18+2
+  flutter_markdown_latex:
+    # path: ../flutter_markdown_latex
+    git:
+      ref: main
+      url: https://github.com/lollipopkit/flutter_markdown_latex
   uuid: ^4.2.2
   choice: ^2.3.0
   file_picker: ^6.1.1
@@ -29,7 +35,6 @@ dependencies:
       url: https://github.com/lollipopkit/highlight.dart
       path: flutter_highlight
     # path: ../highlight.dart/flutter_highlight
-  markdown: ^7.1.1
   google_fonts: ^6.1.0
   intl: ^0.18.0
   url_launcher: ^6.2.3
@@ -42,6 +47,7 @@ dependencies:
   icloud_storage: ^2.2.0
   screenshot: ^2.1.0
   after_layout: ^1.2.0
+  flutter_math_fork: ^0.7.2
 
 dev_dependencies:
   flutter_test:
