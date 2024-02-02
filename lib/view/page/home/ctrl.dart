@@ -407,6 +407,18 @@ void _gotoHistory(String chatId) {
   );
 }
 
+void _onTapReplay(
+    BuildContext context, String chatId, ChatHistoryItem item) async {
+  if (item.role != ChatRole.user) return;
+  final sure = await context.showRoundDialog<bool>(
+    title: l10n.attention,
+    child: Text('${l10n.replay} ?'),
+    actions: Btns.oks(onTap: () => context.pop(true), red: true),
+  );
+  if (sure != true) return;
+  _onReplay(context: context, chatId: chatId, item: item);
+}
+
 /// Remove the [ChatHistoryItem] behind this [item], and resend the [item] like
 /// [_onSend], but append the result after this [item] instead of at the end.
 void _onReplay({
@@ -518,4 +530,30 @@ void _onReplay({
     assistReply.content.first.raw += '\n$msg';
     _sendBtnRN.rebuild();
   }
+}
+
+void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
+  final ctrl = TextEditingController(text: chatItem.toMarkdown);
+  await context.showRoundDialog(
+    title: l10n.edit,
+    child: Input(
+      controller: ctrl,
+      maxLines: 7,
+      minLines: 1,
+      autoCorrect: true,
+      autoFocus: true,
+      suggestion: true,
+      action: TextInputAction.send,
+      onSubmitted: (p0) {
+        chatItem.content.clear();
+        chatItem.content.add(ChatContent(
+          type: ChatContentType.text,
+          raw: p0,
+        ));
+        _storeChat(_curChatId, context);
+        _chatRN.rebuild();
+        context.pop();
+      },
+    ),
+  );
 }

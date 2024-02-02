@@ -41,6 +41,11 @@ Widget _buildInput(BuildContext context) {
                 icon: const Icon(Icons.abc, size: 19),
                 tooltip: l10n.rename,
               ),
+              IconButton(
+                onPressed: () => _onTapDeleteChat(_curChatId, context),
+                icon: const Icon(Icons.delete, size: 19),
+                tooltip: l10n.delete,
+              ),
               const Spacer(),
               _buildSwitchPageBtn(),
               if (isMobile)
@@ -98,23 +103,16 @@ Widget _buildSwitchPageBtn() {
         ? UIs.placeholder
         : ValueListenableBuilder(
             valueListenable: _curPage,
-            builder: (_, page, __) => switch (page) {
-              HomePageEnum.history => IconButton(
-                  onPressed: () => _pageCtrl.animateToPage(
-                    HomePageEnum.chat.index,
-                    duration: Durations.medium1,
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  ),
-                  icon: const Icon(Icons.chat, size: 19),
+            builder: (_, page, __) {
+              final next = page.next;
+              return IconButton(
+                onPressed: () => _pageCtrl.animateToPage(
+                  next.index,
+                  duration: Durations.medium1,
+                  curve: Curves.fastEaseInToSlowEaseOut,
                 ),
-              HomePageEnum.chat => IconButton(
-                  onPressed: () => _pageCtrl.animateToPage(
-                    HomePageEnum.history.index,
-                    duration: Durations.medium1,
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  ),
-                  icon: const Icon(Icons.history, size: 19),
-                ),
+                icon: Icon(next.icon, size: 19),
+              );
             },
           ),
   );

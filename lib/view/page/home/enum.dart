@@ -7,6 +7,13 @@ enum HomePageEnum {
 
   static HomePageEnum fromIdx(int idx) => HomePageEnum.values[idx];
 
+  HomePageEnum get next => HomePageEnum.values[(index + 1) % HomePageEnum.values.length];
+
+  IconData get icon => switch (this) {
+    history => Icons.history,
+    chat => Icons.chat,
+  };
+
   Widget get fab {
     return switch ((this, _isWide.value)) {
       /// Find current chat in history list
@@ -50,12 +57,6 @@ enum HomePageEnum {
         onHomePage: [HomePageEnum.chat],
       ),
       _MoreAction(
-        title: l10n.delete,
-        icon: Icons.delete,
-        onTap: () => _onTapDeleteChat(_curChatId, context),
-        onHomePage: [HomePageEnum.chat],
-      ),
-      _MoreAction(
         title: l10n.search,
         icon: Icons.search,
         onHomePage: [HomePageEnum.history],
@@ -68,7 +69,7 @@ enum HomePageEnum {
       if (!_isWide.value && !item.onHomePage.contains(this)) {
         continue;
       }
-      items.add(IconButton(
+      items.insert(0, IconButton(
         onPressed: () => Funcs.throttle(() {
           item.onTap();
         }),

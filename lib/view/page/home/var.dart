@@ -32,7 +32,10 @@ final _focusNode = FocusNode();
 
 MediaQueryData? _media;
 bool _isDark = false;
-final _isWide = ValueNotifier(false);
+final _isWide = ValueNotifier(false)
+  ..addListener(() {
+    _curPage.value = HomePageEnum.chat;
+  });
 
 const _boxShadow = [
   BoxShadow(

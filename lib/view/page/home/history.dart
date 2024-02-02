@@ -12,23 +12,29 @@ class _HistoryPageState extends State<_HistoryPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ListenableBuilder(
-      listenable: _historyRN,
-      builder: (_, __) {
-        final keys = _allHistories.keys.toList();
-        final len = keys.length;
-        return ListView.builder(
-          controller: _historyScrollCtrl,
-          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
-          reverse: true,
-          itemExtent: _historyItemHeight,
-          itemCount: len,
-          itemBuilder: (_, index) {
-            final chatId = keys[index];
-            return _buildHistoryListItem(chatId).card;
-          },
-        );
-      },
+    return Scaffold(
+      body: ListenableBuilder(
+        listenable: _historyRN,
+        builder: (_, __) {
+          final keys = _allHistories.keys.toList();
+          final len = keys.length;
+          return ListView.builder(
+            controller: _historyScrollCtrl,
+            padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
+            reverse: true,
+            itemExtent: _historyItemHeight,
+            itemCount: len,
+            itemBuilder: (_, index) {
+              final chatId = keys[index];
+              return _buildHistoryListItem(chatId).card;
+            },
+          );
+        },
+      ),
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: _curPage,
+        builder: (_, page, __) => page.fab,
+      ),
     );
   }
 

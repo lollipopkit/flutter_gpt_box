@@ -82,17 +82,7 @@ class _ChatPageState extends State<_ChatPage>
           builders: {
             'code': CodeElementBuilder(onCopy: _onCopy),
           },
-          extensionSet: md.ExtensionSet(
-            [
-              LatexBlockSyntax(),
-              ...md.ExtensionSet.gitHubFlavored.blockSyntaxes
-            ],
-            [
-              LatexInlineSyntax(),
-              md.EmojiSyntax(),
-              ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
-            ],
-          ),
+          extensionSet: MarkdownUtils.extensionSet,
           onTapLink: MarkdownUtils.onLinkTap,
           shrinkWrap: false,
           fitContent: false,
@@ -148,10 +138,10 @@ class _ChatPageState extends State<_ChatPage>
               final isWorking = _chatStreamSubs.containsKey(_curChatId);
               if (isWorking) return UIs.placeholder;
               return IconButton(
-                onPressed: () => _onReplay(
-                  context: context,
-                  chatId: _curChatId,
-                  item: chatItem,
+                onPressed: () => _onTapReplay(
+                  context,
+                  _curChatId,
+                  chatItem,
                 ),
                 icon: const Icon(Icons.refresh, size: 17),
               );
@@ -159,31 +149,7 @@ class _ChatPageState extends State<_ChatPage>
           ),
         if (chatItem.role == ChatRole.user)
           IconButton(
-            onPressed: () async {
-              final ctrl = TextEditingController(text: chatItem.toMarkdown);
-              await context.showRoundDialog(
-                title: l10n.edit,
-                child: Input(
-                  controller: ctrl,
-                  maxLines: 7,
-                  minLines: 1,
-                  autoCorrect: true,
-                  autoFocus: true,
-                  suggestion: true,
-                  action: TextInputAction.send,
-                  onSubmitted: (p0) {
-                    chatItem.content.clear();
-                    chatItem.content.add(ChatContent(
-                      type: ChatContentType.text,
-                      raw: p0,
-                    ));
-                    _storeChat(_curChatId, context);
-                    _chatRN.rebuild();
-                    context.pop();
-                  },
-                ),
-              );
-            },
+            onPressed: () => _onTapEditMsg(context, chatItem),
             icon: const Icon(Icons.edit, size: 17),
           ),
         IconButton(
