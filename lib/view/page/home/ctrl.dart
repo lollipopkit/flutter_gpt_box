@@ -35,7 +35,7 @@ void _storeChat(String chatId, BuildContext context) {
 
 Future<void> _onSend(String chatId, BuildContext context) async {
   if (_inputCtrl.text.isEmpty) return;
-  _focusNode.unfocus();
+  _imeFocus.unfocus();
   final workingChat = _allHistories[chatId];
   if (workingChat == null) {
     final msg = 'Chat($chatId) not found';
@@ -281,7 +281,7 @@ Future<void> _genChatTitle(String chatId, BuildContext context) async {
 }
 
 void _onShareChat(BuildContext context) async {
-  final result = _curChat?.gen4Share(_isDark);
+  final result = _curChat?.gen4Share(context);
   if (result == null) {
     final msg = 'Share Chat($_curChatId): null';
     Loggers.app.warning(msg);

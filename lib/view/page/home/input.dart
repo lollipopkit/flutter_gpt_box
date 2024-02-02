@@ -46,19 +46,12 @@ Widget _buildInput(BuildContext context) {
                 icon: const Icon(Icons.delete, size: 19),
                 tooltip: l10n.delete,
               ),
-              const Spacer(),
-              _buildSwitchPageBtn(),
-              if (isMobile)
-                IconButton(
-                  onPressed: () => _focusNode.unfocus(),
-                  icon: const Icon(Icons.keyboard_hide, size: 19),
-                ),
             ],
           ),
           Input(
             controller: _inputCtrl,
             label: l10n.message,
-            node: _focusNode,
+            node: _imeFocus,
             action: TextInputAction.send,
             maxLines: 5,
             minLines: 1,
@@ -96,24 +89,24 @@ Widget _buildInput(BuildContext context) {
   );
 }
 
-Widget _buildSwitchPageBtn() {
-  return ValueListenableBuilder(
-    valueListenable: _isWide,
-    builder: (_, isWide, __) => isWide
-        ? UIs.placeholder
-        : ValueListenableBuilder(
-            valueListenable: _curPage,
-            builder: (_, page, __) {
-              final next = page.next;
-              return IconButton(
-                onPressed: () => _pageCtrl.animateToPage(
-                  next.index,
-                  duration: Durations.medium1,
-                  curve: Curves.fastEaseInToSlowEaseOut,
-                ),
-                icon: Icon(next.icon, size: 19),
-              );
-            },
-          ),
-  );
-}
+// Widget _buildSwitchPageBtn() {
+//   return ValueListenableBuilder(
+//     valueListenable: _isWide,
+//     builder: (_, isWide, __) => isWide
+//         ? UIs.placeholder
+//         : ValueListenableBuilder(
+//             valueListenable: _curPage,
+//             builder: (_, page, __) {
+//               final next = page.next;
+//               return IconButton(
+//                 onPressed: () => _pageCtrl.animateToPage(
+//                   next.index,
+//                   duration: Durations.medium1,
+//                   curve: Curves.fastEaseInToSlowEaseOut,
+//                 ),
+//                 icon: Icon(next.icon, size: 19),
+//               );
+//             },
+//           ),
+//   );
+// }

@@ -13,13 +13,16 @@ class _ChatPageState extends State<_ChatPage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return ValueListenableBuilder(valueListenable: _isWide, builder: (_, isWide, __) {
-      if (!isWide) return _buildChat();
-      return Scaffold(
-        body: _buildChat(),
-        bottomNavigationBar: _buildInput(context),
-      );
-    },);
+    return ValueListenableBuilder(
+      valueListenable: _isWide,
+      builder: (_, isWide, __) {
+        if (!isWide) return _buildChat();
+        return Scaffold(
+          body: _buildChat(),
+          bottomNavigationBar: _buildInput(context),
+        );
+      },
+    );
   }
 
   Widget _buildChat() {
@@ -56,7 +59,7 @@ class _ChatPageState extends State<_ChatPage>
             child: ListView.builder(
               key: Key(_curChatId),
               controller: _chatScrollCtrl,
-              padding: const EdgeInsets.only(left: 7, right: 7, bottom: 47),
+              padding: const EdgeInsets.all(7),
               physics: const AlwaysScrollableScrollPhysics(
                 parent: BouncingScrollPhysics(),
               ),

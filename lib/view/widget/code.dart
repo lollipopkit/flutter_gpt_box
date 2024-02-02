@@ -28,11 +28,9 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       language = lg.substring(9);
     }
 
-    if (language.isEmpty) return null;
-
     final textContent = element.textContent.trim();
-    final isMultiLine = textContent.contains('\n');
-
+    if (language.isEmpty) return Text(textContent);
+    
     if (language == 'latex') {
       /// The following control sequence is unsupported:
       /// - \documentclass
@@ -58,7 +56,6 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     if (isForCapture) {
       return HighlightViewSync(
         textContent,
-        key: ValueKey(textContent),
         language: language,
         theme: _theme,
         textStyle: _textStyle,
@@ -68,6 +65,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       );
     }
 
+    final isMultiLine = textContent.contains('\n');
     return ValueListenableBuilder(
       valueListenable: Stores.setting.fontSize.listenable(),
       builder: (_, fontSize, __) => isMultiLine

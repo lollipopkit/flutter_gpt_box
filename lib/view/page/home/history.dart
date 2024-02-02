@@ -79,7 +79,7 @@ class _HistoryPageState extends State<_HistoryPage>
         Funcs.throttle(
           () {
             _switchChat(chatId);
-            if (!_isWide.value && _pageCtrl.page == 0) {
+            if (!_isWide.value && _curPage.value != HomePageEnum.chat) {
               _pageCtrl.animateToPage(
                 HomePageEnum.chat.index,
                 duration: Durations.medium3,
@@ -88,6 +88,7 @@ class _HistoryPageState extends State<_HistoryPage>
             }
           },
           id: 'history_item',
+          duration: 70,
         );
       },
     );

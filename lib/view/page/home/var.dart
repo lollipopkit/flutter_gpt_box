@@ -19,16 +19,19 @@ final _chatRN = RebuildNode();
 final _historyRN = RebuildNode();
 final _appbarTitleRN = RebuildNode();
 final _sendBtnRN = RebuildNode();
-// Default false: this item is visible on app start, no need to locate
+// Default false: the history item is visible on app start, no need to locate
 final _locateHistoryBtn = ValueNotifier(false);
 
 var _allHistories = <String, ChatHistory>{};
 String _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
 final _chatStreamSubs = <String, StreamSubscription>{};
-final _curPage = ValueNotifier(HomePageEnum.chat);
+final _curPage = ValueNotifier(HomePageEnum.chat)
+  ..addListener(() {
+    _imeFocus.unfocus();
+  });
 
-final _focusNode = FocusNode();
+final _imeFocus = FocusNode();
 
 MediaQueryData? _media;
 bool _isDark = false;
