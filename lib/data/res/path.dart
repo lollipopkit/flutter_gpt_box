@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/core/util/platform/file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,9 +20,19 @@ abstract final class Paths {
       }
       // fallthrough to getApplicationDocumentsDirectory
     }
-    final dir = await getApplicationDocumentsDirectory();
-    _docDir = dir.path;
-    return dir.path;
+
+    if (isWindows) {
+      final dir = FileUtil.joinPath(
+          Platform.environment['APPDATA'] ??
+              (await getApplicationDocumentsDirectory()).path,
+          "GPTBox");
+      Directory(dir).createSync();
+      _docDir = dir;
+    } else {
+      final Directory dir = await getApplicationDocumentsDirectory();
+      _docDir = dir.path;
+    }
+    return _docDir!;
   }
 
   static const String bakName = 'gptbox_bak.json';
