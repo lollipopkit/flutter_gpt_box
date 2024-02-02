@@ -201,8 +201,6 @@ abstract final class ICloud {
     final uploadResult = await upload(relativePath: Paths.bakName);
     if (uploadResult != null) {
       _logger.warning('Upload backup failed: $uploadResult');
-    } else {
-      _logger.info('Upload backup success');
     }
   }
 }

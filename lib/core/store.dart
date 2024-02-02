@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_chatgpt/core/util/sync/base.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Store {
@@ -43,6 +44,7 @@ extension BoxX on Box {
       lastModifiedKey,
       time ?? DateTime.now().millisecondsSinceEpoch,
     );
+    SyncService.sync();
   }
 
   /// Convert db to json

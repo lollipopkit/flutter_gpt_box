@@ -115,8 +115,6 @@ abstract final class Webdav {
     final err = await upload(relativePath: Paths.bakName);
     if (err != null) {
       _logger.warning('Upload failed: $err');
-    } else {
-      _logger.info('Upload success');
     }
   }
 }

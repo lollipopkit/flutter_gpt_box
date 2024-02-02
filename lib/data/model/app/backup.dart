@@ -76,7 +76,6 @@ class Backup {
     final bakTime = lastModTime;
     final override = force || curTime < bakTime;
     if (!override) {
-      Logger('Backup').info('Backup is older than current, ignore');
       return;
     }
 
@@ -114,7 +113,5 @@ class Backup {
 
     loadFromStore();
     RebuildNode.app.rebuild();
-
-    Logger('Backup').info('Merge success');
   }
 }
