@@ -12,6 +12,17 @@ class _ChatPageState extends State<_ChatPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    return ValueListenableBuilder(valueListenable: _isWide, builder: (_, isWide, __) {
+      if (!isWide) return _buildChat();
+      return Scaffold(
+        body: _buildChat(),
+        bottomNavigationBar: _buildInput(context),
+      );
+    },);
+  }
+
+  Widget _buildChat() {
     var switchDirection = SwitchPageDirection.next;
     return SwitchPageIndicator(
       onSwitchPage: (direction) {

@@ -66,7 +66,6 @@ Future<void> _onSend(String chatId, BuildContext context) async {
     role: ChatRole.user,
   );
   workingChat.items.add(question);
-  _genChatTitle(chatId, context);
   final historyCarried = workingChat.items.reversed
       .take(config.historyLen)
       .map(
@@ -113,10 +112,11 @@ Future<void> _onSend(String chatId, BuildContext context) async {
         _storeChat(chatId, context);
         _sendBtnRN.rebuild();
       },
-      onDone: () {
+      onDone: () async {
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
         _sendBtnRN.rebuild();
+        await _genChatTitle(chatId, context);
         SyncService.sync();
       },
     );
@@ -239,7 +239,7 @@ void _onStopStreamSub(String chatId) {
   _sendBtnRN.rebuild();
 }
 
-void _genChatTitle(String chatId, BuildContext context) async {
+Future<void> _genChatTitle(String chatId, BuildContext context) async {
   final model = Stores.setting.openaiGenTitleModel.fetch();
   if (model.isEmpty) return;
   final entity = _allHistories[chatId];

@@ -104,11 +104,18 @@ class _HomePageState extends State<HomePage>
       drawer: _buildDrawer(),
       appBar: _buildAppBar(context),
       body: _buildBody(),
-      bottomNavigationBar: _buildInput(context),
+      bottomNavigationBar: ValueListenableBuilder(
+        valueListenable: _isWide,
+        builder: (_, isWide, __) {
+          if (isWide) return UIs.placeholder;
+          return _buildInput(context);
+        },
+      ),
       floatingActionButton: ValueListenableBuilder(
         valueListenable: _curPage,
         builder: (_, page, __) => page.fab,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 
@@ -118,13 +125,12 @@ class _HomePageState extends State<HomePage>
     if (_isWide.value) {
       return const Row(
         children: [
-          Expanded(
-            flex: 1,
+          SizedBox(
+            width : 270,
             child: history,
           ),
           VerticalDivider(width: 1, color: Colors.white10),
           Expanded(
-            flex: 2,
             child: chat,
           ),
         ],
