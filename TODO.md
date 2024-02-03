@@ -6,10 +6,10 @@
   - [x] History list locate
   - [x] Replay (edit question and resend)
   - [x] Latex formula render
+  - [x] Auto generate title
+  - [x] Soft wrap switch
 - [x] User experience 
   - [x] Theme
-  - [x] Genrate title for chat
-  - [x] Chat soft wrap
   - [x] Auto scroll to bottom when GPT is genenrating text 
   - [x] Desktop view
 - [x] Backup
@@ -24,11 +24,12 @@
   - [x] Clipboard
   - [x] WebDAV
 - [x] URL Scheme
-  - [x] Config: `lk-gptbox://config/set?openAiUrl=&openAiKey=&openAiModel=&chatId=`
+  - [x] Config: `lk-gptbox://app/set?openAiUrl=&openAiKey=&openAiModel=&chatId=`
     - If chatId is not provided, it will config global settings
     - If chatId not exists, it will create a new chat
+    - On web, it's `https://gpt.lolli.tech/set?openAiUrl=&openAiKey=&openAiModel=&chatId=`
   - [x] Chat
-    - [x] New: `lk-gptbox://chat/new?msg=`
-    - [x] Open: `lk-gptbox://chat/open?chatId=`
-    - [x] Search: `lk-gptbox://chat/search?keyword=`
-    - [x] Share: `lk-gptbox://chat/share?chatId=`
+    - [x] New: `lk-gptbox://app/new?msg=`
+    - [x] Open: `lk-gptbox://app/open?chatId=`
+    - [x] Search: `lk-gptbox://app/search?keyword=`
+    - [x] Share: `lk-gptbox://app/share?chatId=`

@@ -28,18 +28,11 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     final textContent = element.textContent.trim();
     if (language.isEmpty) {
-      return Container(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(37, 158, 158, 158),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        margin: const EdgeInsets.symmetric(horizontal: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 2),
-        child: ValueListenableBuilder(
-          valueListenable: Stores.setting.fontSize.listenable(),
-          builder: (_, val, __) => Text(
-            textContent,
-            style: _textStyle.copyWith(fontSize: val),
+      return RichText(
+        text: TextSpan(
+          text: textContent,
+          style: _textStyle.copyWith(
+            backgroundColor: const Color.fromARGB(37, 158, 158, 158),
           ),
         ),
       );

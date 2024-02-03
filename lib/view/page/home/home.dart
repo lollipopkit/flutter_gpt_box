@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage>
       return const Row(
         children: [
           SizedBox(
-            width: 270,
+            width: 300,
             child: history,
           ),
           Expanded(
@@ -197,7 +197,13 @@ class _HomePageState extends State<HomePage>
   }
 
   void _initUniLinks() async {
-    uriLinkStream.listen((Uri? uri) {
+    if (isWeb) {
+      getInitialUri().then((uri) {
+        if (uri == null) return;
+        AppLink.handle(context, uri);
+      });
+    } else {
+      uriLinkStream.listen((Uri? uri) {
       if (uri == null) return;
       if (!mounted) return;
       AppLink.handle(context, uri);
@@ -209,5 +215,6 @@ class _HomePageState extends State<HomePage>
         child: Text(msg),
       );
     });
+    }
   }
 }

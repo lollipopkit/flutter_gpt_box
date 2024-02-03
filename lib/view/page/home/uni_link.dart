@@ -3,46 +3,15 @@ part of 'home.dart';
 abstract final class AppLink {
   static const scheme = 'lk-gptbox';
 
-  static final List<AppLinkHost> hosts = <AppLinkHost>[
-    AppLinkHostChat._(),
-    AppLinkHostConfig._(),
-  ];
-
-  /// example: lk-gptbox://chat/ACTION?PARAM=PARAM_VALUE
+  /// example: lk-gptbox://HOST/ACTION?PARAM=PARAM_VALUE
   static bool? handle(BuildContext context, Uri uri) {
-    if (uri.scheme != scheme) {
+    if (uri.scheme != scheme && !isWeb) {
       return false;
     }
-    final handlers = hosts.where((e) => e.host == uri.host);
-    if (handlers.isEmpty) {
-      return null;
-    }
-    for (final handler in handlers) {
-      if (handler.handler(context, uri.path, uri.queryParameters)) {
-        return true;
-      }
-    }
-    return false;
-  }
-}
 
-abstract final class AppLinkHost {
-  String get host => throw UnimplementedError();
+    final path = uri.path;
+    final params = uri.queryParameters;
 
-  /// Return [true] to block other handlers, [false] to fallback to next handler
-  bool handler(BuildContext context, String path, Map<String, String> params) {
-    return false;
-  }
-}
-
-final class AppLinkHostChat extends AppLinkHost {
-  AppLinkHostChat._();
-
-  @override
-  String get host => 'chat';
-
-  @override
-  bool handler(BuildContext context, String path, Map<String, String> params) {
     switch (path) {
       case '/new':
         final msg = params['msg'];
@@ -82,26 +51,29 @@ final class AppLinkHostChat extends AppLinkHost {
         context.showSnackBar(msg);
         Loggers.app.warning(msg);
         return true;
-      default:
-        final msg = l10n.invalidLinkFmt(path);
+      case '/go':
+        final page = params['page'];
+        if (page != null) {
+          switch (page) {
+            case 'setting':
+              Routes.setting.go(context);
+              return true;
+            case 'backup':
+              Routes.backup.go(context);
+              return true;
+            case 'about':
+              Routes.about.go(context);
+              return true;
+            default:
+              final msg = l10n.invalidLinkFmt(page);
+              context.showSnackBar(msg);
+              Loggers.app.warning(msg);
+              return true;
+          }
+        }
+        final msg = l10n.invalidLinkFmt('${l10n.empty} page');
         context.showSnackBar(msg);
         Loggers.app.warning(msg);
-        return false;
-    }
-  }
-}
-
-final class AppLinkHostConfig extends AppLinkHost {
-  AppLinkHostConfig._();
-
-  @override
-  String get host => 'config';
-
-  @override
-  bool handler(BuildContext context, String path, Map<String, String> params) {
-    switch (path) {
-      case '/open':
-        Routes.setting.go(context);
         return true;
       case '/set':
         final openAiUrl = params['openAiUrl'];
