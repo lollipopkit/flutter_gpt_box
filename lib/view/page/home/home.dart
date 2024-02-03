@@ -37,7 +37,6 @@ import 'package:flutter_chatgpt/view/widget/future.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/slide_trans.dart';
 import 'package:flutter_chatgpt/view/widget/switch_page_indicator.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -92,7 +91,6 @@ class _HomePageState extends State<HomePage>
     _isDark = context.isDark;
     _isWide.value = _media.isWide;
     CodeElementBuilder.isDark = _isDark;
-    l10n = AppLocalizations.of(context)!;
     super.didChangeDependencies();
 
     /// Must call here, or the colorSeed is not applied

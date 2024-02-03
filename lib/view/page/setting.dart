@@ -20,6 +20,7 @@ import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_chatgpt/view/widget/color_picker.dart';
 import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
+import 'package:flutter_chatgpt/view/widget/fade.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/switch.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
@@ -34,13 +35,18 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   final _store = Stores.setting;
 
+  var localeStr = '';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: Text(l10n.settings),
+    return FadeIn(
+      key: Key(localeStr),
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: Text(l10n.settings),
+        ),
+        body: _buildBody(),
       ),
-      body: _buildBody(),
     );
   }
 
@@ -160,7 +166,6 @@ class _SettingPageState extends State<SettingPage> {
       return;
     }
     _store.themeColorSeed.put(color.value);
-    context.pop();
     RebuildNode.app.rebuild(delay: true);
   }
 
@@ -181,8 +186,12 @@ class _SettingPageState extends State<SettingPage> {
             initial: val.toLocale,
           );
           if (result != null) {
-            _store.locale.put(result.toLanguageTag());
-            RebuildNode.app.rebuild();
+            final newLocaleStr = result.toLanguageTag();
+            _store.locale.put(newLocaleStr);
+            await RebuildNode.app.rebuild(delay: true);
+            setState(() {
+              localeStr = newLocaleStr;
+            });
           }
         },
       ),

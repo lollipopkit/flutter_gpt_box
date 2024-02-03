@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/ext/locale.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
+import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/page/home/home.dart';
@@ -32,7 +33,15 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
             colorSchemeSeed: UIs.colorSeed,
           )),
-          home: const HomePage(),
+          home: Builder(
+            builder: (context) {
+              final l10n_ = AppLocalizations.of(context);
+              if (l10n_ != null) {
+                l10n = l10n_;
+              }
+              return const HomePage();
+            },
+          ),
         );
       },
     );

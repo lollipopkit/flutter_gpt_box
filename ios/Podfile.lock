@@ -51,6 +51,8 @@ PODS:
   - share_plus (0.0.1):
     - Flutter
   - SwiftyGif (5.4.4)
+  - uni_links (0.0.1):
+    - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
 
@@ -63,6 +65,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - r_upgrade (from `.symlinks/plugins/r_upgrade/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
+  - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -89,6 +92,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/r_upgrade/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
+  uni_links:
+    :path: ".symlinks/plugins/uni_links/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
@@ -105,6 +110,7 @@ SPEC CHECKSUMS:
   SDWebImage: 96e0c18ef14010b7485210e92fac888587ebb958
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
+  uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
 
 PODFILE CHECKSUM: 075ddf6b19cdcced44581bd8fbdfb58404a78f8a

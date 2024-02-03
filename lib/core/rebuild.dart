@@ -16,14 +16,15 @@ class RebuildNode implements Listenable {
   }
 
   /// Rebuild all listeners.
-  /// - [delay] if true, rebuild will be delayed for 100ms.
+  /// - [delay] if true, rebuild will be delayed.
   Future<void> rebuild({bool delay = false}) async {
-    if (delay) await Future.delayed(const Duration(milliseconds: 100));
+    if (delay) await Future.delayed(const Duration(milliseconds: 277));
     for (final listener in _listeners) {
       listener();
     }
   }
 
+  /// Add this node's listeners to another node.
   void chain(RebuildNode node) {
     node.addListener(rebuild);
   }
