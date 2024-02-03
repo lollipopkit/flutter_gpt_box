@@ -204,17 +204,17 @@ class _HomePageState extends State<HomePage>
       });
     } else {
       uriLinkStream.listen((Uri? uri) {
-      if (uri == null) return;
-      if (!mounted) return;
-      AppLink.handle(context, uri);
-    }, onError: (err) {
-      final msg = l10n.invalidLinkFmt(err);
-      Loggers.app.warning(msg);
-      context.showRoundDialog(
-        title: l10n.attention,
-        child: Text(msg),
-      );
-    });
+        if (uri == null) return;
+        if (!mounted) return;
+        AppLink.handle(context, uri);
+      }, onError: (err) {
+        final msg = l10n.invalidLinkFmt(err);
+        Loggers.app.warning(msg);
+        context.showRoundDialog(
+          title: l10n.attention,
+          child: Text(msg),
+        );
+      });
     }
   }
 }

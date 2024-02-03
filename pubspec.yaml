@@ -30,11 +30,11 @@ dependencies:
   share_plus: ^7.2.1
   universal_html: ^2.2.4
   flutter_highlight:
-    # git:
-    #   ref: master
-    #   url: https://github.com/lollipopkit/highlight.dart
-    #   path: flutter_highlight
-    path: ../highlight.dart/flutter_highlight
+    git:
+      ref: master
+      url: https://github.com/lollipopkit/highlight.dart
+      path: flutter_highlight
+    # path: ../highlight.dart/flutter_highlight
   google_fonts: ^6.1.0
   intl: ^0.18.0
   url_launcher: ^6.2.3
