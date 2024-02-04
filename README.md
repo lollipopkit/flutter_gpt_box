@@ -23,7 +23,7 @@ This app is now under development, some features may be missing / not available.
 - Restore from [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
 - Share chat by picture.
 - Render code block / latex formula.
-- Uni-Link, eg: `lk-gptbox://chat/new?msg=hello` (no Linux)
+- Uni-Link, eg: `lk-gptbox://chat/new?msg=hello` (except Linux / Web)
 - All platforms support.
 - Sync with WebDAV / iCloud.
 

@@ -58,7 +58,7 @@ Widget _buildInput(BuildContext context) {
             autoCorrect: true,
             suggestion: true,
             onSubmitted: (p0) {
-              _onSend(_curChatId, context);
+              _onSend(context, _curChatId);
             },
             onTap: () {
               if (_curPage.value != HomePageEnum.chat) {

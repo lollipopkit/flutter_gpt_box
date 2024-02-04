@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,11 +26,14 @@ import 'package:flutter_chatgpt/core/util/markdown.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/core/util/sync/base.dart';
 import 'package:flutter_chatgpt/core/util/ui.dart';
+import 'package:flutter_chatgpt/data/model/app/audio_play.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
+import 'package:flutter_chatgpt/data/model/chat/model.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
+import 'package:flutter_chatgpt/data/res/path.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
@@ -74,6 +79,7 @@ class _HomePageState extends State<HomePage>
     );
     _historyScrollCtrl.addListener(_locateHistoryListener);
     _initUniLinks();
+    _listenAudioPlayer();
   }
 
   @override
@@ -198,10 +204,10 @@ class _HomePageState extends State<HomePage>
 
   void _initUniLinks() async {
     if (isWeb) {
-      getInitialUri().then((uri) {
-        if (uri == null) return;
-        AppLink.handle(context, uri);
-      });
+      // getInitialUri().then((uri) {
+      //   if (uri == null) return;
+      //   AppLink.handle(context, uri);
+      // });
     } else {
       uriLinkStream.listen((Uri? uri) {
         if (uri == null) return;
@@ -210,11 +216,26 @@ class _HomePageState extends State<HomePage>
       }, onError: (err) {
         final msg = l10n.invalidLinkFmt(err);
         Loggers.app.warning(msg);
-        context.showRoundDialog(
-          title: l10n.attention,
-          child: Text(msg),
-        );
+        context.showRoundDialog(title: l10n.attention, child: Text(msg));
       });
     }
+  }
+
+  void _listenAudioPlayer() {
+    _audioPlayer.onPositionChanged.listen((position) {
+      final listenable = _audioPlayerMap[_nowPlayingId];
+      if (listenable == null) return;
+      listenable.value = listenable.value.copyWith(
+        playedMilli: position.inMilliseconds,
+      );
+    });
+    _audioPlayer.onPlayerComplete.listen((_) {
+      final listenable = _audioPlayerMap[_nowPlayingId];
+      if (listenable == null) return;
+      listenable.value = listenable.value.copyWith(
+        playing: false,
+        playedMilli: 0,
+      );
+    });
   }
 }

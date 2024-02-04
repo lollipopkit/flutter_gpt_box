@@ -121,7 +121,6 @@ class _CurrentChatSettingsState extends State<_CurrentChatSettings> {
           final models = await OpenAI.instance.model.list();
           context.pop();
           final modelStrs = models.map((e) => e.id).toList();
-          modelStrs.removeWhere((element) => !element.startsWith('gpt'));
           final modelStr = await context.showPickSingleDialog(
             items: modelStrs,
             initial: val,

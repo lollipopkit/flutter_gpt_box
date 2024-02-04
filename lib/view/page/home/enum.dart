@@ -63,7 +63,7 @@ enum HomePageEnum {
         onHomePage: [HomePageEnum.history],
         onTap: () => showSearch(
           context: context,
-          delegate: ChatSearchDelegate(),
+          delegate: _ChatSearchDelegate(),
         ),
       ),
     ]) {

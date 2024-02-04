@@ -15,6 +15,7 @@ import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/provider/debug.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
+import 'package:flutter_chatgpt/data/res/path.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -66,6 +67,8 @@ Future<void> _initApp() async {
   if (isWindows) {
     registerProtocol('lk-gptbox');
   }
+
+  Paths.createAll();
 }
 
 Future<void> _initDb() async {

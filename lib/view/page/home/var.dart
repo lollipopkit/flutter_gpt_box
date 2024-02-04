@@ -7,14 +7,18 @@ final _pageCtrl = PageController(initialPage: _curPage.value.index);
 final _screenshotCtrl = ScreenshotController();
 
 final _timeRN = RebuildNode();
-
-/// Map for markdown rebuild nodes
+// Map for markdown rebuild nodes
 final _mdRNMap = <String, RebuildNode>{};
+// RebuildNodes for history list items
+final _historyRNMap = <String, RebuildNode>{};
 
-/// RebuildNodes for chat history list items
-final _chatRNMap = <String, RebuildNode>{};
+final _audioPlayer = AudioPlayer();
+// Map for audio player value notifiers which stores the current playing status
+final _audioPlayerMap = <String, ValueNotifier<AudioPlayStatus>>{};
+String? _nowPlayingId;
+final _audioLoadingMap = <String, Completer>{};
 
-/// For page body chat view
+// For page body chat view
 final _chatRN = RebuildNode();
 final _historyRN = RebuildNode();
 final _appbarTitleRN = RebuildNode();

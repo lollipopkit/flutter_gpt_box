@@ -80,6 +80,9 @@ class _ChatPageState extends State<_ChatPage>
     final child = ListenableBuilder(
       listenable: node,
       builder: (_, __) {
+        final isAudio =
+            chatItem.content.any((e) => e.type == ChatContentType.audio);
+        if (isAudio) return _buildAudio(chatItem);
         return MarkdownBody(
           data: chatItem.toMarkdown,
           builders: {
@@ -109,6 +112,87 @@ class _ChatPageState extends State<_ChatPage>
                 ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAudio(ChatHistoryItem chatItem) {
+    final listenable = _audioPlayerMap.putIfAbsent(
+      chatItem.id,
+      () => ValueNotifier(AudioPlayStatus.fromChatItem(chatItem)),
+    );
+    final initWidget = () async {
+      await _audioLoadingMap[chatItem.id]?.future;
+      final path = '${await Paths.audio}/${chatItem.id}.mp3';
+      if (!await File(path).exists()) {
+        throw 'File not found: $path';
+      }
+      final player = AudioPlayer();
+      player.setSource(DeviceFileSource(path));
+      return player.getDuration();
+    }();
+    return FutureWidget(
+      future: initWidget,
+      error: ((error, trace) {
+        Loggers.app.warning('Failed to get audio duration', error, trace);
+        return Text('$error');
+      }),
+      loading: UIs.centerSizedLoading,
+      success: (duration) {
+        listenable.value = listenable.value.copyWith(
+          totalMilli: duration?.inMilliseconds ?? 0,
+        );
+        return ValueListenableBuilder(
+          valueListenable: listenable,
+          builder: (_, val, __) {
+            return ListTile(
+              leading: IconButton(
+                icon: val.playing
+                    ? const Icon(Icons.stop)
+                    : const Icon(Icons.play_arrow),
+                onPressed: () async {
+                  if (val.playing) {
+                    _audioPlayer.pause();
+                    _nowPlayingId = null;
+                    listenable.value = val.copyWith(playing: false);
+                  } else {
+                    if (_nowPlayingId == chatItem.id) {
+                      _audioPlayer.resume();
+                      _nowPlayingId = chatItem.id;
+                      listenable.value = val.copyWith(playing: true);
+                      return;
+                    } else {
+                      if (_nowPlayingId != null) {
+                        final last = _audioPlayerMap[_nowPlayingId];
+                        if (last != null) {
+                          _audioPlayer.pause();
+                          _nowPlayingId = null;
+                          last.value = last.value.copyWith(playing: false);
+                        }
+                      }
+                    }
+                    _nowPlayingId = chatItem.id;
+                    listenable.value = val.copyWith(playing: true);
+                    _audioPlayer.play(DeviceFileSource(
+                      '${await Paths.audio}/${chatItem.id}.mp3',
+                    ));
+                  }
+                },
+              ),
+              title: Slider(
+                value: duration == null
+                    ? 0.0
+                    : val.playedMilli / val.totalMilli,
+                onChanged: (v) {
+                  final nowMilli = (val.totalMilli * v).toInt();
+                  final duration = Duration(milliseconds: nowMilli);
+                  _audioPlayer.seek(duration);
+                  listenable.value = val.copyWith(playedMilli: nowMilli);
+                },
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -168,6 +252,7 @@ class _ChatPageState extends State<_ChatPage>
             if (result != true) return;
             chatItems.remove(chatItem);
             _storeChat(_curChatId, context);
+            _historyRNMap[_curChatId]?.rebuild();
             _chatRN.rebuild();
           },
           icon: const Icon(Icons.delete, size: 17),

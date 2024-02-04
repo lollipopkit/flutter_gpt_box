@@ -93,19 +93,13 @@ final class ChatHistoryItem {
 
   ChatHistoryItem.single({
     required this.role,
-    required ChatContent content,
-  })  : id = uuid.v4(),
-        content = [content],
-        createdAt = DateTime.now();
-
-  ChatHistoryItem.singleText({
-    required this.role,
-    required String text,
+    String raw = '',
+    ChatContentType type = ChatContentType.text,
   })  : id = uuid.v4(),
         content = [
           ChatContent(
-            type: ChatContentType.text,
-            raw: text,
+            type: type,
+            raw: raw,
           )
         ],
         createdAt = DateTime.now();
@@ -126,16 +120,6 @@ final class ChatHistoryItem {
             })
         .join('\n');
   }
-
-  static ChatHistoryItem get emptyAssist => ChatHistoryItem.noid(
-        content: [
-          ChatContent(
-            type: ChatContentType.text,
-            raw: '',
-          )
-        ],
-        role: ChatRole.assist,
-      );
 
   Map<String, dynamic> toJson() {
     return {

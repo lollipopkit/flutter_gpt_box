@@ -33,7 +33,7 @@ void _storeChat(String chatId, BuildContext context) {
   Stores.history.put(chat);
 }
 
-Future<void> _onSend(String chatId, BuildContext context) async {
+Future<void> _onSendChat(String chatId, BuildContext context) async {
   if (_inputCtrl.text.isEmpty) return;
   _imeFocus.unfocus();
   final workingChat = _allHistories[chatId];
@@ -79,7 +79,7 @@ Future<void> _onSend(String chatId, BuildContext context) async {
     temperature: config.temperature,
     seed: config.seed,
   );
-  final assistReply = ChatHistoryItem.emptyAssist;
+  final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
   _chatRN.rebuild();
   try {
@@ -117,6 +117,8 @@ Future<void> _onSend(String chatId, BuildContext context) async {
         _storeChat(chatId, context);
         _sendBtnRN.rebuild();
         await _genChatTitle(chatId, context);
+        // Wait for db to store the chat
+        await Future.delayed(const Duration(milliseconds: 300));
         SyncService.sync();
       },
     );
@@ -229,7 +231,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
   );
   if (title == null || title.isEmpty) return;
   entity.name = title;
-  _chatRNMap[chatId]?.rebuild();
+  _historyRNMap[chatId]?.rebuild();
   _storeChat(chatId, context);
   _appbarTitleRN.rebuild();
 }
@@ -243,7 +245,7 @@ Future<void> _genChatTitle(String chatId, BuildContext context) async {
   final model = Stores.setting.openaiGenTitleModel.fetch();
   if (model.isEmpty) return;
   final entity = _allHistories[chatId];
-  if (entity?.items.length != 1) return;
+  if (entity?.items.length != 2) return;
   if (entity == null) {
     final msg = 'Gen Chat($chatId) not found';
     Loggers.app.warning(msg);
@@ -251,18 +253,14 @@ Future<void> _genChatTitle(String chatId, BuildContext context) async {
     return;
   }
 
-  final question = entity.items.first.content.first.raw;
   final resp = await OpenAI.instance.chat.create(
     model: model,
     messages: [
-      entity.items.first.copyWith(
-        content: [
-          ChatContent(
-            type: ChatContentType.text,
-            raw: l10n.genTitlePrompt + question,
-          ),
-        ],
+      ChatHistoryItem.single(
+        raw: l10n.genTitlePrompt,
+        role: ChatRole.system,
       ).toOpenAI,
+      ...entity.items.take(2).map((e) => e.toOpenAI),
     ],
   );
   final title = resp.choices.firstOrNull?.message.content?.firstOrNull?.text;
@@ -276,7 +274,7 @@ Future<void> _genChatTitle(String chatId, BuildContext context) async {
   /// These punctions which not affect the meaning of the title will be removed
   const punctions2Rm = ['。', '"', "'", "“", '”'];
   entity.name = title.replaceAll(RegExp('[${punctions2Rm.join()}]'), '');
-  _chatRNMap[chatId]?.rebuild();
+  _historyRNMap[chatId]?.rebuild();
   if (chatId == _curChatId) _appbarTitleRN.rebuild();
 }
 
@@ -420,7 +418,7 @@ void _onTapReplay(
 }
 
 /// Remove the [ChatHistoryItem] behind this [item], and resend the [item] like
-/// [_onSend], but append the result after this [item] instead of at the end.
+/// [_onSendChat], but append the result after this [item] instead of at the end.
 void _onReplay({
   required BuildContext context,
   required String chatId,
@@ -472,8 +470,8 @@ void _onReplay({
     (final prompt, _, 1) => '$prompt\n${item.toMarkdown}',
     _ => item.content.first.raw,
   };
-  final question = ChatHistoryItem.singleText(
-    text: questionContent,
+  final question = ChatHistoryItem.single(
+    raw: questionContent,
     role: ChatRole.user,
   );
 
@@ -490,7 +488,7 @@ void _onReplay({
     temperature: config.temperature,
     seed: config.seed,
   );
-  final assistReply = ChatHistoryItem.emptyAssist;
+  final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   chatHistory.items.insert(itemIdx + 1, assistReply);
   _chatRN.rebuild();
   try {
@@ -505,8 +503,8 @@ void _onReplay({
         _onStopStreamSub(chatId);
 
         final msg = 'Error: $e\nTrace:\n$trace';
-        chatHistory.items.add(ChatHistoryItem.singleText(
-          text: msg,
+        chatHistory.items.add(ChatHistoryItem.single(
+          raw: msg,
           role: ChatRole.system,
         ));
         _chatRN.rebuild();
@@ -556,4 +554,82 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
       },
     ),
   );
+}
+
+Future<void> _onSendTTS(BuildContext context, String chatId) async {
+  if (isWeb) {
+    final msg = l10n.notSupported('TTS Web');
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+  if (_inputCtrl.text.isEmpty) return;
+  _imeFocus.unfocus();
+  final workingChat = _allHistories[chatId];
+  if (workingChat == null) {
+    final msg = 'Chat($chatId) not found';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+  final config = _getChatConfig(chatId);
+  final questionContent = _inputCtrl.text;
+  final question = ChatHistoryItem.noid(
+    content: [
+      ChatContent(type: ChatContentType.text, raw: questionContent),
+    ],
+    role: ChatRole.user,
+  );
+  workingChat.items.add(question);
+  _inputCtrl.clear();
+  final assistReply = ChatHistoryItem.single(
+    role: ChatRole.assist,
+    type: ChatContentType.audio,
+  );
+  workingChat.items.add(assistReply);
+  final completer = Completer();
+  _audioLoadingMap[assistReply.id] = completer;
+  _chatRN.rebuild();
+  _storeChat(chatId, context);
+
+  try {
+    await OpenAI.instance.audio.createSpeech(
+      model: config.model,
+      input: questionContent,
+      voice: 'nova',
+      outputDirectory: Directory(await Paths.audio),
+      outputFileName: assistReply.id,
+      responseFormat: OpenAIAudioSpeechResponseFormat.mp3,
+    );
+    assistReply.content.first.raw = assistReply.id;
+    completer.complete();
+    _audioLoadingMap.remove(assistReply.id);
+    _storeChat(chatId, context);
+  } catch (e) {
+    _onStopStreamSub(chatId);
+    final msg = 'Audio create speech: $e';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    assistReply.content.first.raw += '\n$msg';
+    _sendBtnRN.rebuild();
+  }
+}
+
+void _onSend(BuildContext context, String chatId) {
+  final modelType = ModelType.fromString(_getChatConfig(chatId).model);
+  switch (modelType) {
+    case ModelType.text:
+      _onSendChat(chatId, context);
+      break;
+    case ModelType.tts:
+      _onSendTTS(context, chatId);
+      break;
+    case ModelType.image:
+      // _onSendImg();
+      break;
+    default:
+      final msg = 'Unknown modelType: $modelType';
+      Loggers.app.warning(msg);
+      context.showSnackBar(msg);
+  }
 }

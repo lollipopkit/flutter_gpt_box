@@ -20,7 +20,6 @@ import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_chatgpt/view/widget/color_picker.dart';
 import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
-import 'package:flutter_chatgpt/view/widget/fade.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/switch.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
@@ -39,14 +38,12 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FadeIn(
+    return Scaffold(
       key: Key(localeStr),
-      child: Scaffold(
-        appBar: CustomAppBar(
-          title: Text(l10n.settings),
-        ),
-        body: _buildBody(),
+      appBar: CustomAppBar(
+        title: Text(l10n.settings),
       ),
+      body: _buildBody(),
     );
   }
 
@@ -340,7 +337,7 @@ class _SettingPageState extends State<SettingPage> {
           final models = await OpenAI.instance.model.list();
           context.pop();
           final modelStrs = models.map((e) => e.id).toList();
-          modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+          //modelStrs.removeWhere((element) => !element.startsWith('gpt'));
           final model = await context.showPickSingleDialog(
             items: modelStrs,
             initial: val,

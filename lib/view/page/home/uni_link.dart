@@ -19,7 +19,7 @@ abstract final class AppLink {
         _switchChat(chat.id);
         if (msg != null) {
           _inputCtrl.text = msg;
-          _onSend(chat.id, context);
+          _onSendChat(chat.id, context);
         }
         return true;
       case '/open':
@@ -35,7 +35,9 @@ abstract final class AppLink {
       case '/search':
         final query = params['keyword'];
         showSearch(
-            context: context, delegate: ChatSearchDelegate(initKeyword: query));
+          context: context,
+          delegate: _ChatSearchDelegate(initKeyword: query),
+        );
         return true;
       case '/share':
         final chatId = params['chatId'];

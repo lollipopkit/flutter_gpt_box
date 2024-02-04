@@ -50,6 +50,8 @@ dependencies:
   flutter_math_fork: ^0.7.2
   uni_links: ^0.5.1
   uni_links_desktop: ^0.1.7
+  image_picker: ^1.0.7
+  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_test:
