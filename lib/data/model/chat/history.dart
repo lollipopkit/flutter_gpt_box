@@ -57,12 +57,11 @@ final class ChatHistory {
   static ChatHistory get example => ChatHistory.noid(
         name: l10n.help,
         items: [
-          ChatHistoryItem.noid(role: ChatRole.system, content: [
-            ChatContent(
-              type: ChatContentType.text,
-              raw: l10n.initChatHelp,
-            )
-          ]),
+          ChatHistoryItem.single(
+            role: ChatRole.system,
+            type: ChatContentType.text,
+            raw: l10n.initChatHelp,
+          ),
         ],
       );
 }
@@ -84,12 +83,6 @@ final class ChatHistoryItem {
     required this.createdAt,
     required this.id,
   });
-
-  ChatHistoryItem.noid({
-    required this.role,
-    required this.content,
-  })  : id = uuid.v4(),
-        createdAt = DateTime.now();
 
   ChatHistoryItem.single({
     required this.role,

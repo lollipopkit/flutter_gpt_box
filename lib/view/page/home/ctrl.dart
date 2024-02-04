@@ -4,7 +4,7 @@ void _switchChat([String? id]) {
   id ??= _allHistories.keys.firstOrNull ?? _newChat().id;
   _curChatId = id;
   _applyChatConfig(_getChatConfig(_curChatId));
-  _mdRNMap.clear();
+  _chatItemRNMap.clear();
   _chatRN.rebuild();
   _sendBtnRN.rebuild();
   _appbarTitleRN.rebuild();
@@ -33,7 +33,7 @@ void _storeChat(String chatId, BuildContext context) {
   Stores.history.put(chat);
 }
 
-Future<void> _onSendChat(String chatId, BuildContext context) async {
+Future<void> _onCreateChat(String chatId, BuildContext context) async {
   if (_inputCtrl.text.isEmpty) return;
   _imeFocus.unfocus();
   final workingChat = _allHistories[chatId];
@@ -59,10 +59,9 @@ Future<void> _onSendChat(String chatId, BuildContext context) async {
     (final prompt, _, 2) => '$prompt\n${_inputCtrl.text}',
     _ => _inputCtrl.text,
   };
-  final question = ChatHistoryItem.noid(
-    content: [
-      ChatContent(type: ChatContentType.text, raw: questionContent),
-    ],
+  final question = ChatHistoryItem.single(
+    type: ChatContentType.text,
+    raw: questionContent,
     role: ChatRole.user,
   );
   workingChat.items.add(question);
@@ -87,7 +86,7 @@ Future<void> _onSendChat(String chatId, BuildContext context) async {
       (event) {
         final delta = event.choices.first.delta.content?.first.text ?? '';
         assistReply.content.first.raw += delta;
-        _mdRNMap[assistReply.id]?.rebuild();
+        _chatItemRNMap[assistReply.id]?.rebuild();
 
         if (Stores.setting.scrollBottom.fetch()) {
           // Only scroll to bottom when current chat is the working chat
@@ -104,8 +103,9 @@ Future<void> _onSendChat(String chatId, BuildContext context) async {
         _onStopStreamSub(chatId);
 
         final msg = 'Error: $e\nTrace:\n$trace';
-        workingChat.items.add(ChatHistoryItem.noid(
-          content: [ChatContent(type: ChatContentType.text, raw: msg)],
+        workingChat.items.add(ChatHistoryItem.single(
+          type: ChatContentType.text,
+          raw: msg,
           role: ChatRole.system,
         ));
         _chatRN.rebuild();
@@ -306,23 +306,12 @@ void _onShareChat(BuildContext context) async {
   }
 }
 
-// Future<void> _onImgPick() async {
-//   final result = await FilePicker.platform.pickFiles(
-//     type: FileType.image,
-//   );
-//   final path = result?.files.single.path;
-//   if (path == null) return;
-//   final b64 = base64Encode(await File(path).readAsBytes());
-//   _curHistories?.add(ChatHistoryItem.noid(
-//     content: [
-//       ChatContent(
-//         type: ChatContentType.image,
-//         raw: 'base64://$b64',
-//       ),
-//     ],
-//     role: ChatRole.user,
-//   ));
-// }
+Future<void> _onTapImgPick() async {
+  final picker = ImagePicker();
+  final result = await picker.pickImage(source: ImageSource.gallery);
+  if (result == null) return;
+  _imagesMap[_curChatId] = result;
+}
 
 void loadFromStore() {
   _allHistories = Stores.history.fetchAll();
@@ -418,7 +407,7 @@ void _onTapReplay(
 }
 
 /// Remove the [ChatHistoryItem] behind this [item], and resend the [item] like
-/// [_onSendChat], but append the result after this [item] instead of at the end.
+/// [_onCreateChat], but append the result after this [item] instead of at the end.
 void _onReplay({
   required BuildContext context,
   required String chatId,
@@ -496,7 +485,7 @@ void _onReplay({
       (event) {
         final delta = event.choices.first.delta.content?.first.text ?? '';
         assistReply.content.first.raw += delta;
-        _mdRNMap[assistReply.id]?.rebuild();
+        _chatItemRNMap[assistReply.id]?.rebuild();
       },
       onError: (e, trace) {
         Loggers.app.warning('Listen chat stream: $e');
@@ -556,7 +545,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
   );
 }
 
-Future<void> _onSendTTS(BuildContext context, String chatId) async {
+Future<void> _onCreateTTS(BuildContext context, String chatId) async {
   if (isWeb) {
     final msg = l10n.notSupported('TTS Web');
     Loggers.app.warning(msg);
@@ -574,10 +563,9 @@ Future<void> _onSendTTS(BuildContext context, String chatId) async {
   }
   final config = _getChatConfig(chatId);
   final questionContent = _inputCtrl.text;
-  final question = ChatHistoryItem.noid(
-    content: [
-      ChatContent(type: ChatContentType.text, raw: questionContent),
-    ],
+  final question = ChatHistoryItem.single(
+    type: ChatContentType.text,
+    raw: questionContent,
     role: ChatRole.user,
   );
   workingChat.items.add(question);
@@ -615,21 +603,80 @@ Future<void> _onSendTTS(BuildContext context, String chatId) async {
   }
 }
 
-void _onSend(BuildContext context, String chatId) {
+void _onCreateImg(BuildContext context) async {
+  final result = _imagesMap[_curChatId];
+  if (result == null) return;
+  final workingChat = _allHistories[_curChatId];
+  if (workingChat == null) return;
+  final chatItem = ChatHistoryItem.single(
+    type: ChatContentType.image,
+    raw: result.path,
+    role: ChatRole.user,
+  );
+  workingChat.items.add(chatItem);
+  _chatRN.rebuild();
+  _storeChat(_curChatId, context);
+  _imagesMap.remove(_curChatId);
+}
+
+void _onCreateRequest(BuildContext context, String chatId) {
   final modelType = ModelType.fromString(_getChatConfig(chatId).model);
+  final err = switch (modelType) {
+    ModelType.tts => isWeb ? 'TTS Web' : null,
+    _ => null,
+  };
+  if (err != null) {
+    final msg = l10n.notSupported(err);
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
   switch (modelType) {
     case ModelType.text:
-      _onSendChat(chatId, context);
+      _onCreateChat(chatId, context);
       break;
     case ModelType.tts:
-      _onSendTTS(context, chatId);
+      _onCreateTTS(context, chatId);
       break;
     case ModelType.image:
-      // _onSendImg();
+      _onCreateImg(context);
       break;
     default:
       final msg = 'Unknown modelType: $modelType';
       Loggers.app.warning(msg);
       context.showSnackBar(msg);
+  }
+}
+
+void _onTapAudioCtrl(
+  AudioPlayStatus val,
+  ChatHistoryItem chatItem,
+  ValueNotifier<AudioPlayStatus> listenable,
+) async {
+  if (val.playing) {
+    _audioPlayer.pause();
+    _nowPlayingId = null;
+    listenable.value = val.copyWith(playing: false);
+  } else {
+    if (_nowPlayingId == chatItem.id) {
+      _audioPlayer.resume();
+      _nowPlayingId = chatItem.id;
+      listenable.value = val.copyWith(playing: true);
+      return;
+    } else {
+      if (_nowPlayingId != null) {
+        final last = _audioPlayerMap[_nowPlayingId];
+        if (last != null) {
+          _audioPlayer.pause();
+          _nowPlayingId = null;
+          last.value = last.value.copyWith(playing: false);
+        }
+      }
+    }
+    _nowPlayingId = chatItem.id;
+    listenable.value = val.copyWith(playing: true);
+    _audioPlayer.play(DeviceFileSource(
+      '${await Paths.audio}/${chatItem.id}.mp3',
+    ));
   }
 }

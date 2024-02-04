@@ -43,6 +43,7 @@ import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/slide_trans.dart';
 import 'package:flutter_chatgpt/view/widget/switch_page_indicator.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uni_links/uni_links.dart';
@@ -223,19 +224,14 @@ class _HomePageState extends State<HomePage>
 
   void _listenAudioPlayer() {
     _audioPlayer.onPositionChanged.listen((position) {
-      final listenable = _audioPlayerMap[_nowPlayingId];
-      if (listenable == null) return;
-      listenable.value = listenable.value.copyWith(
-        playedMilli: position.inMilliseconds,
-      );
+      final status = _audioPlayerMap[_nowPlayingId];
+      if (status == null) return;
+      status.value = status.value.copyWith(played: position.inMilliseconds);
     });
     _audioPlayer.onPlayerComplete.listen((_) {
-      final listenable = _audioPlayerMap[_nowPlayingId];
-      if (listenable == null) return;
-      listenable.value = listenable.value.copyWith(
-        playing: false,
-        playedMilli: 0,
-      );
+      final status = _audioPlayerMap[_nowPlayingId];
+      if (status == null) return;
+      status.value = status.value.copyWith(playing: false, played: 0);
     });
   }
 }

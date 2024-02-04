@@ -19,7 +19,7 @@ abstract final class AppLink {
         _switchChat(chat.id);
         if (msg != null) {
           _inputCtrl.text = msg;
-          _onSendChat(chat.id, context);
+          _onCreateChat(chat.id, context);
         }
         return true;
       case '/open':

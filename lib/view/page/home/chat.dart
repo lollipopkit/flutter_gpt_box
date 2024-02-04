@@ -76,25 +76,19 @@ class _ChatPageState extends State<_ChatPage>
 
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
-    final node = _mdRNMap.putIfAbsent(chatItem.id, () => RebuildNode());
+    final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RebuildNode());
     final child = ListenableBuilder(
       listenable: node,
       builder: (_, __) {
-        final isAudio =
-            chatItem.content.any((e) => e.type == ChatContentType.audio);
-        if (isAudio) return _buildAudio(chatItem);
-        return MarkdownBody(
-          data: chatItem.toMarkdown,
-          builders: {
-            'code': CodeElementBuilder(onCopy: _onCopy),
-          },
-          extensionSet: MarkdownUtils.extensionSet,
-          onTapLink: MarkdownUtils.onLinkTap,
-          shrinkWrap: false,
-          fitContent: false,
-
-          /// User experience is better when this is false.
-          selectable: false,
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: chatItem.content
+              .map((e) => switch (e.type) {
+                    ChatContentType.text => _buildText(chatItem),
+                    ChatContentType.audio => _buildAudio(chatItem),
+                    _ => Text('Unknown type: ${e.type}'),
+                  })
+              .toList(),
         );
       },
     );
@@ -104,15 +98,32 @@ class _ChatPageState extends State<_ChatPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildChatItemBtn(chatItems, chatItem),
-          Stores.setting.softWrap.fetch()
-              ? child
-              : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: child,
-                ),
+          child,
         ],
       ),
     );
+  }
+
+  Widget _buildText(ChatHistoryItem chatItem) {
+    final child = MarkdownBody(
+      data: chatItem.toMarkdown,
+      builders: {
+        'code': CodeElementBuilder(onCopy: _onCopy),
+      },
+      extensionSet: MarkdownUtils.extensionSet,
+      onTapLink: MarkdownUtils.onLinkTap,
+      shrinkWrap: false,
+      fitContent: false,
+
+      /// User experience is better when this is false.
+      selectable: false,
+    );
+    return Stores.setting.softWrap.fetch()
+        ? child
+        : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: child,
+          );
   }
 
   Widget _buildAudio(ChatHistoryItem chatItem) {
@@ -139,7 +150,7 @@ class _ChatPageState extends State<_ChatPage>
       loading: UIs.centerSizedLoading,
       success: (duration) {
         listenable.value = listenable.value.copyWith(
-          totalMilli: duration?.inMilliseconds ?? 0,
+          total: duration?.inMilliseconds ?? 0,
         );
         return ValueListenableBuilder(
           valueListenable: listenable,
@@ -147,46 +158,18 @@ class _ChatPageState extends State<_ChatPage>
             return ListTile(
               leading: IconButton(
                 icon: val.playing
-                    ? const Icon(Icons.stop)
-                    : const Icon(Icons.play_arrow),
-                onPressed: () async {
-                  if (val.playing) {
-                    _audioPlayer.pause();
-                    _nowPlayingId = null;
-                    listenable.value = val.copyWith(playing: false);
-                  } else {
-                    if (_nowPlayingId == chatItem.id) {
-                      _audioPlayer.resume();
-                      _nowPlayingId = chatItem.id;
-                      listenable.value = val.copyWith(playing: true);
-                      return;
-                    } else {
-                      if (_nowPlayingId != null) {
-                        final last = _audioPlayerMap[_nowPlayingId];
-                        if (last != null) {
-                          _audioPlayer.pause();
-                          _nowPlayingId = null;
-                          last.value = last.value.copyWith(playing: false);
-                        }
-                      }
-                    }
-                    _nowPlayingId = chatItem.id;
-                    listenable.value = val.copyWith(playing: true);
-                    _audioPlayer.play(DeviceFileSource(
-                      '${await Paths.audio}/${chatItem.id}.mp3',
-                    ));
-                  }
-                },
+                    ? const Icon(Icons.stop, size: 19)
+                    : const Icon(Icons.play_arrow, size: 19),
+                onPressed: () => _onTapAudioCtrl(val, chatItem, listenable),
               ),
               title: Slider(
-                value: duration == null
-                    ? 0.0
-                    : val.playedMilli / val.totalMilli,
+                value:
+                    duration == null ? 0.0 : val.played / val.total,
                 onChanged: (v) {
-                  final nowMilli = (val.totalMilli * v).toInt();
+                  final nowMilli = (val.total * v).toInt();
                   final duration = Duration(milliseconds: nowMilli);
                   _audioPlayer.seek(duration);
-                  listenable.value = val.copyWith(playedMilli: nowMilli);
+                  listenable.value = val.copyWith(played: nowMilli);
                 },
               ),
             );

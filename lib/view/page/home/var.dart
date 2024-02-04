@@ -8,7 +8,7 @@ final _screenshotCtrl = ScreenshotController();
 
 final _timeRN = RebuildNode();
 // Map for markdown rebuild nodes
-final _mdRNMap = <String, RebuildNode>{};
+final _chatItemRNMap = <String, RebuildNode>{};
 // RebuildNodes for history list items
 final _historyRNMap = <String, RebuildNode>{};
 
@@ -17,6 +17,8 @@ final _audioPlayer = AudioPlayer();
 final _audioPlayerMap = <String, ValueNotifier<AudioPlayStatus>>{};
 String? _nowPlayingId;
 final _audioLoadingMap = <String, Completer>{};
+
+final _imagesMap = <String, XFile>{};
 
 // For page body chat view
 final _chatRN = RebuildNode();

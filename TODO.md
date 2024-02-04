@@ -12,17 +12,14 @@
   - [x] Theme
   - [x] Auto scroll to bottom when GPT is genenrating text 
   - [x] Desktop view
-- [x] Backup
-  - [x] iCloud
-  - [x] File
-  - [x] Clipboard
-  - [x] WebDAV
-- [x] Restore
-  - [x] from ChatGPT Next Web backup file
-  - [x] iCloud
-  - [x] File
-  - [x] Clipboard
-  - [x] WebDAV
+- [x] Sync
+  - [x] Channel 
+    - [x] Restore from ChatGPT Next Web backup file
+    - [x] iCloud
+    - [x] File
+    - [x] Clipboard
+    - [x] WebDAV
+  - [ ] Sync media files
 - [x] URL Scheme
   - [x] Config: `lk-gptbox://app/set?openAiUrl=&openAiKey=&openAiModel=&chatId=`
     - If chatId is not provided, it will config global settings
