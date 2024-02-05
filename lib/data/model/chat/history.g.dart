@@ -20,22 +20,19 @@ class ChatHistoryAdapter extends TypeAdapter<ChatHistory> {
       items: (fields[1] as List).cast<ChatHistoryItem>(),
       id: fields[0] as String,
       name: fields[2] as String?,
-      config: fields[3] as ChatConfig?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatHistory obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.items)
       ..writeByte(2)
-      ..write(obj.name)
-      ..writeByte(3)
-      ..write(obj.config);
+      ..write(obj.name);
   }
 
   @override

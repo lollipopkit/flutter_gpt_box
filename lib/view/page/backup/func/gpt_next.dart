@@ -31,7 +31,7 @@ void _onTapRestoreGPTNext(BuildContext context) async {
         }
         return (chats, GPTNextConvertor.parseConfig(obj, params.$2));
       },
-      (picked, ChatConfig.fromStore()),
+      (picked, OpenAICfg.current),
     );
     context.pop();
 
@@ -66,8 +66,10 @@ void _onTapRestoreGPTNext(BuildContext context) async {
               Stores.history.put(chat);
             }
             if (!onlyRestoreHistory) {
-              Stores.setting.openaiApiUrl.put(cfg.url);
-              Stores.setting.openaiApiKey.put(cfg.key);
+              OpenAICfg.current = OpenAICfg.current.copyWith(
+                url: cfg.url,
+                key: cfg.key,
+              );
             }
             context.pop();
             RebuildNode.app.rebuild();

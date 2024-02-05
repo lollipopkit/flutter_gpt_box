@@ -7,10 +7,12 @@ import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/locale.dart';
 import 'package:flutter_chatgpt/core/ext/string.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
+import 'package:flutter_chatgpt/core/store.dart';
 import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/core/util/ui.dart';
+import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
@@ -35,6 +37,7 @@ class _SettingPageState extends State<SettingPage> {
   final _store = Stores.setting;
 
   var localeStr = '';
+  final _cfgRN = RebuildNode();
 
   @override
   Widget build(BuildContext context) {
@@ -216,249 +219,267 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _buildChat() {
-    final children = [
-      _buildOpenAIKey(),
-      _buildOpenAIUrl(),
-      _buildOpenAIModels(),
-      _buildPrompt(),
-      _buildHistoryLength(),
-    ];
-    return Column(
-      children: children.map((e) => CardX(child: e)).toList(),
-    );
-  }
-
-  Widget _buildOpenAIKey() {
-    return ValueListenableBuilder(
-      valueListenable: _store.openaiApiKey.listenable(),
-      builder: (_, val, __) {
-        return ListTile(
-          leading: const Icon(Icons.vpn_key),
-          title: Text(l10n.secretKey),
-          trailing: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 60),
-            child: Text(
-              val.isEmpty ? l10n.empty : val,
-              style: UIs.textGrey,
-              textAlign: TextAlign.end,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          onTap: () async {
-            final ctrl = TextEditingController(text: val);
-            final result = await context.showRoundDialog<String>(
-              title: l10n.edit,
-              child: Input(
-                controller: ctrl,
-                hint: 'sk-xxx',
-                maxLines: 3,
-              ),
-              actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
-            );
-            if (result == null) return;
-            _store.openaiApiKey.put(result);
-            OpenAICfg.key = result;
-          },
+    return ListenableBuilder(
+      listenable: _cfgRN,
+      builder: (_, __) {
+        final cfg = OpenAICfg.current;
+        final children = [
+          _buildSwitchCfg(cfg),
+          _buildOpenAIKey(cfg.key),
+          _buildOpenAIUrl(cfg.url),
+          _buildOpenAIModels(cfg),
+          _buildPrompt(cfg.prompt),
+          _buildHistoryLength(cfg.historyLen),
+        ];
+        return Column(
+          children: children.map((e) => CardX(child: e)).toList(),
         );
       },
     );
   }
 
-  Widget _buildOpenAIUrl() {
-    return ValueListenableBuilder(
-      valueListenable: _store.openaiApiUrl.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.link),
-        title: Text(l10n.apiUrl),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
-          val.isEmpty ? l10n.empty : val,
-          style: UIs.text13Grey,
-        ),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val);
-          final result = await context.showRoundDialog<String>(
-            title: l10n.edit,
-            child: Input(
-              controller: ctrl,
-              hint: 'https://api.openai.com',
-              maxLines: 3,
-            ),
-            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
-          );
-          if (result == null) return;
-          if (result.contains('/v1') || !OpenAICfg.apiUrlReg.hasMatch(result)) {
-            final sure = await context.showRoundDialog(
-              title: l10n.attention,
-              child: Text(l10n.apiUrlTip),
-              actions: Btns.oks(onTap: () => context.pop(true), red: true),
-            );
-            if (sure != true) return;
-          }
-          _store.openaiApiUrl.put(result);
-          OpenAICfg.url = result;
-        },
+  Widget _buildSwitchCfg(ChatConfig cfg) {
+    return ListTile(
+      leading: const Icon(Icons.switch_account),
+      title: Text('Profile'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextButton(onPressed: () {}, child: Text(l10n.add)),
+          TextButton(
+              onPressed: () async {
+                final profileNames = Stores.config.box.getKeys();
+                final current = cfg.name;
+                final result = await context.showPickSingleDialog(
+                  items: profileNames,
+                  initial: current,
+                );
+                if (result == null) return;
+                Stores.setting.chatConfigId.put(result);
+                OpenAICfg.switchTo(result);
+                _cfgRN.rebuild();
+              },
+              child: Text(l10n.select))
+        ],
       ),
+      subtitle: Text(cfg.name ?? l10n.untitled),
     );
   }
 
-  Widget _buildOpenAIModels() {
+  Widget _buildOpenAIKey(String val) {
+    return ListTile(
+      leading: const Icon(Icons.vpn_key),
+      title: Text(l10n.secretKey),
+      trailing: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 60),
+        child: Text(
+          val.isEmpty ? l10n.empty : val,
+          style: UIs.textGrey,
+          textAlign: TextAlign.end,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val);
+        final result = await context.showRoundDialog<String>(
+          title: l10n.edit,
+          child: Input(
+            controller: ctrl,
+            hint: 'sk-xxx',
+            maxLines: 3,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (result == null) return;
+        OpenAICfg.current = OpenAICfg.current.copyWith(key: result);
+        _cfgRN.rebuild();
+      },
+    );
+  }
+
+  Widget _buildOpenAIUrl(String val) {
+    return ListTile(
+      leading: const Icon(Icons.link),
+      title: Text(l10n.apiUrl),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(
+        val.isEmpty ? l10n.empty : val,
+        style: UIs.text13Grey,
+      ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val);
+        final result = await context.showRoundDialog<String>(
+          title: l10n.edit,
+          child: Input(
+            controller: ctrl,
+            hint: 'https://api.openai.com',
+            maxLines: 3,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (result == null) return;
+        if (result.contains('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
+          final sure = await context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.apiUrlTip),
+            actions: Btns.oks(onTap: () => context.pop(true), red: true),
+          );
+          if (sure != true) return;
+        }
+        OpenAICfg.current = OpenAICfg.current.copyWith(url: result);
+        _cfgRN.rebuild();
+      },
+    );
+  }
+
+  Widget _buildOpenAIModels(ChatConfig cfg) {
     return ExpandTile(
       leading: const Icon(Icons.model_training),
       title: Text(l10n.model),
       children: [
-        _buildOpenAIChatModel(),
-        _buildOpenAIGenTitleModel(),
+        _buildOpenAIChatModel(cfg),
+        _buildOpenAIGenTitleModel(cfg),
       ],
     );
   }
 
-  Widget _buildOpenAIChatModel() {
-    return ValueListenableBuilder(
-      valueListenable: _store.openaiModel.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.chat),
-        title: Text(l10n.chat),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
-          val,
-          style: UIs.text13Grey,
-        ),
-        onTap: () async {
-          if (_store.openaiApiKey.fetch().isEmpty) {
-            context.showRoundDialog(
-              title: l10n.attention,
-              child: Text(l10n.needOpenAIKey),
-              actions: Btns.oks(onTap: () => context.pop()),
-            );
-            return;
-          }
-          context.showLoadingDialog();
-          final models = await OpenAI.instance.model.list();
-          context.pop();
-          final modelStrs = models.map((e) => e.id).toList();
-          //modelStrs.removeWhere((element) => !element.startsWith('gpt'));
-          final model = await context.showPickSingleDialog(
-            items: modelStrs,
-            initial: val,
-          );
-          if (model != null) {
-            _store.openaiModel.put(model);
-          }
-        },
+  Widget _buildOpenAIChatModel(ChatConfig cfg) {
+    final val = cfg.model;
+    return ListTile(
+      leading: const Icon(Icons.chat),
+      title: Text(l10n.chat),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(
+        val,
+        style: UIs.text13Grey,
       ),
-    );
-  }
-
-  Widget _buildOpenAIGenTitleModel() {
-    final property = _store.openaiGenTitleModel;
-    return ValueListenableBuilder(
-      valueListenable: property.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.title),
-        title: Text(l10n.genChatTitle),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
-          l10n.genTitleTip(val.isEmpty ? l10n.empty : val),
-          style: UIs.text13Grey,
-        ),
-        onTap: () async {
-          if (_store.openaiApiKey.fetch().isEmpty) {
-            context.showRoundDialog(
-              title: l10n.attention,
-              child: Text(l10n.needOpenAIKey),
-              actions: Btns.oks(onTap: () => context.pop()),
-            );
-            return;
-          }
-          context.showLoadingDialog();
-          final models = await OpenAI.instance.model.list();
-          context.pop();
-          final modelStrs = models.map((e) => e.id).toList();
-          modelStrs.removeWhere((element) => !element.startsWith('gpt'));
-          final model = await context.showPickSingleDialog(
-            items: modelStrs,
-            initial: val,
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(''),
-                child: Text(l10n.clear),
-              ),
-            ],
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
           );
-          if (model != null) {
-            property.put(model);
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildPrompt() {
-    return ValueListenableBuilder(
-      valueListenable: _store.prompt.listenable(),
-      builder: (_, val, __) {
-        return ListTile(
-          leading: const Icon(Icons.abc),
-          title: Text(l10n.promptsSettingsItem),
-          trailing: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 60),
-            child: Text(
-              val.isEmpty ? l10n.empty : val,
-              style: UIs.textGrey,
-              textAlign: TextAlign.end,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          onTap: () async {
-            final ctrl = TextEditingController(text: val);
-            final result = await context.showRoundDialog<String>(
-              title: l10n.edit,
-              child: Input(
-                controller: ctrl,
-                maxLines: 3,
-              ),
-              actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
-            );
-            if (result == null) return;
-            _store.prompt.put(result);
-          },
+          return;
+        }
+        context.showLoadingDialog();
+        final models = await OpenAI.instance.model.list();
+        context.pop();
+        final modelStrs = models.map((e) => e.id).toList();
+        //modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
         );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          _cfgRN.rebuild();
+        }
       },
     );
   }
 
-  Widget _buildHistoryLength() {
-    return ValueListenableBuilder(
-      valueListenable: _store.historyLength.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.history),
-        title: Text(l10n.chatHistoryLength),
-        trailing: Text(
-          val.toString(),
-          style: UIs.text13Grey,
-        ),
-        subtitle: Text(l10n.chatHistoryTip, style: UIs.textGrey),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val.toString());
-          final result = await context.showRoundDialog<String>(
-            title: l10n.edit,
-            child: Input(
-              controller: ctrl,
-              hint: '7',
-              type: TextInputType.number,
-            ),
-            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
-          );
-          if (result == null) return;
-          final newVal = int.tryParse(result);
-          if (newVal == null) {
-            context.showSnackBar('Invalid number: $result');
-            return;
-          }
-          _store.historyLength.put(newVal);
-        },
+  Widget _buildOpenAIGenTitleModel(ChatConfig cfg) {
+    final val = cfg.genTitleModel;
+    return ListTile(
+      leading: const Icon(Icons.title),
+      title: Text(l10n.genChatTitle),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(
+        l10n.genTitleTip(val == null || val.isEmpty ? l10n.empty : val),
+        style: UIs.text13Grey,
       ),
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
+          );
+          return;
+        }
+        context.showLoadingDialog();
+        final models = await OpenAI.instance.model.list();
+        context.pop();
+        final modelStrs = models.map((e) => e.id).toList();
+        modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
+          actions: [
+            TextButton(
+              onPressed: () => context.pop(''),
+              child: Text(l10n.clear),
+            ),
+          ],
+        );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(genTitleModel: model);
+          _cfgRN.rebuild();
+        }
+      },
+    );
+  }
+
+  Widget _buildPrompt(String val) {
+    return ListTile(
+      leading: const Icon(Icons.abc),
+      title: Text(l10n.promptsSettingsItem),
+      trailing: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 60),
+        child: Text(
+          val.isEmpty ? l10n.empty : val,
+          style: UIs.textGrey,
+          textAlign: TextAlign.end,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val);
+        final result = await context.showRoundDialog<String>(
+          title: l10n.edit,
+          child: Input(
+            controller: ctrl,
+            maxLines: 3,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (result == null) return;
+        OpenAICfg.current = OpenAICfg.current.copyWith(prompt: result);
+        _cfgRN.rebuild();
+      },
+    );
+  }
+
+  Widget _buildHistoryLength(int val) {
+    return ListTile(
+      leading: const Icon(Icons.history),
+      title: Text(l10n.chatHistoryLength),
+      trailing: Text(
+        val.toString(),
+        style: UIs.text13Grey,
+      ),
+      subtitle: Text(l10n.chatHistoryTip, style: UIs.textGrey),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val.toString());
+        final result = await context.showRoundDialog<String>(
+          title: l10n.edit,
+          child: Input(
+            controller: ctrl,
+            hint: '7',
+            type: TextInputType.number,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (result == null) return;
+        final newVal = int.tryParse(result);
+        if (newVal == null) {
+          context.showSnackBar('Invalid number: $result');
+          return;
+        }
+        OpenAICfg.current = OpenAICfg.current.copyWith(historyLen: newVal);
+        _cfgRN.rebuild();
+      },
     );
   }
 

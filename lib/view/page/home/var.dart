@@ -18,7 +18,7 @@ final _audioPlayerMap = <String, ValueNotifier<AudioPlayStatus>>{};
 String? _nowPlayingId;
 final _audioLoadingMap = <String, Completer>{};
 
-final _imagesMap = <String, XFile>{};
+final _imagePicked = ValueNotifier<XFile?>(null); 
 
 // For page body chat view
 final _chatRN = RebuildNode();

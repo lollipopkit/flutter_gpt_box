@@ -3,7 +3,6 @@ part of 'home.dart';
 void _switchChat([String? id]) {
   id ??= _allHistories.keys.firstOrNull ?? _newChat().id;
   _curChatId = id;
-  _applyChatConfig(_getChatConfig(_curChatId));
   _chatItemRNMap.clear();
   _chatRN.rebuild();
   _sendBtnRN.rebuild();
@@ -43,7 +42,7 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
     context.showSnackBar(msg);
     return;
   }
-  final config = _getChatConfig(chatId);
+  final config = OpenAICfg.current;
   final questionContent = switch ((
     config.prompt,
     config.historyLen,
@@ -116,7 +115,7 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
         _sendBtnRN.rebuild();
-        await _genChatTitle(chatId, context);
+        await _genChatTitle(context, chatId, config);
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
         SyncService.sync();
@@ -149,27 +148,6 @@ ChatHistory _newChat() {
   return newHistory;
 }
 
-void _applyChatConfig(ChatConfig config) {
-  OpenAICfg.key = config.key;
-  OpenAICfg.url = config.url;
-}
-
-ChatConfig _getChatConfig(String chatId) {
-  return _allHistories[chatId]?.config ?? ChatConfig.fromStore();
-}
-
-void _onTapSetting(BuildContext context) async {
-  final config = _getChatConfig(_curChatId);
-  final result = await context.showRoundDialog<ChatConfig>(
-    title: '${l10n.settings} (${l10n.current})',
-    child: _CurrentChatSettings(config: config),
-  );
-  if (result == null) return;
-  _allHistories[_curChatId]?.config = result;
-  _storeChat(_curChatId, context);
-  _applyChatConfig(config);
-}
-
 void _onTapDeleteChat(String chatId, BuildContext context) {
   final entity = _allHistories[chatId];
   if (entity == null) {
@@ -179,8 +157,8 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
     return;
   }
 
-  /// If config is null and items is empty, delete it directly
-  if (entity.config == null && entity.items.isEmpty) {
+  /// If items is empty, delete it directly
+  if (entity.items.isEmpty) {
     _onDeleteChat(chatId);
     return;
   }
@@ -225,6 +203,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
     title: l10n.rename,
     child: Input(
       controller: ctrl,
+      autoFocus: true,
       onSubmitted: (p0) => context.pop(p0),
     ),
     actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
@@ -241,9 +220,13 @@ void _onStopStreamSub(String chatId) {
   _sendBtnRN.rebuild();
 }
 
-Future<void> _genChatTitle(String chatId, BuildContext context) async {
-  final model = Stores.setting.openaiGenTitleModel.fetch();
-  if (model.isEmpty) return;
+Future<void> _genChatTitle(
+  BuildContext context,
+  String chatId,
+  ChatConfig cfg,
+) async {
+  final model = cfg.genTitleModel;
+  if (model == null || model.isEmpty) return;
   final entity = _allHistories[chatId];
   if (entity?.items.length != 2) return;
   if (entity == null) {
@@ -310,7 +293,7 @@ Future<void> _onTapImgPick() async {
   final picker = ImagePicker();
   final result = await picker.pickImage(source: ImageSource.gallery);
   if (result == null) return;
-  _imagesMap[_curChatId] = result;
+  _imagePicked.value = result;
 }
 
 void loadFromStore() {
@@ -443,7 +426,7 @@ void _onReplay({
     chatHistory.items.removeAt(itemIdx + 1);
   }
 
-  final config = _getChatConfig(chatId);
+  final config = OpenAICfg.current;
   final questionContent = switch ((
     config.prompt,
     config.historyLen,
@@ -561,7 +544,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
     context.showSnackBar(msg);
     return;
   }
-  final config = _getChatConfig(chatId);
+  final config = OpenAICfg.current;
   final questionContent = _inputCtrl.text;
   final question = ChatHistoryItem.single(
     type: ChatContentType.text,
@@ -604,23 +587,32 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
 }
 
 void _onCreateImg(BuildContext context) async {
-  final result = _imagesMap[_curChatId];
-  if (result == null) return;
+  final prompt = _inputCtrl.text;
+  if (prompt.isEmpty) return;
+  _imeFocus.unfocus();
+  _inputCtrl.clear();
+
+  final resp = await OpenAI.instance.image.create(prompt: prompt);
+}
+
+void _onEditImage(BuildContext context) async {
+  final val = _imagePicked.value;
+  if (val == null) return;
   final workingChat = _allHistories[_curChatId];
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.single(
     type: ChatContentType.image,
-    raw: result.path,
+    raw: val.path,
     role: ChatRole.user,
   );
   workingChat.items.add(chatItem);
   _chatRN.rebuild();
   _storeChat(_curChatId, context);
-  _imagesMap.remove(_curChatId);
+  _imagePicked.value = null;
 }
 
 void _onCreateRequest(BuildContext context, String chatId) {
-  final modelType = ModelType.fromString(_getChatConfig(chatId).model);
+  final modelType = ModelType.fromString(OpenAICfg.current.model);
   final err = switch (modelType) {
     ModelType.tts => isWeb ? 'TTS Web' : null,
     _ => null,

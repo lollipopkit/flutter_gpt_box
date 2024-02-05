@@ -24,9 +24,12 @@
   - [x] Config: `lk-gptbox://app/set?openAiUrl=&openAiKey=&openAiModel=&chatId=`
     - If chatId is not provided, it will config global settings
     - If chatId not exists, it will create a new chat
-    - On web, it's `https://gpt.lolli.tech/set?openAiUrl=&openAiKey=&openAiModel=&chatId=`
+    - [ ] On web, it's `https://gpt.lolli.tech/set?openAiUrl=&openAiKey=&openAiModel=&chatId=`
   - [x] Chat
     - [x] New: `lk-gptbox://app/new?msg=`
     - [x] Open: `lk-gptbox://app/open?chatId=`
     - [x] Search: `lk-gptbox://app/search?keyword=`
     - [x] Share: `lk-gptbox://app/share?chatId=`
+- [ ] Plugin
+  - [ ] Engine (Webview?)
+  - [ ] Share Center

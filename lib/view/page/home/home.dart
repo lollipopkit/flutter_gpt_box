@@ -48,7 +48,6 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uni_links/uni_links.dart';
 
-part 'setting.dart';
 part 'chat.dart';
 part 'history.dart';
 part 'var.dart';
@@ -234,4 +233,8 @@ class _HomePageState extends State<HomePage>
       status.value = status.value.copyWith(playing: false, played: 0);
     });
   }
+
+  // void _checkInvalidModels() {
+  //   final validModels = 
+  // }
 }

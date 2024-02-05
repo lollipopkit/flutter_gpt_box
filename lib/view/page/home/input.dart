@@ -20,14 +20,10 @@ Widget _buildInput(BuildContext context) {
           Row(
             children: [
               // IconButton(
-              //   onPressed: _onImgPick,
-              //   icon: const Icon(Icons.photo, size: 19),
+              //   onPressed: () => _onTapSetting(context),
+              //   icon: const Icon(Icons.settings, size: 19),
+              //   tooltip: l10n.settings,
               // ),
-              IconButton(
-                onPressed: () => _onTapSetting(context),
-                icon: const Icon(Icons.settings, size: 19),
-                tooltip: l10n.settings,
-              ),
               IconButton(
                 onPressed: () {
                   _switchChat(_newChat().id);
@@ -60,6 +56,10 @@ Widget _buildInput(BuildContext context) {
             onSubmitted: (p0) {
               _onCreateRequest(context, _curChatId);
             },
+            prefix: const IconButton(
+              onPressed: _onTapImgPick,
+              icon: Icon(Icons.photo, size: 19),
+            ),
             onTap: () {
               if (_curPage.value != HomePageEnum.chat) {
                 _pageCtrl.animateToPage(

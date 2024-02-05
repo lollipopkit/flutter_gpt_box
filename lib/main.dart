@@ -118,4 +118,5 @@ Future<void> _initDesktopWindow() async {
 Future<void> _loadStores() async {
   await Stores.history.init();
   await Stores.setting.init();
+  await Stores.config.init();
 }

@@ -1,6 +1,7 @@
 {
   "@@locale": "zh",
   "about": "关于",
+  "add": "添加",
   "apiUrl": "Api 地址",
   "apiUrlTip": "API Url 应该类似 `https://api.openai.com`，且不需要最后的 `/v1`。继续使用该 URL 吗？",
   "assistant": "助手",

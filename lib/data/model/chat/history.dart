@@ -1,5 +1,4 @@
 import 'package:dart_openai/dart_openai.dart';
-import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -14,20 +13,16 @@ final class ChatHistory {
   final List<ChatHistoryItem> items;
   @HiveField(2)
   String? name;
-  @HiveField(3)
-  ChatConfig? config;
 
   ChatHistory({
     required this.items,
     required this.id,
     this.name,
-    this.config,
   });
 
   ChatHistory.noid({
     required this.items,
     this.name,
-    this.config,
   }) : id = uuid.v4();
 
   static ChatHistory get empty => ChatHistory.noid(items: []);
@@ -37,7 +32,6 @@ final class ChatHistory {
       'id': id,
       'name': name,
       'items': items.map((e) => e.toJson()).toList(),
-      'config': config?.toJson(),
     };
   }
 
@@ -48,9 +42,6 @@ final class ChatHistory {
       items: (json['items'] as List)
           .map((e) => ChatHistoryItem.fromJson(e.cast<String, dynamic>()))
           .toList(),
-      config: json['config'] == null
-          ? null
-          : ChatConfig.fromJson(json['config'].cast<String, dynamic>()),
     );
   }
 

@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
   "about": "About",
+  "add": "Add",
   "apiUrl": "API URL",
   "apiUrlTip": "API URL should be like `https://api.openai.com` without the trailing `/v1`. Continue to use this URL?",
   "assistant": "Assistant",
