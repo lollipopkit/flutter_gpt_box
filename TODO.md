@@ -6,12 +6,15 @@
   - [x] History list locate
   - [x] Replay (edit question and resend)
   - [x] Latex formula render
-  - [x] Auto generate title
-  - [x] Soft wrap switch
+  - [x] Image create / edit / varify
+  - [x] TTS / STT
+  - [x] Multimodel 
 - [x] User experience 
   - [x] Theme
   - [x] Auto scroll to bottom when GPT is genenrating text 
   - [x] Desktop view
+  - [x] Auto generate title
+  - [x] Soft wrap switch
 - [x] Sync
   - [x] Channel 
     - [x] Restore from ChatGPT Next Web backup file
@@ -33,3 +36,6 @@
 - [ ] Plugin
   - [ ] Engine (Webview?)
   - [ ] Share Center
+- [ ] Update
+  - [ ] Breaking changes notify
+  - [x] Update service 

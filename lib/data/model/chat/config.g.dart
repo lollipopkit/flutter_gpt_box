@@ -21,22 +21,19 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       url: fields[1] as String,
       key: fields[2] as String,
       model: fields[3] as String,
-      seed: fields[4] as int?,
-      temperature: fields[5] as double?,
       historyLen: fields[6] as int,
       id: fields[7] as String,
-      name: fields[8] as String?,
-      imgModel: fields[9] as String?,
-      speechModel: fields[10] as String?,
-      translationModel: fields[11] as String?,
-      genTitleModel: fields[12] as String?,
+      name: fields[8] as String,
+      imgModel: fields[9] as String,
+      speechModel: fields[10] as String,
+      transcribeModel: fields[11] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatConfig obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.prompt)
       ..writeByte(1)
@@ -45,10 +42,6 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       ..write(obj.key)
       ..writeByte(3)
       ..write(obj.model)
-      ..writeByte(4)
-      ..write(obj.seed)
-      ..writeByte(5)
-      ..write(obj.temperature)
       ..writeByte(6)
       ..write(obj.historyLen)
       ..writeByte(7)
@@ -60,9 +53,7 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       ..writeByte(10)
       ..write(obj.speechModel)
       ..writeByte(11)
-      ..write(obj.translationModel)
-      ..writeByte(12)
-      ..write(obj.genTitleModel);
+      ..write(obj.transcribeModel);
   }
 
   @override

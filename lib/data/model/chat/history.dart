@@ -75,6 +75,11 @@ final class ChatHistoryItem {
     required this.id,
   });
 
+  ChatHistoryItem.gen({
+    required this.role,
+    required this.content,
+  }) : createdAt = DateTime.now(), id = uuid.v4();
+
   ChatHistoryItem.single({
     required this.role,
     String raw = '',
@@ -99,7 +104,9 @@ final class ChatHistoryItem {
     return content
         .map((e) => switch (e.type) {
               ChatContentType.text => e.raw,
-              ChatContentType.image => '![](${e.raw})',
+              ChatContentType.imagePath => '![](file://${e.raw})',
+              ChatContentType.imageUrl => '![](${e.raw})',
+              ChatContentType.imageBase64 => '![](base64://${e.raw})',
               final type => throw UnimplementedError('type: $type'),
             })
         .join('\n');
@@ -144,13 +151,17 @@ enum ChatContentType {
   @HiveField(0)
   text,
   @HiveField(1)
-  image,
+  imagePath,
   @HiveField(2)
-  video,
+  videoPath,
   @HiveField(3)
-  audio,
+  audioPath,
   @HiveField(4)
-  file,
+  filePath,
+  @HiveField(5)
+  imageUrl,
+  @HiveField(6)
+  imageBase64,
   ;
 }
 
@@ -167,9 +178,9 @@ final class ChatContent {
       switch (type) {
         ChatContentType.text =>
           OpenAIChatCompletionChoiceMessageContentItemModel.text(raw),
-        ChatContentType.image =>
+        ChatContentType.imageUrl =>
           OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(raw),
-        _ => throw UnimplementedError(),
+        _ => throw UnimplementedError('$type.toOpenAI'),
       };
 
   Map<String, dynamic> toJson() {

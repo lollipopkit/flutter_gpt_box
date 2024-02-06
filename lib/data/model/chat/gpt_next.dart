@@ -82,14 +82,12 @@ abstract final class GPTNextConvertor {
         'app-config': {
           'modelConfig': {
             'model': String model,
-            'temperature': double temperature,
             'historyMessageCount': int historyMessageCount,
           }
         },
       } = map;
       cfg = cfg.copyWith(
         model: model,
-        temperature: temperature,
         historyLen: historyMessageCount,
       );
     } catch (e) {

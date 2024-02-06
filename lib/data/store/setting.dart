@@ -1,5 +1,4 @@
 import 'package:flutter_chatgpt/core/store.dart';
-import 'package:flutter_chatgpt/data/model/chat/config.dart';
 
 class SettingStore extends Store {
   SettingStore() : super('setting');
@@ -21,16 +20,15 @@ class SettingStore extends Store {
   // );
   // late final prompt = property('prompt', '');
   // late final historyLength = property('historyLength', 7);
-  late final chatConfigs = listProperty<ChatConfig>('chatConfigs', const [
-    ChatConfig.defaultOne,
-  ]);
   late final chatConfigId = property('chatConfigId', '');
+  late final multiModel = property('multiModel', true);
 
   /// Auto scroll to bottom when new message comes.
   late final scrollBottom = property('scrollBottom', true);
   late final locale = property('locale', '');
   late final softWrap = property('softWrap', true);
   late final autoRmDupChat = property('autoRmDupChat', true);
+  late final genTitle = property('genTitle', true);
 
   /// Webdav sync
   late final webdavSync = property('webdavSync', false);

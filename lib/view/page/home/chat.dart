@@ -19,7 +19,7 @@ class _ChatPageState extends State<_ChatPage>
         if (!isWide) return _buildChat();
         return Scaffold(
           body: _buildChat(),
-          bottomNavigationBar: _buildInput(context),
+          bottomNavigationBar: _buildBottom(context),
         );
       },
     );
@@ -84,9 +84,8 @@ class _ChatPageState extends State<_ChatPage>
           mainAxisSize: MainAxisSize.min,
           children: chatItem.content
               .map((e) => switch (e.type) {
-                    ChatContentType.text => _buildText(chatItem),
-                    ChatContentType.audio => _buildAudio(chatItem),
-                    _ => Text('Unknown type: ${e.type}'),
+                    ChatContentType.audioPath => _buildAudio(chatItem),
+                    _ => _buildText(chatItem),
                   })
               .toList(),
         );

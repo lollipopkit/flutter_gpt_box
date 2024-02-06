@@ -43,6 +43,7 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
     return;
   }
   final config = OpenAICfg.current;
+  _genChatTitle(context, chatId, config);
   final questionContent = switch ((
     config.prompt,
     config.historyLen,
@@ -58,24 +59,37 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
     (final prompt, _, 2) => '$prompt\n${_inputCtrl.text}',
     _ => _inputCtrl.text,
   };
-  final question = ChatHistoryItem.single(
-    type: ChatContentType.text,
-    raw: questionContent,
+  final imgUrl = await () async {
+    if (_filePicked.value == null) return null;
+    // Mock url
+    return 'https://res.lolli.tech/logo.png';
+  }();
+  final historyLen = config.historyLen > workingChat.items.length
+      ? workingChat.items.length
+      : config.historyLen;
+  final historyCarried = workingChat.items.reversed
+      .take(historyLen)
+      .map((e) => e.toOpenAI)
+      .toList();
+  final question = ChatHistoryItem.gen(
+    content: [
+      ChatContent(
+        type: ChatContentType.text,
+        raw: questionContent,
+      ),
+      if (imgUrl != null)
+        ChatContent(
+          type: ChatContentType.imageUrl,
+          raw: imgUrl,
+        ),
+    ],
     role: ChatRole.user,
   );
   workingChat.items.add(question);
-  final historyCarried = workingChat.items.reversed
-      .take(config.historyLen)
-      .map(
-        (e) => e.toOpenAI,
-      )
-      .toList();
   _inputCtrl.clear();
   final chatStream = OpenAI.instance.chat.createStream(
-    model: config.model,
+    model: imgUrl == null ? config.model : 'gpt-4-vision-preview',
     messages: [...historyCarried.reversed, question.toOpenAI],
-    temperature: config.temperature,
-    seed: config.seed,
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
@@ -115,7 +129,6 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
         _sendBtnRN.rebuild();
-        await _genChatTitle(context, chatId, config);
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
         SyncService.sync();
@@ -225,10 +238,10 @@ Future<void> _genChatTitle(
   String chatId,
   ChatConfig cfg,
 ) async {
-  final model = cfg.genTitleModel;
-  if (model == null || model.isEmpty) return;
+  if (!Stores.setting.genTitle.fetch()) return;
+
   final entity = _allHistories[chatId];
-  if (entity?.items.length != 2) return;
+  if (entity?.items.length != 1) return;
   if (entity == null) {
     final msg = 'Gen Chat($chatId) not found';
     Loggers.app.warning(msg);
@@ -237,13 +250,13 @@ Future<void> _genChatTitle(
   }
 
   final resp = await OpenAI.instance.chat.create(
-    model: model,
+    model: cfg.model,
     messages: [
       ChatHistoryItem.single(
         raw: l10n.genTitlePrompt,
         role: ChatRole.system,
       ).toOpenAI,
-      ...entity.items.take(2).map((e) => e.toOpenAI),
+      entity.items.first.toOpenAI,
     ],
   );
   final title = resp.choices.firstOrNull?.message.content?.firstOrNull?.text;
@@ -289,11 +302,40 @@ void _onShareChat(BuildContext context) async {
   }
 }
 
-Future<void> _onTapImgPick() async {
+Future<void> _onTapImgPick(BuildContext context) async {
+  if (_filePicked.value != null) {
+    final delete = await context.showRoundDialog(
+      title: l10n.file,
+      child: Image.memory(
+        await _filePicked.value!.readAsBytes(),
+        fit: BoxFit.cover,
+        cacheHeight: 100,
+        cacheWidth: 100,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => context.pop(true),
+          child: Text(
+            l10n.delete,
+            style: UIs.textRed,
+          ),
+        ),
+      ],
+    );
+    if (delete == true) {
+      _filePicked.value = null;
+    }
+    return;
+  }
   final picker = ImagePicker();
   final result = await picker.pickImage(source: ImageSource.gallery);
   if (result == null) return;
-  _imagePicked.value = result;
+  final len = await result.length();
+  if (len > 1024 * 1024 * 10) {
+    context.showSnackBar(l10n.fileTooLarge(len.bytes2Str));
+    return;
+  }
+  _filePicked.value = result;
 }
 
 void loadFromStore() {
@@ -457,8 +499,6 @@ void _onReplay({
   final chatStream = OpenAI.instance.chat.createStream(
     model: config.model,
     messages: [...historyCarried.reversed, question.toOpenAI],
-    temperature: config.temperature,
-    seed: config.seed,
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   chatHistory.items.insert(itemIdx + 1, assistReply);
@@ -555,7 +595,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
   _inputCtrl.clear();
   final assistReply = ChatHistoryItem.single(
     role: ChatRole.assist,
-    type: ChatContentType.audio,
+    type: ChatContentType.audioPath,
   );
   workingChat.items.add(assistReply);
   final completer = Completer();
@@ -586,58 +626,161 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
   }
 }
 
-void _onCreateImg(BuildContext context) async {
+Future<void> _onCreateImg(BuildContext context) async {
   final prompt = _inputCtrl.text;
   if (prompt.isEmpty) return;
   _imeFocus.unfocus();
   _inputCtrl.clear();
 
-  final resp = await OpenAI.instance.image.create(prompt: prompt);
+  final workingChat = _allHistories[_curChatId];
+  if (workingChat == null) {
+    final msg = 'Chat($_curChatId) not found';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+
+  final resp = await OpenAI.instance.image.create(
+    model: OpenAICfg.current.imgModel,
+    prompt: prompt,
+  );
+  final imgs = <String>[];
+  for (final item in resp.data) {
+    final url = item.url;
+    if (url != null) {
+      imgs.add(url);
+    }
+  }
+  if (imgs.isEmpty) {
+    const msg = 'Create image: empty resp';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+  workingChat.items.add(ChatHistoryItem.gen(
+    role: ChatRole.assist,
+    content: imgs
+        .map((e) => ChatContent(type: ChatContentType.imageUrl, raw: e))
+        .toList(),
+  ));
+  _chatRN.rebuild();
+  _storeChat(_curChatId, context);
 }
 
-void _onEditImage(BuildContext context) async {
-  final val = _imagePicked.value;
+Future<void> _onEditImage(BuildContext context) async {
+  final prompt = _inputCtrl.text;
+  if (prompt.isEmpty) return;
+  _imeFocus.unfocus();
+  _inputCtrl.clear();
+
+  final val = _filePicked.value;
   if (val == null) return;
   final workingChat = _allHistories[_curChatId];
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.single(
-    type: ChatContentType.image,
+    type: ChatContentType.imagePath,
     raw: val.path,
     role: ChatRole.user,
   );
   workingChat.items.add(chatItem);
   _chatRN.rebuild();
   _storeChat(_curChatId, context);
-  _imagePicked.value = null;
-}
+  _filePicked.value = null;
 
-void _onCreateRequest(BuildContext context, String chatId) {
-  final modelType = ModelType.fromString(OpenAICfg.current.model);
-  final err = switch (modelType) {
-    ModelType.tts => isWeb ? 'TTS Web' : null,
-    _ => null,
-  };
-  if (err != null) {
-    final msg = l10n.notSupported(err);
+  final resp = await OpenAI.instance.image.edit(
+    model: OpenAICfg.current.imgModel,
+    image: File(val.path),
+    prompt: prompt,
+  );
+
+  final imgs = <String>[];
+  for (final item in resp.data) {
+    final url = item.url;
+    if (url != null) {
+      imgs.add(url);
+    }
+  }
+
+  if (imgs.isEmpty) {
+    const msg = 'Edit image: empty resp';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     return;
   }
-  switch (modelType) {
-    case ModelType.text:
-      _onCreateChat(chatId, context);
-      break;
-    case ModelType.tts:
-      _onCreateTTS(context, chatId);
-      break;
-    case ModelType.image:
-      _onCreateImg(context);
-      break;
-    default:
-      final msg = 'Unknown modelType: $modelType';
-      Loggers.app.warning(msg);
-      context.showSnackBar(msg);
+
+  workingChat.items.add(ChatHistoryItem.gen(
+    role: ChatRole.assist,
+    content: imgs
+        .map((e) => ChatContent(type: ChatContentType.imageUrl, raw: e))
+        .toList(),
+  ));
+  _chatRN.rebuild();
+  _storeChat(_curChatId, context);
+}
+
+Future<void> _onCreateAudioToText(BuildContext context) async {
+  if (isWeb) {
+    final msg = l10n.notSupported('Audio to Text Web');
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
   }
+  final val = _filePicked.value;
+  if (val == null) return;
+  final workingChat = _allHistories[_curChatId];
+  if (workingChat == null) return;
+  final chatItem = ChatHistoryItem.single(
+    type: ChatContentType.audioPath,
+    raw: val.path,
+    role: ChatRole.user,
+  );
+  workingChat.items.add(chatItem);
+  _chatRN.rebuild();
+  _storeChat(_curChatId, context);
+  _filePicked.value = null;
+
+  final resp = await OpenAI.instance.audio.createTranscription(
+    model: OpenAICfg.current.speechModel,
+    file: File(val.path),
+    prompt: '',
+  );
+  final text = resp.text;
+  if (text.isEmpty) {
+    const msg = 'Audio to Text: empty resp';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+  workingChat.items.add(ChatHistoryItem.single(
+    role: ChatRole.assist,
+    type: ChatContentType.text,
+    raw: text,
+  ));
+  _chatRN.rebuild();
+  _storeChat(_curChatId, context);
+}
+
+/// Auto select model and send the request
+void _onCreateRequest(BuildContext context, String chatId) async {
+  final chatType = _chatType.value;
+  final notSupport = switch (chatType) {
+    /// Dart package `openai` uses [io.File], which is not supported on web
+    ChatType.img || ChatType.audio => isWeb,
+    _ => false,
+  };
+  if (notSupport) {
+    final msg = l10n.notSupported('Web ${chatType.name}');
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+  return await switch ((chatType, _filePicked.value)) {
+    (ChatType.text, _) => _onCreateChat(chatId, context),
+    (ChatType.img, null) => _onCreateImg(context),
+    (ChatType.img, _) => _onEditImage(context),
+    (ChatType.audio, null) => _onCreateTTS(context, chatId),
+    (ChatType.audio, _) => _onCreateAudioToText(context),
+  };
 }
 
 void _onTapAudioCtrl(
@@ -672,3 +815,63 @@ void _onTapAudioCtrl(
     ));
   }
 }
+
+// /// The chat type is determined by the following order:
+// /// Programmatically -> AI -> Text
+// Future<ChatType> _getChatType() async {
+//   return _getChatTypeByProg() ?? await _getChatTypeByAI() ?? ChatType.text;
+// }
+
+// /// Recognize the chat type by the question content programmatically.
+// ChatType? _getChatTypeByProg() {
+//   if (isWeb) return ChatType.text;
+
+//   final file = _filePicked.value;
+//   if (file != null) {
+//     final mime = file.mimeType;
+//     if (mime != null) {
+//       // If file is image
+//       if (mime.startsWith('image/')) {
+//         // explainImage / editImage
+//         if (_inputCtrl.text.isNotEmpty) {
+//           return null;
+//         }
+//         return ChatType.varifyImage;
+//       }
+//       // If file is audio
+//       if (mime.startsWith('audio/')) {
+//         return ChatType.audioToText;
+//       }
+//     }
+//   }
+
+//   return null;
+// }
+
+// /// Send [_inputCtrl.text] to OpenAI and get the chat type by the AI response.
+// Future<ChatType?> _getChatTypeByAI() async {
+//   if (_inputCtrl.text.isEmpty) return null;
+
+//   final config = OpenAICfg.current;
+//   final result = await OpenAI.instance.chat.create(
+//     model: config.model,
+//     messages: [
+//       ChatHistoryItem.single(
+//         role: ChatRole.system,
+//         raw: '''
+// There are some types of chat:
+// ${ChatType.values.map((e) => e.name).join('/')}
+// Which is most proper type for this chat? (Only response the `code` of type, eg: `text`)
+// ''',
+//       ).toOpenAI,
+//       ChatHistoryItem.single(
+//         raw: _inputCtrl.text,
+//         role: ChatRole.user,
+//       ).toOpenAI,
+//     ],
+//   );
+//   final type =
+//       result.choices.firstOrNull?.message.content?.firstOrNull?.text?.trim();
+//   if (type == null) return null;
+//   return ChatType.fromString(type);
+// }

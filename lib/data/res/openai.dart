@@ -13,6 +13,7 @@ abstract final class OpenAICfg {
       Stores.config.fetch(ChatConfig.defaultId) ?? ChatConfig.defaultOne;
   static ChatConfig get current => _cfg;
   static set current(ChatConfig config) {
+    _cfg = config;
     apply();
     config.save();
   }

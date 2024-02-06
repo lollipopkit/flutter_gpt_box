@@ -5,7 +5,12 @@ final class ConfigStore extends Store {
   ConfigStore() : super('config');
 
   ChatConfig? fetch(String id) {
-    return box.get(id) as ChatConfig?;
+    final val = box.get(id) as ChatConfig?;
+    if (val == null && id == ChatConfig.defaultId) {
+      put(ChatConfig.defaultOne);
+      return ChatConfig.defaultOne;
+    }
+    return val;
   }
 
   void put(ChatConfig config) {
@@ -14,7 +19,7 @@ final class ConfigStore extends Store {
 
   bool delete(String id) {
     /// Cannot delete default config
-    if (id.isEmpty) return false;
+    if (id == ChatConfig.defaultId) return false;
     box.delete(id);
     return true;
   }

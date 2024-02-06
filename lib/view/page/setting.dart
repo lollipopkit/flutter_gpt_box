@@ -17,6 +17,7 @@ import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
@@ -239,30 +240,87 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _buildSwitchCfg(ChatConfig cfg) {
-    return ListTile(
-      leading: const Icon(Icons.switch_account),
-      title: Text('Profile'),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextButton(onPressed: () {}, child: Text(l10n.add)),
-          TextButton(
-              onPressed: () async {
-                final profileNames = Stores.config.box.getKeys();
-                final current = cfg.name;
-                final result = await context.showPickSingleDialog(
-                  items: profileNames,
-                  initial: current,
-                );
-                if (result == null) return;
-                Stores.setting.chatConfigId.put(result);
-                OpenAICfg.switchTo(result);
+    final vals = Stores.config.box
+        .toJson<ChatConfig>(includeInternal: false)
+        .values
+        .toList();
+    final children = <Widget>[];
+    for (int idx = 0; idx < vals.length; idx++) {
+      final value = vals[idx];
+      final delBtn = IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () {
+          if (value.id == ChatConfig.defaultId) return;
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.delFmt(value.name, l10n.profile)),
+            actions: Btns.oks(
+              onTap: () {
+                Stores.config.delete(value.id);
                 _cfgRN.rebuild();
+                context.pop();
+                if (cfg.id == value.id) {
+                  OpenAICfg.switchTo(ChatConfig.defaultId);
+                  _cfgRN.rebuild();
+                }
               },
-              child: Text(l10n.select))
-        ],
+              red: true,
+            ),
+          );
+        },
+      );
+      children.add(ListTile(
+        leading: Checkbox(
+          value: cfg.id == value.id,
+          onChanged: (val) {
+            if (val != true) return;
+            OpenAICfg.switchTo(value.id);
+            _cfgRN.rebuild();
+          },
+        ),
+        title: Text(value.name.isEmpty ? l10n.defaulT : value.name),
+        onTap: () {
+          if (cfg.id == value.id) return;
+          OpenAICfg.switchTo(value.id);
+          _cfgRN.rebuild();
+        },
+        trailing: value.id != ChatConfig.defaultId ? delBtn : null,
+      ));
+    }
+    children.add(ListTile(
+      onTap: () async {
+        final ctrl = TextEditingController();
+        final name = await context.showRoundDialog(
+          title: l10n.add,
+          child: Input(
+            controller: ctrl,
+            hint: l10n.name,
+            icon: Icons.text_fields,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (name == null) return;
+        final cfg = ChatConfig.defaultOne.copyWith(
+          id: uuid.v4(),
+          name: name,
+        )..save();
+        OpenAICfg.switchTo(cfg.id);
+        _cfgRN.rebuild();
+      },
+      title: Text(l10n.add),
+      trailing: const Icon(Icons.add),
+    ));
+    return ExpandTile(
+      leading: const Icon(Icons.switch_account),
+      title: Text(l10n.profile),
+      subtitle: Text(
+        '${l10n.current}: ${switch ((cfg.id, cfg.name)) {
+          (ChatConfig.defaultId, _) => l10n.defaulT,
+          (_, final String name) => name,
+        }}',
+        style: UIs.text13Grey,
       ),
-      subtitle: Text(cfg.name ?? l10n.untitled),
+      children: children,
     );
   }
 
@@ -338,7 +396,9 @@ class _SettingPageState extends State<SettingPage> {
       title: Text(l10n.model),
       children: [
         _buildOpenAIChatModel(cfg),
-        _buildOpenAIGenTitleModel(cfg),
+        _buildOpenAIImgModel(cfg),
+        _buildOpenAISpeechModel(cfg),
+        _buildOpenAITranscribeModel(cfg),
       ],
     );
   }
@@ -349,46 +409,7 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Icons.chat),
       title: Text(l10n.chat),
       trailing: const Icon(Icons.keyboard_arrow_right),
-      subtitle: Text(
-        val,
-        style: UIs.text13Grey,
-      ),
-      onTap: () async {
-        if (cfg.key.isEmpty) {
-          context.showRoundDialog(
-            title: l10n.attention,
-            child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: () => context.pop()),
-          );
-          return;
-        }
-        context.showLoadingDialog();
-        final models = await OpenAI.instance.model.list();
-        context.pop();
-        final modelStrs = models.map((e) => e.id).toList();
-        //modelStrs.removeWhere((element) => !element.startsWith('gpt'));
-        final model = await context.showPickSingleDialog(
-          items: modelStrs,
-          initial: val,
-        );
-        if (model != null) {
-          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
-          _cfgRN.rebuild();
-        }
-      },
-    );
-  }
-
-  Widget _buildOpenAIGenTitleModel(ChatConfig cfg) {
-    final val = cfg.genTitleModel;
-    return ListTile(
-      leading: const Icon(Icons.title),
-      title: Text(l10n.genChatTitle),
-      trailing: const Icon(Icons.keyboard_arrow_right),
-      subtitle: Text(
-        l10n.genTitleTip(val == null || val.isEmpty ? l10n.empty : val),
-        style: UIs.text13Grey,
-      ),
+      subtitle: Text(val, style: UIs.text13Grey),
       onTap: () async {
         if (cfg.key.isEmpty) {
           context.showRoundDialog(
@@ -406,15 +427,108 @@ class _SettingPageState extends State<SettingPage> {
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,
-          actions: [
-            TextButton(
-              onPressed: () => context.pop(''),
-              child: Text(l10n.clear),
-            ),
-          ],
         );
         if (model != null) {
-          OpenAICfg.current = OpenAICfg.current.copyWith(genTitleModel: model);
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          _cfgRN.rebuild();
+        }
+      },
+    );
+  }
+
+  Widget _buildOpenAIImgModel(ChatConfig cfg) {
+    final val = cfg.imgModel;
+    return ListTile(
+      leading: const Icon(Icons.photo),
+      title: Text(l10n.image),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(val, style: UIs.text13Grey),
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
+          );
+          return;
+        }
+        context.showLoadingDialog();
+        final models = await OpenAI.instance.model.list();
+        context.pop();
+        final modelStrs = models.map((e) => e.id).toList();
+        modelStrs.removeWhere((element) => !element.startsWith('dall-e'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
+        );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          _cfgRN.rebuild();
+        }
+      },
+    );
+  }
+
+  Widget _buildOpenAISpeechModel(ChatConfig cfg) {
+    final val = cfg.speechModel;
+    return ListTile(
+      leading: const Icon(Icons.speaker),
+      title: Text(l10n.tts),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(val, style: UIs.text13Grey),
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
+          );
+          return;
+        }
+        context.showLoadingDialog();
+        final models = await OpenAI.instance.model.list();
+        context.pop();
+        final modelStrs = models.map((e) => e.id).toList();
+        modelStrs.removeWhere((element) => !element.startsWith('tts'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
+        );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          _cfgRN.rebuild();
+        }
+      },
+    );
+  }
+
+  Widget _buildOpenAITranscribeModel(ChatConfig cfg) {
+    final val = cfg.transcribeModel;
+    return ListTile(
+      leading: const Icon(Icons.transcribe),
+      title: Text(l10n.stt),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(val, style: UIs.text13Grey),
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
+          );
+          return;
+        }
+        context.showLoadingDialog();
+        final models = await OpenAI.instance.model.list();
+        context.pop();
+        final modelStrs = models.map((e) => e.id).toList();
+        modelStrs.removeWhere((element) => !element.startsWith('whisper'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
+        );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
           _cfgRN.rebuild();
         }
       },
@@ -485,6 +599,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildMore() {
     final children = [
+      _buildMultiModel(),
       _buildFontSize(),
       _buildScrollBottom(),
       _buildSoftWrap(),
@@ -492,6 +607,14 @@ class _SettingPageState extends State<SettingPage> {
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
+    );
+  }
+
+  Widget _buildMultiModel() {
+    return ListTile(
+      leading: const Icon(Icons.auto_awesome),
+      title: Text(l10n.multiModel),
+      trailing: StoreSwitch(prop: _store.multiModel),
     );
   }
 

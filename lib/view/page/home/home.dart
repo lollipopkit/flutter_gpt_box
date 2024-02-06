@@ -16,6 +16,7 @@ import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/datetime.dart';
 import 'package:flutter_chatgpt/core/ext/media_query.dart';
+import 'package:flutter_chatgpt/core/ext/num.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
@@ -29,7 +30,7 @@ import 'package:flutter_chatgpt/core/util/ui.dart';
 import 'package:flutter_chatgpt/data/model/app/audio_play.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
-import 'package:flutter_chatgpt/data/model/chat/model.dart';
+import 'package:flutter_chatgpt/data/model/chat/type.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
@@ -40,6 +41,7 @@ import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_chatgpt/view/widget/future.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
+import 'package:flutter_chatgpt/view/widget/popup_menu.dart';
 import 'package:flutter_chatgpt/view/widget/slide_trans.dart';
 import 'package:flutter_chatgpt/view/widget/switch_page_indicator.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -55,7 +57,7 @@ part 'ctrl.dart';
 part 'enum.dart';
 part 'search.dart';
 part 'appbar.dart';
-part 'input.dart';
+part 'bottom.dart';
 part 'uni_link.dart';
 
 class HomePage extends StatefulWidget {
@@ -113,7 +115,7 @@ class _HomePageState extends State<HomePage>
         valueListenable: _isWide,
         builder: (_, isWide, __) {
           if (isWide) return UIs.placeholder;
-          return _buildInput(context);
+          return _buildBottom(context);
         },
       ),
     );
