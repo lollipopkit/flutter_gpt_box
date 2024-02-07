@@ -599,22 +599,14 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildMore() {
     final children = [
-      _buildMultiModel(),
       _buildFontSize(),
+      _buildGenTitle(),
       _buildScrollBottom(),
       _buildSoftWrap(),
       _buildAutoRmDupChat(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
-    );
-  }
-
-  Widget _buildMultiModel() {
-    return ListTile(
-      leading: const Icon(Icons.auto_awesome),
-      title: Text(l10n.multiModel),
-      trailing: StoreSwitch(prop: _store.multiModel),
     );
   }
 
@@ -650,6 +642,14 @@ class _SettingPageState extends State<SettingPage> {
           _store.fontSize.put(newVal);
         },
       ),
+    );
+  }
+
+  Widget _buildGenTitle() {
+    return ListTile(
+      leading: const Icon(Icons.auto_awesome),
+      title: Text(l10n.genChatTitle),
+      trailing: StoreSwitch(prop: _store.genTitle),
     );
   }
 

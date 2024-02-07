@@ -77,35 +77,35 @@ class _ChatPageState extends State<_ChatPage>
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RebuildNode());
-    final child = ListenableBuilder(
-      listenable: node,
-      builder: (_, __) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: chatItem.content
-              .map((e) => switch (e.type) {
-                    ChatContentType.audioPath => _buildAudio(chatItem),
-                    _ => _buildText(chatItem),
-                  })
-              .toList(),
-        );
-      },
-    );
     return Padding(
       padding: const EdgeInsets.all(7),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildChatItemBtn(chatItems, chatItem),
-          child,
+          ListenableBuilder(
+            listenable: node,
+            builder: (_, __) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: chatItem.content
+        .map((e) => switch (e.type) {
+              ChatContentType.audio => _buildAudio(chatItem),
+              ChatContentType.image => _buildImage(e),
+              _ => _buildText(e),
+            })
+        .toList(),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildText(ChatHistoryItem chatItem) {
+  Widget _buildText(ChatContent content) {
     final child = MarkdownBody(
-      data: chatItem.toMarkdown,
+      data: content.raw,
       builders: {
         'code': CodeElementBuilder(onCopy: _onCopy),
       },
@@ -125,6 +125,17 @@ class _ChatPageState extends State<_ChatPage>
           );
   }
 
+  Widget _buildImage(ChatContent content) {
+    return Image.network(
+      content.raw,
+      loadingBuilder: (_, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return UIs.centerSizedLoading;
+      },
+    );
+  }
+
+  /// TODO: Current design only allows one audio of each chat item.
   Widget _buildAudio(ChatHistoryItem chatItem) {
     final listenable = _audioPlayerMap.putIfAbsent(
       chatItem.id,
@@ -162,8 +173,7 @@ class _ChatPageState extends State<_ChatPage>
                 onPressed: () => _onTapAudioCtrl(val, chatItem, listenable),
               ),
               title: Slider(
-                value:
-                    duration == null ? 0.0 : val.played / val.total,
+                value: duration == null ? 0.0 : val.played / val.total,
                 onChanged: (v) {
                   final nowMilli = (val.total * v).toInt();
                   final duration = Duration(milliseconds: nowMilli);

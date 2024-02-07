@@ -104,9 +104,7 @@ final class ChatHistoryItem {
     return content
         .map((e) => switch (e.type) {
               ChatContentType.text => e.raw,
-              ChatContentType.imagePath => '![](file://${e.raw})',
-              ChatContentType.imageUrl => '![](${e.raw})',
-              ChatContentType.imageBase64 => '![](base64://${e.raw})',
+              ChatContentType.image => '![](${e.raw})',
               final type => throw UnimplementedError('type: $type'),
             })
         .join('\n');
@@ -146,22 +144,15 @@ final class ChatHistoryItem {
   }
 }
 
+/// Handle [audio] as file path and [image] as url.
 @HiveType(typeId: 1)
 enum ChatContentType {
   @HiveField(0)
   text,
   @HiveField(1)
-  imagePath,
+  audio,
   @HiveField(2)
-  videoPath,
-  @HiveField(3)
-  audioPath,
-  @HiveField(4)
-  filePath,
-  @HiveField(5)
-  imageUrl,
-  @HiveField(6)
-  imageBase64,
+  image,
   ;
 }
 
@@ -178,7 +169,7 @@ final class ChatContent {
       switch (type) {
         ChatContentType.text =>
           OpenAIChatCompletionChoiceMessageContentItemModel.text(raw),
-        ChatContentType.imageUrl =>
+        ChatContentType.image =>
           OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(raw),
         _ => throw UnimplementedError('$type.toOpenAI'),
       };

@@ -77,7 +77,9 @@ class _HomePageState extends State<HomePage>
     _allHistories = Stores.history.fetchAll();
     _refreshTimeTimer = Timer.periodic(
       const Duration(seconds: 10),
-      (_) => _timeRN.rebuild(),
+      (_) {
+        if (mounted) _timeRN.rebuild();
+      },
     );
     _historyScrollCtrl.addListener(_locateHistoryListener);
     _initUniLinks();
@@ -237,6 +239,6 @@ class _HomePageState extends State<HomePage>
   }
 
   // void _checkInvalidModels() {
-  //   final validModels = 
+  //   final validModels =
   // }
 }

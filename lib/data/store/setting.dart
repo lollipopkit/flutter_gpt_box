@@ -21,7 +21,6 @@ class SettingStore extends Store {
   // late final prompt = property('prompt', '');
   // late final historyLength = property('historyLength', 7);
   late final chatConfigId = property('chatConfigId', '');
-  late final multiModel = property('multiModel', true);
 
   /// Auto scroll to bottom when new message comes.
   late final scrollBottom = property('scrollBottom', true);
@@ -42,4 +41,8 @@ class SettingStore extends Store {
 
   late final initHelpShown = property('initHelpShown', false);
   //late final imPro = property('imPro', false);
+
+  /// Picture upload config
+  late final picUploadUrl = property('picUploadUrl', '');
+  
 }

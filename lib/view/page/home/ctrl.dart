@@ -43,7 +43,6 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
     return;
   }
   final config = OpenAICfg.current;
-  _genChatTitle(context, chatId, config);
   final questionContent = switch ((
     config.prompt,
     config.historyLen,
@@ -61,7 +60,7 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
   };
   final imgUrl = await () async {
     if (_filePicked.value == null) return null;
-    // Mock url
+    // TODO: Change mock url to real url
     return 'https://res.lolli.tech/logo.png';
   }();
   final historyLen = config.historyLen > workingChat.items.length
@@ -79,13 +78,14 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
       ),
       if (imgUrl != null)
         ChatContent(
-          type: ChatContentType.imageUrl,
+          type: ChatContentType.image,
           raw: imgUrl,
         ),
     ],
     role: ChatRole.user,
   );
   workingChat.items.add(question);
+  _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
   final chatStream = OpenAI.instance.chat.createStream(
     model: imgUrl == null ? config.model : 'gpt-4-vision-preview',
@@ -94,6 +94,7 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
   _chatRN.rebuild();
+  _filePicked.value = null;
   try {
     final sub = chatStream.listen(
       (event) {
@@ -238,16 +239,19 @@ Future<void> _genChatTitle(
   String chatId,
   ChatConfig cfg,
 ) async {
+  print(111);
   if (!Stores.setting.genTitle.fetch()) return;
+  print(222);
 
   final entity = _allHistories[chatId];
-  if (entity?.items.length != 1) return;
   if (entity == null) {
     final msg = 'Gen Chat($chatId) not found';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     return;
   }
+  if (entity.items.length != 1) return;
+  print(333);
 
   final resp = await OpenAI.instance.chat.create(
     model: cfg.model,
@@ -259,6 +263,7 @@ Future<void> _genChatTitle(
       entity.items.first.toOpenAI,
     ],
   );
+  print(444);
   final title = resp.choices.firstOrNull?.message.content?.firstOrNull?.text;
   if (title == null) {
     final msg = 'Gen Chat($chatId) title: null resp';
@@ -595,7 +600,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
   _inputCtrl.clear();
   final assistReply = ChatHistoryItem.single(
     role: ChatRole.assist,
-    type: ChatContentType.audioPath,
+    type: ChatContentType.audio,
   );
   workingChat.items.add(assistReply);
   final completer = Completer();
@@ -660,7 +665,7 @@ Future<void> _onCreateImg(BuildContext context) async {
   workingChat.items.add(ChatHistoryItem.gen(
     role: ChatRole.assist,
     content: imgs
-        .map((e) => ChatContent(type: ChatContentType.imageUrl, raw: e))
+        .map((e) => ChatContent(type: ChatContentType.image, raw: e))
         .toList(),
   ));
   _chatRN.rebuild();
@@ -678,7 +683,7 @@ Future<void> _onEditImage(BuildContext context) async {
   final workingChat = _allHistories[_curChatId];
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.single(
-    type: ChatContentType.imagePath,
+    type: ChatContentType.image,
     raw: val.path,
     role: ChatRole.user,
   );
@@ -711,7 +716,7 @@ Future<void> _onEditImage(BuildContext context) async {
   workingChat.items.add(ChatHistoryItem.gen(
     role: ChatRole.assist,
     content: imgs
-        .map((e) => ChatContent(type: ChatContentType.imageUrl, raw: e))
+        .map((e) => ChatContent(type: ChatContentType.image, raw: e))
         .toList(),
   ));
   _chatRN.rebuild();
@@ -730,7 +735,7 @@ Future<void> _onCreateAudioToText(BuildContext context) async {
   final workingChat = _allHistories[_curChatId];
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.single(
-    type: ChatContentType.audioPath,
+    type: ChatContentType.audio,
     raw: val.path,
     role: ChatRole.user,
   );

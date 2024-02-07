@@ -136,17 +136,9 @@ class ChatContentTypeAdapter extends TypeAdapter<ChatContentType> {
       case 0:
         return ChatContentType.text;
       case 1:
-        return ChatContentType.imagePath;
+        return ChatContentType.audio;
       case 2:
-        return ChatContentType.videoPath;
-      case 3:
-        return ChatContentType.audioPath;
-      case 4:
-        return ChatContentType.filePath;
-      case 5:
-        return ChatContentType.imageUrl;
-      case 6:
-        return ChatContentType.imageBase64;
+        return ChatContentType.image;
       default:
         return ChatContentType.text;
     }
@@ -158,23 +150,11 @@ class ChatContentTypeAdapter extends TypeAdapter<ChatContentType> {
       case ChatContentType.text:
         writer.writeByte(0);
         break;
-      case ChatContentType.imagePath:
+      case ChatContentType.audio:
         writer.writeByte(1);
         break;
-      case ChatContentType.videoPath:
+      case ChatContentType.image:
         writer.writeByte(2);
-        break;
-      case ChatContentType.audioPath:
-        writer.writeByte(3);
-        break;
-      case ChatContentType.filePath:
-        writer.writeByte(4);
-        break;
-      case ChatContentType.imageUrl:
-        writer.writeByte(5);
-        break;
-      case ChatContentType.imageBase64:
-        writer.writeByte(6);
         break;
     }
   }
