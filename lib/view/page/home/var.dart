@@ -19,7 +19,7 @@ String? _nowPlayingId;
 final _audioLoadingMap = <String, Completer>{};
 
 /// Audio / Image / File
-final _filePicked = ValueNotifier<XFile?>(null); 
+final _filePicked = ValueNotifier<XFile?>(null);
 
 final _chatType = ValueNotifier(ChatType.text);
 

@@ -78,7 +78,8 @@ final class ChatHistoryItem {
   ChatHistoryItem.gen({
     required this.role,
     required this.content,
-  }) : createdAt = DateTime.now(), id = uuid.v4();
+  })  : createdAt = DateTime.now(),
+        id = uuid.v4();
 
   ChatHistoryItem.single({
     required this.role,

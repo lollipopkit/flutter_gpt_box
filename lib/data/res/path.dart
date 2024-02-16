@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/core/util/platform/file.dart';
+import 'package:flutter_chatgpt/data/model/app/backup.dart';
 import 'package:path_provider/path_provider.dart';
 
 abstract final class Paths {
@@ -37,10 +38,10 @@ abstract final class Paths {
     }
     return _docDir!;
   }
-  
+
   static Future<String> get dl async => FileUtil.joinPath(await doc, 'dl');
 
-  static const String bakName = 'gptbox_bak.json';
+  static const String bakName = 'gptbox_bak_v${Backup.validVer}.json';
   static Future<String> get bak async => '${await doc}/$bakName';
 
   static Future<String> get audio async =>

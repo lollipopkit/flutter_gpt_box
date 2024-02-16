@@ -239,9 +239,7 @@ Future<void> _genChatTitle(
   String chatId,
   ChatConfig cfg,
 ) async {
-  print(111);
   if (!Stores.setting.genTitle.fetch()) return;
-  print(222);
 
   final entity = _allHistories[chatId];
   if (entity == null) {
@@ -251,19 +249,21 @@ Future<void> _genChatTitle(
     return;
   }
   if (entity.items.length != 1) return;
-  print(333);
 
   final resp = await OpenAI.instance.chat.create(
     model: cfg.model,
     messages: [
       ChatHistoryItem.single(
-        raw: l10n.genTitlePrompt,
+        raw: '''
+Create a simple and clear title based on user content.
+If the language is Chinese, Japanese or Korean, the title should be within 10 characters; 
+if it is English, French, German, Latin and other Western languages, the number of title characters should not exceed 23. 
+The title should be the same as the language entered by the user.''',
         role: ChatRole.system,
       ).toOpenAI,
       entity.items.first.toOpenAI,
     ],
   );
-  print(444);
   final title = resp.choices.firstOrNull?.message.content?.firstOrNull?.text;
   if (title == null) {
     final msg = 'Gen Chat($chatId) title: null resp';

@@ -89,12 +89,12 @@ class _ChatPageState extends State<_ChatPage>
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: chatItem.content
-        .map((e) => switch (e.type) {
-              ChatContentType.audio => _buildAudio(chatItem),
-              ChatContentType.image => _buildImage(e),
-              _ => _buildText(e),
-            })
-        .toList(),
+                    .map((e) => switch (e.type) {
+                          ChatContentType.audio => _buildAudio(chatItem),
+                          ChatContentType.image => _buildImage(e),
+                          _ => _buildText(e),
+                        })
+                    .toList(),
               );
             },
           ),

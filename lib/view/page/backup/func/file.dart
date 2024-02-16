@@ -36,7 +36,7 @@ void _onTapFileRestore(BuildContext context) async {
       return;
     }
 
-    if (backupFormatVersion != backup.version) {
+    if (Backup.validVer != backup.version) {
       context.showSnackBar('Backup version not match');
       return;
     }
