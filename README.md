@@ -64,7 +64,7 @@ After you read the above, you can:
 - [l10n guide](https://blog.lolli.tech/faq/) can be found in my blog.
 
 ## 💡 My other apps
-- [Server Box](https://github.com/lollipopkit/flutter_gpt_box) - Server status & tools.
+- [Server Box](https://github.com/lollipopkit/flutter_server_box) - Server status & tools.
 - [2FA Box](https://github.com/lollipopkit/flutter_2fa) - Open source 2FA app for Android, iOS and the web.
 - [More](https://github.com/lollipopkit) - Tools & etc.
 

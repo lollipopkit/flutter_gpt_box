@@ -68,7 +68,7 @@
 
 
 ## 💡 我的其它 Apps
-- [Server Box](https://github.com/lollipopkit/flutter_gpt_box) - 服务器状态和工具。
+- [Server Box](https://github.com/lollipopkit/flutter_server_box) - 服务器状态和工具。
 - [2FA Box](https://github.com/lollipopkit/flutter_2fa) - 开源的 2FA 应用。
 - [更多](https://github.com/lollipopkit) - 工具 & etc.
 
