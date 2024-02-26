@@ -135,7 +135,7 @@ class _ChatPageState extends State<_ChatPage>
     );
   }
 
-  /// TODO: Current design only allows one audio of each chat item.
+  /// Current design only allows one audio of each chat item.
   Widget _buildAudio(ChatHistoryItem chatItem) {
     final listenable = _audioPlayerMap.putIfAbsent(
       chatItem.id,
@@ -153,10 +153,10 @@ class _ChatPageState extends State<_ChatPage>
     }();
     return FutureWidget(
       future: initWidget,
-      error: ((error, trace) {
+      error: (error, trace) {
         Loggers.app.warning('Failed to get audio duration', error, trace);
         return Text('$error');
-      }),
+      },
       loading: UIs.centerSizedLoading,
       success: (duration) {
         listenable.value = listenable.value.copyWith(

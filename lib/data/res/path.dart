@@ -46,4 +46,7 @@ abstract final class Paths {
 
   static Future<String> get audio async =>
       FileUtil.joinPath(await doc, 'audio');
+
+  static Future<String> get image async =>
+      FileUtil.joinPath(await doc, 'image');
 }

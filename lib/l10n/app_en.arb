@@ -105,5 +105,6 @@
   "user": "User",
   "versionHaveUpdate": "Found: v1.0.{build}, click to update",
   "versionUpdated": "Current: v1.0.{build}, is up to date",
-  "weeksAgo": "{weeks} weeks ago"
+  "weeksAgo": "{weeks} weeks ago",
+  "wrap": "Wrap"
 }

@@ -33,10 +33,7 @@ abstract final class GPTNextConvertor {
         'system' => ChatRole.system,
         final role => throw ArgumentError('role: $role'),
       };
-      final contentEnum = ChatContent(
-        type: ChatContentType.text,
-        raw: content,
-      );
+      final contentEnum = ChatContent.text(content);
       final dateEnum = parseDate(date);
       if (dateEnum == null) {
         continue;

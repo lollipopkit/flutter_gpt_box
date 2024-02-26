@@ -22,7 +22,7 @@
     - [x] File
     - [x] Clipboard
     - [x] WebDAV
-  - [ ] Sync media files
+  - [ ] Manually sync media files
 - [x] URL Scheme
   - [x] Config: `lk-gptbox://app/set?openAiUrl=&openAiKey=&openAiModel=&chatId=`
     - If chatId is not provided, it will config global settings

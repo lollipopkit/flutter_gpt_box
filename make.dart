@@ -193,7 +193,7 @@ Name=$appName
 Exec=$appName
 Icon=app_icon
 Type=Application
-Categories=Network;Utility;
+Categories=Utility;
 ''';
   await File('$appDirName/$appName.desktop').writeAsString(desktop);
   // Run appimagetool

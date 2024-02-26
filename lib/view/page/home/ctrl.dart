@@ -58,10 +58,13 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
     (final prompt, _, 2) => '$prompt\n${_inputCtrl.text}',
     _ => _inputCtrl.text,
   };
-  final imgUrl = await () async {
-    if (_filePicked.value == null) return null;
-    // TODO: Change mock url to real url
-    return 'https://res.lolli.tech/logo.png';
+  final (imgUrl, imgPath) = await () async {
+    final value = _filePicked.value;
+    if (value == null) return (null, null);
+    final imgPath = FileUtil.joinPath(await Paths.image, uuid.v4());
+    await value.saveTo(imgPath);
+    // Convert to base64 url
+    return (await value.base64, imgPath);
   }();
   final historyLen = config.historyLen > workingChat.items.length
       ? workingChat.items.length
@@ -72,24 +75,24 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
       .toList();
   final question = ChatHistoryItem.gen(
     content: [
-      ChatContent(
-        type: ChatContentType.text,
-        raw: questionContent,
-      ),
-      if (imgUrl != null)
-        ChatContent(
-          type: ChatContentType.image,
-          raw: imgUrl,
-        ),
+      ChatContent.text(questionContent),
+      if (imgPath != null) ChatContent.image(imgPath),
     ],
     role: ChatRole.user,
   );
   workingChat.items.add(question);
+  final questionForApi = ChatHistoryItem.gen(
+    role: ChatRole.user,
+    content: [
+      ChatContent.text(questionContent),
+      if (imgUrl != null) ChatContent.image(imgUrl),
+    ],
+  );
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
   final chatStream = OpenAI.instance.chat.createStream(
-    model: imgUrl == null ? config.model : 'gpt-4-vision-preview',
-    messages: [...historyCarried.reversed, question.toOpenAI],
+    model: imgUrl == null ? config.model : config.imgModel,
+    messages: [...historyCarried.reversed, questionForApi.toOpenAI],
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
@@ -102,15 +105,7 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
         assistReply.content.first.raw += delta;
         _chatItemRNMap[assistReply.id]?.rebuild();
 
-        if (Stores.setting.scrollBottom.fetch()) {
-          // Only scroll to bottom when current chat is the working chat
-          final isWorking = chatId == _curChatId;
-          final isSubscribed = _chatStreamSubs.containsKey(chatId);
-          final isDisplaying = _chatScrollCtrl.hasClients;
-          if (isWorking && isSubscribed && isDisplaying) {
-            _chatScrollCtrl.jumpTo(_chatScrollCtrl.position.maxScrollExtent);
-          }
-        }
+        _autoScroll(chatId);
       },
       onError: (e, trace) {
         Loggers.app.warning('Listen chat stream: $e');
@@ -514,6 +509,8 @@ void _onReplay({
         final delta = event.choices.first.delta.content?.first.text ?? '';
         assistReply.content.first.raw += delta;
         _chatItemRNMap[assistReply.id]?.rebuild();
+
+        _autoScroll(chatId);
       },
       onError: (e, trace) {
         Loggers.app.warning('Listen chat stream: $e');
@@ -532,6 +529,7 @@ void _onReplay({
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
         _sendBtnRN.rebuild();
+        _appbarTitleRN.rebuild();
         SyncService.sync();
       },
     );
@@ -561,10 +559,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
       action: TextInputAction.send,
       onSubmitted: (p0) {
         chatItem.content.clear();
-        chatItem.content.add(ChatContent(
-          type: ChatContentType.text,
-          raw: p0,
-        ));
+        chatItem.content.add(ChatContent.text(p0));
         _storeChat(_curChatId, context);
         _chatRN.rebuild();
         context.pop();
@@ -664,9 +659,7 @@ Future<void> _onCreateImg(BuildContext context) async {
   }
   workingChat.items.add(ChatHistoryItem.gen(
     role: ChatRole.assist,
-    content: imgs
-        .map((e) => ChatContent(type: ChatContentType.image, raw: e))
-        .toList(),
+    content: imgs.map((e) => ChatContent.image(e)).toList(),
   ));
   _chatRN.rebuild();
   _storeChat(_curChatId, context);
@@ -715,9 +708,7 @@ Future<void> _onEditImage(BuildContext context) async {
 
   workingChat.items.add(ChatHistoryItem.gen(
     role: ChatRole.assist,
-    content: imgs
-        .map((e) => ChatContent(type: ChatContentType.image, raw: e))
-        .toList(),
+    content: imgs.map((e) => ChatContent.image(e)).toList(),
   ));
   _chatRN.rebuild();
   _storeChat(_curChatId, context);
@@ -818,6 +809,18 @@ void _onTapAudioCtrl(
     _audioPlayer.play(DeviceFileSource(
       '${await Paths.audio}/${chatItem.id}.mp3',
     ));
+  }
+}
+
+void _autoScroll(String chatId) {
+  if (Stores.setting.scrollBottom.fetch()) {
+    // Only scroll to bottom when current chat is the working chat
+    final isWorking = chatId == _curChatId;
+    final isSubscribed = _chatStreamSubs.containsKey(chatId);
+    final isDisplaying = _chatScrollCtrl.hasClients;
+    if (isWorking && isSubscribed && isDisplaying) {
+      _chatScrollCtrl.jumpTo(_chatScrollCtrl.position.maxScrollExtent);
+    }
   }
 }
 

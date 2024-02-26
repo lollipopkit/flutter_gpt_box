@@ -86,12 +86,7 @@ final class ChatHistoryItem {
     String raw = '',
     ChatContentType type = ChatContentType.text,
   })  : id = uuid.v4(),
-        content = [
-          ChatContent(
-            type: type,
-            raw: raw,
-          )
-        ],
+        content = [ChatContent(type: type, raw: raw)],
         createdAt = DateTime.now();
 
   OpenAIChatCompletionChoiceMessageModel get toOpenAI {
@@ -145,7 +140,7 @@ final class ChatHistoryItem {
   }
 }
 
-/// Handle [audio] as file path and [image] as url.
+/// Handle [audio] and [image] as url (file:// & https://) or base64
 @HiveType(typeId: 1)
 enum ChatContentType {
   @HiveField(0)
@@ -165,6 +160,9 @@ final class ChatContent {
   String raw;
 
   ChatContent({required this.type, required this.raw});
+  ChatContent.text(this.raw) : type = ChatContentType.text;
+  ChatContent.audio(this.raw) : type = ChatContentType.audio;
+  ChatContent.image(this.raw) : type = ChatContentType.image;
 
   OpenAIChatCompletionChoiceMessageContentItemModel get toOpenAI =>
       switch (type) {

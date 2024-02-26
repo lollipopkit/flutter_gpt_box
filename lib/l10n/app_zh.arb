@@ -105,5 +105,6 @@
   "user": "用户",
   "versionHaveUpdate": "找到新版本：v1.0.{build}, 点击更新",
   "versionUpdated": "当前：v1.0.{build}, 已是最新",
-  "weeksAgo": "{weeks} 周前"
+  "weeksAgo": "{weeks} 周前",
+  "wrap": "换行"
 }
