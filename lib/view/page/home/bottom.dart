@@ -76,6 +76,33 @@ Widget _buildTextField(BuildContext context) {
         );
       }
     },
+    contextMenuBuilder: (context, editableTextState) {
+      final TextEditingValue value = editableTextState.textEditingValue;
+      final List<ContextMenuButtonItem> buttonItems =
+          editableTextState.contextMenuButtonItems;
+      if (_inputCtrl.text.isNotEmpty) {
+        buttonItems.add(ContextMenuButtonItem(
+          label: l10n.clear,
+          onPressed: () {
+            _inputCtrl.clear();
+          },
+        ));
+      }
+      buttonItems.add(ContextMenuButtonItem(
+        label: l10n.wrap,
+        onPressed: () {
+          final newValue = value.copyWith(
+            text: '${value.text}\n',
+            selection: TextSelection.collapsed(offset: value.selection.end + 1),
+          );
+          editableTextState.updateEditingValue(newValue);
+        },
+      ));
+      return AdaptiveTextSelectionToolbar.buttonItems(
+        anchors: editableTextState.contextMenuAnchors,
+        buttonItems: buttonItems,
+      );
+    },
     suffix: ListenableBuilder(
       listenable: _sendBtnRN,
       builder: (_, __) {
