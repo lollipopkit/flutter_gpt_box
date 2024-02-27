@@ -38,6 +38,7 @@
   "edit": "Edit",
   "empty": "Empty",
   "emptyFields": "{fields} is empty",
+  "error": "Error",
   "file": "File",
   "fileTooLarge": "File too large: {size}",
   "fontSize": "Font size",

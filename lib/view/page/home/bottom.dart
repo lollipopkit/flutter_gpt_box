@@ -62,6 +62,9 @@ Widget _buildTextField(BuildContext context) {
     action: TextInputAction.send,
     maxLines: 5,
     minLines: 1,
+
+    /// Keep this, or 'Wrap' will not work on iOS
+    type: TextInputType.multiline,
     autoCorrect: true,
     suggestion: true,
     onSubmitted: (p0) {
@@ -77,7 +80,7 @@ Widget _buildTextField(BuildContext context) {
       }
     },
     contextMenuBuilder: (context, editableTextState) {
-      final TextEditingValue value = editableTextState.textEditingValue;
+      //final TextEditingValue value = editableTextState.textEditingValue;
       final List<ContextMenuButtonItem> buttonItems =
           editableTextState.contextMenuButtonItems;
       if (_inputCtrl.text.isNotEmpty) {
@@ -91,11 +94,7 @@ Widget _buildTextField(BuildContext context) {
       buttonItems.add(ContextMenuButtonItem(
         label: l10n.wrap,
         onPressed: () {
-          final newValue = value.copyWith(
-            text: '${value.text}\n',
-            selection: TextSelection.collapsed(offset: value.selection.end + 1),
-          );
-          editableTextState.updateEditingValue(newValue);
+          _inputCtrl.text += '\n';
         },
       ));
       return AdaptiveTextSelectionToolbar.buttonItems(

@@ -42,8 +42,9 @@ final class ConfigStore extends Store {
         }
       }
     }
-    if (errCount > 0) Loggers.app.warning('fetchAll config: $errCount error(s)');
-    // Sort by last modified time ASC
+    if (errCount > 0) {
+      Loggers.app.warning('fetchAll config: $errCount error(s)');
+    }
     return map;
   }
 }

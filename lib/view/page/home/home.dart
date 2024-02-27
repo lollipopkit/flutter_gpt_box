@@ -29,6 +29,7 @@ import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/core/util/platform/file.dart';
 import 'package:flutter_chatgpt/core/util/sync/base.dart';
 import 'package:flutter_chatgpt/core/util/ui.dart';
+import 'package:flutter_chatgpt/core/util/url.dart';
 import 'package:flutter_chatgpt/data/model/app/audio_play.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';

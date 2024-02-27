@@ -38,6 +38,7 @@
   "edit": "编辑",
   "empty": "空",
   "emptyFields": "{fields} 为空",
+  "error": "错误",
   "file": "文件",
   "fileTooLarge": "文件过大：{size}",
   "fontSize": "字体大小",

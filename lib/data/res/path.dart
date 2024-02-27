@@ -7,8 +7,9 @@ import 'package:path_provider/path_provider.dart';
 
 abstract final class Paths {
   static Future<void> createAll() async {
-    await (Directory(await audio)).create(recursive: true);
     await (Directory(await doc)).create(recursive: true);
+    await (Directory(await audio)).create();
+    await (Directory(await image)).create();
   }
 
   static String? _docDir;
