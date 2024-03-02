@@ -66,11 +66,8 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
     // Convert to base64 url
     return (await value.base64, imgPath);
   }();
-  final historyLen = config.historyLen > workingChat.items.length
-      ? workingChat.items.length
-      : config.historyLen;
   final historyCarried = workingChat.items.reversed
-      .take(historyLen)
+      .take(config.historyLen)
       .map((e) => e.toOpenAI)
       .toList();
   final question = ChatHistoryItem.gen(

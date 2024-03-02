@@ -17,7 +17,6 @@ class _HomeBottom extends StatelessWidget {
 
   Widget _buildView(BuildContext context) {
     final isDark = RNode.dark.value;
-    debugPrint(isDark.toString());
     return Container(
       padding: isDesktop
           ? const EdgeInsets.only(left: 11, right: 11, top: 7, bottom: 17)

@@ -6,25 +6,25 @@ part 'config.g.dart';
 
 @HiveType(typeId: 6)
 final class ChatConfig {
-  @HiveField(0)
+  @HiveField(0, defaultValue: '')
   final String prompt;
-  @HiveField(1)
+  @HiveField(1, defaultValue: 'https://api.openai.com')
   final String url;
-  @HiveField(2)
+  @HiveField(2, defaultValue: '')
   final String key;
-  @HiveField(3)
+  @HiveField(3, defaultValue: 'gpt-4-turbo-preview')
   final String model;
-  @HiveField(6)
+  @HiveField(7, defaultValue: 7)
   final int historyLen;
-  @HiveField(7)
+  @HiveField(8, defaultValue: defaultId)
   final String id;
-  @HiveField(8)
+  @HiveField(9, defaultValue: '')
   final String name;
-  @HiveField(9)
+  @HiveField(10, defaultValue: 'dall-e-3')
   final String imgModel;
-  @HiveField(10)
+  @HiveField(11, defaultValue: 'tts-1')
   final String speechModel;
-  @HiveField(11)
+  @HiveField(12, defaultValue: 'whisper-1')
   final String transcribeModel;
 
   const ChatConfig({
