@@ -419,9 +419,9 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        context.showLoadingDialog();
-        final models = await OpenAI.instance.model.list();
-        context.pop();
+        final models = await context.showLoadingDialog(
+          fn: () async => await OpenAI.instance.model.list(),
+        );
         final modelStrs = models.map((e) => e.id).toList();
         modelStrs.removeWhere((element) => !element.startsWith('gpt'));
         final model = await context.showPickSingleDialog(
@@ -452,9 +452,9 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        context.showLoadingDialog();
-        final models = await OpenAI.instance.model.list();
-        context.pop();
+        final models = await context.showLoadingDialog(
+          fn: () async => await OpenAI.instance.model.list(),
+        );
         final modelStrs = models.map((e) => e.id).toList();
         modelStrs.removeWhere((element) => !element.startsWith('dall-e'));
         final model = await context.showPickSingleDialog(
@@ -485,9 +485,9 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        context.showLoadingDialog();
-        final models = await OpenAI.instance.model.list();
-        context.pop();
+        final models = await context.showLoadingDialog(
+          fn: () async => await OpenAI.instance.model.list(),
+        );
         final modelStrs = models.map((e) => e.id).toList();
         modelStrs.removeWhere((element) => !element.startsWith('tts'));
         final model = await context.showPickSingleDialog(
@@ -518,9 +518,9 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        context.showLoadingDialog();
-        final models = await OpenAI.instance.model.list();
-        context.pop();
+        final models = await context.showLoadingDialog(
+          fn: () async => await OpenAI.instance.model.list(),
+        );
         final modelStrs = models.map((e) => e.id).toList();
         modelStrs.removeWhere((element) => !element.startsWith('whisper'));
         final model = await context.showPickSingleDialog(

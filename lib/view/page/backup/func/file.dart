@@ -29,9 +29,9 @@ void _onTapFileRestore(BuildContext context) async {
   if (text == null) return;
 
   try {
-    context.showLoadingDialog();
-    final backup = await compute(Backup.fromJsonString, text.trim());
-    context.pop();
+    final backup = await context.showLoadingDialog(
+      fn: () async => await compute(Backup.fromJsonString, text.trim()),
+    );
     if (backup == null) {
       return;
     }

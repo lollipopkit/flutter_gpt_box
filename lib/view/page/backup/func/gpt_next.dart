@@ -13,27 +13,27 @@ void _onTapRestoreGPTNext(BuildContext context) async {
   if (picked == null) return;
 
   try {
-    context.showLoadingDialog();
-    final (chats, cfg) = await compute(
-      (params) async {
-        final obj = json.decode(params.$1) as Map<String, dynamic>;
-        final {
-          'chat-next-web-store': {
-            'sessions': List sessions,
-          }
-        } = obj;
-        final chats = <ChatHistory>[];
+    final (chats, cfg) = await context.showLoadingDialog(fn: () async {
+      return await compute(
+        (params) async {
+          final obj = json.decode(params.$1) as Map<String, dynamic>;
+          final {
+            'chat-next-web-store': {
+              'sessions': List sessions,
+            }
+          } = obj;
+          final chats = <ChatHistory>[];
 
-        /// Use for-loop for exception handling
-        /// Instead of `sessions.map((e) => ChatHistory.fromGPTNext(e)).toList()`
-        for (final item in sessions) {
-          chats.add(GPTNextConvertor.toChatHistory(item));
-        }
-        return (chats, GPTNextConvertor.parseConfig(obj, params.$2));
-      },
-      (picked, OpenAICfg.current),
-    );
-    context.pop();
+          /// Use for-loop for exception handling
+          /// Instead of `sessions.map((e) => ChatHistory.fromGPTNext(e)).toList()`
+          for (final item in sessions) {
+            chats.add(GPTNextConvertor.toChatHistory(item));
+          }
+          return (chats, GPTNextConvertor.parseConfig(obj, params.$2));
+        },
+        (picked, OpenAICfg.current),
+      );
+    });
 
     var onlyRestoreHistory = false;
     context.showRoundDialog(

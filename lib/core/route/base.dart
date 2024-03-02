@@ -19,12 +19,12 @@ class AppRoute<Ret, Arg> {
     this.middlewares,
   });
 
-  Future<Ret?>? go(BuildContext context, {Key? key, Arg? args}) {
+  Future<Ret?> go(BuildContext context, {Key? key, Arg? args}) {
     /// Add global middlewares here.
     Analysis.recordView(path);
 
     final ret = middlewares?.any((e) => !e((context: context, route: this)));
-    if (ret == true) return null;
+    if (ret == true) return Future.value(null);
 
     return Navigator.push<Ret>(
       context,
