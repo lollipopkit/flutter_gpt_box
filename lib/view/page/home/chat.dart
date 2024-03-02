@@ -108,6 +108,7 @@ class _ChatPageState extends State<_ChatPage>
       data: content.raw,
       builders: {
         'code': CodeElementBuilder(onCopy: _onCopy),
+        'latex': LatexElementBuilder(),
       },
       extensionSet: MarkdownUtils.extensionSet,
       onTapLink: MarkdownUtils.onLinkTap,

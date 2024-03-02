@@ -49,6 +49,7 @@ import 'package:flutter_chatgpt/view/widget/popup_menu.dart';
 import 'package:flutter_chatgpt/view/widget/slide_trans.dart';
 import 'package:flutter_chatgpt/view/widget/switch_page_indicator.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';

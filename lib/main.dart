@@ -103,7 +103,6 @@ Future<void> _initDesktopWindow() async {
   await CustomAppBar.updateTitlebarHeight();
 
   const windowOptions = WindowOptions(
-    size: Size(960, 720),
     center: true,
     backgroundColor: Colors.transparent,
     skipTaskbar: false,

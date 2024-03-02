@@ -434,12 +434,12 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "0195b4a288cb0da2e90ac08621e5393575a291bf"
-      url: "https://github.com/lollipopkit/flutter_markdown_latex"
+      resolved-ref: "4358eca443176991f9c379d22f0562a180805417"
+      url: "https://github.com/xushengs/flutter_markdown_latex"
     source: git
-    version: "0.1.4"
+    version: "0.3.0"
   flutter_math_fork:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_math_fork
       sha256: "94bee4642892a94939af0748c6a7de0ff8318feee588379dcdfea7dc5cba06c8"

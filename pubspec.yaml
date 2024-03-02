@@ -26,13 +26,13 @@ dependencies:
     # path: ../flutter_markdown_latex
     git:
       ref: main
-      url: https://github.com/lollipopkit/flutter_markdown_latex
+      url: https://github.com/xushengs/flutter_markdown_latex
   uuid: ^4.2.2
   choice: ^2.3.0
   file_picker: ^6.1.1
   share_plus: ^7.2.1
   universal_html: ^2.2.4
-  flutter_highlight:
+  flutter_highlight: #^0.7.0
     git:
       ref: master
       url: https://github.com/lollipopkit/highlight.dart
@@ -50,7 +50,7 @@ dependencies:
   icloud_storage: ^2.2.0
   screenshot: ^2.1.0
   after_layout: ^1.2.0
-  flutter_math_fork: ^0.7.2
+  # flutter_math_fork: ^0.7.2
   uni_links: ^0.5.1
   uni_links_desktop: ^0.1.7
   image_picker: ^1.0.7
