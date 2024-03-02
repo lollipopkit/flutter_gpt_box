@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -13,8 +13,6 @@ class CodeElementBuilder extends MarkdownElementBuilder {
   final bool isForCapture;
 
   CodeElementBuilder({this.onCopy, this.isForCapture = false});
-
-  static bool isDark = false;
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
@@ -28,40 +26,33 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     final textContent = element.textContent.trim();
     if (language.isEmpty) {
-      return RichText(
-        text: TextSpan(
-          text: textContent,
-          style: _textStyle.copyWith(
-            backgroundColor: const Color.fromARGB(37, 158, 158, 158),
-          ),
-        ),
-      );
+      return null;
     }
 
-    if (language == 'latex') {
-      /// The following control sequence is unsupported:
-      /// - \documentclass
-      /// - \title
-      /// - \author
-      /// - \begin
-      /// - more...
-      /// If [textContent] contains any of the above, it will be rendered as
-      /// plain text.
-      final isUnsupported = textContent.contains(r'\documentclass') ||
-          textContent.contains(r'\title') ||
-          textContent.contains(r'\author') ||
-          textContent.contains(r'\begin');
-      if (!isUnsupported) {
-        final String? displayMode = element.attributes['displayMode'];
-        return Math.tex(
-          textContent,
-          mathStyle: displayMode == 'true' ? MathStyle.display : MathStyle.text,
-        );
-      }
-    }
+    // if (language == 'latex') {
+    //   /// The following control sequence is unsupported:
+    //   /// - \documentclass
+    //   /// - \title
+    //   /// - \author
+    //   /// - \begin
+    //   /// - more...
+    //   /// If [textContent] contains any of the above, it will be rendered as
+    //   /// plain text.
+    //   final isUnsupported = textContent.contains(r'\documentclass') ||
+    //       textContent.contains(r'\title') ||
+    //       textContent.contains(r'\author') ||
+    //       textContent.contains(r'\begin');
+    //   if (!isUnsupported) {
+    //     final String? displayMode = element.attributes['displayMode'];
+    //     return Math.tex(
+    //       textContent,
+    //       mathStyle: displayMode == 'true' ? MathStyle.display : MathStyle.text,
+    //     );
+    //   }
+    // }
 
     if (isForCapture) {
-      return HighlightViewSync(
+      return HighlightView(
         textContent,
         language: language,
         theme: _theme,
@@ -99,7 +90,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
   }
 
   Map<String, TextStyle> get _theme {
-    return isDark ? _darkTheme : _lightTheme;
+    return RNode.dark.value ? _darkTheme : _lightTheme;
   }
 }
 

@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/util/sync/base.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -48,17 +49,34 @@ extension BoxX on Box {
   }
 
   /// Convert db to json
-  Map<String, dynamic> toJson({bool includeInternal = true}) {
-    final json = <String, dynamic>{};
+  Map<String, T> toJson<T>({bool includeInternal = true}) {
+    final json = <String, T>{};
     for (final key in keys) {
       if (key is String &&
           key.startsWith(_internalPreffix) &&
           !includeInternal) {
         continue;
       }
-      json[key] = get(key);
+      try {
+        json[key] = get(key) as T;
+      } catch (e) {
+        Loggers.app.warning(e);
+      }
     }
     return json;
+  }
+
+  List<String> getKeys({bool includeInternal = true}) {
+    final keys_ = <String>[];
+    for (final key in keys) {
+      if (key is String &&
+          key.startsWith(_internalPreffix) &&
+          !includeInternal) {
+        continue;
+      }
+      keys_.add(key);
+    }
+    return keys_;
   }
 }
 

@@ -11,11 +11,13 @@ extension DialogX on BuildContext {
     List<Widget>? actions,
     String? title,
     bool barrierDismiss = true,
+    void Function(BuildContext)? onContext,
   }) async {
     return await showDialog<T>(
       context: this,
       barrierDismissible: barrierDismiss,
       builder: (_) {
+        onContext?.call(_);
         return AlertDialog(
           title: title == null ? null : Text(title),
           content: child,
@@ -26,11 +28,28 @@ extension DialogX on BuildContext {
     );
   }
 
-  void showLoadingDialog({bool barrierDismiss = false}) {
+  Future<T> showLoadingDialog<T>({
+    required Future<T> Function() fn,
+    bool barrierDismiss = false,
+  }) async {
+    BuildContext? ctx;
     showRoundDialog(
       child: UIs.centerSizedLoading,
       barrierDismiss: barrierDismiss,
+      onContext: (c) => ctx = c,
     );
+
+    try {
+      return await fn();
+    } catch (e) {
+      rethrow;
+    } finally {
+      /// Wait for context to be unmounted
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (ctx?.mounted == true) {
+        ctx?.pop();
+      }
+    }
   }
 
   Future<List<T>?> showPickDialog<T>({

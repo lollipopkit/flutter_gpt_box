@@ -16,7 +16,9 @@ import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/datetime.dart';
 import 'package:flutter_chatgpt/core/ext/media_query.dart';
+import 'package:flutter_chatgpt/core/ext/num.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
+import 'package:flutter_chatgpt/core/ext/xfile.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/route/page.dart';
@@ -24,31 +26,35 @@ import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/core/util/markdown.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:flutter_chatgpt/core/util/platform/file.dart';
 import 'package:flutter_chatgpt/core/util/sync/base.dart';
 import 'package:flutter_chatgpt/core/util/ui.dart';
+import 'package:flutter_chatgpt/core/util/url.dart';
 import 'package:flutter_chatgpt/data/model/app/audio_play.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
-import 'package:flutter_chatgpt/data/model/chat/model.dart';
+import 'package:flutter_chatgpt/data/model/chat/type.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/path.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_chatgpt/view/widget/future.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
+import 'package:flutter_chatgpt/view/widget/popup_menu.dart';
 import 'package:flutter_chatgpt/view/widget/slide_trans.dart';
 import 'package:flutter_chatgpt/view/widget/switch_page_indicator.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uni_links/uni_links.dart';
 
-part 'setting.dart';
 part 'chat.dart';
 part 'history.dart';
 part 'var.dart';
@@ -56,7 +62,7 @@ part 'ctrl.dart';
 part 'enum.dart';
 part 'search.dart';
 part 'appbar.dart';
-part 'input.dart';
+part 'bottom.dart';
 part 'uni_link.dart';
 
 class HomePage extends StatefulWidget {
@@ -64,6 +70,14 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+
+  static void afterRestore() {
+    _allHistories = Stores.history.fetchAll();
+    _historyRN.build();
+    _chatRN.build();
+    _appbarTitleRN.build();
+    _switchChat();
+  }
 }
 
 class _HomePageState extends State<HomePage>
@@ -76,7 +90,9 @@ class _HomePageState extends State<HomePage>
     _allHistories = Stores.history.fetchAll();
     _refreshTimeTimer = Timer.periodic(
       const Duration(seconds: 10),
-      (_) => _timeRN.rebuild(),
+      (_) {
+        if (mounted) _timeRN.build();
+      },
     );
     _historyScrollCtrl.addListener(_locateHistoryListener);
     _initUniLinks();
@@ -95,10 +111,10 @@ class _HomePageState extends State<HomePage>
   @override
   void didChangeDependencies() {
     _media = MediaQuery.of(context);
-    _isDark = context.isDark;
+    RNode.dark.value = context.isDark;
     _isWide.value = _media.isWide;
-    CodeElementBuilder.isDark = _isDark;
     super.didChangeDependencies();
+    _homeBottomRN.build();
 
     /// Must call here, or the colorSeed is not applied
     UIs.primaryColor = Theme.of(context).colorScheme.primary;
@@ -114,7 +130,7 @@ class _HomePageState extends State<HomePage>
         valueListenable: _isWide,
         builder: (_, isWide, __) {
           if (isWide) return UIs.placeholder;
-          return _buildInput(context);
+          return const _HomeBottom();
         },
       ),
     );
@@ -148,7 +164,7 @@ class _HomePageState extends State<HomePage>
   Widget _buildDrawer() {
     return Container(
       width: _isWide.value ? 270 : (_media?.size.width ?? 300) * 0.7,
-      color: UIs.bgColor.fromBool(_isDark),
+      color: UIs.bgColor.fromBool(RNode.dark.value),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Column(
@@ -168,11 +184,17 @@ class _HomePageState extends State<HomePage>
             UIs.height77,
             ListTile(
               onTap: () => Routes.setting.go(context),
+              onLongPress: () => _onLongTapSetting(context),
               leading: const Icon(Icons.settings),
               title: Text(l10n.settings),
             ).card,
             ListTile(
-              onTap: () => Routes.backup.go(context),
+              onTap: () async {
+                final ret = await Routes.backup.go(context);
+                if (ret?.isRestoreSuc == true) {
+                  HomePage.afterRestore();
+                }
+              },
               leading: const Icon(Icons.backup),
               title: Text(l10n.backup),
             ).card,
@@ -234,4 +256,8 @@ class _HomePageState extends State<HomePage>
       status.value = status.value.copyWith(playing: false, played: 0);
     });
   }
+
+  // void _checkInvalidModels() {
+  //   final validModels =
+  // }
 }

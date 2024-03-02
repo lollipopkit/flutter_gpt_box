@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: RebuildNode.app,
+      listenable: RNode.app,
       builder: (_, __) {
         UIs.colorSeed = Color(Stores.setting.themeColorSeed.fetch());
         final themeMode = switch (Stores.setting.themeMode.fetch()) {

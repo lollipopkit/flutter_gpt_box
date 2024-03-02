@@ -20,22 +20,19 @@ class ChatHistoryAdapter extends TypeAdapter<ChatHistory> {
       items: (fields[1] as List).cast<ChatHistoryItem>(),
       id: fields[0] as String,
       name: fields[2] as String?,
-      config: fields[3] as ChatConfig?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatHistory obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.items)
       ..writeByte(2)
-      ..write(obj.name)
-      ..writeByte(3)
-      ..write(obj.config);
+      ..write(obj.name);
   }
 
   @override
@@ -139,13 +136,9 @@ class ChatContentTypeAdapter extends TypeAdapter<ChatContentType> {
       case 0:
         return ChatContentType.text;
       case 1:
-        return ChatContentType.image;
-      case 2:
-        return ChatContentType.video;
-      case 3:
         return ChatContentType.audio;
-      case 4:
-        return ChatContentType.file;
+      case 2:
+        return ChatContentType.image;
       default:
         return ChatContentType.text;
     }
@@ -157,17 +150,11 @@ class ChatContentTypeAdapter extends TypeAdapter<ChatContentType> {
       case ChatContentType.text:
         writer.writeByte(0);
         break;
-      case ChatContentType.image:
+      case ChatContentType.audio:
         writer.writeByte(1);
         break;
-      case ChatContentType.video:
+      case ChatContentType.image:
         writer.writeByte(2);
-        break;
-      case ChatContentType.audio:
-        writer.writeByte(3);
-        break;
-      case ChatContentType.file:
-        writer.writeByte(4);
         break;
     }
   }

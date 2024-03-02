@@ -1,5 +1,4 @@
 import 'package:dart_openai/dart_openai.dart';
-import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -14,20 +13,16 @@ final class ChatHistory {
   final List<ChatHistoryItem> items;
   @HiveField(2)
   String? name;
-  @HiveField(3)
-  ChatConfig? config;
 
   ChatHistory({
     required this.items,
     required this.id,
     this.name,
-    this.config,
   });
 
   ChatHistory.noid({
     required this.items,
     this.name,
-    this.config,
   }) : id = uuid.v4();
 
   static ChatHistory get empty => ChatHistory.noid(items: []);
@@ -37,7 +32,6 @@ final class ChatHistory {
       'id': id,
       'name': name,
       'items': items.map((e) => e.toJson()).toList(),
-      'config': config?.toJson(),
     };
   }
 
@@ -48,9 +42,6 @@ final class ChatHistory {
       items: (json['items'] as List)
           .map((e) => ChatHistoryItem.fromJson(e.cast<String, dynamic>()))
           .toList(),
-      config: json['config'] == null
-          ? null
-          : ChatConfig.fromJson(json['config'].cast<String, dynamic>()),
     );
   }
 
@@ -84,17 +75,18 @@ final class ChatHistoryItem {
     required this.id,
   });
 
+  ChatHistoryItem.gen({
+    required this.role,
+    required this.content,
+  })  : createdAt = DateTime.now(),
+        id = uuid.v4();
+
   ChatHistoryItem.single({
     required this.role,
     String raw = '',
     ChatContentType type = ChatContentType.text,
   })  : id = uuid.v4(),
-        content = [
-          ChatContent(
-            type: type,
-            raw: raw,
-          )
-        ],
+        content = [ChatContent(type: type, raw: raw)],
         createdAt = DateTime.now();
 
   OpenAIChatCompletionChoiceMessageModel get toOpenAI {
@@ -148,18 +140,15 @@ final class ChatHistoryItem {
   }
 }
 
+/// Handle [audio] and [image] as url (file:// & https://) or base64
 @HiveType(typeId: 1)
 enum ChatContentType {
   @HiveField(0)
   text,
   @HiveField(1)
-  image,
-  @HiveField(2)
-  video,
-  @HiveField(3)
   audio,
-  @HiveField(4)
-  file,
+  @HiveField(2)
+  image,
   ;
 }
 
@@ -171,6 +160,9 @@ final class ChatContent {
   String raw;
 
   ChatContent({required this.type, required this.raw});
+  ChatContent.text(this.raw) : type = ChatContentType.text;
+  ChatContent.audio(this.raw) : type = ChatContentType.audio;
+  ChatContent.image(this.raw) : type = ChatContentType.image;
 
   OpenAIChatCompletionChoiceMessageContentItemModel get toOpenAI =>
       switch (type) {
@@ -178,7 +170,7 @@ final class ChatContent {
           OpenAIChatCompletionChoiceMessageContentItemModel.text(raw),
         ChatContentType.image =>
           OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(raw),
-        _ => throw UnimplementedError(),
+        _ => throw UnimplementedError('$type.toOpenAI'),
       };
 
   Map<String, dynamic> toJson() {

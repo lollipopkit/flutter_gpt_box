@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/util/markdown.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 
 extension ChatHistoryShare on ChatHistory {
   Widget gen4Share(BuildContext context) {
@@ -28,6 +30,7 @@ extension ChatHistoryShare on ChatHistory {
         extensionSet: MarkdownUtils.extensionSet,
         builders: {
           'code': CodeElementBuilder(isForCapture: true),
+          'latex': LatexElementBuilder(),
         },
       ));
       children.add(UIs.height13);
@@ -35,6 +38,7 @@ extension ChatHistoryShare on ChatHistory {
     final widget = InheritedTheme.captureAll(
       context,
       Material(
+        color: UIs.bgColor.fromBool(RNode.dark.value),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Column(

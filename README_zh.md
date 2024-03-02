@@ -17,10 +17,12 @@
 
 ## 😣 注意
 本应用目前正在开发中，可能部分功能缺失 / 不可用。
+请不要在生产环境中使用，也不要用于重要数据。
 
 
 ## 🪄 特性
 - 从 [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) 恢复
+- 文本 / 图片 / 音频聊天（网页版仅支持文本）
 - 以图片形式分享聊天
 - Uni-Link，例如：`lk-gptbox://chat/new?msg=你好` (Linux / Web 除外)
 - 与 WebDAV / iCloud 同步

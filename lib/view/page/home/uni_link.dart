@@ -87,42 +87,11 @@ abstract final class AppLink {
           Loggers.app.warning(msg);
           return true;
         }
-        final chatId = params['chatId'];
-        if (chatId != null) {
-          final chat = _allHistories[chatId];
-          if (chat == null) {
-            final msg = l10n.invalidLinkFmt('no chatId($chatId)');
-            context.showSnackBar(msg);
-            Loggers.app.warning(msg);
-            return true;
-          }
-          var cfg = chat.config;
-          if (cfg != null) {
-            if (openAiKey != null) {
-              cfg = cfg.copyWith(key: openAiKey);
-            }
-            if (openAiUrl != null) {
-              cfg = cfg.copyWith(url: openAiUrl);
-            }
-            if (openAiModel != null) {
-              cfg = cfg.copyWith(model: openAiModel);
-            }
-            chat.config = cfg;
-            _storeChat(chatId, context);
-          }
-        } else {
-          if (openAiKey != null) {
-            Stores.setting.openaiApiKey.put(openAiKey);
-            OpenAICfg.key = openAiKey;
-          }
-          if (openAiUrl != null) {
-            Stores.setting.openaiApiUrl.put(openAiUrl);
-            OpenAICfg.url = openAiUrl;
-          }
-          if (openAiModel != null) {
-            Stores.setting.openaiModel.put(openAiModel);
-          }
-        }
+        OpenAICfg.current = OpenAICfg.current.copyWith(
+          url: openAiUrl,
+          key: openAiKey,
+          model: openAiModel,
+        );
         return true;
       default:
         final msg = l10n.invalidLinkFmt(path);

@@ -19,7 +19,7 @@ class _ChatPageState extends State<_ChatPage>
         if (!isWide) return _buildChat();
         return Scaffold(
           body: _buildChat(),
-          bottomNavigationBar: _buildInput(context),
+          bottomNavigationBar: const _HomeBottom(),
         );
       },
     );
@@ -76,39 +76,39 @@ class _ChatPageState extends State<_ChatPage>
 
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
-    final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RebuildNode());
-    final child = ListenableBuilder(
-      listenable: node,
-      builder: (_, __) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: chatItem.content
-              .map((e) => switch (e.type) {
-                    ChatContentType.text => _buildText(chatItem),
-                    ChatContentType.audio => _buildAudio(chatItem),
-                    _ => Text('Unknown type: ${e.type}'),
-                  })
-              .toList(),
-        );
-      },
-    );
+    final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
     return Padding(
       padding: const EdgeInsets.all(7),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildChatItemBtn(chatItems, chatItem),
-          child,
+          ListenableBuilder(
+            listenable: node,
+            builder: (_, __) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: chatItem.content
+                    .map((e) => switch (e.type) {
+                          ChatContentType.audio => _buildAudio(chatItem),
+                          ChatContentType.image => _buildImage(e),
+                          _ => _buildText(e),
+                        })
+                    .toList(),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildText(ChatHistoryItem chatItem) {
+  Widget _buildText(ChatContent content) {
     final child = MarkdownBody(
-      data: chatItem.toMarkdown,
+      data: content.raw,
       builders: {
         'code': CodeElementBuilder(onCopy: _onCopy),
+        'latex': LatexElementBuilder(),
       },
       extensionSet: MarkdownUtils.extensionSet,
       onTapLink: MarkdownUtils.onLinkTap,
@@ -126,6 +126,48 @@ class _ChatPageState extends State<_ChatPage>
           );
   }
 
+  Widget _buildImage(ChatContent content) {
+    if (UrlType.from(content.raw).isFile) {
+      return Image.file(
+        File(content.raw),
+        errorBuilder: (context, error, stackTrace) {
+          return Column(
+            children: [
+              const Icon(Icons.broken_image, size: 50),
+              UIs.height13,
+              TextButton(
+                onPressed: () {
+                  final text = '$error\n\n$stackTrace';
+                  context.showRoundDialog(
+                    title: l10n.error,
+                    child: SingleChildScrollView(child: Text(text)),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: text));
+                        },
+                        child: Text(l10n.copy),
+                      )
+                    ],
+                  );
+                },
+                child: Text(l10n.error),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    return Image.network(
+      content.raw,
+      loadingBuilder: (_, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return UIs.centerSizedLoading;
+      },
+    );
+  }
+
+  /// Current design only allows one audio of each chat item.
   Widget _buildAudio(ChatHistoryItem chatItem) {
     final listenable = _audioPlayerMap.putIfAbsent(
       chatItem.id,
@@ -143,10 +185,10 @@ class _ChatPageState extends State<_ChatPage>
     }();
     return FutureWidget(
       future: initWidget,
-      error: ((error, trace) {
+      error: (error, trace) {
         Loggers.app.warning('Failed to get audio duration', error, trace);
         return Text('$error');
-      }),
+      },
       loading: UIs.centerSizedLoading,
       success: (duration) {
         listenable.value = listenable.value.copyWith(
@@ -163,8 +205,7 @@ class _ChatPageState extends State<_ChatPage>
                 onPressed: () => _onTapAudioCtrl(val, chatItem, listenable),
               ),
               title: Slider(
-                value:
-                    duration == null ? 0.0 : val.played / val.total,
+                value: duration == null ? 0.0 : val.played / val.total,
                 onChanged: (v) {
                   final nowMilli = (val.total * v).toInt();
                   final duration = Duration(milliseconds: nowMilli);
@@ -235,8 +276,8 @@ class _ChatPageState extends State<_ChatPage>
             if (result != true) return;
             chatItems.remove(chatItem);
             _storeChat(_curChatId, context);
-            _historyRNMap[_curChatId]?.rebuild();
-            _chatRN.rebuild();
+            _historyRNMap[_curChatId]?.build();
+            _chatRN.build();
           },
           icon: const Icon(Icons.delete, size: 17),
         ),

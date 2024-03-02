@@ -8,24 +8,25 @@ class SettingStore extends Store {
   late final fontSize = property('fontSize', 12.0);
   late final autoCheckUpdate = property('autoCheckUpdate', true);
 
-  late final openaiApiUrl = property(
-    'openaiApiUrl',
-    'https://api.openai.com',
-  );
-  late final openaiApiKey = property('openaiApiKey', '');
-  late final openaiModel = property('openaiModel', 'gpt-3.5-turbo-1106');
-  late final openaiGenTitleModel = property(
-    'openaiGenTitleModel',
-    'gpt-3.5-turbo',
-  );
-  late final prompt = property('prompt', '');
-  late final historyLength = property('historyLength', 7);
+  // late final openaiApiUrl = property(
+  //   'openaiApiUrl',
+  //   'https://api.openai.com',
+  // );
+  // late final openaiApiKey = property('openaiApiKey', '');
+  // late final openaiModel = property('openaiModel', 'gpt-3.5-turbo-1106');
+  // late final openaiGenTitleModel = property(
+  //   'openaiGenTitleModel',
+  //   'gpt-3.5-turbo',
+  // );
+  // late final prompt = property('prompt', '');
+  // late final historyLength = property('historyLength', 7);
 
   /// Auto scroll to bottom when new message comes.
   late final scrollBottom = property('scrollBottom', true);
   late final locale = property('locale', '');
   late final softWrap = property('softWrap', true);
   late final autoRmDupChat = property('autoRmDupChat', true);
+  late final genTitle = property('genTitle', true);
 
   /// Webdav sync
   late final webdavSync = property('webdavSync', false);
@@ -39,4 +40,7 @@ class SettingStore extends Store {
 
   late final initHelpShown = property('initHelpShown', false);
   //late final imPro = property('imPro', false);
+
+  /// Picture upload config
+  late final picUploadUrl = property('picUploadUrl', '');
 }

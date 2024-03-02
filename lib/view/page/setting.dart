@@ -7,14 +7,17 @@ import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/locale.dart';
 import 'package:flutter_chatgpt/core/ext/string.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
+import 'package:flutter_chatgpt/core/store.dart';
 import 'package:flutter_chatgpt/core/update.dart';
 import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/core/util/ui.dart';
+import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
@@ -35,6 +38,7 @@ class _SettingPageState extends State<SettingPage> {
   final _store = Stores.setting;
 
   var localeStr = '';
+  final _cfgRN = RNode();
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +106,7 @@ class _SettingPageState extends State<SettingPage> {
             _store.themeMode.put(result.index);
 
             /// Set delay to true to wait for db update.
-            RebuildNode.app.rebuild(delay: true);
+            RNode.app.build(delay: true);
           }
         },
         trailing: Text(
@@ -163,7 +167,7 @@ class _SettingPageState extends State<SettingPage> {
       return;
     }
     _store.themeColorSeed.put(color.value);
-    RebuildNode.app.rebuild(delay: true);
+    RNode.app.build(delay: true);
   }
 
   Widget _buildLocale() {
@@ -185,7 +189,7 @@ class _SettingPageState extends State<SettingPage> {
           if (result != null) {
             final newLocaleStr = result.toLanguageTag();
             _store.locale.put(newLocaleStr);
-            await RebuildNode.app.rebuild(delay: true);
+            await RNode.app.build(delay: true);
             setState(() {
               localeStr = newLocaleStr;
             });
@@ -216,255 +220,387 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _buildChat() {
-    final children = [
-      _buildOpenAIKey(),
-      _buildOpenAIUrl(),
-      _buildOpenAIModels(),
-      _buildPrompt(),
-      _buildHistoryLength(),
-    ];
-    return Column(
-      children: children.map((e) => CardX(child: e)).toList(),
-    );
-  }
-
-  Widget _buildOpenAIKey() {
-    return ValueListenableBuilder(
-      valueListenable: _store.openaiApiKey.listenable(),
-      builder: (_, val, __) {
-        return ListTile(
-          leading: const Icon(Icons.vpn_key),
-          title: Text(l10n.secretKey),
-          trailing: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 60),
-            child: Text(
-              val.isEmpty ? l10n.empty : val,
-              style: UIs.textGrey,
-              textAlign: TextAlign.end,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          onTap: () async {
-            final ctrl = TextEditingController(text: val);
-            final result = await context.showRoundDialog<String>(
-              title: l10n.edit,
-              child: Input(
-                controller: ctrl,
-                hint: 'sk-xxx',
-                maxLines: 3,
-              ),
-              actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
-            );
-            if (result == null) return;
-            _store.openaiApiKey.put(result);
-            OpenAICfg.key = result;
-          },
+    return ListenableBuilder(
+      listenable: _cfgRN,
+      builder: (_, __) {
+        final cfg = OpenAICfg.current;
+        final children = [
+          _buildSwitchCfg(cfg),
+          _buildOpenAIKey(cfg.key),
+          _buildOpenAIUrl(cfg.url),
+          _buildOpenAIModels(cfg),
+          _buildPrompt(cfg.prompt),
+          _buildHistoryLength(cfg.historyLen),
+        ];
+        return Column(
+          children: children.map((e) => CardX(child: e)).toList(),
         );
       },
     );
   }
 
-  Widget _buildOpenAIUrl() {
-    return ValueListenableBuilder(
-      valueListenable: _store.openaiApiUrl.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.link),
-        title: Text(l10n.apiUrl),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
-          val.isEmpty ? l10n.empty : val,
-          style: UIs.text13Grey,
-        ),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val);
-          final result = await context.showRoundDialog<String>(
-            title: l10n.edit,
-            child: Input(
-              controller: ctrl,
-              hint: 'https://api.openai.com',
-              maxLines: 3,
+  Widget _buildSwitchCfg(ChatConfig cfg) {
+    final vals = Stores.config.box
+        .toJson<ChatConfig>(includeInternal: false)
+        .values
+        .toList();
+    final children = <Widget>[];
+    for (int idx = 0; idx < vals.length; idx++) {
+      final value = vals[idx];
+      final delBtn = IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () {
+          if (value.id == ChatConfig.defaultId) return;
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.delFmt(value.name, l10n.profile)),
+            actions: Btns.oks(
+              onTap: () {
+                Stores.config.delete(value.id);
+                _cfgRN.build();
+                context.pop();
+                if (cfg.id == value.id) {
+                  OpenAICfg.switchTo(ChatConfig.defaultId);
+                  _cfgRN.build();
+                }
+              },
+              red: true,
             ),
-            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
           );
-          if (result == null) return;
-          if (result.contains('/v1') || !OpenAICfg.apiUrlReg.hasMatch(result)) {
-            final sure = await context.showRoundDialog(
-              title: l10n.attention,
-              child: Text(l10n.apiUrlTip),
-              actions: Btns.oks(onTap: () => context.pop(true), red: true),
-            );
-            if (sure != true) return;
-          }
-          _store.openaiApiUrl.put(result);
-          OpenAICfg.url = result;
         },
+      );
+      children.add(ListTile(
+        leading: Checkbox(
+          value: cfg.id == value.id,
+          onChanged: (val) {
+            if (val != true) return;
+            OpenAICfg.switchTo(value.id);
+            _cfgRN.build();
+          },
+        ),
+        title: Text(value.name.isEmpty ? l10n.defaulT : value.name),
+        onTap: () {
+          if (cfg.id == value.id) return;
+          OpenAICfg.switchTo(value.id);
+          _cfgRN.build();
+        },
+        trailing: value.id != ChatConfig.defaultId ? delBtn : null,
+      ));
+    }
+    children.add(ListTile(
+      onTap: () async {
+        final ctrl = TextEditingController();
+        final name = await context.showRoundDialog(
+          title: l10n.add,
+          child: Input(
+            controller: ctrl,
+            hint: l10n.name,
+            icon: Icons.text_fields,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (name == null) return;
+        final cfg = ChatConfig.defaultOne.copyWith(
+          id: uuid.v4(),
+          name: name,
+        )..save();
+        OpenAICfg.switchTo(cfg.id);
+        _cfgRN.build();
+      },
+      title: Text(l10n.add),
+      trailing: const Icon(Icons.add),
+    ));
+    return ExpandTile(
+      leading: const Icon(Icons.switch_account),
+      title: Text(l10n.profile),
+      subtitle: Text(
+        '${l10n.current}: ${switch ((cfg.id, cfg.name)) {
+          (ChatConfig.defaultId, _) => l10n.defaulT,
+          (_, final String name) => name,
+        }}',
+        style: UIs.text13Grey,
       ),
+      children: children,
     );
   }
 
-  Widget _buildOpenAIModels() {
+  Widget _buildOpenAIKey(String val) {
+    return ListTile(
+      leading: const Icon(Icons.vpn_key),
+      title: Text(l10n.secretKey),
+      trailing: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 60),
+        child: Text(
+          val.isEmpty ? l10n.empty : val,
+          style: UIs.textGrey,
+          textAlign: TextAlign.end,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val);
+        final result = await context.showRoundDialog<String>(
+          title: l10n.edit,
+          child: Input(
+            controller: ctrl,
+            hint: 'sk-xxx',
+            maxLines: 3,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (result == null) return;
+        OpenAICfg.current = OpenAICfg.current.copyWith(key: result);
+        _cfgRN.build();
+      },
+    );
+  }
+
+  Widget _buildOpenAIUrl(String val) {
+    return ListTile(
+      leading: const Icon(Icons.link),
+      title: Text(l10n.apiUrl),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(
+        val.isEmpty ? l10n.empty : val,
+        style: UIs.text13Grey,
+      ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val);
+        final result = await context.showRoundDialog<String>(
+          title: l10n.edit,
+          child: Input(
+            controller: ctrl,
+            hint: 'https://api.openai.com',
+            maxLines: 3,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (result == null) return;
+        if (result.contains('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
+          final sure = await context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.apiUrlTip),
+            actions: Btns.oks(onTap: () => context.pop(true), red: true),
+          );
+          if (sure != true) return;
+        }
+        OpenAICfg.current = OpenAICfg.current.copyWith(url: result);
+        _cfgRN.build();
+      },
+    );
+  }
+
+  Widget _buildOpenAIModels(ChatConfig cfg) {
     return ExpandTile(
       leading: const Icon(Icons.model_training),
       title: Text(l10n.model),
       children: [
-        _buildOpenAIChatModel(),
-        _buildOpenAIGenTitleModel(),
+        _buildOpenAIChatModel(cfg),
+        _buildOpenAIImgModel(cfg),
+        _buildOpenAISpeechModel(cfg),
+        _buildOpenAITranscribeModel(cfg),
       ],
     );
   }
 
-  Widget _buildOpenAIChatModel() {
-    return ValueListenableBuilder(
-      valueListenable: _store.openaiModel.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.chat),
-        title: Text(l10n.chat),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
-          val,
-          style: UIs.text13Grey,
-        ),
-        onTap: () async {
-          if (_store.openaiApiKey.fetch().isEmpty) {
-            context.showRoundDialog(
-              title: l10n.attention,
-              child: Text(l10n.needOpenAIKey),
-              actions: Btns.oks(onTap: () => context.pop()),
-            );
-            return;
-          }
-          context.showLoadingDialog();
-          final models = await OpenAI.instance.model.list();
-          context.pop();
-          final modelStrs = models.map((e) => e.id).toList();
-          //modelStrs.removeWhere((element) => !element.startsWith('gpt'));
-          final model = await context.showPickSingleDialog(
-            items: modelStrs,
-            initial: val,
+  Widget _buildOpenAIChatModel(ChatConfig cfg) {
+    final val = cfg.model;
+    return ListTile(
+      leading: const Icon(Icons.chat),
+      title: Text(l10n.chat),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(val, style: UIs.text13Grey),
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
           );
-          if (model != null) {
-            _store.openaiModel.put(model);
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildOpenAIGenTitleModel() {
-    final property = _store.openaiGenTitleModel;
-    return ValueListenableBuilder(
-      valueListenable: property.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.title),
-        title: Text(l10n.genChatTitle),
-        trailing: const Icon(Icons.keyboard_arrow_right),
-        subtitle: Text(
-          l10n.genTitleTip(val.isEmpty ? l10n.empty : val),
-          style: UIs.text13Grey,
-        ),
-        onTap: () async {
-          if (_store.openaiApiKey.fetch().isEmpty) {
-            context.showRoundDialog(
-              title: l10n.attention,
-              child: Text(l10n.needOpenAIKey),
-              actions: Btns.oks(onTap: () => context.pop()),
-            );
-            return;
-          }
-          context.showLoadingDialog();
-          final models = await OpenAI.instance.model.list();
-          context.pop();
-          final modelStrs = models.map((e) => e.id).toList();
-          modelStrs.removeWhere((element) => !element.startsWith('gpt'));
-          final model = await context.showPickSingleDialog(
-            items: modelStrs,
-            initial: val,
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(''),
-                child: Text(l10n.clear),
-              ),
-            ],
-          );
-          if (model != null) {
-            property.put(model);
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildPrompt() {
-    return ValueListenableBuilder(
-      valueListenable: _store.prompt.listenable(),
-      builder: (_, val, __) {
-        return ListTile(
-          leading: const Icon(Icons.abc),
-          title: Text(l10n.promptsSettingsItem),
-          trailing: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 60),
-            child: Text(
-              val.isEmpty ? l10n.empty : val,
-              style: UIs.textGrey,
-              textAlign: TextAlign.end,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          onTap: () async {
-            final ctrl = TextEditingController(text: val);
-            final result = await context.showRoundDialog<String>(
-              title: l10n.edit,
-              child: Input(
-                controller: ctrl,
-                maxLines: 3,
-              ),
-              actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
-            );
-            if (result == null) return;
-            _store.prompt.put(result);
-          },
+          return;
+        }
+        final models = await context.showLoadingDialog(
+          fn: () async => await OpenAI.instance.model.list(),
         );
+        final modelStrs = models.map((e) => e.id).toList();
+        modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
+        );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          _cfgRN.build();
+        }
       },
     );
   }
 
-  Widget _buildHistoryLength() {
-    return ValueListenableBuilder(
-      valueListenable: _store.historyLength.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.history),
-        title: Text(l10n.chatHistoryLength),
-        trailing: Text(
-          val.toString(),
-          style: UIs.text13Grey,
-        ),
-        subtitle: Text(l10n.chatHistoryTip, style: UIs.textGrey),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val.toString());
-          final result = await context.showRoundDialog<String>(
-            title: l10n.edit,
-            child: Input(
-              controller: ctrl,
-              hint: '7',
-              type: TextInputType.number,
-            ),
-            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+  Widget _buildOpenAIImgModel(ChatConfig cfg) {
+    final val = cfg.imgModel;
+    return ListTile(
+      leading: const Icon(Icons.photo),
+      title: Text(l10n.image),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(val, style: UIs.text13Grey),
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
           );
-          if (result == null) return;
-          final newVal = int.tryParse(result);
-          if (newVal == null) {
-            context.showSnackBar('Invalid number: $result');
-            return;
-          }
-          _store.historyLength.put(newVal);
-        },
+          return;
+        }
+        final models = await context.showLoadingDialog(
+          fn: () async => await OpenAI.instance.model.list(),
+        );
+        final modelStrs = models.map((e) => e.id).toList();
+        modelStrs.removeWhere((element) => !element.startsWith('dall-e'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
+        );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          _cfgRN.build();
+        }
+      },
+    );
+  }
+
+  Widget _buildOpenAISpeechModel(ChatConfig cfg) {
+    final val = cfg.speechModel;
+    return ListTile(
+      leading: const Icon(Icons.speaker),
+      title: Text(l10n.tts),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(val, style: UIs.text13Grey),
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
+          );
+          return;
+        }
+        final models = await context.showLoadingDialog(
+          fn: () async => await OpenAI.instance.model.list(),
+        );
+        final modelStrs = models.map((e) => e.id).toList();
+        modelStrs.removeWhere((element) => !element.startsWith('tts'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
+        );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          _cfgRN.build();
+        }
+      },
+    );
+  }
+
+  Widget _buildOpenAITranscribeModel(ChatConfig cfg) {
+    final val = cfg.transcribeModel;
+    return ListTile(
+      leading: const Icon(Icons.transcribe),
+      title: Text(l10n.stt),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      subtitle: Text(val, style: UIs.text13Grey),
+      onTap: () async {
+        if (cfg.key.isEmpty) {
+          context.showRoundDialog(
+            title: l10n.attention,
+            child: Text(l10n.needOpenAIKey),
+            actions: Btns.oks(onTap: () => context.pop()),
+          );
+          return;
+        }
+        final models = await context.showLoadingDialog(
+          fn: () async => await OpenAI.instance.model.list(),
+        );
+        final modelStrs = models.map((e) => e.id).toList();
+        modelStrs.removeWhere((element) => !element.startsWith('whisper'));
+        final model = await context.showPickSingleDialog(
+          items: modelStrs,
+          initial: val,
+        );
+        if (model != null) {
+          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          _cfgRN.build();
+        }
+      },
+    );
+  }
+
+  Widget _buildPrompt(String val) {
+    return ListTile(
+      leading: const Icon(Icons.abc),
+      title: Text(l10n.promptsSettingsItem),
+      trailing: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 60),
+        child: Text(
+          val.isEmpty ? l10n.empty : val,
+          style: UIs.textGrey,
+          textAlign: TextAlign.end,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val);
+        final result = await context.showRoundDialog<String>(
+          title: l10n.edit,
+          child: Input(
+            controller: ctrl,
+            maxLines: 3,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (result == null) return;
+        OpenAICfg.current = OpenAICfg.current.copyWith(prompt: result);
+        _cfgRN.build();
+      },
+    );
+  }
+
+  Widget _buildHistoryLength(int val) {
+    return ListTile(
+      leading: const Icon(Icons.history),
+      title: Text(l10n.chatHistoryLength),
+      trailing: Text(
+        val.toString(),
+        style: UIs.text13Grey,
+      ),
+      subtitle: Text(l10n.chatHistoryTip, style: UIs.textGrey),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val.toString());
+        final result = await context.showRoundDialog<String>(
+          title: l10n.edit,
+          child: Input(
+            controller: ctrl,
+            hint: '7',
+            type: TextInputType.number,
+          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+        );
+        if (result == null) return;
+        final newVal = int.tryParse(result);
+        if (newVal == null) {
+          context.showSnackBar('Invalid number: $result');
+          return;
+        }
+        OpenAICfg.current = OpenAICfg.current.copyWith(historyLen: newVal);
+        _cfgRN.build();
+      },
     );
   }
 
   Widget _buildMore() {
     final children = [
       _buildFontSize(),
+      _buildGenTitle(),
       _buildScrollBottom(),
       _buildSoftWrap(),
       _buildAutoRmDupChat(),
@@ -506,6 +642,14 @@ class _SettingPageState extends State<SettingPage> {
           _store.fontSize.put(newVal);
         },
       ),
+    );
+  }
+
+  Widget _buildGenTitle() {
+    return ListTile(
+      leading: const Icon(Icons.auto_awesome),
+      title: Text(l10n.genChatTitle),
+      trailing: StoreSwitch(prop: _store.genTitle),
     );
   }
 

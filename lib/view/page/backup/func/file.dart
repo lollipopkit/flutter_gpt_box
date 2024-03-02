@@ -29,32 +29,36 @@ void _onTapFileRestore(BuildContext context) async {
   if (text == null) return;
 
   try {
-    context.showLoadingDialog();
-    final backup = await compute(Backup.fromJsonString, text.trim());
-    context.pop();
+    final backup = await context.showLoadingDialog(
+      fn: () async => await compute(Backup.fromJsonString, text.trim()),
+    );
     if (backup == null) {
       return;
     }
 
-    if (backupFormatVersion != backup.version) {
+    if (Backup.validVer != backup.version) {
       context.showSnackBar('Backup version not match');
       return;
     }
 
     final time = DateTime.fromMillisecondsSinceEpoch(backup.lastModTime);
-    await context.showRoundDialog(
+    final suc = await context.showRoundDialog(
       title: l10n.attention,
       child: Text(l10n.sureRestoreFmt(time)),
       actions: [
         TextButton(
           onPressed: () async {
-            context.pop();
+            context.pop(true);
             await backup.merge(force: true);
           },
           child: Text(l10n.restore),
         ),
       ],
     );
+    if (suc == true) {
+      const BackupPageRet ret = (isRestoreSuc: true);
+      context.pop(ret);
+    }
   } catch (e, trace) {
     Loggers.app.warning('Import backup failed', e, trace);
     context.showSnackBar(e.toString());

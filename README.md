@@ -17,10 +17,12 @@ A third-party GPT Client for OpenAI API on all platforms.
 
 ## 😣 Attention
 This app is now under development, some features may be missing / not available.
+Please don't use it in production environment, and don't use it for important data.
 
 
 ## 🪄 Features
 - Restore from [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
+- Text / Image / Audio chat. (Web only support text)
 - Share chat by picture.
 - Render code block / latex formula.
 - Uni-Link, eg: `lk-gptbox://chat/new?msg=hello` (except Linux / Web)

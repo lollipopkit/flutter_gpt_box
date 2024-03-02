@@ -33,7 +33,7 @@ class DebugPage extends StatelessWidget {
               if (sure == true) {
                 DebugNotifier.logs.clear();
                 DebugNotifier.state.clear();
-                DebugNotifier.node.rebuild();
+                DebugNotifier.node.build();
               }
             },
             icon: const Icon(Icons.delete, color: Colors.white, size: 21),

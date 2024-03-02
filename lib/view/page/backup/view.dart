@@ -12,10 +12,10 @@ import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/util/platform/file.dart';
 import 'package:flutter_chatgpt/core/util/ui.dart';
 import 'package:flutter_chatgpt/data/model/app/backup.dart';
-import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/gpt_next.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
+import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
@@ -36,6 +36,8 @@ part 'func/gpt_next.dart';
 
 final _icloudLoading = ValueNotifier(false);
 final _webdavLoading = ValueNotifier(false);
+
+typedef BackupPageRet = ({bool isRestoreSuc});
 
 final class BackupPage extends StatelessWidget {
   const BackupPage({super.key, Never? args});

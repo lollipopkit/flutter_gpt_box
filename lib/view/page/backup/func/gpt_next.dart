@@ -13,27 +13,27 @@ void _onTapRestoreGPTNext(BuildContext context) async {
   if (picked == null) return;
 
   try {
-    context.showLoadingDialog();
-    final (chats, cfg) = await compute(
-      (params) async {
-        final obj = json.decode(params.$1) as Map<String, dynamic>;
-        final {
-          'chat-next-web-store': {
-            'sessions': List sessions,
-          }
-        } = obj;
-        final chats = <ChatHistory>[];
+    final (chats, cfg) = await context.showLoadingDialog(fn: () async {
+      return await compute(
+        (params) async {
+          final obj = json.decode(params.$1) as Map<String, dynamic>;
+          final {
+            'chat-next-web-store': {
+              'sessions': List sessions,
+            }
+          } = obj;
+          final chats = <ChatHistory>[];
 
-        /// Use for-loop for exception handling
-        /// Instead of `sessions.map((e) => ChatHistory.fromGPTNext(e)).toList()`
-        for (final item in sessions) {
-          chats.add(GPTNextConvertor.toChatHistory(item));
-        }
-        return (chats, GPTNextConvertor.parseConfig(obj, params.$2));
-      },
-      (picked, ChatConfig.fromStore()),
-    );
-    context.pop();
+          /// Use for-loop for exception handling
+          /// Instead of `sessions.map((e) => ChatHistory.fromGPTNext(e)).toList()`
+          for (final item in sessions) {
+            chats.add(GPTNextConvertor.toChatHistory(item));
+          }
+          return (chats, GPTNextConvertor.parseConfig(obj, params.$2));
+        },
+        (picked, OpenAICfg.current),
+      );
+    });
 
     var onlyRestoreHistory = false;
     context.showRoundDialog(
@@ -66,11 +66,13 @@ void _onTapRestoreGPTNext(BuildContext context) async {
               Stores.history.put(chat);
             }
             if (!onlyRestoreHistory) {
-              Stores.setting.openaiApiUrl.put(cfg.url);
-              Stores.setting.openaiApiKey.put(cfg.key);
+              OpenAICfg.current = OpenAICfg.current.copyWith(
+                url: cfg.url,
+                key: cfg.key,
+              );
             }
             context.pop();
-            RebuildNode.app.rebuild();
+            RNode.app.build();
           },
           child: Text(l10n.restore),
         ),

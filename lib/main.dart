@@ -103,7 +103,6 @@ Future<void> _initDesktopWindow() async {
   await CustomAppBar.updateTitlebarHeight();
 
   const windowOptions = WindowOptions(
-    size: Size(960, 720),
     center: true,
     backgroundColor: Colors.transparent,
     skipTaskbar: false,
@@ -118,4 +117,5 @@ Future<void> _initDesktopWindow() async {
 Future<void> _loadStores() async {
   await Stores.history.init();
   await Stores.setting.init();
+  await Stores.config.init();
 }

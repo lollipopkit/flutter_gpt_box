@@ -16,9 +16,9 @@ final class AudioPlayStatus {
   });
 
   static AudioPlayStatus fromChatItem(ChatHistoryItem item) => AudioPlayStatus(
-    id: item.id,
-    source: item.content.first.raw,
-  );
+        id: item.id,
+        source: item.content.first.raw,
+      );
 
   AudioPlayStatus copyWith({
     int? played,

@@ -28,20 +28,25 @@ abstract final class ICloud {
     String? localPath,
   }) async {
     final completer = Completer<ICloudErr?>();
-    await ICloudStorage.upload(
-      containerId: _containerId,
-      filePath: localPath ?? '${await Paths.doc}/$relativePath',
-      destinationRelativePath: relativePath,
-      onProgress: (stream) {
-        stream.listen(
-          null,
-          onDone: () => completer.complete(null),
-          onError: (e) => completer.complete(
-            ICloudErr(type: ICloudErrType.generic, message: '$e'),
-          ),
-        );
-      },
-    );
+    try {
+      await ICloudStorage.upload(
+        containerId: _containerId,
+        filePath: localPath ?? '${await Paths.doc}/$relativePath',
+        destinationRelativePath: relativePath,
+        onProgress: (stream) {
+          stream.listen(
+            null,
+            onDone: () => completer.complete(null),
+            onError: (e) => completer.complete(
+              ICloudErr(type: ICloudErrType.generic, message: '$e'),
+            ),
+          );
+        },
+      );
+    } catch (e, s) {
+      _logger.warning('Upload $relativePath failed', e, s);
+      completer.complete(ICloudErr(type: ICloudErrType.generic, message: '$e'));
+    }
     return completer.future;
   }
 
@@ -52,10 +57,14 @@ abstract final class ICloud {
   }
 
   static Future<void> delete(String relativePath) async {
-    await ICloudStorage.delete(
-      containerId: _containerId,
-      relativePath: relativePath,
-    );
+    try {
+      await ICloudStorage.delete(
+        containerId: _containerId,
+        relativePath: relativePath,
+      );
+    } catch (e, s) {
+      _logger.warning('Delete $relativePath failed', e, s);
+    }
   }
 
   /// Download file from iCloud
@@ -71,20 +80,25 @@ abstract final class ICloud {
     String? localPath,
   }) async {
     final completer = Completer<ICloudErr?>();
-    await ICloudStorage.download(
-      containerId: _containerId,
-      relativePath: relativePath,
-      destinationFilePath: localPath ?? '${await Paths.doc}/$relativePath',
-      onProgress: (stream) {
-        stream.listen(
-          null,
-          onDone: () => completer.complete(null),
-          onError: (e) => completer.complete(
-            ICloudErr(type: ICloudErrType.generic, message: '$e'),
-          ),
-        );
-      },
-    );
+    try {
+      await ICloudStorage.download(
+        containerId: _containerId,
+        relativePath: relativePath,
+        destinationFilePath: localPath ?? '${await Paths.doc}/$relativePath',
+        onProgress: (stream) {
+          stream.listen(
+            null,
+            onDone: () => completer.complete(null),
+            onError: (e) => completer.complete(
+              ICloudErr(type: ICloudErrType.generic, message: '$e'),
+            ),
+          );
+        },
+      );
+    } catch (e, s) {
+      _logger.warning('Download $relativePath failed', e, s);
+      completer.complete(ICloudErr(type: ICloudErrType.generic, message: '$e'));
+    }
     return completer.future;
   }
 

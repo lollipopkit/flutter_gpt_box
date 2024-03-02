@@ -11,7 +11,7 @@ const _level2Color = {
 };
 
 abstract final class DebugNotifier {
-  static final node = RebuildNode();
+  static final node = RNode();
   static final logs = <LogRecord>[];
   static final state = <Widget>[];
 
@@ -52,7 +52,7 @@ abstract final class DebugNotifier {
       state.sublist(state.length - _kMaxDebugLogLines);
     }
 
-    node.rebuild();
+    node.build();
   }
 
   static String get logsStr {

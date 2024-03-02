@@ -41,7 +41,7 @@ class _HistoryPageState extends State<_HistoryPage>
   Widget _buildHistoryListItem(String chatId) {
     final entity = _allHistories[chatId];
     if (entity == null) return UIs.placeholder;
-    final node = _historyRNMap.putIfAbsent(chatId, () => RebuildNode());
+    final node = _historyRNMap.putIfAbsent(chatId, () => RNode());
     return ListTile(
       title: ListenableBuilder(
         listenable: node,
