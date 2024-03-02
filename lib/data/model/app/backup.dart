@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_chatgpt/core/rebuild.dart';
-import 'package:flutter_chatgpt/core/store.dart';
+import 'package:flutter_chatgpt/core/util/json.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/res/path.dart';
@@ -10,18 +10,18 @@ import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/page/home/home.dart';
 import 'package:logging/logging.dart';
 
+final _logger = Logger('Backup');
+
 class Backup {
   static const validVer = 2;
 
   final int version;
   final List<ChatHistory> history;
   final List<ChatConfig> configs;
-  final Map<String, dynamic> settings;
   final int lastModTime;
 
   const Backup({
     required this.version,
-    required this.settings,
     required this.history,
     required this.configs,
     required this.lastModTime,
@@ -42,47 +42,11 @@ class Backup {
         return 0;
       }
     }();
-    final settings = () {
-      try {
-        return json['settings'] as Map<String, dynamic>;
-      } catch (e) {
-        return <String, dynamic>{};
-      }
-    }();
-    final configs = () {
-      final items = <ChatConfig>[];
-      try {
-        final list = ((json['configs'] ?? []) as List<dynamic>);
-        for (final item in list) {
-          try {
-            final config = ChatConfig.fromJson(item.cast<String, dynamic>());
-            items.add(config);
-          } catch (_) {}
-        }
-        return items;
-      } catch (e) {
-        return <ChatConfig>[];
-      }
-    }();
-    final history = () {
-      final items = <ChatHistory>[];
-      try {
-        final list = ((json['history'] ?? []) as List<dynamic>);
-        for (final item in list) {
-          try {
-            final h = ChatHistory.fromJson(item.cast<String, dynamic>());
-            items.add(h);
-          } catch (_) {}
-        }
-        return items;
-      } catch (e) {
-        return <ChatHistory>[];
-      }
-    }();
+    final configs = fromJsonList(json['configs'], ChatConfig.fromJson);
+    final history = fromJsonList(json['history'], ChatHistory.fromJson);
     return Backup(
       version: version,
       lastModTime: lastModTime,
-      settings: settings,
       configs: configs,
       history: history,
     );
@@ -90,7 +54,6 @@ class Backup {
 
   Map<String, dynamic> toJson() => {
         'version': version,
-        'settings': settings,
         'history': history,
         'configs': configs,
         'lastModTime': lastModTime,
@@ -109,7 +72,6 @@ class Backup {
     return Backup(
       version: validVer,
       lastModTime: Stores.lastModTime,
-      settings: Stores.setting.box.toJson(),
       history: Stores.history.fetchAll().values.toList(),
       configs: Stores.config.fetchAll().values.toList(),
     );
@@ -137,6 +99,7 @@ class Backup {
     final bakTime = lastModTime;
     final override = force || curTime < bakTime;
     if (!override) {
+      _logger.info('Skip merge, local is newer');
       return;
     }
 
@@ -156,24 +119,24 @@ class Backup {
       Stores.history.put(history.firstWhere((e) => e.id == id));
     }
 
-    // Settings
-    final nowSettingsKeys = Stores.setting.box.keys.toSet();
-    final bakSettingsKeys = settings.keys.toSet();
-    final settingsNew = bakSettingsKeys.difference(nowSettingsKeys);
-    for (final key in settingsNew) {
-      Stores.setting.box.put(key, settings[key]);
+    // Config
+    final nowConfigKeys = Stores.config.box.keys.toSet();
+    final bakConfigKeys = configs.map((e) => e.id).toSet();
+    final configNew = bakConfigKeys.difference(nowConfigKeys);
+    for (final id in configNew) {
+      Stores.config.put(configs.firstWhere((e) => e.id == id));
     }
-    final settingsDelete = nowSettingsKeys.difference(bakSettingsKeys);
-    final settingsUpdate = nowSettingsKeys.intersection(bakSettingsKeys);
-    for (final key in settingsDelete) {
-      Stores.setting.box.delete(key);
+    final configDelete = nowConfigKeys.difference(bakConfigKeys);
+    final configUpdate = nowConfigKeys.intersection(bakConfigKeys);
+    for (final id in configDelete) {
+      Stores.config.delete(id);
     }
-    for (final key in settingsUpdate) {
-      Stores.setting.box.put(key, settings[key]);
+    for (final id in configUpdate) {
+      Stores.config.put(configs.firstWhere((e) => e.id == id));
     }
 
-    loadFromStore();
     RNode.app.build();
     HomePage.afterRestore();
+    _logger.info('Merge done');
   }
 }

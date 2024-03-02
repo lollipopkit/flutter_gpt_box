@@ -15,7 +15,7 @@ Widget _buildWebdav(BuildContext context) {
           title: Text(l10n.auto),
           trailing: StoreSwitch(
             prop: Stores.setting.webdavSync,
-            validator: (p0) {
+            validator: (p0) async {
               if (Stores.setting.icloudSync.fetch() && p0) {
                 context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
                 return false;
@@ -28,14 +28,8 @@ Widget _buildWebdav(BuildContext context) {
                   return false;
                 }
               }
+              await Webdav.sync();
               return true;
-            },
-            callback: (val) async {
-              if (val) {
-                _webdavLoading.value = true;
-                await Webdav.sync();
-                _webdavLoading.value = false;
-              }
             },
           ),
         ),

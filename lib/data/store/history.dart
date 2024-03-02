@@ -35,9 +35,9 @@ class HistoryStore extends Store {
     return Map.fromEntries(sorted);
   }
 
-  void put(ChatHistory history) {
+  void put(ChatHistory history, [bool update = true]) {
     box.put(history.id, history);
-    box.updateLastModified();
+    if (update) box.updateLastModified();
   }
 
   void delete(String id) {

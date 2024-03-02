@@ -29,13 +29,13 @@ class SettingStore extends Store {
   late final genTitle = property('genTitle', true);
 
   /// Webdav sync
-  late final webdavSync = property('webdavSync', false);
-  late final webdavUrl = property('webdavUrl', '');
-  late final webdavUser = property('webdavUser', '');
-  late final webdavPwd = property('webdavPwd', '');
+  late final webdavSync = property('webdavSync', false, updateModTime: false);
+  late final webdavUrl = property('webdavUrl', '', updateModTime: false);
+  late final webdavUser = property('webdavUser', '', updateModTime: false);
+  late final webdavPwd = property('webdavPwd', '', updateModTime: false);
 
   /// Only valid on iOS and macOS
-  late final icloudSync = property('icloudSync', false);
+  late final icloudSync = property('icloudSync', false, updateModTime: false);
   late final onlySyncOnLaunch = property('onlySyncOnLaunch', false);
 
   late final initHelpShown = property('initHelpShown', false);

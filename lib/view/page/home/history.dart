@@ -88,7 +88,7 @@ class _HistoryPageState extends State<_HistoryPage>
             }
           },
           id: 'history_item',
-          duration: 70,
+          durationMills: 70,
         );
       },
     );

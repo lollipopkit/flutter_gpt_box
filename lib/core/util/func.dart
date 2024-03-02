@@ -8,11 +8,11 @@ abstract final class Funcs {
   static Future<void> throttle(
     FutureOr Function() func, {
     String id = _defaultThrottleId,
-    int duration = _defaultDurationTime,
+    int durationMills = _defaultDurationTime,
     FutureOr Function()? onIgnore,
   }) async {
     final currentTime = DateTime.now().millisecondsSinceEpoch;
-    if (currentTime - (startTimeMap[id] ?? 0) > duration) {
+    if (currentTime - (startTimeMap[id] ?? 0) > durationMills) {
       startTimeMap[id] = DateTime.now().millisecondsSinceEpoch;
       await func();
     } else {

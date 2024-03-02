@@ -191,6 +191,8 @@ class _HomePageState extends State<HomePage>
             ListTile(
               onTap: () async {
                 final ret = await Routes.backup.go(context);
+                Scaffold.maybeOf(context)?.closeDrawer();
+
                 if (ret?.isRestoreSuc == true) {
                   HomePage.afterRestore();
                 }
@@ -218,6 +220,7 @@ class _HomePageState extends State<HomePage>
     /// - Init help uses [l10n] to gen msg, so [l10n] must be ready
     /// - [l10n] is ready after first layout
     _switchChat();
+    _historyRN.build();
     _removeDuplicateHistory(context);
 
     if (Stores.setting.autoCheckUpdate.fetch()) {

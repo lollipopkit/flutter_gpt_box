@@ -150,7 +150,6 @@ ChatHistory _newChat() {
   /// Put newHistory to the first place, the default implementation of Dart's
   /// Map will put the new item to the last place.
   _allHistories = {newHistory.id: newHistory, ..._allHistories};
-  Stores.history.put(newHistory);
   return newHistory;
 }
 
@@ -397,7 +396,7 @@ void _locateHistoryListener() => Funcs.throttle(
         _locateHistoryBtn.value = !visible;
       },
       id: 'calcChatLocateBtn',
-      duration: 10,
+      durationMills: 10,
     );
 
 void _gotoHistory(String chatId) {

@@ -13,7 +13,9 @@ abstract final class SyncService {
     await Funcs.throttle(
       _sync,
       id: 'SyncService.sync',
-      duration: 30000,
+
+      /// In common case, a chat will be ended in 10 seconds.
+      durationMills: 10000,
     );
   }
 

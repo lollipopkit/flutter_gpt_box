@@ -34,7 +34,6 @@ part 'func/webdav.dart';
 part 'func/icloud.dart';
 part 'func/gpt_next.dart';
 
-final _icloudLoading = ValueNotifier(false);
 final _webdavLoading = ValueNotifier(false);
 
 typedef BackupPageRet = ({bool isRestoreSuc});

@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
+import 'package:flutter_chatgpt/core/util/func.dart';
 import 'package:flutter_chatgpt/core/util/sync/base.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -16,12 +17,30 @@ class Store {
 
   Future<void> init() async => box = await Hive.openBox(boxName);
 
-  _StoreProperty<T> property<T>(String key, T defaultValue) {
-    return _StoreProperty<T>(box, key, defaultValue);
+  _StoreProperty<T> property<T>(
+    String key,
+    T defaultValue, {
+    bool updateModTime = true,
+  }) {
+    return _StoreProperty<T>(
+      box,
+      key,
+      defaultValue,
+      updateModTime: updateModTime,
+    );
   }
 
-  _StoreListProperty<T> listProperty<T>(String key, List<T> defaultValue) {
-    return _StoreListProperty<T>(box, key, defaultValue);
+  _StoreListProperty<T> listProperty<T>(
+    String key,
+    List<T> defaultValue, {
+    bool updateLastModified = true,
+  }) {
+    return _StoreListProperty<T>(
+      box,
+      key,
+      defaultValue,
+      updateModTime: updateLastModified,
+    );
   }
 }
 
@@ -32,19 +51,19 @@ extension BoxX on Box {
   static const String lastModifiedKey = '${_internalPreffix}lastModified';
   int? get lastModified {
     final val = get(lastModifiedKey);
-    if (val == null || val is! int) {
-      final time = DateTime.now().millisecondsSinceEpoch;
-      put(lastModifiedKey, time);
-      return time;
+    if (val is! int) {
+      return null;
     }
     return val;
   }
 
   Future<void> updateLastModified({int? time}) async {
-    await put(
-      lastModifiedKey,
-      time ?? DateTime.now().millisecondsSinceEpoch,
-    );
+    Funcs.throttle(() async {
+      await put(
+        lastModifiedKey,
+        time ?? DateTime.now().millisecondsSinceEpoch,
+      );
+    }, id: 'Box.updateLastModified', durationMills: 100);
     SyncService.sync();
   }
 
@@ -84,16 +103,22 @@ extension BoxX on Box {
 abstract class StorePropertyBase<T> {
   ValueListenable<T> listenable();
   T fetch();
-  Future<void> put(T value, {bool updateLastModified = true});
+  Future<void> put(T value, {bool updateModTime = true});
   Future<void> delete();
 }
 
 class _StoreProperty<T> implements StorePropertyBase<T> {
-  const _StoreProperty(this._box, this._key, this.defaultValue);
+  const _StoreProperty(
+    this._box,
+    this._key,
+    this.defaultValue, {
+    this.updateModTime = true,
+  });
 
   final Box _box;
   final String _key;
   final T defaultValue;
+  final bool updateModTime;
 
   @override
   ValueListenable<T> listenable() {
@@ -110,25 +135,34 @@ class _StoreProperty<T> implements StorePropertyBase<T> {
   }
 
   @override
-  Future<void> put(T value, {bool updateLastModified = true}) async {
-    if (updateLastModified) {
+  Future<void> put(T value, {bool updateModTime = true}) async {
+    if (this.updateModTime && updateModTime) {
       await _box.updateLastModified();
     }
     return _box.put(_key, value);
   }
 
   @override
-  Future<void> delete() {
+  Future<void> delete({bool updateModTime = true}) async {
+    if (this.updateModTime && updateModTime) {
+      await _box.updateLastModified();
+    }
     return _box.delete(_key);
   }
 }
 
 class _StoreListProperty<T> implements StorePropertyBase<List<T>> {
-  const _StoreListProperty(this._box, this._key, this.defaultValue);
+  const _StoreListProperty(
+    this._box,
+    this._key,
+    this.defaultValue, {
+    this.updateModTime = true,
+  });
 
   final Box _box;
   final String _key;
   final List<T> defaultValue;
+  final bool updateModTime;
 
   @override
   ValueListenable<List<T>> listenable() {
@@ -147,15 +181,18 @@ class _StoreListProperty<T> implements StorePropertyBase<List<T>> {
   }
 
   @override
-  Future<void> put(List<T> value, {bool updateLastModified = true}) async {
-    if (updateLastModified) {
+  Future<void> put(List<T> value, {bool updateModTime = true}) async {
+    if (this.updateModTime && updateModTime) {
       await _box.updateLastModified();
     }
     return _box.put(_key, value);
   }
 
   @override
-  Future<void> delete() {
+  Future<void> delete({bool updateModTime = true}) async {
+    if (this.updateModTime && updateModTime) {
+      await _box.updateLastModified();
+    }
     return _box.delete(_key);
   }
 }
