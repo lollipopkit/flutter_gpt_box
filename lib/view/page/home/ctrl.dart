@@ -883,3 +883,35 @@ void _autoScroll(String chatId) {
 //   if (type == null) return null;
 //   return ChatType.fromString(type);
 // }
+
+Future<void> _onLongTapSetting(BuildContext context) async {
+  // final map = Stores.setting.box.toJson(includeInternal: false);
+  // final keys = map.keys;
+
+  // /// Encode [map] to String with indent `\t`
+  // final text = const JsonEncoder.withIndent('  ').convert(map);
+  // final result = await Routes.editor.go(context, args: (
+  //   text: text,
+  //   langCode: 'json',
+  //   title: l10n.settings,
+  // ));
+  // if (result == null) {
+  //   return;
+  // }
+  // try {
+  //   final newSettings = json.decode(result) as Map<String, dynamic>;
+  //   Stores.setting.box.putAll(newSettings);
+  //   final newKeys = newSettings.keys;
+  //   final removedKeys = keys.where((e) => !newKeys.contains(e));
+  //   for (final key in removedKeys) {
+  //     Stores.setting.box.delete(key);
+  //   }
+  //   RebuildNode.app.rebuild();
+  // } catch (e, trace) {
+  //   context.showRoundDialog(
+  //     title: l10n.error,
+  //     child: Text('$e'),
+  //   );
+  //   Loggers.app.warning('Update json settings failed', e, trace);
+  // }
+}

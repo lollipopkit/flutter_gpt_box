@@ -7,7 +7,6 @@ import 'package:flutter_chatgpt/core/analysis.dart';
 import 'package:flutter_chatgpt/view/page/about.dart';
 import 'package:flutter_chatgpt/view/page/backup/view.dart';
 import 'package:flutter_chatgpt/view/page/debug.dart';
-import 'package:flutter_chatgpt/view/page/editor.dart';
 import 'package:flutter_chatgpt/view/page/setting.dart';
 
 part 'base.dart';
@@ -35,8 +34,8 @@ sealed class Routes {
     path: '/backup',
   );
 
-  static const editor = AppRoute<String, EditorPageArgs>(
-    page: EditorPage.new,
-    path: '/editor',
-  );
+  // static const editor = AppRoute<String, EditorPageArgs>(
+  //   page: EditorPage.new,
+  //   path: '/editor',
+  // );
 }

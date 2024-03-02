@@ -176,6 +176,7 @@ class _HomePageState extends State<HomePage>
             UIs.height77,
             ListTile(
               onTap: () => Routes.setting.go(context),
+              onLongPress: () => _onLongTapSetting(context),
               leading: const Icon(Icons.settings),
               title: Text(l10n.settings),
             ).card,
