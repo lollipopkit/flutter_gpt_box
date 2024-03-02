@@ -335,12 +335,6 @@ Future<void> _onTapImgPick(BuildContext context) async {
   _filePicked.value = result;
 }
 
-void loadFromStore() {
-  _allHistories = Stores.history.fetchAll();
-  _historyRN.build();
-  _switchChat();
-}
-
 void _removeDuplicateHistory(BuildContext context) async {
   final existTitles = <String, String>{}; // {ID: Title}
   final rmIds = <String>[];

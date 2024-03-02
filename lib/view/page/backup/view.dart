@@ -37,6 +37,8 @@ part 'func/gpt_next.dart';
 final _icloudLoading = ValueNotifier(false);
 final _webdavLoading = ValueNotifier(false);
 
+typedef BackupPageRet = ({bool isRestoreSuc});
+
 final class BackupPage extends StatelessWidget {
   const BackupPage({super.key, Never? args});
 

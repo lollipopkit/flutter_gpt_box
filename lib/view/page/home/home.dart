@@ -70,6 +70,14 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+
+  static void afterRestore() {
+    _allHistories = Stores.history.fetchAll();
+    _historyRN.build();
+    _chatRN.build();
+    _appbarTitleRN.build();
+    _switchChat();
+  }
 }
 
 class _HomePageState extends State<HomePage>
@@ -181,7 +189,12 @@ class _HomePageState extends State<HomePage>
               title: Text(l10n.settings),
             ).card,
             ListTile(
-              onTap: () => Routes.backup.go(context),
+              onTap: () async {
+                final ret = await Routes.backup.go(context);
+                if (ret?.isRestoreSuc == true) {
+                  HomePage.afterRestore();
+                }
+              },
               leading: const Icon(Icons.backup),
               title: Text(l10n.backup),
             ).card,

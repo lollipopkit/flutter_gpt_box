@@ -42,19 +42,23 @@ void _onTapFileRestore(BuildContext context) async {
     }
 
     final time = DateTime.fromMillisecondsSinceEpoch(backup.lastModTime);
-    await context.showRoundDialog(
+    final suc = await context.showRoundDialog(
       title: l10n.attention,
       child: Text(l10n.sureRestoreFmt(time)),
       actions: [
         TextButton(
           onPressed: () async {
-            context.pop();
+            context.pop(true);
             await backup.merge(force: true);
           },
           child: Text(l10n.restore),
         ),
       ],
     );
+    if (suc == true) {
+      const BackupPageRet ret = (isRestoreSuc: true);
+      context.pop(ret);
+    }
   } catch (e, trace) {
     Loggers.app.warning('Import backup failed', e, trace);
     context.showSnackBar(e.toString());

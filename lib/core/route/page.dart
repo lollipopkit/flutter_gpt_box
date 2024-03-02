@@ -29,7 +29,7 @@ sealed class Routes {
     path: '/about',
   );
 
-  static const backup = AppRoute(
+  static const backup = AppRoute<BackupPageRet, Never>(
     page: BackupPage.new,
     path: '/backup',
   );

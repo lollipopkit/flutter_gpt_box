@@ -7,6 +7,7 @@ import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/res/path.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
+import 'package:flutter_chatgpt/view/page/home/home.dart';
 import 'package:logging/logging.dart';
 
 class Backup {
@@ -173,5 +174,6 @@ class Backup {
 
     loadFromStore();
     RNode.app.build();
+    HomePage.afterRestore();
   }
 }
