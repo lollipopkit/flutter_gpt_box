@@ -58,6 +58,10 @@ extension BoxX on Box {
   }
 
   Future<void> updateLastModified({int? time}) async {
+    /// Don't update lastModified for setting box
+    if (name == 'setting') {
+      return;
+    }
     Funcs.throttle(() async {
       await put(
         lastModifiedKey,
