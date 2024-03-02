@@ -38,7 +38,7 @@ class _SettingPageState extends State<SettingPage> {
   final _store = Stores.setting;
 
   var localeStr = '';
-  final _cfgRN = RebuildNode();
+  final _cfgRN = RNode();
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class _SettingPageState extends State<SettingPage> {
             _store.themeMode.put(result.index);
 
             /// Set delay to true to wait for db update.
-            RebuildNode.app.rebuild(delay: true);
+            RNode.app.build(delay: true);
           }
         },
         trailing: Text(
@@ -167,7 +167,7 @@ class _SettingPageState extends State<SettingPage> {
       return;
     }
     _store.themeColorSeed.put(color.value);
-    RebuildNode.app.rebuild(delay: true);
+    RNode.app.build(delay: true);
   }
 
   Widget _buildLocale() {
@@ -189,7 +189,7 @@ class _SettingPageState extends State<SettingPage> {
           if (result != null) {
             final newLocaleStr = result.toLanguageTag();
             _store.locale.put(newLocaleStr);
-            await RebuildNode.app.rebuild(delay: true);
+            await RNode.app.build(delay: true);
             setState(() {
               localeStr = newLocaleStr;
             });
@@ -257,11 +257,11 @@ class _SettingPageState extends State<SettingPage> {
             actions: Btns.oks(
               onTap: () {
                 Stores.config.delete(value.id);
-                _cfgRN.rebuild();
+                _cfgRN.build();
                 context.pop();
                 if (cfg.id == value.id) {
                   OpenAICfg.switchTo(ChatConfig.defaultId);
-                  _cfgRN.rebuild();
+                  _cfgRN.build();
                 }
               },
               red: true,
@@ -275,14 +275,14 @@ class _SettingPageState extends State<SettingPage> {
           onChanged: (val) {
             if (val != true) return;
             OpenAICfg.switchTo(value.id);
-            _cfgRN.rebuild();
+            _cfgRN.build();
           },
         ),
         title: Text(value.name.isEmpty ? l10n.defaulT : value.name),
         onTap: () {
           if (cfg.id == value.id) return;
           OpenAICfg.switchTo(value.id);
-          _cfgRN.rebuild();
+          _cfgRN.build();
         },
         trailing: value.id != ChatConfig.defaultId ? delBtn : null,
       ));
@@ -305,7 +305,7 @@ class _SettingPageState extends State<SettingPage> {
           name: name,
         )..save();
         OpenAICfg.switchTo(cfg.id);
-        _cfgRN.rebuild();
+        _cfgRN.build();
       },
       title: Text(l10n.add),
       trailing: const Icon(Icons.add),
@@ -350,7 +350,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (result == null) return;
         OpenAICfg.current = OpenAICfg.current.copyWith(key: result);
-        _cfgRN.rebuild();
+        _cfgRN.build();
       },
     );
   }
@@ -385,7 +385,7 @@ class _SettingPageState extends State<SettingPage> {
           if (sure != true) return;
         }
         OpenAICfg.current = OpenAICfg.current.copyWith(url: result);
-        _cfgRN.rebuild();
+        _cfgRN.build();
       },
     );
   }
@@ -430,7 +430,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
-          _cfgRN.rebuild();
+          _cfgRN.build();
         }
       },
     );
@@ -463,7 +463,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
-          _cfgRN.rebuild();
+          _cfgRN.build();
         }
       },
     );
@@ -496,7 +496,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
-          _cfgRN.rebuild();
+          _cfgRN.build();
         }
       },
     );
@@ -529,7 +529,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
-          _cfgRN.rebuild();
+          _cfgRN.build();
         }
       },
     );
@@ -560,7 +560,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (result == null) return;
         OpenAICfg.current = OpenAICfg.current.copyWith(prompt: result);
-        _cfgRN.rebuild();
+        _cfgRN.build();
       },
     );
   }
@@ -592,7 +592,7 @@ class _SettingPageState extends State<SettingPage> {
           return;
         }
         OpenAICfg.current = OpenAICfg.current.copyWith(historyLen: newVal);
-        _cfgRN.rebuild();
+        _cfgRN.build();
       },
     );
   }

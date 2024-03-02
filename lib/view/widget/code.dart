@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -13,8 +14,6 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
   CodeElementBuilder({this.onCopy, this.isForCapture = false});
 
-  static bool isDark = false;
-
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
     // Can't be null
@@ -27,14 +26,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     final textContent = element.textContent.trim();
     if (language.isEmpty) {
-      return RichText(
-        text: TextSpan(
-          text: textContent,
-          style: _textStyle.copyWith(
-            backgroundColor: const Color.fromARGB(37, 158, 158, 158),
-          ),
-        ),
-      );
+      return null;
     }
 
     // if (language == 'latex') {
@@ -98,7 +90,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
   }
 
   Map<String, TextStyle> get _theme {
-    return isDark ? _darkTheme : _lightTheme;
+    return RNode.dark.value ? _darkTheme : _lightTheme;
   }
 }
 

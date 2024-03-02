@@ -172,6 +172,6 @@ class Backup {
     }
 
     loadFromStore();
-    RebuildNode.app.rebuild();
+    RNode.app.build();
   }
 }

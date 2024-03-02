@@ -6,11 +6,11 @@ final _historyScrollCtrl = ScrollController();
 final _pageCtrl = PageController(initialPage: _curPage.value.index);
 final _screenshotCtrl = ScreenshotController();
 
-final _timeRN = RebuildNode();
+final _timeRN = RNode();
 // Map for markdown rebuild nodes
-final _chatItemRNMap = <String, RebuildNode>{};
+final _chatItemRNMap = <String, RNode>{};
 // RebuildNodes for history list items
-final _historyRNMap = <String, RebuildNode>{};
+final _historyRNMap = <String, RNode>{};
 
 final _audioPlayer = AudioPlayer();
 // Map for audio player value notifiers which stores the current playing status
@@ -24,10 +24,10 @@ final _filePicked = ValueNotifier<XFile?>(null);
 final _chatType = ValueNotifier(ChatType.text);
 
 // For page body chat view
-final _chatRN = RebuildNode();
-final _historyRN = RebuildNode();
-final _appbarTitleRN = RebuildNode();
-final _sendBtnRN = RebuildNode();
+final _chatRN = RNode();
+final _historyRN = RNode();
+final _appbarTitleRN = RNode();
+final _sendBtnRN = RNode();
 // Default false: the history item is visible on app start, no need to locate
 final _locateHistoryBtn = ValueNotifier(false);
 
@@ -43,7 +43,6 @@ final _curPage = ValueNotifier(HomePageEnum.chat)
 final _imeFocus = FocusNode();
 
 MediaQueryData? _media;
-bool _isDark = false;
 final _isWide = ValueNotifier(false)
   ..addListener(() {
     _curPage.value = HomePageEnum.chat;

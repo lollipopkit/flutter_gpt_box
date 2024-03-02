@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage>
     _refreshTimeTimer = Timer.periodic(
       const Duration(seconds: 10),
       (_) {
-        if (mounted) _timeRN.rebuild();
+        if (mounted) _timeRN.build();
       },
     );
     _historyScrollCtrl.addListener(_locateHistoryListener);
@@ -103,10 +103,10 @@ class _HomePageState extends State<HomePage>
   @override
   void didChangeDependencies() {
     _media = MediaQuery.of(context);
-    _isDark = context.isDark;
+    RNode.dark.value = context.isDark;
     _isWide.value = _media.isWide;
-    CodeElementBuilder.isDark = _isDark;
     super.didChangeDependencies();
+    _homeBottomRN.build();
 
     /// Must call here, or the colorSeed is not applied
     UIs.primaryColor = Theme.of(context).colorScheme.primary;
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage>
         valueListenable: _isWide,
         builder: (_, isWide, __) {
           if (isWide) return UIs.placeholder;
-          return _buildBottom(context);
+          return const _HomeBottom();
         },
       ),
     );
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage>
   Widget _buildDrawer() {
     return Container(
       width: _isWide.value ? 270 : (_media?.size.width ?? 300) * 0.7,
-      color: UIs.bgColor.fromBool(_isDark),
+      color: UIs.bgColor.fromBool(RNode.dark.value),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Column(

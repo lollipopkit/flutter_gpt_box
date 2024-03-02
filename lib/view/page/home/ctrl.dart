@@ -4,9 +4,9 @@ void _switchChat([String? id]) {
   id ??= _allHistories.keys.firstOrNull ?? _newChat().id;
   _curChatId = id;
   _chatItemRNMap.clear();
-  _chatRN.rebuild();
-  _sendBtnRN.rebuild();
-  _appbarTitleRN.rebuild();
+  _chatRN.build();
+  _sendBtnRN.build();
+  _appbarTitleRN.build();
 }
 
 void _switchPreviousChat() {
@@ -96,14 +96,14 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
-  _chatRN.rebuild();
+  _chatRN.build();
   _filePicked.value = null;
   try {
     final sub = chatStream.listen(
       (event) {
         final delta = event.choices.first.delta.content?.first.text ?? '';
         assistReply.content.first.raw += delta;
-        _chatItemRNMap[assistReply.id]?.rebuild();
+        _chatItemRNMap[assistReply.id]?.build();
 
         _autoScroll(chatId);
       },
@@ -117,28 +117,28 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
           raw: msg,
           role: ChatRole.system,
         ));
-        _chatRN.rebuild();
+        _chatRN.build();
         _storeChat(chatId, context);
-        _sendBtnRN.rebuild();
+        _sendBtnRN.build();
       },
       onDone: () async {
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
-        _sendBtnRN.rebuild();
+        _sendBtnRN.build();
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
         SyncService.sync();
       },
     );
     _chatStreamSubs[chatId] = sub;
-    _sendBtnRN.rebuild();
+    _sendBtnRN.build();
   } catch (e) {
     _onStopStreamSub(chatId);
     final msg = 'Chat stream: $e';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     assistReply.content.first.raw += '\n$msg';
-    _sendBtnRN.rebuild();
+    _sendBtnRN.build();
   }
 }
 
@@ -196,7 +196,7 @@ void _onDeleteChat(String chatId) {
   if (_curChatId == chatId) {
     _switchChat();
   }
-  _historyRN.rebuild();
+  _historyRN.build();
 }
 
 void _onTapRenameChat(String chatId, BuildContext context) async {
@@ -219,14 +219,14 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
   );
   if (title == null || title.isEmpty) return;
   entity.name = title;
-  _historyRNMap[chatId]?.rebuild();
+  _historyRNMap[chatId]?.build();
   _storeChat(chatId, context);
-  _appbarTitleRN.rebuild();
+  _appbarTitleRN.build();
 }
 
 void _onStopStreamSub(String chatId) {
   _chatStreamSubs.remove(chatId)?.cancel();
-  _sendBtnRN.rebuild();
+  _sendBtnRN.build();
 }
 
 Future<void> _genChatTitle(
@@ -270,8 +270,8 @@ The title should be the same as the language entered by the user.''',
   /// These punctions which not affect the meaning of the title will be removed
   const punctions2Rm = ['。', '"', "'", "“", '”'];
   entity.name = title.replaceAll(RegExp('[${punctions2Rm.join()}]'), '');
-  _historyRNMap[chatId]?.rebuild();
-  if (chatId == _curChatId) _appbarTitleRN.rebuild();
+  _historyRNMap[chatId]?.build();
+  if (chatId == _curChatId) _appbarTitleRN.build();
 }
 
 void _onShareChat(BuildContext context) async {
@@ -340,7 +340,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
 
 void loadFromStore() {
   _allHistories = Stores.history.fetchAll();
-  _historyRN.rebuild();
+  _historyRN.build();
   _switchChat();
 }
 
@@ -385,7 +385,7 @@ void _removeDuplicateHistory(BuildContext context) async {
         Stores.history.delete(id);
         _allHistories.remove(id);
       }
-      _historyRN.rebuild();
+      _historyRN.build();
       if (!_allHistories.keys.contains(_curChatId)) {
         _switchChat();
       }
@@ -502,13 +502,13 @@ void _onReplay({
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   chatHistory.items.insert(itemIdx + 1, assistReply);
-  _chatRN.rebuild();
+  _chatRN.build();
   try {
     final sub = chatStream.listen(
       (event) {
         final delta = event.choices.first.delta.content?.first.text ?? '';
         assistReply.content.first.raw += delta;
-        _chatItemRNMap[assistReply.id]?.rebuild();
+        _chatItemRNMap[assistReply.id]?.build();
 
         _autoScroll(chatId);
       },
@@ -521,27 +521,27 @@ void _onReplay({
           raw: msg,
           role: ChatRole.system,
         ));
-        _chatRN.rebuild();
+        _chatRN.build();
         _storeChat(chatId, context);
-        _sendBtnRN.rebuild();
+        _sendBtnRN.build();
       },
       onDone: () {
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
-        _sendBtnRN.rebuild();
-        _appbarTitleRN.rebuild();
+        _sendBtnRN.build();
+        _appbarTitleRN.build();
         SyncService.sync();
       },
     );
     _chatStreamSubs[chatId] = sub;
-    _sendBtnRN.rebuild();
+    _sendBtnRN.build();
   } catch (e) {
     _onStopStreamSub(chatId);
     final msg = 'Chat stream: $e';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     assistReply.content.first.raw += '\n$msg';
-    _sendBtnRN.rebuild();
+    _sendBtnRN.build();
   }
 }
 
@@ -561,7 +561,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
         chatItem.content.clear();
         chatItem.content.add(ChatContent.text(p0));
         _storeChat(_curChatId, context);
-        _chatRN.rebuild();
+        _chatRN.build();
         context.pop();
       },
     ),
@@ -600,7 +600,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
   workingChat.items.add(assistReply);
   final completer = Completer();
   _audioLoadingMap[assistReply.id] = completer;
-  _chatRN.rebuild();
+  _chatRN.build();
   _storeChat(chatId, context);
 
   try {
@@ -622,7 +622,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     assistReply.content.first.raw += '\n$msg';
-    _sendBtnRN.rebuild();
+    _sendBtnRN.build();
   }
 }
 
@@ -661,7 +661,7 @@ Future<void> _onCreateImg(BuildContext context) async {
     role: ChatRole.assist,
     content: imgs.map((e) => ChatContent.image(e)).toList(),
   ));
-  _chatRN.rebuild();
+  _chatRN.build();
   _storeChat(_curChatId, context);
 }
 
@@ -681,7 +681,7 @@ Future<void> _onEditImage(BuildContext context) async {
     role: ChatRole.user,
   );
   workingChat.items.add(chatItem);
-  _chatRN.rebuild();
+  _chatRN.build();
   _storeChat(_curChatId, context);
   _filePicked.value = null;
 
@@ -710,7 +710,7 @@ Future<void> _onEditImage(BuildContext context) async {
     role: ChatRole.assist,
     content: imgs.map((e) => ChatContent.image(e)).toList(),
   ));
-  _chatRN.rebuild();
+  _chatRN.build();
   _storeChat(_curChatId, context);
 }
 
@@ -731,7 +731,7 @@ Future<void> _onCreateAudioToText(BuildContext context) async {
     role: ChatRole.user,
   );
   workingChat.items.add(chatItem);
-  _chatRN.rebuild();
+  _chatRN.build();
   _storeChat(_curChatId, context);
   _filePicked.value = null;
 
@@ -752,7 +752,7 @@ Future<void> _onCreateAudioToText(BuildContext context) async {
     type: ChatContentType.text,
     raw: text,
   ));
-  _chatRN.rebuild();
+  _chatRN.build();
   _storeChat(_curChatId, context);
 }
 

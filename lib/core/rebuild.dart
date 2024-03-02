@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class RebuildNode implements Listenable {
+/// [RNode] is RebuildNode.
+class RNode implements Listenable {
   final List<VoidCallback> _listeners = [];
 
-  RebuildNode();
+  RNode();
 
   @override
   void addListener(VoidCallback listener) {
@@ -15,9 +16,9 @@ class RebuildNode implements Listenable {
     _listeners.remove(listener);
   }
 
-  /// Rebuild all listeners.
+  /// Trigger all listeners.
   /// - [delay] if true, rebuild will be delayed.
-  Future<void> rebuild({bool delay = false}) async {
+  Future<void> build({bool delay = false}) async {
     if (delay) await Future.delayed(const Duration(milliseconds: 277));
     for (final listener in _listeners) {
       listener();
@@ -25,9 +26,10 @@ class RebuildNode implements Listenable {
   }
 
   /// Add this node's listeners to another node.
-  void chain(RebuildNode node) {
-    node.addListener(rebuild);
+  void chain(RNode node) {
+    node.addListener(build);
   }
 
-  static final app = RebuildNode();
+  static final app = RNode();
+  static final dark = ValueNotifier(false);
 }

@@ -72,7 +72,7 @@ void _onTapRestoreGPTNext(BuildContext context) async {
               );
             }
             context.pop();
-            RebuildNode.app.rebuild();
+            RNode.app.build();
           },
           child: Text(l10n.restore),
         ),

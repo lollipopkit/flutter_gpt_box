@@ -19,7 +19,7 @@ class _ChatPageState extends State<_ChatPage>
         if (!isWide) return _buildChat();
         return Scaffold(
           body: _buildChat(),
-          bottomNavigationBar: _buildBottom(context),
+          bottomNavigationBar: const _HomeBottom(),
         );
       },
     );
@@ -76,7 +76,7 @@ class _ChatPageState extends State<_ChatPage>
 
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
-    final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RebuildNode());
+    final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
     return Padding(
       padding: const EdgeInsets.all(7),
       child: Column(
@@ -276,8 +276,8 @@ class _ChatPageState extends State<_ChatPage>
             if (result != true) return;
             chatItems.remove(chatItem);
             _storeChat(_curChatId, context);
-            _historyRNMap[_curChatId]?.rebuild();
-            _chatRN.rebuild();
+            _historyRNMap[_curChatId]?.build();
+            _chatRN.build();
           },
           icon: const Icon(Icons.delete, size: 17),
         ),
