@@ -7,6 +7,10 @@ void _switchChat([String? id]) {
   _chatRN.build();
   _sendBtnRN.build();
   _appbarTitleRN.build();
+  Future.delayed(_durationMedium, () {
+    // Different chats have different height
+    _chatFabRN.build();
+  });
 }
 
 void _switchPreviousChat() {
@@ -917,7 +921,7 @@ Future<void> _onLongTapSetting(BuildContext context) async {
 void _switchPage(HomePageEnum page) {
   _pageCtrl.animateToPage(
     page.index,
-    duration: Durations.medium1,
+    duration: _durationMedium,
     curve: Curves.fastEaseInToSlowEaseOut,
   );
 }

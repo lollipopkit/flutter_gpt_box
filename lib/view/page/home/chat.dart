@@ -30,10 +30,9 @@ class _ChatPageState extends State<_ChatPage>
     return ListenableBuilder(
       listenable: _chatFabRN,
       builder: (_, __) {
-        if (!_chatScrollCtrl.hasClients) return UIs.placeholder;
-        final up = _chatScrollCtrl.offset >=
-            _chatScrollCtrl.position.maxScrollExtent / 2;
-        final icon = up ? Icons.arrow_upward : Icons.arrow_downward;
+        final valid = _chatScrollCtrl.positions.length == 1 &&
+            _chatScrollCtrl.position.hasContentDimensions &&
+            _chatScrollCtrl.position.maxScrollExtent > 0;
         return AnimatedSwitcher(
           transitionBuilder: (child, animation) {
             return ScaleTransition(
@@ -41,31 +40,40 @@ class _ChatPageState extends State<_ChatPage>
               child: child,
             );
           },
-          duration: Durations.medium1,
-          child: FloatingActionButton(
-            key: ValueKey(up),
-            mini: true,
-            onPressed: () async {
-              if (!_chatScrollCtrl.hasClients) return;
-              if (up) {
-                await _chatScrollCtrl.animateTo(
-                  0,
-                  duration: Durations.medium1,
-                  curve: Curves.easeInOut,
-                );
-              } else {
-                await _chatScrollCtrl.animateTo(
-                  _chatScrollCtrl.position.maxScrollExtent,
-                  duration: Durations.medium1,
-                  curve: Curves.easeInOut,
-                );
-              }
-              _chatFabRN.build();
-            },
-            child: Icon(icon),
-          ),
+          duration: _durationShort,
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOut,
+          child: valid ? _buildFABBtn() : UIs.placeholder,
         );
       },
+    );
+  }
+
+  Widget _buildFABBtn() {
+    final up =
+        _chatScrollCtrl.offset >= _chatScrollCtrl.position.maxScrollExtent / 2;
+    final icon = up ? Icons.arrow_upward : Icons.arrow_downward;
+    return FloatingActionButton(
+      key: ValueKey(up),
+      mini: true,
+      onPressed: () async {
+        if (!_chatScrollCtrl.hasClients) return;
+        if (up) {
+          await _chatScrollCtrl.animateTo(
+            0,
+            duration: _durationMedium,
+            curve: Curves.easeInOut,
+          );
+        } else {
+          await _chatScrollCtrl.animateTo(
+            _chatScrollCtrl.position.maxScrollExtent,
+            duration: _durationMedium,
+            curve: Curves.easeInOut,
+          );
+        }
+        _chatFabRN.build();
+      },
+      child: Icon(icon),
     );
   }
 
@@ -90,7 +98,7 @@ class _ChatPageState extends State<_ChatPage>
           final item = _curChat?.items;
           if (item == null) return UIs.placeholder;
           return AnimatedSwitcher(
-            duration: Durations.short4,
+            duration: _durationShort,
             switchInCurve: Easing.standardDecelerate,
             switchOutCurve: Easing.standardDecelerate,
             transitionBuilder: (child, animation) => SlideTransitionX(

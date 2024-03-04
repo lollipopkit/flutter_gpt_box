@@ -23,7 +23,7 @@ class _HomeBottom extends StatelessWidget {
           child: AnimatedPadding(
             padding: EdgeInsets.only(bottom: _media?.viewInsets.bottom ?? 0),
             curve: Curves.fastEaseInToSlowEaseOut,
-            duration: Durations.short1,
+            duration: _durationShort,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -181,26 +181,4 @@ class _HomeBottom extends StatelessWidget {
       },
     );
   }
-
-// Widget _buildSwitchPageBtn() {
-//   return ValueListenableBuilder(
-//     valueListenable: _isWide,
-//     builder: (_, isWide, __) => isWide
-//         ? UIs.placeholder
-//         : ValueListenableBuilder(
-//             valueListenable: _curPage,
-//             builder: (_, page, __) {
-//               final next = page.next;
-//               return IconButton(
-//                 onPressed: () => _pageCtrl.animateToPage(
-//                   next.index,
-//                   duration: Durations.medium1,
-//                   curve: Curves.fastEaseInToSlowEaseOut,
-//                 ),
-//                 icon: Icon(next.icon, size: 19),
-//               );
-//             },
-//           ),
-//   );
-// }
 }

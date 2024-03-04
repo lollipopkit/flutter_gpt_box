@@ -26,7 +26,7 @@ final class ImageListTile extends StatelessWidget {
       _ when imageUrl.startsWith('assets') => AssetImage(imageUrl),
       _ => FileImage(File(imageUrl)),
     };
-    
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Material(
@@ -72,6 +72,7 @@ final class ImageListTile extends StatelessWidget {
   Widget _buildImage(ImageProvider provider) {
     return Hero(
       tag: heroTag,
+      transitionOnUserGestures: true,
       child: Image(
         image: provider,
         fit: BoxFit.cover,

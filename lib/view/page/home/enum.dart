@@ -22,7 +22,7 @@ enum HomePageEnum {
           valueListenable: _locateHistoryBtn,
           builder: (_, display, __) {
             return AnimatedSwitcher(
-              duration: Durations.short3,
+              duration: _durationShort,
               transitionBuilder: (child, animation) =>
                   ScaleTransition(scale: animation, child: child),
               child: display

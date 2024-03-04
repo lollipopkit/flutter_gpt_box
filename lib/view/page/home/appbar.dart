@@ -11,7 +11,7 @@ CustomAppBar _buildAppBar(BuildContext context) {
         final len = '${entity.items.length} ${l10n.message}';
         final time = entity.items.lastOrNull?.createdAt.toAgo;
         return AnimatedSwitcher(
-          duration: Durations.medium1,
+          duration: _durationMedium,
           switchInCurve: Easing.standardDecelerate,
           switchOutCurve: Easing.standardDecelerate,
           transitionBuilder: (child, animation) => SlideTransitionX(

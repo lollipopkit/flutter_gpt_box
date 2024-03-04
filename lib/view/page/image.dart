@@ -28,7 +28,11 @@ final class ImagePage extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Hero(tag: args!.tag, child: Image(image: args!.image)),
+        Hero(
+          tag: args!.tag,
+          transitionOnUserGestures: true,
+          child: Image(image: args!.image),
+        ),
         Positioned(
           top: CustomAppBar.titlebarHeight?.toDouble() ??
               MediaQuery.maybeOf(context)?.padding.top ??

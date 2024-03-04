@@ -74,3 +74,6 @@ const _boxShadowDark = [
 final _historyItemHeight = isDesktop ? 73.0 : 79.0;
 // The pixel tollerance
 final _historyLocateTollerance = _historyItemHeight / 3;
+
+const _durationShort = Durations.short4;
+const _durationMedium = Durations.medium1;
