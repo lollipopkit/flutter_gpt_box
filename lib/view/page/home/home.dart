@@ -6,6 +6,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/build_mode.dart';
@@ -95,7 +96,6 @@ class _HomePageState extends State<HomePage>
         if (mounted) _timeRN.build();
       },
     );
-    _historyScrollCtrl.addListener(_locateHistoryListener);
     _initUniLinks();
     _listenAudioPlayer();
   }
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage>
     if (_isWide.value) {
       return const Row(
         children: [
-          SizedBox(width: 300, child: history),
+          SizedBox(width: 290, child: history),
           Expanded(child: chat),
         ],
       );

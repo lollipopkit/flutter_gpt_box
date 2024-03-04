@@ -5,6 +5,7 @@ import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key, Never? args});
@@ -19,12 +20,23 @@ class AboutPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 17),
           children: [
+            _buildUniLinks(),
             _buildLicense(context),
             _buildInfo(),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildUniLinks() {
+    return CardX(child: ListTile(
+      leading: const Icon(Icons.link),
+      title: Text('URL Scheme ${l10n.usage}'),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => launchUrlString(
+          'https://github.com/lollipopkit/flutter_gpt_box/blob/main/doc/uni_link.md'),
+    ));
   }
 
   Widget _buildInfo() {

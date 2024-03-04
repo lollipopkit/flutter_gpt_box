@@ -20,6 +20,50 @@ class _ChatPageState extends State<_ChatPage>
         return Scaffold(
           body: _buildChat(),
           bottomNavigationBar: const _HomeBottom(),
+          floatingActionButton: _buildFAB(),
+        );
+      },
+    );
+  }
+
+  Widget _buildFAB() {
+    return ListenableBuilder(
+      listenable: _chatFabRN,
+      builder: (_, __) {
+        if (!_chatScrollCtrl.hasClients) return UIs.placeholder;
+        final up = _chatScrollCtrl.offset >=
+            _chatScrollCtrl.position.maxScrollExtent / 2;
+        final icon = up ? Icons.arrow_upward : Icons.arrow_downward;
+        return AnimatedSwitcher(
+          transitionBuilder: (child, animation) {
+            return ScaleTransition(
+              scale: animation,
+              child: child,
+            );
+          },
+          duration: Durations.medium1,
+          child: FloatingActionButton(
+            key: ValueKey(up),
+            mini: true,
+            onPressed: () async {
+              if (!_chatScrollCtrl.hasClients) return;
+              if (up) {
+                await _chatScrollCtrl.animateTo(
+                  0,
+                  duration: Durations.medium1,
+                  curve: Curves.easeInOut,
+                );
+              } else {
+                await _chatScrollCtrl.animateTo(
+                  _chatScrollCtrl.position.maxScrollExtent,
+                  duration: Durations.medium1,
+                  curve: Curves.easeInOut,
+                );
+              }
+              _chatFabRN.build();
+            },
+            child: Icon(icon),
+          ),
         );
       },
     );
@@ -246,6 +290,10 @@ class _ChatPageState extends State<_ChatPage>
           ListenableBuilder(
             listenable: _sendBtnRN,
             builder: (_, __) {
+              /// TODO: Can't replay image message.
+              final isImgChat =
+                  chatItem.content.any((e) => e.type == ChatContentType.image);
+              if (isImgChat) return UIs.placeholder;
               final isWorking = _chatStreamSubs.containsKey(_curChatId);
               if (isWorking) return UIs.placeholder;
               return IconButton(
