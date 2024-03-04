@@ -34,7 +34,7 @@ class AboutPage extends StatelessWidget {
         child: MarkdownBody(
           data: '''
 ### 👋🏻 ${l10n.myOtherApps}
-- [Server Box](https://github.com/lollipopkit/flutter_server_box) - View status & control your server
+- [Server Box](https://github.com/lollipopkit/flutter_server_box): View status & control your server
 
 
 ### 🥳 ${l10n.contributor} & ${l10n.participant}

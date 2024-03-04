@@ -15,22 +15,33 @@ abstract final class AppLink {
     switch (path) {
       case '/new':
         final msg = params['msg'];
+        final send = params['send'];
         final chat = _newChat();
         _switchChat(chat.id);
         if (msg != null) {
           _inputCtrl.text = msg;
-          _onCreateChat(chat.id, context);
+          if (send == 'true') _onCreateChat(chat.id, context);
         }
         return true;
       case '/open':
         final chatId = params['chatId'];
+        final title = params['title'];
         if (chatId != null) {
           _switchChat(chatId);
           return true;
         }
-        final msg = l10n.invalidLinkFmt('${l10n.empty} chatId');
-        context.showSnackBar(msg);
-        Loggers.app.warning(msg);
+        if (title != null) {
+          final chat = _allHistories.values.toList().firstWhereOrNull(
+                (e) => e.name?.contains(title) == true,
+              );
+          if (chat != null) {
+            _switchChat(chat.id);
+            return true;
+          }
+        }
+        if (_curPage.value != HomePageEnum.history) {
+          _switchPage(HomePageEnum.history);
+        }
         return true;
       case '/search':
         final query = params['keyword'];
@@ -41,6 +52,7 @@ abstract final class AppLink {
         return true;
       case '/share':
         final chatId = params['chatId'];
+        final title = params['title'];
         if (chatId != null) {
           final chat = _allHistories[chatId];
           if (chat != null) {
@@ -49,9 +61,17 @@ abstract final class AppLink {
             return true;
           }
         }
-        final msg = l10n.invalidLinkFmt('${l10n.empty} chatId');
-        context.showSnackBar(msg);
-        Loggers.app.warning(msg);
+        if (title != null) {
+          final chat = _allHistories.values.toList().firstWhereOrNull(
+                (e) => e.name?.contains(title) == true,
+              );
+          if (chat != null) {
+            _switchChat(chat.id);
+            _onShareChat(context);
+            return true;
+          }
+        }
+        _onShareChat(context);
         return true;
       case '/go':
         final page = params['page'];

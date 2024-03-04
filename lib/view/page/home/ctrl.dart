@@ -913,3 +913,11 @@ Future<void> _onLongTapSetting(BuildContext context) async {
   //   Loggers.app.warning('Update json settings failed', e, trace);
   // }
 }
+
+void _switchPage(HomePageEnum page) {
+  _pageCtrl.animateToPage(
+    page.index,
+    duration: Durations.medium1,
+    curve: Curves.fastEaseInToSlowEaseOut,
+  );
+}

@@ -84,11 +84,7 @@ class _HomeBottom extends StatelessWidget {
       },
       onTap: () {
         if (_curPage.value != HomePageEnum.chat) {
-          _pageCtrl.animateToPage(
-            HomePageEnum.chat.index,
-            duration: Durations.medium1,
-            curve: Curves.fastEaseInToSlowEaseOut,
-          );
+          _switchPage(HomePageEnum.chat);
         }
       },
       contextMenuBuilder: (context, editableTextState) {
