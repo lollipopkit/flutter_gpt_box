@@ -138,7 +138,7 @@ class _ChatPageState extends State<_ChatPage>
                           ChatContentType.image => _buildImage(e),
                           _ => _buildText(e),
                         })
-                    .toList(),
+                    .joinWith(UIs.height13),
               );
             },
           ),
@@ -171,43 +171,9 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   Widget _buildImage(ChatContent content) {
-    if (UrlType.from(content.raw).isFile) {
-      return Image.file(
-        File(content.raw),
-        errorBuilder: (context, error, stackTrace) {
-          return Column(
-            children: [
-              const Icon(Icons.broken_image, size: 50),
-              UIs.height13,
-              TextButton(
-                onPressed: () {
-                  final text = '$error\n\n$stackTrace';
-                  context.showRoundDialog(
-                    title: l10n.error,
-                    child: SingleChildScrollView(child: Text(text)),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(text: text));
-                        },
-                        child: Text(l10n.copy),
-                      )
-                    ],
-                  );
-                },
-                child: Text(l10n.error),
-              ),
-            ],
-          );
-        },
-      );
-    }
-    return Image.network(
-      content.raw,
-      loadingBuilder: (_, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return UIs.centerSizedLoading;
-      },
+    return ImageListTile(
+      imageUrl: content.raw,
+      heroTag: content.hashCode.toString(),
     );
   }
 

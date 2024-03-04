@@ -28,7 +28,10 @@ class AppRoute<Ret, Arg> {
 
     return Navigator.push<Ret>(
       context,
-      MaterialPageRoute(builder: (context) => page(key: key, args: args)),
+      MaterialPageRoute(
+        builder: (context) => page(key: key, args: args),
+        settings: RouteSettings(name: path),
+      ),
     );
   }
 }

@@ -3,9 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
-int? _titlebarHeight;
-bool _drawTitlebar = false;
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
@@ -22,6 +19,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
   final Color? backgroundColor;
 
+  static int? titlebarHeight;
+  static bool _drawTitlebar = false;
+
   @override
   Widget build(BuildContext context) {
     final bar = AppBar(
@@ -31,7 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle,
       leading: leading,
       backgroundColor: backgroundColor,
-      toolbarHeight: (_titlebarHeight ?? 0) + kToolbarHeight,
+      toolbarHeight: (titlebarHeight ?? 0) + kToolbarHeight,
     );
     if (!_drawTitlebar) return bar;
     return Stack(
@@ -82,11 +82,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   static Future<void> updateTitlebarHeight() async {
     switch (Platform.operatingSystem) {
       case 'macos':
-        _titlebarHeight = 27;
+        titlebarHeight = 27;
         break;
       // Draw a titlebar on Linux
       case 'linux' || 'windows':
-        _titlebarHeight = 37;
+        titlebarHeight = 37;
         _drawTitlebar = true;
         break;
       default:
@@ -96,5 +96,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize =>
-      Size.fromHeight((_titlebarHeight ?? 0) + kToolbarHeight);
+      Size.fromHeight((titlebarHeight ?? 0) + kToolbarHeight);
 }
