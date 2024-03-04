@@ -225,6 +225,8 @@ void _onStopStreamSub(String chatId) {
   _sendBtnRN.build();
 }
 
+final _punctionsRm = RegExp('[。"\'“”]');
+
 Future<void> _genChatTitle(
   BuildContext context,
   String chatId,
@@ -252,7 +254,13 @@ if it is English, French, German, Latin and other Western languages, the number 
 The title should be the same as the language entered by the user.''',
         role: ChatRole.system,
       ).toOpenAI,
-      entity.items.first.toOpenAI,
+      ChatHistoryItem.single(
+        role: ChatRole.user,
+        raw: entity.items.first.content
+                .firstWhereOrNull((p0) => p0.type == ChatContentType.text)
+                ?.raw ??
+            '',
+      ).toOpenAI,
     ],
   );
   final title = resp.choices.firstOrNull?.message.content?.firstOrNull?.text;
@@ -264,8 +272,7 @@ The title should be the same as the language entered by the user.''',
   }
 
   /// These punctions which not affect the meaning of the title will be removed
-  const punctions2Rm = ['。', '"', "'", "“", '”'];
-  entity.name = title.replaceAll(RegExp('[${punctions2Rm.join()}]'), '');
+  entity.name = title.replaceAll(_punctionsRm, '');
   _historyRNMap[chatId]?.build();
   if (chatId == _curChatId) _appbarTitleRN.build();
 }
@@ -299,11 +306,12 @@ void _onShareChat(BuildContext context) async {
 }
 
 Future<void> _onTapImgPick(BuildContext context) async {
-  if (_filePicked.value != null) {
+  final val = _filePicked.value;
+  if (val != null) {
     final delete = await context.showRoundDialog(
       title: l10n.file,
       child: Image.memory(
-        await _filePicked.value!.readAsBytes(),
+        await val.readAsBytes(),
         fit: BoxFit.cover,
         cacheHeight: 100,
         cacheWidth: 100,
@@ -312,7 +320,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
         TextButton(
           onPressed: () => context.pop(true),
           child: Text(
-            l10n.delete,
+            l10n.clear,
             style: UIs.textRed,
           ),
         ),

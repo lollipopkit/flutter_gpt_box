@@ -25,7 +25,7 @@ Please don't use it in production environment, and don't use it for important da
 - Text / Image / Audio chat. (Web only support text)
 - Share chat by picture.
 - Render code block / latex formula.
-- Uni-Link, eg: `lk-gptbox://chat/new?msg=hello` (except Linux / Web)
+- Uni-Link, eg: `lk-gptbox://chat/new?msg=hello` (except Linux)
 - All platforms support.
 - Sync with WebDAV / iCloud.
 

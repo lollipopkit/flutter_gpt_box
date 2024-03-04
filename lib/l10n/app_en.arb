@@ -51,7 +51,7 @@
   "hoursAgo": "{hours} hours ago",
   "ignoreTip": "Ignore tips",
   "image": "Image",
-  "initChatHelp": "### 📖 Tip\n- Overscroll on the chat page to switch chat history.\n- Long press code block to copy\n- The left drawer settings are global settings, the settings above the input box below are settings for the current conversation\n- Swipe right to enter the left side of the history page, you can modify the title of the chat, delete the chat\n\n### 🔍 Help\n- If you have found a bug, please use [Github Issue](https://github.com/lollipopkit/flutter_gpt_box/issues)",
+  "initChatHelp": "### 📖 Tip\n- Overscroll on the chat page to switch chat history.\n- Long press code block to copy\n\n###  🔗 URL Scheme\n- [ ] On web, replace `lk-gptbox://app` to `https://gpt.lolli.tech`\n- [x] Config: `lk-gptbox://app/set?openAiUrl=&openAiKey=&openAiModel=`\n- [x] Chat\n  - [x] New: `lk-gptbox://app/new?msg=`\n  - [x] Open: `lk-gptbox://app/open?chatId=`\n  - [x] Search: `lk-gptbox://app/search?keyword=`\n  - [x] Share: `lk-gptbox://app/share?chatId=`\n\n### 🔍 Help\n- If you have found a bug, please use [Github Issue](https://github.com/lollipopkit/flutter_gpt_box/issues)",
   "invalidLinkFmt": "Invalid link: {uri}",
   "justNow": "Just now",
   "lang": "Language",

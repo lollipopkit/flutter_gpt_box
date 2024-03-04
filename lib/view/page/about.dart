@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/data/res/github_id.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
@@ -18,8 +19,8 @@ class AboutPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 17),
           children: [
-            _buildInfo(),
             _buildLicense(context),
+            _buildInfo(),
           ],
         ),
       ),
@@ -37,7 +38,7 @@ class AboutPage extends StatelessWidget {
 
 
 ### 🥳 ${l10n.contributor} & ${l10n.participant}
-～
+${GithubId.markdownStr}
 
 
 ### 🗂️ ${l10n.privacy}

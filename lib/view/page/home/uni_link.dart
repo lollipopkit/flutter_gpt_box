@@ -94,6 +94,7 @@ abstract final class AppLink {
         );
         return true;
       default:
+        if (isWeb && path == '/') return true;
         final msg = l10n.invalidLinkFmt(path);
         context.showSnackBar(msg);
         Loggers.app.warning(msg);

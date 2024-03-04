@@ -14,5 +14,6 @@ class ExpandTile extends ExpansionTile {
     super.childrenPadding,
     super.trailing,
     super.controller,
-  }) : super(shape: _shape, collapsedShape: _shape);
+    Alignment? align = Alignment.centerLeft,
+  }) : super(shape: _shape, collapsedShape: _shape, expandedAlignment: align);
 }

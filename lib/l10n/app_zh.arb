@@ -51,7 +51,7 @@
   "hoursAgo": "{hours} 小时前",
   "ignoreTip": "忽略提示",
   "image": "图片",
-  "initChatHelp": "### 📖 提示\n- 在聊天界面过度滑动（overscroll）可以快捷切换聊天历史记录\n- 长按代码块来复制\n- 左侧抽屉设置为全局设置，下方的输入框上方的设置为当前对话的设置\n- 向右滑动可以进入左侧的历史聊天记录页面，可以修改聊天标题、删除聊天\n\n### 🔍 帮助\n- 如果 GPT Box 有 bug，请使用 [Github Issue](https://github.com/lollipopkit/flutter_gpt_box/issues)\n- QQ群 762870488",
+  "initChatHelp": "### 📖 提示\n- 在聊天界面过度滑动（overscroll）可以快捷切换聊天历史记录\n- 长按代码块来复制\n\n###  🔗 链接\n- [ ] 在Web, 替换 `lk-gptbox://app` 为 `https://gpt.lolli.tech`\n- [x] 配置: `lk-gptbox://app/set?openAiUrl=&openAiKey=&openAiModel=`\n- [x] 聊天\n  - [x] 新建: `lk-gptbox://app/new?msg=`\n  - [x] 打开: `lk-gptbox://app/open?chatId=`\n  - [x] 搜索: `lk-gptbox://app/search?keyword=`\n  - [x] 分享: `lk-gptbox://app/share?chatId=`\n\n### 🔍 帮助\n- 如果 GPT Box 有 bug，请使用 [Github Issue](https://github.com/lollipopkit/flutter_gpt_box/issues)\n- QQ群 762870488",
   "invalidLinkFmt": "未知链接：{uri}",
   "justNow": "刚刚",
   "lang": "语言",

@@ -15,6 +15,7 @@ import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/datetime.dart';
+import 'package:flutter_chatgpt/core/ext/list.dart';
 import 'package:flutter_chatgpt/core/ext/media_query.dart';
 import 'package:flutter_chatgpt/core/ext/num.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
@@ -142,13 +143,8 @@ class _HomePageState extends State<HomePage>
     if (_isWide.value) {
       return const Row(
         children: [
-          SizedBox(
-            width: 300,
-            child: history,
-          ),
-          Expanded(
-            child: chat,
-          ),
+          SizedBox(width: 300, child: history),
+          Expanded(child: chat),
         ],
       );
     }
@@ -228,12 +224,11 @@ class _HomePageState extends State<HomePage>
     }
   }
 
-  void _initUniLinks() async {
+  Future<void> _initUniLinks() async {
     if (isWeb) {
-      // getInitialUri().then((uri) {
-      //   if (uri == null) return;
-      //   AppLink.handle(context, uri);
-      // });
+      final uri = await getInitialUri();
+      if (uri == null) return;
+      AppLink.handle(context, uri);
     } else {
       uriLinkStream.listen((Uri? uri) {
         if (uri == null) return;
