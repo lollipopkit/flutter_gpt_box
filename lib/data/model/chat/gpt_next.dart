@@ -1,6 +1,6 @@
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
+import 'package:shortid/shortid.dart';
 
-import '../../res/uuid.dart';
 import 'history.dart';
 
 abstract final class GPTNextConvertor {
@@ -39,15 +39,15 @@ abstract final class GPTNextConvertor {
         continue;
       }
       items.add(ChatHistoryItem(
-        id: uuid.v4(),
         role: roleEnum,
         content: [contentEnum],
         createdAt: dateEnum,
+        id: shortid.generate(),
       ));
     }
 
     return ChatHistory(
-      id: uuid.v4(),
+      id: shortid.generate(),
       name: topic,
       items: items,
     );

@@ -86,6 +86,9 @@ abstract final class AppLink {
             case 'about':
               Routes.about.go(context);
               return true;
+            case 'res':
+              Routes.res.go(context);
+              return true;
             default:
               final msg = l10n.invalidLinkFmt(page);
               context.showSnackBar(msg);

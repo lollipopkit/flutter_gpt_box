@@ -4,7 +4,7 @@
 ## URL Scheme
 - [x] On web, replace `lk-gptbox://app` to `https://gpt.lolli.tech`
 - [x] Page: `lk-gptbox://app/go?page=`
-  - Available `page`: `setting`, `backup`, `about`
+  - Available `page`: `setting`, `backup`, `about`, `res`
 - [x] Config: `lk-gptbox://app/set?openAiUrl=&openAiKey=&openAiModel=`
 - [x] Chat
   - [x] New: `lk-gptbox://app/new?msg=&send=`
@@ -22,7 +22,7 @@
 ## 链接
 - [x] 在网页上，将 `lk-gptbox://app` 替换为 `https://gpt.lolli.tech`
 - [x] 页面: `lk-gptbox://app/go?page=`
-  - 可用 `page`（页面）: `setting`, `backup`, `about` 
+  - 可用 `page`（页面）: `setting`, `backup`, `about`, `res`
 - [x] 配置: `lk-gptbox://app/set?openAiUrl=&openAiKey=&openAiModel=`
 - [x] 聊天
   - [x] 新建: `lk-gptbox://app/new?msg=&send=`

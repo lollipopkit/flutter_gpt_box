@@ -65,7 +65,7 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
   final (imgUrl, imgPath) = await () async {
     final value = _filePicked.value;
     if (value == null) return (null, null);
-    final imgPath = FileUtil.joinPath(await Paths.image, uuid.v4());
+    final imgPath = FileUtil.joinPath(await Paths.image, shortid.generate());
     await value.saveTo(imgPath);
     // Convert to base64 url
     return (await value.base64, imgPath);
@@ -92,7 +92,7 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
   final chatStream = OpenAI.instance.chat.createStream(
-    model: imgUrl == null ? config.model : config.imgModel,
+    model: imgUrl == null ? config.model : config.visionModel,
     messages: [...historyCarried.reversed, questionForApi.toOpenAI],
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
@@ -102,7 +102,8 @@ Future<void> _onCreateChat(String chatId, BuildContext context) async {
   try {
     final sub = chatStream.listen(
       (event) {
-        final delta = event.choices.first.delta.content?.first.text ?? '';
+        final delta = event.choices.first.delta.content?.first?.text;
+        if (delta == null) return;
         assistReply.content.first.raw += delta;
         _chatItemRNMap[assistReply.id]?.build();
 
@@ -336,7 +337,10 @@ Future<void> _onTapImgPick(BuildContext context) async {
     return;
   }
   final picker = ImagePicker();
-  final result = await picker.pickImage(source: ImageSource.gallery);
+  final result = await picker.pickImage(
+    source: ImageSource.gallery,
+    requestFullMetadata: false,
+  );
   if (result == null) return;
   final len = await result.length();
   if (len > 1024 * 1024 * 10) {
@@ -508,7 +512,8 @@ void _onReplay({
   try {
     final sub = chatStream.listen(
       (event) {
-        final delta = event.choices.first.delta.content?.first.text ?? '';
+        final delta = event.choices.first.delta.content?.first?.text;
+        if (delta == null) return;
         assistReply.content.first.raw += delta;
         _chatItemRNMap[assistReply.id]?.build();
 
@@ -601,22 +606,21 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
   );
   workingChat.items.add(assistReply);
   final completer = Completer();
-  _audioLoadingMap[assistReply.id] = completer;
+  final replyContent = assistReply.content.first;
+  AudioCard.loadingMap[replyContent.id] = completer;
   _chatRN.build();
-  _storeChat(chatId, context);
 
   try {
-    await OpenAI.instance.audio.createSpeech(
-      model: config.model,
+    final file = await OpenAI.instance.audio.createSpeech(
+      model: config.speechModel,
       input: questionContent,
       voice: 'nova',
       outputDirectory: Directory(await Paths.audio),
-      outputFileName: assistReply.id,
-      responseFormat: OpenAIAudioSpeechResponseFormat.mp3,
+      outputFileName: replyContent.id,
+      responseFormat: OpenAIAudioSpeechResponseFormat.aac,
     );
-    assistReply.content.first.raw = assistReply.id;
+    replyContent.raw = file.path.split('/').last;
     completer.complete();
-    _audioLoadingMap.remove(assistReply.id);
     _storeChat(chatId, context);
   } catch (e) {
     _onStopStreamSub(chatId);
@@ -779,39 +783,6 @@ void _onCreateRequest(BuildContext context, String chatId) async {
     (ChatType.audio, null) => _onCreateTTS(context, chatId),
     (ChatType.audio, _) => _onCreateAudioToText(context),
   };
-}
-
-void _onTapAudioCtrl(
-  AudioPlayStatus val,
-  ChatHistoryItem chatItem,
-  ValueNotifier<AudioPlayStatus> listenable,
-) async {
-  if (val.playing) {
-    _audioPlayer.pause();
-    _nowPlayingId = null;
-    listenable.value = val.copyWith(playing: false);
-  } else {
-    if (_nowPlayingId == chatItem.id) {
-      _audioPlayer.resume();
-      _nowPlayingId = chatItem.id;
-      listenable.value = val.copyWith(playing: true);
-      return;
-    } else {
-      if (_nowPlayingId != null) {
-        final last = _audioPlayerMap[_nowPlayingId];
-        if (last != null) {
-          _audioPlayer.pause();
-          _nowPlayingId = null;
-          last.value = last.value.copyWith(playing: false);
-        }
-      }
-    }
-    _nowPlayingId = chatItem.id;
-    listenable.value = val.copyWith(playing: true);
-    _audioPlayer.play(DeviceFileSource(
-      '${await Paths.audio}/${chatItem.id}.mp3',
-    ));
-  }
 }
 
 void _autoScroll(String chatId) {

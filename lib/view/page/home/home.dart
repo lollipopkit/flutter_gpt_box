@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:after_layout/after_layout.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,6 @@ import 'package:flutter_chatgpt/core/util/platform/base.dart';
 import 'package:flutter_chatgpt/core/util/platform/file.dart';
 import 'package:flutter_chatgpt/core/util/sync/base.dart';
 import 'package:flutter_chatgpt/core/util/ui.dart';
-import 'package:flutter_chatgpt/data/model/app/audio_play.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
 import 'package:flutter_chatgpt/data/model/chat/type.dart';
@@ -39,9 +37,9 @@ import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/path.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
+import 'package:flutter_chatgpt/view/widget/audio.dart';
 import 'package:flutter_chatgpt/view/widget/code.dart';
 import 'package:flutter_chatgpt/view/widget/future.dart';
 import 'package:flutter_chatgpt/view/widget/image.dart';
@@ -54,6 +52,7 @@ import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shortid/shortid.dart';
 import 'package:uni_links/uni_links.dart';
 
 part 'chat.dart';
@@ -96,7 +95,7 @@ class _HomePageState extends State<HomePage>
       },
     );
     _initUniLinks();
-    _listenAudioPlayer();
+    AudioCard.listenAudioPlayer();
   }
 
   @override
@@ -196,6 +195,11 @@ class _HomePageState extends State<HomePage>
               title: Text(l10n.backup),
             ).card,
             ListTile(
+              leading: const Icon(Icons.file_open),
+              title: Text(l10n.res),
+              onTap: () => Routes.res.go(context),
+            ).card,
+            ListTile(
               onTap: () => Routes.about.go(context),
               leading: const Icon(Icons.info),
               title: Text(l10n.about),
@@ -239,19 +243,6 @@ class _HomePageState extends State<HomePage>
         context.showRoundDialog(title: l10n.attention, child: Text(msg));
       });
     }
-  }
-
-  void _listenAudioPlayer() {
-    _audioPlayer.onPositionChanged.listen((position) {
-      final status = _audioPlayerMap[_nowPlayingId];
-      if (status == null) return;
-      status.value = status.value.copyWith(played: position.inMilliseconds);
-    });
-    _audioPlayer.onPlayerComplete.listen((_) {
-      final status = _audioPlayerMap[_nowPlayingId];
-      if (status == null) return;
-      status.value = status.value.copyWith(playing: false, played: 0);
-    });
   }
 
   // void _checkInvalidModels() {

@@ -11,16 +11,10 @@ final _pageCtrl = PageController(initialPage: _curPage.value.index);
 final _screenshotCtrl = ScreenshotController();
 
 final _timeRN = RNode();
-// Map for markdown rebuild nodes
+/// Map for [ChatHistoryItem]'s [RNode]
 final _chatItemRNMap = <String, RNode>{};
 // RebuildNodes for history list items
 final _historyRNMap = <String, RNode>{};
-
-final _audioPlayer = AudioPlayer();
-// Map for audio player value notifiers which stores the current playing status
-final _audioPlayerMap = <String, ValueNotifier<AudioPlayStatus>>{};
-String? _nowPlayingId;
-final _audioLoadingMap = <String, Completer>{};
 
 /// Audio / Image / File
 final _filePicked = ValueNotifier<XFile?>(null);

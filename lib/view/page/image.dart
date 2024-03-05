@@ -15,6 +15,14 @@ final class ImagePageArgs {
   });
 }
 
+final class ImagePageRet {
+  final bool isDeleted;
+
+  const ImagePageRet({
+    this.isDeleted = false,
+  });
+}
+
 final class ImagePage extends StatelessWidget {
   final ImagePageArgs? args;
 
@@ -42,7 +50,7 @@ final class ImagePage extends StatelessWidget {
             onPressed: () => context.pop(),
             icon: const Icon(Icons.close),
           ),
-        )
+        ),
       ],
     );
   }

@@ -16,10 +16,10 @@ dependencies:
   logging: ^1.2.0
   path_provider: ^2.1.2
   window_manager: ^0.3.7
-  dart_openai:
-    git:
-      ref: main
-      url: https://github.com/lollipopkit/dart_openai
+  dart_openai: ^5.1.0
+    # git:
+    #   ref: main
+    #   url: https://github.com/lollipopkit/dart_openai
   markdown: ^7.1.1
   flutter_markdown: ^0.6.18+2
   flutter_markdown_latex: ^0.3.0
@@ -27,7 +27,6 @@ dependencies:
     # git:
     #   ref: main
     #   url: https://github.com/xushengs/flutter_markdown_latex
-  uuid: ^4.2.2
   choice: ^2.3.0
   file_picker: ^6.1.1
   share_plus: ^7.2.1
@@ -56,6 +55,7 @@ dependencies:
   image_picker: ^1.0.7
   audioplayers: ^5.2.1
   cross_file: ^0.3.4
+  shortid: ^0.1.2
 
 dev_dependencies:
   flutter_test:

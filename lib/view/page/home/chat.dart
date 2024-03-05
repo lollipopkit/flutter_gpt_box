@@ -139,10 +139,11 @@ class _ChatPageState extends State<_ChatPage>
             listenable: node,
             builder: (_, __) {
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: chatItem.content
                     .map((e) => switch (e.type) {
-                          ChatContentType.audio => _buildAudio(chatItem),
+                          ChatContentType.audio => _buildAudio(e),
                           ChatContentType.image => _buildImage(e),
                           _ => _buildText(e),
                         })
@@ -179,63 +180,14 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   Widget _buildImage(ChatContent content) {
-    return ImageListTile(
+    return ImageCard(
       imageUrl: content.raw,
       heroTag: content.hashCode.toString(),
     );
   }
 
-  /// Current design only allows one audio of each chat item.
-  Widget _buildAudio(ChatHistoryItem chatItem) {
-    final listenable = _audioPlayerMap.putIfAbsent(
-      chatItem.id,
-      () => ValueNotifier(AudioPlayStatus.fromChatItem(chatItem)),
-    );
-    final initWidget = () async {
-      await _audioLoadingMap[chatItem.id]?.future;
-      final path = '${await Paths.audio}/${chatItem.id}.mp3';
-      if (!await File(path).exists()) {
-        throw 'File not found: $path';
-      }
-      final player = AudioPlayer();
-      player.setSource(DeviceFileSource(path));
-      return player.getDuration();
-    }();
-    return FutureWidget(
-      future: initWidget,
-      error: (error, trace) {
-        Loggers.app.warning('Failed to get audio duration', error, trace);
-        return Text('$error');
-      },
-      loading: UIs.centerSizedLoading,
-      success: (duration) {
-        listenable.value = listenable.value.copyWith(
-          total: duration?.inMilliseconds ?? 0,
-        );
-        return ValueListenableBuilder(
-          valueListenable: listenable,
-          builder: (_, val, __) {
-            return ListTile(
-              leading: IconButton(
-                icon: val.playing
-                    ? const Icon(Icons.stop, size: 19)
-                    : const Icon(Icons.play_arrow, size: 19),
-                onPressed: () => _onTapAudioCtrl(val, chatItem, listenable),
-              ),
-              title: Slider(
-                value: duration == null ? 0.0 : val.played / val.total,
-                onChanged: (v) {
-                  final nowMilli = (val.total * v).toInt();
-                  final duration = Duration(milliseconds: nowMilli);
-                  _audioPlayer.seek(duration);
-                  listenable.value = val.copyWith(played: nowMilli);
-                },
-              ),
-            );
-          },
-        );
-      },
-    );
+  Widget _buildAudio(ChatContent content) {
+    return AudioCard(id: content.id);
   }
 
   Widget _buildChatItemBtn(
@@ -313,7 +265,7 @@ class _ChatPageState extends State<_ChatPage>
 
   void _onCopy(String content) {
     Clipboard.setData(ClipboardData(text: content));
-    context.showSnackBar(l10n.copied);
+    //context.showSnackBar(l10n.copied);
   }
 
   @override

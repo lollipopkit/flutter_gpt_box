@@ -1,7 +1,8 @@
 import 'package:dart_openai/dart_openai.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:shortid/shortid.dart';
 
 part 'history.g.dart';
 
@@ -23,7 +24,7 @@ final class ChatHistory {
   ChatHistory.noid({
     required this.items,
     this.name,
-  }) : id = uuid.v4();
+  }) : id = shortid.generate();
 
   static ChatHistory get empty => ChatHistory.noid(items: []);
 
@@ -79,15 +80,15 @@ final class ChatHistoryItem {
     required this.role,
     required this.content,
   })  : createdAt = DateTime.now(),
-        id = uuid.v4();
+        id = shortid.generate();
 
   ChatHistoryItem.single({
     required this.role,
     String raw = '',
     ChatContentType type = ChatContentType.text,
-  })  : id = uuid.v4(),
-        content = [ChatContent(type: type, raw: raw)],
-        createdAt = DateTime.now();
+  })  : content = [ChatContent.noid(type: type, raw: raw)],
+        createdAt = DateTime.now(),
+        id = shortid.generate();
 
   OpenAIChatCompletionChoiceMessageModel get toOpenAI {
     return OpenAIChatCompletionChoiceMessageModel(
@@ -122,7 +123,7 @@ final class ChatHistoryItem {
           .map((e) => ChatContent.fromJson(e.cast<String, dynamic>()))
           .toList(),
       createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
-      id: json['id'] as String,
+      id: json['id'] as String? ?? shortid.generate(),
     );
   }
 
@@ -130,12 +131,13 @@ final class ChatHistoryItem {
     ChatRole? role,
     List<ChatContent>? content,
     DateTime? createdAt,
+    @protected String? id,
   }) {
     return ChatHistoryItem(
       role: role ?? this.role,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
-      id: id,
+      id: id ?? this.id,
     );
   }
 }
@@ -158,11 +160,22 @@ final class ChatContent {
   final ChatContentType type;
   @HiveField(1)
   String raw;
+  @HiveField(2, defaultValue: '')
+  final String id;
 
-  ChatContent({required this.type, required this.raw});
-  ChatContent.text(this.raw) : type = ChatContentType.text;
-  ChatContent.audio(this.raw) : type = ChatContentType.audio;
-  ChatContent.image(this.raw) : type = ChatContentType.image;
+  ChatContent({required this.type, required this.raw, required String id})
+      : id = id.isEmpty ? shortid.generate() : id;
+  ChatContent.noid({required this.type, required this.raw})
+      : id = shortid.generate();
+  ChatContent.text(this.raw)
+      : type = ChatContentType.text,
+        id = shortid.generate();
+  ChatContent.audio(this.raw)
+      : type = ChatContentType.audio,
+        id = shortid.generate();
+  ChatContent.image(this.raw)
+      : type = ChatContentType.image,
+        id = shortid.generate();
 
   OpenAIChatCompletionChoiceMessageContentItemModel get toOpenAI =>
       switch (type) {
@@ -177,6 +190,7 @@ final class ChatContent {
     return {
       'type': type.index,
       'raw': raw,
+      'id': id,
     };
   }
 
@@ -184,6 +198,7 @@ final class ChatContent {
     return ChatContent(
       type: ChatContentType.values[json['type'] as int],
       raw: json['raw'] as String,
+      id: json['id'] as String? ?? shortid.generate(),
     );
   }
 }

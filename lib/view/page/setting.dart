@@ -17,7 +17,6 @@ import 'package:flutter_chatgpt/data/res/build.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/data/res/uuid.dart';
 import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
@@ -26,6 +25,7 @@ import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/switch.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:shortid/shortid.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key, Never? args});
@@ -301,7 +301,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (name == null) return;
         final cfg = ChatConfig.defaultOne.copyWith(
-          id: uuid.v4(),
+          id: shortid.generate(),
           name: name,
         )..save();
         OpenAICfg.switchTo(cfg.id);

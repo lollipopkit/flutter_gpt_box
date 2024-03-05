@@ -7,16 +7,21 @@ import 'package:flutter_chatgpt/core/route/page.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/page/image.dart';
+import 'package:flutter_chatgpt/view/widget/card.dart';
 
-final class ImageListTile extends StatelessWidget {
+final class ImageCard extends StatelessWidget {
   final String imageUrl;
   final String heroTag;
+  final void Function(ImagePageRet)? onRet;
 
-  const ImageListTile({
+  const ImageCard({
     super.key,
     required this.imageUrl,
     required this.heroTag,
+    this.onRet,
   });
+
+  static double height = 177;
 
   @override
   Widget build(BuildContext context) {
@@ -27,42 +32,24 @@ final class ImageListTile extends StatelessWidget {
       _ => FileImage(File(imageUrl)),
     };
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Material(
-        child: InkWell(
-          onTap: () => Routes.image.go(
+    return CardX(
+      child: InkWell(
+        onTap: () async {
+          final ret = await Routes.image.go(
             context,
             args: ImagePageArgs(
               tag: heroTag,
               image: provider,
             ),
-          ),
-          child: Container(
-            height: 77,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(39, 245, 245, 245),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 77,
-                  height: 77,
-                  child: _buildImage(provider),
-                ),
-                UIs.width13,
-                Expanded(
-                  child: Text(
-                    imageUrl,
-                    style: UIs.text11Bold,
-                    maxLines: 3,
-                    overflow: TextOverflow.fade,
-                  ),
-                )
-              ],
-            ),
+          );
+          if (ret != null) onRet?.call(ret);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(7),
+          child: SizedBox(
+            width: height,
+            height: height,
+            child: _buildImage(provider),
           ),
         ),
       ),
@@ -80,17 +67,20 @@ final class ImageListTile extends StatelessWidget {
           if (loadingProgress == null) {
             return child;
           }
+          final progress =
+              '${loadingProgress.cumulativeBytesLoaded} / ${loadingProgress.expectedTotalBytes}';
           return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               UIs.centerSizedLoading,
               UIs.height13,
-              Text(
-                  '${loadingProgress.cumulativeBytesLoaded} / ${loadingProgress.expectedTotalBytes}'),
+              Text(progress),
             ],
           );
         },
         errorBuilder: (context, error, stackTrace) {
           return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.broken_image, size: 50),
               UIs.height13,
@@ -110,7 +100,7 @@ final class ImageListTile extends StatelessWidget {
                     ],
                   );
                 },
-                child: Text(l10n.error),
+                child: Text('${l10n.error} Log'),
               ),
             ],
           );
