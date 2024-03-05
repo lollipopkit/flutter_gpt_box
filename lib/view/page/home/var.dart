@@ -11,6 +11,7 @@ final _pageCtrl = PageController(initialPage: _curPage.value.index);
 final _screenshotCtrl = ScreenshotController();
 
 final _timeRN = RNode();
+
 /// Map for [ChatHistoryItem]'s [RNode]
 final _chatItemRNMap = <String, RNode>{};
 // RebuildNodes for history list items

@@ -187,7 +187,7 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   Widget _buildAudio(ChatContent content) {
-    return AudioCard(id: content.id);
+    return AudioCard(id: content.id, path: content.raw);
   }
 
   Widget _buildChatItemBtn(

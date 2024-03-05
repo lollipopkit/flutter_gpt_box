@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/data/model/app/audio_play.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/path.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/widget/future.dart';
 
@@ -14,14 +13,22 @@ final _audioPlayer = AudioPlayer();
 // Map for audio player value notifiers which stores the current playing status
 final _audioPlayerMap = <String, ValueNotifier<AudioPlayStatus>>{};
 String? _nowPlayingId;
-const _formatSuffix = '.aac';
 
 final class AudioCard extends StatefulWidget {
   static final loadingMap = <String, Completer>{};
 
+  final String path;
   final String id;
+  final bool buildSlider;
+  final void Function()? onDelete;
 
-  const AudioCard({super.key, required this.id});
+  const AudioCard({
+    super.key,
+    required this.id,
+    required this.path,
+    this.buildSlider = true,
+    this.onDelete,
+  });
 
   @override
   State<AudioCard> createState() => _AudioCardState();
@@ -41,22 +48,34 @@ final class AudioCard extends StatefulWidget {
 }
 
 class _AudioCardState extends State<AudioCard> {
+  late final _file = File(widget.path);
+
   @override
   Widget build(BuildContext context) {
+    var inited = true;
     final listenable = _audioPlayerMap.putIfAbsent(
       widget.id,
-      () => ValueNotifier(AudioPlayStatus(id: widget.id)),
+      () {
+        inited = false;
+        return ValueNotifier(AudioPlayStatus(id: widget.id));
+      },
     );
+    if (inited) {
+      return _buildItem(listenable);
+    }
     final initWidget = () async {
       await AudioCard.loadingMap[widget.id]?.future;
       AudioCard.loadingMap.remove(widget.id);
-      final path = '${await Paths.audio}/${widget.id}$_formatSuffix';
-      if (!await File(path).exists()) {
-        throw l10n.fileNotFound(path);
+      if (!await _file.exists()) {
+        throw l10n.fileNotFound(widget.path);
       }
       final player = AudioPlayer();
-      player.setSource(DeviceFileSource(path));
-      return player.getDuration();
+      player.setSource(DeviceFileSource(widget.path));
+      final duration = await player.getDuration();
+
+      listenable.value = listenable.value.copyWith(
+        total: duration?.inMilliseconds ?? 0,
+      );
     }();
     return FutureWidget(
       future: initWidget,
@@ -65,31 +84,68 @@ class _AudioCardState extends State<AudioCard> {
       },
       loading: UIs.centerSizedLoading,
       success: (duration) {
-        listenable.value = listenable.value.copyWith(
-          total: duration?.inMilliseconds ?? 0,
-        );
-        return ValueListenableBuilder(
-          valueListenable: listenable,
-          builder: (_, val, __) {
-            return ListTile(
-              leading: IconButton(
-                icon: val.playing
-                    ? const Icon(Icons.stop, size: 19)
-                    : const Icon(Icons.play_arrow, size: 19),
-                onPressed: () => _onTapAudioCtrl(val, widget.id, listenable),
+        return _buildItem(listenable);
+      },
+    );
+  }
+
+  Widget _buildItem(ValueNotifier<AudioPlayStatus> listenable) {
+    return ValueListenableBuilder(
+      valueListenable: listenable,
+      builder: (_, val, __) {
+        if (!widget.buildSlider) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                widget.id,
+                style: UIs.text13Bold,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
               ),
-              title: Slider(
-                value: duration == null ? 0.0 : val.played / val.total,
-                onChanged: (v) {
-                  final nowMilli = (val.total * v).toInt();
-                  final duration = Duration(milliseconds: nowMilli);
-                  _audioPlayer.seek(duration);
-                  listenable.value = val.copyWith(played: nowMilli);
-                },
-              ),
-            ).card;
-          },
-        );
+              Text(listenable.value.progress),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: val.playing
+                        ? const Icon(Icons.stop, size: 19)
+                        : const Icon(Icons.play_arrow, size: 19),
+                    onPressed: () =>
+                        _onTapAudioCtrl(val, widget.id, listenable),
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      _audioPlayerMap.remove(widget.id);
+                      listenable.dispose();
+                      await _file.delete();
+                      widget.onDelete?.call();
+                    },
+                    icon: const Icon(Icons.delete),
+                  ),
+                ],
+              )
+            ],
+          ).card;
+        }
+        return ListTile(
+          leading: IconButton(
+            icon: val.playing
+                ? const Icon(Icons.stop, size: 19)
+                : const Icon(Icons.play_arrow, size: 19),
+            onPressed: () => _onTapAudioCtrl(val, widget.id, listenable),
+          ),
+          title: Slider(
+            value: val.played / val.total,
+            onChanged: (v) {
+              final nowMilli = (val.total * v).toInt();
+              final duration = Duration(milliseconds: nowMilli);
+              _audioPlayer.seek(duration);
+              listenable.value = val.copyWith(played: nowMilli);
+            },
+          ),
+        ).card;
       },
     );
   }
@@ -121,9 +177,7 @@ class _AudioCardState extends State<AudioCard> {
       }
       _nowPlayingId = id;
       listenable.value = val.copyWith(playing: true);
-      _audioPlayer.play(DeviceFileSource(
-        '${await Paths.audio}/$id$_formatSuffix',
-      ));
+      _audioPlayer.play(DeviceFileSource(_file.absolute.path));
     }
   }
 }

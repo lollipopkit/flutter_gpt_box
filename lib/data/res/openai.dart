@@ -20,7 +20,7 @@ abstract final class OpenAICfg {
     OpenAI.apiKey = _cfg.key;
     OpenAI.baseUrl = _cfg.url;
   }
-  
+
   static bool switchTo(String id) {
     final cfg = Stores.config.fetch(id);
     if (cfg != null) {

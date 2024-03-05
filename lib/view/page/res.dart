@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/path.dart';
+import 'package:flutter_chatgpt/view/page/image.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/audio.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
@@ -17,7 +18,7 @@ final class ResPage extends StatefulWidget {
   State<ResPage> createState() => _ResPageState();
 }
 
-const _duration = Durations.short3;
+const _duration = Durations.medium1;
 
 final class _ResPageState extends State<ResPage> {
   late final _resType = ValueNotifier(_ResType.image)..addListener(_load);
@@ -60,8 +61,8 @@ final class _ResPageState extends State<ResPage> {
             key: _listKey,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 5,
-              crossAxisSpacing: 17,
-              mainAxisSpacing: 17,
+              crossAxisSpacing: 13,
+              mainAxisSpacing: 13,
             ),
             padding: const EdgeInsets.symmetric(horizontal: 17),
             itemBuilder: (_, idx, anime) {
@@ -85,12 +86,22 @@ final class _ResPageState extends State<ResPage> {
       );
     }
     final entity = _filesList[idx];
-    return _resType.value.build(entity);
+    return _buildCard(entity);
   }
 
   void _load() async {
-    _listKey.currentState?.removeAllItems(
-      (context, animation) => FadeTransition(
+    _listKey.currentState?.removeAllItems(_rmCardBuilder, duration: _duration);
+    await Future.delayed(_duration);
+    _filesList.clear();
+    await for (final entity in _resType.value.all) {
+      _filesList.add(entity);
+      _filesList.sort((a, b) => a.path.compareTo(b.path));
+      _listKey.currentState?.insertItem(_filesList.indexOf(entity));
+    }
+  }
+
+  Widget _rmCardBuilder(BuildContext context, Animation<double> animation) =>
+      FadeTransition(
         opacity: animation.drive(CurveTween(curve: Curves.easeInOutCubic)),
         child: CardX(
           child: SizedBox(
@@ -98,16 +109,46 @@ final class _ResPageState extends State<ResPage> {
             width: ImageCard.height,
           ),
         ),
-      ),
+      );
+
+  Widget _buildCard(FileSystemEntity entity) {
+    switch (_resType.value) {
+      case _ResType.audio:
+        final id = entity.path.split('/').last;
+        return AudioCard(
+          id: id,
+          path: entity.path,
+          buildSlider: false,
+          onDelete: () => _onAudioDelete(entity),
+        );
+      case _ResType.image:
+        return ImageCard(
+          imageUrl: entity.path,
+          heroTag: entity.path,
+          onRet: (p0) => _onImageRet(p0, entity),
+        );
+    }
+  }
+
+  void _onAudioDelete(FileSystemEntity entity) async {
+    _listKey.currentState?.removeItem(
+      _filesList.indexOf(entity),
+      _rmCardBuilder,
       duration: _duration,
     );
-    await Future.delayed(_duration);
-    _filesList.clear();
-    await for (final entity in _resType.value.all) {
-      debugPrint('entity: $entity');
-      _filesList.add(entity);
-      _filesList.sort((a, b) => a.path.compareTo(b.path));
-      _listKey.currentState?.insertItem(_filesList.indexOf(entity));
+    _filesList.remove(entity);
+  }
+
+  void _onImageRet(ImagePageRet ret, FileSystemEntity entity) async {
+    if (ret.isDeleted) {
+      // Wait for hero anime
+      await Future.delayed(_duration + Durations.short3);
+      _listKey.currentState?.removeItem(
+        _filesList.indexOf(entity),
+        _rmCardBuilder,
+        duration: _duration,
+      );
+      _filesList.remove(entity);
     }
   }
 }
@@ -127,13 +168,6 @@ enum _ResType {
     await for (final entity in dir.list()) {
       yield entity;
     }
-  }
-
-  Widget build(FileSystemEntity entity) {
-    return switch (this) {
-      audio => AudioCard(id: entity.path),
-      image => ImageCard(imageUrl: entity.path, heroTag: entity.path),
-    };
   }
 
   IconData get icon => switch (this) {

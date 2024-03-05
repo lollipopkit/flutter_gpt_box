@@ -30,13 +30,15 @@ class AboutPage extends StatelessWidget {
   }
 
   Widget _buildUniLinks() {
-    return CardX(child: ListTile(
-      leading: const Icon(Icons.link),
-      title: Text('URL Scheme ${l10n.usage}'),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: () => launchUrlString(
-          'https://github.com/lollipopkit/flutter_gpt_box/blob/main/doc/uni_link.md'),
-    ));
+    return CardX(
+      child: ListTile(
+        leading: const Icon(Icons.link),
+        title: Text('URL Scheme ${l10n.usage}'),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => launchUrlString(
+            'https://github.com/lollipopkit/flutter_gpt_box/blob/main/doc/uni_link.md'),
+      ),
+    );
   }
 
   Widget _buildInfo() {

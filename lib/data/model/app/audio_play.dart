@@ -4,7 +4,10 @@ final class AudioPlayStatus {
   /// [ChatContent]'s id
   final String id;
 
+  /// milliseconds
   final int played;
+
+  /// milliseconds
   final int total;
   final bool playing;
 
@@ -26,5 +29,15 @@ final class AudioPlayStatus {
       total: total ?? this.total,
       playing: playing ?? this.playing,
     );
+  }
+
+  String get progress {
+    final played = Duration(milliseconds: this.played);
+    final playedStr =
+        '${played.inMinutes.toString().padLeft(2, '0')}:${played.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+    final total = Duration(milliseconds: this.total);
+    final totalStr =
+        '${total.inMinutes.toString().padLeft(2, '0')}:${total.inSeconds.remainder(60).toString().padLeft(2, '0')}';
+    return '$playedStr / $totalStr';
   }
 }

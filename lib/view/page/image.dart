@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/ext/context/base.dart';
+import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
+import 'package:flutter_chatgpt/core/util/ui.dart';
+import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/view/widget/appbar.dart';
 
 final class ImagePageArgs {
   final String? title;
@@ -33,25 +35,31 @@ final class ImagePage extends StatelessWidget {
     if (args == null) {
       return UIs.placeholder;
     }
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Hero(
-          tag: args!.tag,
-          transitionOnUserGestures: true,
-          child: Image(image: args!.image),
-        ),
-        Positioned(
-          top: CustomAppBar.titlebarHeight?.toDouble() ??
-              MediaQuery.maybeOf(context)?.padding.top ??
-              17,
-          left: 17,
-          child: IconButton(
-            onPressed: () => context.pop(),
-            icon: const Icon(Icons.close),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final sure = await context.showRoundDialog(
+              title: l10n.delete,
+              child:
+                  Text(l10n.delFmt(args?.title ?? l10n.untitled, l10n.image)),
+              actions: Btns.oks(onTap: () => context.pop(true)),
+            );
+            if (sure != true) return;
+            context.pop(const ImagePageRet(isDeleted: true));
+          },
+          child: const Icon(Icons.delete)),
+      body: GestureDetector(
+        onTap: () => context.pop(),
+        child: Align(
+          alignment: Alignment.center,
+          child: Hero(
+            tag: args!.tag,
+            transitionOnUserGestures: true,
+            child: Image(image: args!.image),
           ),
         ),
-      ],
+      ),
     );
   }
 }

@@ -318,8 +318,6 @@ Future<void> _onTapImgPick(BuildContext context) async {
       child: Image.memory(
         await val.readAsBytes(),
         fit: BoxFit.cover,
-        cacheHeight: 100,
-        cacheWidth: 100,
       ),
       actions: [
         TextButton(
@@ -619,7 +617,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
       outputFileName: replyContent.id,
       responseFormat: OpenAIAudioSpeechResponseFormat.aac,
     );
-    replyContent.raw = file.path.split('/').last;
+    replyContent.raw = file.path;
     completer.complete();
     _storeChat(chatId, context);
   } catch (e) {
