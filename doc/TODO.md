@@ -15,6 +15,7 @@
   - [x] Desktop view
   - [x] Auto generate title
   - [x] Soft wrap switch
+  - [ ] Cache generated image
 - [x] Sync
   - [x] Channel 
     - [x] Restore from ChatGPT Next Web backup file

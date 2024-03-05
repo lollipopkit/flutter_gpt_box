@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
+import 'package:flutter_chatgpt/core/ext/num.dart';
 import 'package:flutter_chatgpt/core/route/page.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
@@ -67,8 +68,9 @@ final class ImageCard extends StatelessWidget {
           if (loadingProgress == null) {
             return child;
           }
-          final progress =
-              '${loadingProgress.cumulativeBytesLoaded} / ${loadingProgress.expectedTotalBytes}';
+          final loadedBytes = loadingProgress.cumulativeBytesLoaded.bytes2Str;
+          final totalBytes = loadingProgress.expectedTotalBytes?.bytes2Str;
+          final progress = '$loadedBytes / $totalBytes';
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

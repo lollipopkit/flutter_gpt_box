@@ -24,3 +24,25 @@ enum ChatType {
         audio => l10n.audio,
       };
 }
+
+enum ChatApiType {
+  /// Chat in plain text
+  text,
+  /// Text chat with img
+  textImg,
+  /// Create img
+  img,
+  imgEdit,
+  tts,
+  stt,
+  ;
+
+  int toJson() => index;
+  static ChatApiType? fromJson(int val) {
+    try {
+      return ChatApiType.values[val];
+    } catch (e) {
+      return null;
+    }
+  }
+}
