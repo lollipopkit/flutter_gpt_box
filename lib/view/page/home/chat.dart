@@ -16,10 +16,9 @@ class _ChatPageState extends State<_ChatPage>
     return ValueListenableBuilder(
       valueListenable: _isWide,
       builder: (_, isWide, __) {
-        if (!isWide) return _buildChat();
         return Scaffold(
           body: _buildChat(),
-          bottomNavigationBar: const _HomeBottom(),
+          bottomNavigationBar: isWide ? const _HomeBottom() : null,
           floatingActionButton: _buildFAB(),
         );
       },

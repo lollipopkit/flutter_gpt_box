@@ -28,8 +28,10 @@ enum ChatType {
 enum ChatApiType {
   /// Chat in plain text
   text,
+
   /// Text chat with img
   textImg,
+
   /// Create img
   img,
   imgEdit,
