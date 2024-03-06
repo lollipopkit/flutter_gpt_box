@@ -10,7 +10,7 @@ import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/view/page/image.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 
-final class ImageCard extends StatelessWidget {
+final class ImageCard extends StatefulWidget {
   final String imageUrl;
   final String heroTag;
   final void Function(ImagePageRet)? onRet;
@@ -25,7 +25,16 @@ final class ImageCard extends StatelessWidget {
   static double height = 177;
 
   @override
+  State<ImageCard> createState() => _ImageCardState();
+}
+
+class _ImageCardState extends State<ImageCard> {
+  Object? err;
+  StackTrace? trace;
+
+  @override
   Widget build(BuildContext context) {
+    final imageUrl = widget.imageUrl;
     final ImageProvider provider = switch (imageUrl) {
       _ when imageUrl.startsWith('http') =>
         NetworkImage(imageUrl) as ImageProvider,
@@ -36,20 +45,36 @@ final class ImageCard extends StatelessWidget {
     return CardX(
       child: InkWell(
         onTap: () async {
+          if (err != null || trace != null) {
+            final text = '$err\n\n$trace';
+            context.showRoundDialog(
+              title: l10n.error,
+              child: SingleChildScrollView(child: Text(text)),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: text));
+                  },
+                  child: Text(l10n.copy),
+                )
+              ],
+            );
+            return;
+          }
           final ret = await Routes.image.go(
             context,
             args: ImagePageArgs(
-              tag: heroTag,
+              tag: widget.heroTag,
               image: provider,
             ),
           );
-          if (ret != null) onRet?.call(ret);
+          if (ret != null) widget.onRet?.call(ret);
         },
         child: Padding(
           padding: const EdgeInsets.all(7),
           child: SizedBox(
-            width: height,
-            height: height,
+            width: ImageCard.height,
+            height: ImageCard.height,
             child: _buildImage(provider),
           ),
         ),
@@ -59,7 +84,7 @@ final class ImageCard extends StatelessWidget {
 
   Widget _buildImage(ImageProvider provider) {
     return Hero(
-      tag: heroTag,
+      tag: widget.heroTag,
       transitionOnUserGestures: true,
       child: Image(
         image: provider,
@@ -81,29 +106,14 @@ final class ImageCard extends StatelessWidget {
           );
         },
         errorBuilder: (context, error, stackTrace) {
+          err = error;
+          trace = stackTrace;
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.broken_image, size: 50),
               UIs.height13,
-              TextButton(
-                onPressed: () {
-                  final text = '$error\n\n$stackTrace';
-                  context.showRoundDialog(
-                    title: l10n.error,
-                    child: SingleChildScrollView(child: Text(text)),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(text: text));
-                        },
-                        child: Text(l10n.copy),
-                      )
-                    ],
-                  );
-                },
-                child: Text('${l10n.error} Log'),
-              ),
+              Text('${l10n.error} Log'),
             ],
           );
         },
