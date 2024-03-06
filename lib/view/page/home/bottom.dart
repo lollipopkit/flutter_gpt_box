@@ -54,6 +54,7 @@ class _HomeBottom extends StatelessWidget {
                     ),
                     const Spacer(),
                     _buildSwitchChatType(),
+                    UIs.width7,
                   ],
                 ),
                 _buildTextField(context),

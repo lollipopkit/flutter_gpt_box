@@ -141,6 +141,7 @@ final class _ResPageState extends State<ResPage> {
 
   void _onImageRet(ImagePageRet ret, FileSystemEntity entity) async {
     if (ret.isDeleted) {
+      await File(entity.path).delete();
       // Wait for hero anime
       await Future.delayed(_duration + Durations.short3);
       _listKey.currentState?.removeItem(
