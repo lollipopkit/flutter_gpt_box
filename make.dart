@@ -4,7 +4,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-const appName = 'GPT';
+const appName = 'GPTBox';
 final appNameLower = appName.toLowerCase();
 
 const buildDataFilePath = 'lib/data/res/build.dart';
@@ -35,19 +35,6 @@ Future<void> getGitCommitCount() async {
       .where((line) => line.isNotEmpty)
       .length;
 }
-
-// Future<int> getScriptCommitCount() async {
-//   if (!await File(shellScriptPath).exists()) {
-//     print('File not found: $shellScriptPath');
-//     exit(1);
-//   }
-//   final result =
-//       await Process.run('git', ['log', '--oneline', shellScriptPath]);
-//   return (result.stdout as String)
-//       .split('\n')
-//       .where((line) => line.isNotEmpty)
-//       .length;
-// }
 
 Future<void> writeStaicConfigFile(
     Map<String, dynamic> data, String className, String path) async {
@@ -162,12 +149,10 @@ Future<void> flutterBuildAndroid() async {
 Future<void> flutterBuildLinux() async {
   await flutterBuild('linux');
   const appDirName = 'linux.AppDir';
-  // mkdir appName.AppDir
-  await Process.run('mkdir', [appDirName]);
   // cp -r build/linux/x64/release/bundle/* appName.AppDir
   await Process.run('cp', [
     '-r',
-    'build/linux/x64/release/bundle/*',
+    'build/linux/x64/release/bundle',
     appDirName,
   ]);
   // cp -r assets/app_icon.png ServerBox.AppDir

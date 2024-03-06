@@ -42,7 +42,7 @@
 
 
 ## ⬇️ 使用
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gpt/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gpt/latest.AppImage) / [Windows](https://res.lolli.tech/gpt/latest.win.zip) / [Web](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web](https://gpt.lolli.tech/)
 
 - 由于中国政策原因，且**目前**无法完成[备案](https://github.com/lollipopkit/flutter_server_box/discussions/180)。请移步 AppStore 其他区下载。
 - 关于安全：

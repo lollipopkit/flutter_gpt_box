@@ -43,3 +43,5 @@ app.*.map.json
 /android/app/release
 
 /android/app/fjy.androidstudio.key
+linux.AppDir
+GPTBox-x86_64.AppImage
