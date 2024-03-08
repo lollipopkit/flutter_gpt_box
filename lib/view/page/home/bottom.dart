@@ -23,7 +23,7 @@ class _HomeBottom extends StatelessWidget {
           child: AnimatedPadding(
             padding: EdgeInsets.only(bottom: _media?.viewInsets.bottom ?? 0),
             curve: Curves.fastEaseInToSlowEaseOut,
-            duration: _durationShort,
+            duration: Durations.short1,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

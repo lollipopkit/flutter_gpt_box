@@ -20,7 +20,7 @@ final _historyRNMap = <String, RNode>{};
 /// Audio / Image / File
 final _filePicked = ValueNotifier<XFile?>(null);
 
-final _chatType = ValueNotifier(ChatType.text);
+final _chatType = ChatType.text.vn;
 
 // For page body chat view
 final _chatRN = RNode();
@@ -28,14 +28,14 @@ final _historyRN = RNode();
 final _appbarTitleRN = RNode();
 final _sendBtnRN = RNode();
 // Default false: the history item is visible on app start, no need to locate
-final _locateHistoryBtn = ValueNotifier(false);
+final _locateHistoryBtn = false.vn;
 final _chatFabRN = RNode();
 
 var _allHistories = <String, ChatHistory>{};
 String _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
 final _chatStreamSubs = <String, StreamSubscription>{};
-final _curPage = ValueNotifier(HomePageEnum.chat)
+final _curPage = HomePageEnum.chat.vn
   ..addListener(() {
     _imeFocus.unfocus();
   });
@@ -43,7 +43,7 @@ final _curPage = ValueNotifier(HomePageEnum.chat)
 final _imeFocus = FocusNode();
 
 MediaQueryData? _media;
-final _isWide = ValueNotifier(false)
+final _isWide = false.vn
   ..addListener(() {
     _curPage.value = HomePageEnum.chat;
   });

@@ -17,6 +17,7 @@ import 'package:flutter_chatgpt/core/ext/datetime.dart';
 import 'package:flutter_chatgpt/core/ext/list.dart';
 import 'package:flutter_chatgpt/core/ext/media_query.dart';
 import 'package:flutter_chatgpt/core/ext/num.dart';
+import 'package:flutter_chatgpt/core/ext/value_notifier.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/ext/xfile.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
