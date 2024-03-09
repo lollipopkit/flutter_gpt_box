@@ -15,7 +15,7 @@ class AppUpdate {
   final AppUpdatePlatformSpecific<String> url;
 
   static Future<AppUpdate> fromUrl() async {
-    final resp = await Dio().get('https://res.lolli.tech/gptbox/update.json');
+    final resp = await Dio().get('https://cdn.lolli.tech/gptbox/update.json');
     return AppUpdate.fromJson(resp.data);
   }
 
