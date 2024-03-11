@@ -109,7 +109,28 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
   final pwdCtrl = TextEditingController(
     text: Stores.setting.webdavPwd.fetch(),
   );
-  final result = await context.showRoundDialog<bool>(
+
+  void onSubmit() async {
+    final err = await context.showLoadingDialog(fn: () async {
+      return await Webdav.test(urlCtrl.text, userCtrl.text, pwdCtrl.text);
+    });
+    if (err == null) {
+      context.pop();
+      context.showSnackBar(l10n.success);
+      Webdav.changeClient(urlCtrl.text, userCtrl.text, pwdCtrl.text);
+      return;
+    }
+    context.showRoundDialog(
+      title: l10n.error,
+      child: Text(err),
+      actions: Btns.oks(onTap: () => context.pop()),
+    );
+  }
+
+  final userNode = FocusNode();
+  final pwdNode = FocusNode();
+
+  await context.showRoundDialog<bool>(
     title: 'WebDAV',
     child: Column(
       mainAxisSize: MainAxisSize.min,
@@ -118,27 +139,23 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
           label: 'URL',
           hint: 'https://example.com/webdav/',
           controller: urlCtrl,
+          autoFocus: true,
+          onSubmitted: (p0) => userNode.requestFocus(),
         ),
         Input(
           label: l10n.user,
           controller: userCtrl,
+          node: userNode,
+          onSubmitted: (p0) => pwdNode.requestFocus(),
         ),
         Input(
           label: l10n.passwd,
           controller: pwdCtrl,
+          node: pwdNode,
+          onSubmitted: (p0) => onSubmit(),
         ),
       ],
     ),
-    actions: Btns.oks(onTap: () => context.pop(true)),
+    actions: Btns.oks(onTap: onSubmit),
   );
-  if (result == true) {
-    final result = await Webdav.test(urlCtrl.text, userCtrl.text, pwdCtrl.text);
-    if (result == null) {
-      context.showSnackBar(l10n.success);
-    } else {
-      context.showSnackBar(result);
-      return;
-    }
-    Webdav.changeClient(urlCtrl.text, userCtrl.text, pwdCtrl.text);
-  }
 }
