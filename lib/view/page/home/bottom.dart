@@ -52,6 +52,30 @@ class _HomeBottom extends StatelessWidget {
                       icon: const Icon(Icons.delete, size: 19),
                       tooltip: l10n.delete,
                     ),
+                    ListenableBuilder(
+                      listenable: _filePicked,
+                      builder: (_, __) {
+                        return ListenableBuilder(
+                          listenable: _chatType,
+                          builder: (_, __) {
+                            return switch (_chatType.value) {
+                              ChatType.text || ChatType.img => Badge(
+                                  isLabelVisible: _filePicked.value != null,
+                                  child: IconButton(
+                                    onPressed: () => _onTapImgPick(context),
+                                    icon: const Icon(Icons.photo, size: 19),
+                                  ),
+                                ),
+                              // ChatType.audio => const IconButton(
+                              //   onPressed: _onTapAudioPick,
+                              //   icon: Icon(Icons.mic, size: 19),
+                              // ),
+                              _ => UIs.placeholder,
+                            };
+                          },
+                        );
+                      },
+                    ),
                     const Spacer(),
                     _buildSwitchChatType(),
                     UIs.width7,
@@ -120,29 +144,9 @@ class _HomeBottom extends StatelessWidget {
                   onPressed: () => _onStopStreamSub(_curChatId),
                   icon: const Icon(Icons.stop),
                 )
-              : ListenableBuilder(
-                  listenable: _filePicked,
-                  builder: (_, __) {
-                    return ListenableBuilder(
-                      listenable: _chatType,
-                      builder: (_, __) {
-                        return switch (_chatType.value) {
-                          ChatType.text || ChatType.img => Badge(
-                              isLabelVisible: _filePicked.value != null,
-                              child: IconButton(
-                                onPressed: () => _onTapImgPick(context),
-                                icon: const Icon(Icons.photo, size: 19),
-                              ),
-                            ),
-                          // ChatType.audio => const IconButton(
-                          //   onPressed: _onTapAudioPick,
-                          //   icon: Icon(Icons.mic, size: 19),
-                          // ),
-                          _ => UIs.placeholder,
-                        };
-                      },
-                    );
-                  },
+              : IconButton(
+                  onPressed: () => _onCreateRequest(context, _curChatId),
+                  icon: const Icon(Icons.send, size: 19),
                 );
         },
       ),
