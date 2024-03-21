@@ -21,7 +21,7 @@ Please don't use it in production environment, and don't use it for important da
 
 
 ## 🪄 Features
-- Restore from [ChatGPT Next Web](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web)
+- Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI's export file](https://chat.openai.com).
 - Text / Image / Audio chat. (Web only support text)
 - Share chat by picture.
 - Render code block / latex formula.

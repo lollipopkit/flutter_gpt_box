@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/ext/list.dart';
+import 'package:flutter_chatgpt/core/ext/iterable.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 
 enum ChatType {

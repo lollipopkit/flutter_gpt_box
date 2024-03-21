@@ -20,7 +20,7 @@
   - [x] Channel 
     - [x] Import
       - [x] from ChatGPT Next Web backup file
-      - [ ] OpenAI's ChatGPT export file
+      - [x] OpenAI's ChatGPT export file
     - [x] iCloud
     - [x] File
     - [x] Clipboard

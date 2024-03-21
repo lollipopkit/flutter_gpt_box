@@ -8,18 +8,22 @@ import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
-import 'package:flutter_chatgpt/core/rebuild.dart';
 import 'package:flutter_chatgpt/core/util/platform/file.dart';
 import 'package:flutter_chatgpt/core/util/ui.dart';
 import 'package:flutter_chatgpt/data/model/app/backup.dart';
 import 'package:flutter_chatgpt/data/model/chat/gpt_next.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
+import 'package:flutter_chatgpt/data/model/chat/openai.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/openai.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:flutter_chatgpt/data/res/url.dart';
+import 'package:flutter_chatgpt/view/page/home/home.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../core/util/platform/base.dart';
 import '../../../core/util/sync/icloud.dart';
@@ -33,6 +37,7 @@ part 'func/file.dart';
 part 'func/webdav.dart';
 part 'func/icloud.dart';
 part 'func/gpt_next.dart';
+part 'func/openai.dart';
 
 final _webdavLoading = ValueNotifier(false);
 
@@ -64,6 +69,7 @@ final class BackupPage extends StatelessWidget {
         _buildFile(context),
         _buildTitle(l10n.thirdParty),
         _buildGPTNext(context),
+        _buildOpenAI(context),
       ],
     );
   }
@@ -96,7 +102,7 @@ final class BackupPage extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: const Icon(Icons.sync),
+            leading: const Icon(MingCute.refresh_3_line),
             title: Text(l10n.onlySyncOnLaunch),
             trailing: StoreSwitch(prop: Stores.setting.onlySyncOnLaunch),
           ),

@@ -25,6 +25,7 @@ import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
 import 'package:flutter_chatgpt/view/widget/input.dart';
 import 'package:flutter_chatgpt/view/widget/switch.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:shortid/shortid.dart';
 
 class SettingPage extends StatefulWidget {
@@ -174,7 +175,7 @@ class _SettingPageState extends State<SettingPage> {
     return ValueListenableBuilder(
       valueListenable: _store.locale.listenable(),
       builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.language),
+        leading: const Icon(MingCute.translate_line),
         title: Text(l10n.lang),
         trailing: Text(
           val.isEmpty ? l10n.localeName : val,

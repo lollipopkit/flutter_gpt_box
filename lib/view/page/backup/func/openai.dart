@@ -1,34 +1,35 @@
 part of '../view.dart';
 
-Widget _buildGPTNext(BuildContext context) {
+Widget _buildOpenAI(BuildContext context) {
   return ListTile(
-    title: const Text('ChatGPT Next Web'),
-    leading: const Icon(MingCute.chat_2_fill),
-    trailing: Text(l10n.restore),
-    onTap: () => _onTapRestoreGPTNext(context),
+    title: const Text('OpenAI'),
+    leading: const Icon(MingCute.openai_fill),
+    subtitle: MarkdownBody(
+      data: l10n.restoreOpenaiTip(Urls.openaiRestoreDoc),
+      onTapLink: (text, href, title) {
+        if (href != null) launchUrlString(href);
+      },
+    ),
+    trailing: const Icon(Icons.chevron_right),
+    onTap: () => _onTapRestoreOpenAI(context),
   ).card;
 }
 
-void _onTapRestoreGPTNext(BuildContext context) async {
+void _onTapRestoreOpenAI(BuildContext context) async {
   final picked = await FileUtil.pickString();
   if (picked == null) return;
 
   final chats = await context.showLoadingDialog(fn: () async {
     return await compute(
       (params) async {
-        final obj = json.decode(params) as Map<String, dynamic>;
-        final {
-          'chat-next-web-store': {
-            'sessions': List sessions,
-          }
-        } = obj;
+        final obj = json.decode(params) as List;
         final chats = <ChatHistory>[];
 
         /// Use for-loop for exception handling
-        /// Instead of `sessions.map((e) => ChatHistory.fromGPTNext(e)).toList()`
-        for (final item in sessions) {
+        /// Instead of `sessions.map((e) => ChatHistory.fromOpenAI(e)).toList()`
+        for (final item in obj) {
           try {
-            chats.add(GPTNextConvertor.toChatHistory(item));
+            chats.add(OpenAIConvertor.toChatHistory(item));
           } catch (_) {}
         }
         return chats;

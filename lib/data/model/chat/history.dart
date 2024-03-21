@@ -1,7 +1,9 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_chatgpt/core/ext/iterable.dart';
 import 'package:flutter_chatgpt/data/model/chat/type.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
+import 'package:flutter_chatgpt/data/res/url.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shortid/shortid.dart';
 
@@ -63,7 +65,7 @@ final class ChatHistory {
           ChatHistoryItem.single(
             role: ChatRole.system,
             type: ChatContentType.text,
-            raw: l10n.initChatHelp,
+            raw: l10n.initChatHelp(Urls.repoIssue, Urls.unilinkDoc),
           ),
         ],
       );
@@ -97,8 +99,9 @@ final class ChatHistoryItem {
     required this.role,
     String raw = '',
     ChatContentType type = ChatContentType.text,
+    DateTime? createdAt,
   })  : content = [ChatContent.noid(type: type, raw: raw)],
-        createdAt = DateTime.now(),
+        createdAt = createdAt ?? DateTime.now(),
         id = shortid.generate();
 
   OpenAIChatCompletionChoiceMessageModel get toOpenAI {
@@ -237,9 +240,14 @@ enum ChatRole {
     }
   }
 
-  String get name => switch (this) {
+  String get localized => switch (this) {
         user => l10n.user,
         assist => l10n.assistant,
         system => l10n.system,
       };
+
+  static ChatRole? fromString(String? val) => switch (val) {
+    'assistant' => assist,
+    _ => values.firstWhereOrNull((p0) => p0.name == val),
+  };
 }

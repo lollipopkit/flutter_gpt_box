@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/data/res/github_id.dart';
 import 'package:flutter_chatgpt/data/res/l10n.dart';
 import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:flutter_chatgpt/data/res/url.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -35,8 +36,7 @@ class AboutPage extends StatelessWidget {
         leading: const Icon(Icons.link),
         title: Text('URL Scheme ${l10n.usage}'),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () => launchUrlString(
-            'https://github.com/lollipopkit/flutter_gpt_box/blob/main/doc/uni_link.md'),
+        onTap: () => launchUrlString(Urls.unilinkDoc),
       ),
     );
   }
@@ -48,7 +48,7 @@ class AboutPage extends StatelessWidget {
         child: MarkdownBody(
           data: '''
 ### 👋🏻 ${l10n.myOtherApps}
-- [Server Box](https://github.com/lollipopkit/flutter_server_box): View status & control your server
+- [Server Box](${Urls.serverBoxRepo}): View status & control your server
 
 
 ### 🥳 ${l10n.contributor} & ${l10n.participant}
@@ -66,6 +66,9 @@ ${l10n.helpTip}
 ### 📝 ${l10n.license}
 GPL v3 lollipopkit
 ''',
+          onTapLink: (text, href, title) {
+            if (href != null) launchUrlString(href);
+          },
         ),
       ),
     );

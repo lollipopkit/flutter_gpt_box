@@ -51,7 +51,7 @@ class _ChatPageState extends State<_ChatPage>
   Widget _buildFABBtn() {
     final up =
         _chatScrollCtrl.offset >= _chatScrollCtrl.position.maxScrollExtent / 2;
-    final icon = up ? Icons.arrow_upward : Icons.arrow_downward;
+    final icon = up ? MingCute.up_fill : MingCute.down_fill;
     return FloatingActionButton(
       key: ValueKey(up),
       mini: true,
@@ -203,7 +203,7 @@ class _ChatPageState extends State<_ChatPage>
           ),
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
           child: Text(
-            chatItem.role.name,
+            chatItem.role.localized,
             style: TextStyle(
               fontSize: 12,
               color: isBright ? Colors.black : Colors.white,
@@ -242,7 +242,7 @@ class _ChatPageState extends State<_ChatPage>
             final result = await context.showRoundDialog<bool>(
               title: l10n.attention,
               child: Text(
-                l10n.delFmt('${chatItem.role.name}#$idx', l10n.chat),
+                l10n.delFmt('${chatItem.role.localized}#$idx', l10n.chat),
               ),
               actions: Btns.oks(onTap: () => context.pop(true), red: true),
             );

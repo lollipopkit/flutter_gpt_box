@@ -3,7 +3,7 @@ part of '../view.dart';
 Widget _buildFile(BuildContext context) {
   return CardX(
     child: ExpandTile(
-      leading: const Icon(Icons.file_open),
+      leading: const Icon(MingCute.file_fill),
       title: Text(l10n.file),
       children: [
         ListTile(

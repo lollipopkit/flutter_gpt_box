@@ -20,7 +20,7 @@ extension ChatHistoryShare on ChatHistory {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
         child: Text(
-          item.role.name,
+          item.role.localized,
           style: const TextStyle(fontSize: 12, color: Colors.white),
         ),
       ));
