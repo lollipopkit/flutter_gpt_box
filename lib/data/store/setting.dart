@@ -5,7 +5,7 @@ class SettingStore extends Store {
 
   late final themeMode = property('themeMode', 0);
   late final themeColorSeed = property('themeColorSeed', 4287106639);
-  late final fontSize = property('fontSize', 12.0);
+  //late final fontSize = property('fontSize', 12.0);
   late final autoCheckUpdate = property('autoCheckUpdate', true);
 
   // late final openaiApiUrl = property(

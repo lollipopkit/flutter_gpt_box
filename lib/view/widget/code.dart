@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/core/rebuild.dart';
-import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -64,7 +63,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     // }
 
     if (isForCapture) {
-      return HighlightView(
+      return HighlightViewSync(
         textContent,
         language: language,
         theme: _theme,
@@ -75,30 +74,27 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     }
 
     final isMultiLine = textContent.contains('\n');
-    return ValueListenableBuilder(
-      valueListenable: Stores.setting.fontSize.listenable(),
-      builder: (_, fontSize, __) => isMultiLine
-          ? HighlightViewSync(
-              textContent,
-              key: ValueKey(textContent),
-              language: language,
-              theme: _theme,
-              textStyle: _textStyle.copyWith(fontSize: fontSize),
-              tabSize: 4,
-              selectable: true,
-              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
-            )
-          : HighlightViewSync(
-              textContent,
-              key: ValueKey(textContent),
-              language: language,
-              theme: _theme,
-              textStyle: _textStyle.copyWith(fontSize: fontSize),
-              tabSize: 4,
-              selectable: true,
-              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-            ),
-    );
+    return isMultiLine
+        ? HighlightViewSync(
+            textContent,
+            key: ValueKey(textContent),
+            language: language,
+            theme: _theme,
+            textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
+            tabSize: 4,
+            selectable: true,
+            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
+          )
+        : HighlightViewSync(
+            textContent,
+            key: ValueKey(textContent),
+            language: language,
+            theme: _theme,
+            textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
+            tabSize: 4,
+            selectable: true,
+            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+          );
   }
 
   Map<String, TextStyle> get _theme {

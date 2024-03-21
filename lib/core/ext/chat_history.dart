@@ -49,6 +49,7 @@ extension ChatHistoryShare on ChatHistory {
             children: [
               Text(
                 name ?? l10n.untitled,
+                textAlign: TextAlign.center,
                 style:
                     const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
               ),

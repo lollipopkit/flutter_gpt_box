@@ -27,7 +27,7 @@ CustomAppBar _buildAppBar(BuildContext context) {
             width: (_media?.size.width ?? 300) * 0.5,
             child: RichText(
               maxLines: 2,
-              overflow: TextOverflow.fade,
+              overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.left,
               text: TextSpan(
                 children: [

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/core/ext/context/base.dart';
 import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
 import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
 import 'package:flutter_chatgpt/core/ext/string.dart';
@@ -63,11 +64,15 @@ abstract final class AppUpdateIface {
 
     if (min != null && min > Build.build) {
       context.showRoundDialog(
-        child: Text(tip),
+        title: 'v1.0.$newest',
+        child: Text(update.changelog.current ?? l10n.empty),
         actions: [
           TextButton(
-            onPressed: () => _doUpdate(update, context),
-            child: Text(l10n.ok),
+            onPressed: () {
+              context.pop();
+              _doUpdate(update, context);
+            },
+            child: Text(l10n.update),
           )
         ],
       );

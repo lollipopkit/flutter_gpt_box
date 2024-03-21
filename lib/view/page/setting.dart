@@ -600,7 +600,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildMore() {
     final children = [
-      _buildFontSize(),
+      //_buildFontSize(),
       _buildGenTitle(),
       _buildScrollBottom(),
       _buildSoftWrap(),
@@ -611,40 +611,40 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildFontSize() {
-    return ValueListenableBuilder(
-      valueListenable: _store.fontSize.listenable(),
-      builder: (_, val, __) => ListTile(
-        leading: const Icon(Icons.text_fields),
-        title: Text(l10n.fontSize),
-        trailing: Text(
-          val.toString(),
-          style: UIs.text13Grey,
-        ),
-        subtitle: Text(l10n.fontSizeSettingTip, style: UIs.text13Grey),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val.toString());
-          final result = await context.showRoundDialog<String>(
-            title: l10n.fontSize,
-            child: Input(
-              icon: Icons.text_fields,
-              controller: ctrl,
-              hint: '12',
-              type: const TextInputType.numberWithOptions(decimal: true),
-            ),
-            actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
-          );
-          if (result == null) return;
-          final newVal = double.tryParse(result);
-          if (newVal == null) {
-            context.showSnackBar('Invalid number: $result');
-            return;
-          }
-          _store.fontSize.put(newVal);
-        },
-      ),
-    );
-  }
+  // Widget _buildFontSize() {
+  //   return ValueListenableBuilder(
+  //     valueListenable: _store.fontSize.listenable(),
+  //     builder: (_, val, __) => ListTile(
+  //       leading: const Icon(Icons.text_fields),
+  //       title: Text(l10n.fontSize),
+  //       trailing: Text(
+  //         val.toString(),
+  //         style: UIs.text13Grey,
+  //       ),
+  //       subtitle: Text(l10n.fontSizeSettingTip, style: UIs.text13Grey),
+  //       onTap: () async {
+  //         final ctrl = TextEditingController(text: val.toString());
+  //         final result = await context.showRoundDialog<String>(
+  //           title: l10n.fontSize,
+  //           child: Input(
+  //             icon: Icons.text_fields,
+  //             controller: ctrl,
+  //             hint: '12',
+  //             type: const TextInputType.numberWithOptions(decimal: true),
+  //           ),
+  //           actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+  //         );
+  //         if (result == null) return;
+  //         final newVal = double.tryParse(result);
+  //         if (newVal == null) {
+  //           context.showSnackBar('Invalid number: $result');
+  //           return;
+  //         }
+  //         _store.fontSize.put(newVal);
+  //       },
+  //     ),
+  //   );
+  // }
 
   Widget _buildGenTitle() {
     return ListTile(
