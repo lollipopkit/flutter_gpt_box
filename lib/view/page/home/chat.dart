@@ -165,7 +165,7 @@ class _ChatPageState extends State<_ChatPage>
       extensionSet: MarkdownUtils.extensionSet,
       onTapLink: MarkdownUtils.onLinkTap,
       shrinkWrap: false,
-      fitContent: false,
+      fitContent: true,
 
       /// User experience is better when this is false.
       selectable: false,

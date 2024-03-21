@@ -14,6 +14,9 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
   CodeElementBuilder({this.onCopy, this.isForCapture = false});
 
+  static final _bgPaint = Paint()
+    ..color = const Color.fromARGB(28, 159, 159, 159);
+
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
     // Can't be null
@@ -26,7 +29,16 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     final textContent = element.textContent.trim();
     if (language.isEmpty) {
-      return null;
+      return RichText(
+        text: TextSpan(
+          text: textContent,
+          style: _textStyle.copyWith(
+            color: preferredStyle?.color,
+            background: _bgPaint,
+          ),
+        ),
+        softWrap: false,
+      );
     }
 
     // if (language == 'latex') {
