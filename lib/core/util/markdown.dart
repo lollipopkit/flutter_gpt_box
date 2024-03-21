@@ -19,4 +19,9 @@ abstract final class MarkdownUtils {
       ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
     ],
   );
+
+  static final extensionSetWithoutCode = md.ExtensionSet(
+    md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+    [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+  );
 }

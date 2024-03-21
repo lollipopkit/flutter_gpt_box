@@ -11,6 +11,7 @@ abstract final class OpenAIConvertor {
         .firstWhereOrNull((e) => e is Map && e['parent'] == null) as Map?;
     var children = item?['children'] as List?;
 
+    /// To avoid infinite loop
     var times = 0;
     while (children != null && children.isNotEmpty && times++ < 100) {
       final nextId = children.firstOrNull;
@@ -30,8 +31,8 @@ abstract final class OpenAIConvertor {
       final contentStr = content.join('\n');
       if (contentStr.isEmpty) continue;
 
-      final createdTime = msg?['create_time'] as int;
-      final time = DateTime.fromMillisecondsSinceEpoch(createdTime * 1000);
+      final createdTime = ((msg?['create_time'] as double) * 1000).toInt();
+      final time = DateTime.fromMillisecondsSinceEpoch(createdTime);
 
       items.add(ChatHistoryItem.single(
         role: role,

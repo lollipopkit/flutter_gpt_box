@@ -72,7 +72,7 @@ class _HistoryPageState extends State<_HistoryPage>
         children: [
           IconBtn(
             onTap: () => _onTapDeleteChat(chatId, context),
-            icon: MingCute.delete_3_fill,
+            icon: Icons.delete,
             size: 17,
           ),
         ],

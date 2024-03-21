@@ -175,7 +175,7 @@ class _SettingPageState extends State<SettingPage> {
     return ValueListenableBuilder(
       valueListenable: _store.locale.listenable(),
       builder: (_, val, __) => ListTile(
-        leading: const Icon(MingCute.translate_line),
+        leading: const Icon(MingCute.translate_2_line),
         title: Text(l10n.lang),
         trailing: Text(
           val.isEmpty ? l10n.localeName : val,

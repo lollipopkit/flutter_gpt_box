@@ -21,9 +21,9 @@ import 'package:flutter_chatgpt/view/page/home/home.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
 import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
+import 'package:flutter_chatgpt/view/widget/markdown.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../core/util/platform/base.dart';
 import '../../../core/util/sync/icloud.dart';
@@ -33,11 +33,11 @@ import '../../../data/store/all.dart';
 import '../../widget/input.dart';
 import '../../widget/switch.dart';
 
-part 'func/file.dart';
-part 'func/webdav.dart';
-part 'func/icloud.dart';
-part 'func/gpt_next.dart';
-part 'func/openai.dart';
+part 'impl/file.dart';
+part 'impl/webdav.dart';
+part 'impl/icloud.dart';
+part 'impl/gpt_next.dart';
+part 'impl/openai.dart';
 
 final _webdavLoading = ValueNotifier(false);
 

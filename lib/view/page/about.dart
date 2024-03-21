@@ -5,7 +5,7 @@ import 'package:flutter_chatgpt/data/res/ui.dart';
 import 'package:flutter_chatgpt/data/res/url.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:flutter_chatgpt/view/widget/card.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_chatgpt/view/widget/markdown.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutPage extends StatelessWidget {
@@ -45,7 +45,7 @@ class AboutPage extends StatelessWidget {
     return CardX(
       child: Padding(
         padding: const EdgeInsets.all(17),
-        child: MarkdownBody(
+        child: SimpleMarkdown(
           data: '''
 ### 👋🏻 ${l10n.myOtherApps}
 - [Server Box](${Urls.serverBoxRepo}): View status & control your server
@@ -60,15 +60,12 @@ ${l10n.privacyTip}
 
 
 ### 😣 ${l10n.help}
-${l10n.helpTip}
+${l10n.helpTip(Urls.repoDiscussion, Urls.repoIssue)}
 
 
 ### 📝 ${l10n.license}
 GPL v3 lollipopkit
 ''',
-          onTapLink: (text, href, title) {
-            if (href != null) launchUrlString(href);
-          },
         ),
       ),
     );
