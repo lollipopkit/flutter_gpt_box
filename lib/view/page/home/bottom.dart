@@ -44,7 +44,7 @@ class _HomeBottom extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () => _onTapRenameChat(_curChatId, context),
-                      icon: const Icon(MingCute.pencil_fill, size: 19),
+                      icon: const Icon(Icons.edit, size: 19),
                       tooltip: l10n.rename,
                     ),
                     IconButton(

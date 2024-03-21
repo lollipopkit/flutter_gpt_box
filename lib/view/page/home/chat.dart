@@ -165,7 +165,9 @@ class _ChatPageState extends State<_ChatPage>
       extensionSet: MarkdownUtils.extensionSet,
       onTapLink: MarkdownUtils.onLinkTap,
       shrinkWrap: false,
-      fitContent: true,
+
+      /// Keep it false, or the ScrollView's height calculation will be wrong.
+      fitContent: false,
 
       /// User experience is better when this is false.
       selectable: false,

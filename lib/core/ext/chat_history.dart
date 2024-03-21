@@ -32,6 +32,9 @@ extension ChatHistoryShare on ChatHistory {
           'code': CodeElementBuilder(isForCapture: true),
           'latex': LatexElementBuilder(),
         },
+        fitContent: false,
+        selectable: false,
+        shrinkWrap: false,
       ));
       children.add(UIs.height13);
     }

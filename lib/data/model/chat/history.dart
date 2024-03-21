@@ -247,7 +247,7 @@ enum ChatRole {
       };
 
   static ChatRole? fromString(String? val) => switch (val) {
-    'assistant' => assist,
-    _ => values.firstWhereOrNull((p0) => p0.name == val),
-  };
+        'assistant' => assist,
+        _ => values.firstWhereOrNull((p0) => p0.name == val),
+      };
 }

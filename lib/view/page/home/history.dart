@@ -70,11 +70,16 @@ class _HistoryPageState extends State<_HistoryPage>
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconBtn(
-            onTap: () => _onTapDeleteChat(chatId, context),
-            icon: Icons.delete,
-            size: 17,
-          ),
+          isDesktop
+              ? IconBtn(
+                  onTap: () => _onTapDeleteChat(chatId, context),
+                  icon: Icons.delete,
+                  size: 17,
+                )
+              : IconButton(
+                  onPressed: () => _onTapDeleteChat(chatId, context),
+                  icon: const Icon(Icons.delete, size: 17),
+                ),
         ],
       ),
       onTap: () {
