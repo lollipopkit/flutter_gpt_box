@@ -10,8 +10,6 @@ final appNameLower = appName.toLowerCase();
 const buildDataFilePath = 'lib/data/res/build.dart';
 const apkPath = 'build/app/outputs/flutter-apk/app-release.apk';
 const appleXCConfigPath = 'Runner.xcodeproj/project.pbxproj';
-const macOSArchievePath = 'build/macos/Build/Products/Release/Runner.app';
-const releaseDir = '/Volumes/pm981/release/$appName';
 const uploadPathPrefix = 'cda:/var/www/res/';
 
 var regAppleProjectVer = RegExp(r'CURRENT_PROJECT_VERSION = .+;');
@@ -247,7 +245,7 @@ Future<void> scpWeb2CDN() async {
     [
       '-r',
       './build/web',
-      'hk:/var/www/flutter_$appNameLower/',
+      'hk:/var/www/$appNameLower/',
     ],
     runInShell: true,
   );

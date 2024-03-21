@@ -51,7 +51,8 @@ final class ImagePage extends StatelessWidget {
           child: const Icon(Icons.delete)),
       body: GestureDetector(
         onTap: () => context.pop(),
-        child: Align(
+        child: Container(
+          color: Colors.black,
           alignment: Alignment.center,
           child: Hero(
             tag: args!.tag,

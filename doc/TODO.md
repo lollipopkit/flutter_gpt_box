@@ -18,7 +18,9 @@
   - [ ] Cache generated image
 - [x] Sync
   - [x] Channel 
-    - [x] Restore from ChatGPT Next Web backup file
+    - [x] Import
+      - [x] from ChatGPT Next Web backup file
+      - [ ] OpenAI's ChatGPT export file
     - [x] iCloud
     - [x] File
     - [x] Clipboard
