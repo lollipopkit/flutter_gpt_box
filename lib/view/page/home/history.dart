@@ -49,6 +49,7 @@ class _HistoryPageState extends State<_HistoryPage>
           entity.name ?? l10n.untitled,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
+          style: UIs.text15,
         ),
       ),
       subtitle: ListenableBuilder(
@@ -59,7 +60,7 @@ class _HistoryPageState extends State<_HistoryPage>
           if (time == null) return Text(len, style: UIs.textGrey);
           return Text(
             '$len · $time',
-            style: UIs.textGrey,
+            style: UIs.text13Grey,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           );
@@ -69,9 +70,10 @@ class _HistoryPageState extends State<_HistoryPage>
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            onPressed: () => _onTapDeleteChat(chatId, context),
-            icon: const Icon(Icons.delete, size: 19),
+          IconBtn(
+            onTap: () => _onTapDeleteChat(chatId, context),
+            icon: MingCute.delete_3_fill,
+            size: 17,
           ),
         ],
       ),

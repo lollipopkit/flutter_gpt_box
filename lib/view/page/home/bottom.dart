@@ -39,12 +39,12 @@ class _HomeBottom extends StatelessWidget {
                         _switchChat(_newChat().id);
                         _historyRN.build();
                       },
-                      icon: const Icon(Icons.add),
+                      icon: const Icon(MingCute.add_fill, size: 17),
                       tooltip: l10n.newChat,
                     ),
                     IconButton(
                       onPressed: () => _onTapRenameChat(_curChatId, context),
-                      icon: const Icon(Icons.abc, size: 19),
+                      icon: const Icon(MingCute.pencil_fill, size: 19),
                       tooltip: l10n.rename,
                     ),
                     IconButton(
