@@ -86,14 +86,6 @@ class Backup {
     await File(await Paths.bak).writeAsString(await backup());
   }
 
-  /// Merge logic:
-  /// - Same id:
-  ///   - If [override], restore
-  ///   - If not [override], ignore
-  /// - New id: restore
-  /// - Deleted id:
-  ///   - If [override], delete
-  ///   - If not [override], ignore
   Future<void> merge({bool force = false}) async {
     final curTime = Stores.lastModTime;
     final bakTime = lastModTime;

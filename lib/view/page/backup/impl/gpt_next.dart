@@ -37,25 +37,5 @@ void _onTapRestoreGPTNext(BuildContext context) async {
     );
   });
 
-  context.showRoundDialog(
-    title: l10n.attention,
-    child: SizedBox(
-      width: 300,
-      child: Text(
-        l10n.sureRestoreFmt('${chats.length} ${l10n.chat}'),
-      ),
-    ),
-    actions: [
-      TextButton(
-        onPressed: () async {
-          for (final chat in chats) {
-            Stores.history.put(chat);
-          }
-          context.pop();
-          HomePage.afterRestore();
-        },
-        child: Text(l10n.restore),
-      ),
-    ],
-  );
+  _askConfirm(context, chats);
 }

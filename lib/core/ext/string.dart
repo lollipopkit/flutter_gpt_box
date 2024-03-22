@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt/data/res/l10n.dart';
 
 extension StringX on String {
   /// Format: `#8b2252` or `8b2252`
@@ -32,4 +33,12 @@ extension StringX on String {
 
   /// Check if a url is a file url (ends with a file extension)
   bool get isFileUrl => split('/').lastOrNull?.contains('.') ?? false;
+}
+
+extension StringXX on String? {
+  bool get isNullOrEmpty =>
+      this == null || this!.isEmpty || this!.trim().isEmpty;
+
+  /// - `null` || trim() == '' -> [l10n.untitled]
+  String get emptyL10n => isNullOrEmpty ? l10n.untitled : this!;
 }

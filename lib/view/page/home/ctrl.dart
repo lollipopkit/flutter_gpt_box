@@ -185,52 +185,111 @@ Future<void> _onTapImgPick(BuildContext context) async {
   _filePicked.value = result;
 }
 
-void _removeDuplicateHistory(BuildContext context) async {
-  final existTitles = <String, String>{}; // {ID: Title}
-  final rmIds = <String>[];
-  for (final item in _allHistories.values) {
-    if (rmIds.contains(item.id)) continue;
-    final name = item.name;
-    if (name == null || name.isEmpty) continue;
-    // For performance, only check the title at first
-    final titleIncluded = existTitles.values.contains(item.name);
-    if (titleIncluded) {
-      // Secondly, check the length of the history
-      final sameLen = _allHistories[item.id]?.items.length == item.items.length;
-      if (sameLen) {
-        // Thirdly, check the content of the history
-        final sameContent = _allHistories[item.id]
-                ?.items
-                .map((e) => e.content.first.raw)
-                .join() ==
-            item.items.map((e) => e.content.first.raw).join();
-        if (sameContent) {
-          rmIds.add(item.id);
-        }
-      }
-    } else {
-      existTitles[item.id] = name;
-    }
+Set<String> findAllDuplicateIds(Map<String, ChatHistory> allHistories) {
+  final existTitles = <String, List<String>>{}; // {"title": ["id"]}
+  for (final item in allHistories.values) {
+    final title = item.name ?? '';
+    existTitles.putIfAbsent(title, () => []).add(item.id);
   }
 
+  final rmIds = <String>{};
+  for (final entry in existTitles.entries) {
+    /// If only one chat with the same title, skip
+    if (entry.value.length == 1) continue;
+    final ids = entry.value;
+
+    /// If the title is the same, first compare whether the content is the same
+
+    /// Collect all assist's reply content
+    final contentMap = <String, List<String>>{}; // {"id": ["content"]}
+    final timeMap = <String, int>{}; // {"id": time}
+    for (final id in ids) {
+      final history = allHistories[id];
+      if (history == null) continue;
+      for (final item in history.items) {
+        /// Only compare assist's reply which is variety
+        if (item.role != ChatRole.assist) continue;
+        final content = item.toMarkdown;
+        contentMap.putIfAbsent(content, () => []).add(id);
+        final time = timeMap[id];
+        if (time == null || item.createdAt.millisecondsSinceEpoch > time) {
+          timeMap[id] = item.createdAt.millisecondsSinceEpoch;
+        }
+      }
+    }
+
+    /// Find out the same content
+    var anyDup = false;
+    for (var idx = 0; idx < contentMap.length - 1; idx++) {
+      final contentsA = contentMap.values.elementAt(idx);
+      final contentsB = contentMap.values.elementAt(idx + 1);
+      anyDup = contentsA.any((e) => contentsB.contains(e));
+      if (anyDup) {
+        break;
+      }
+    }
+
+    /// If there is no same content, skip
+    if (!anyDup) continue;
+
+    /// If there is same content, delete the old one
+    var latestTime = timeMap.values.first;
+    for (final entry in timeMap.entries) {
+      if (entry.value > latestTime) {
+        latestTime = entry.value;
+      }
+    }
+
+    rmIds.addAll(timeMap.entries
+        .where((e) => e.value != latestTime)
+        .map((e) => e.key)
+        .toList());
+  }
+  return rmIds;
+}
+
+void _removeDuplicateHistory(BuildContext context) async {
+  final rmIds = await compute(findAllDuplicateIds, _allHistories);
   if (rmIds.isEmpty) {
     return;
   }
 
   final rmCount = rmIds.length;
-  context.showSnackBarWithAction(
-    content: l10n.rmDuplicationFmt(rmCount),
-    action: l10n.delete,
-    onTap: () {
-      for (final id in rmIds) {
-        Stores.history.delete(id);
-        _allHistories.remove(id);
-      }
-      _historyRN.build();
-      if (!_allHistories.keys.contains(_curChatId)) {
-        _switchChat();
-      }
-    },
+  final children = <Widget>[Text(l10n.rmDuplicationFmt(rmCount))];
+  for (int idx = 0; idx < rmCount; idx++) {
+    final id = rmIds.elementAt(idx);
+    final item = _allHistories[id];
+    if (item == null) continue;
+    children.add(Text(
+      '${idx + 1}. ${item.items.firstOrNull?.toMarkdown ?? l10n.empty}',
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: UIs.text12Grey,
+    ));
+  }
+  context.showRoundDialog(
+    title: l10n.attention,
+    child: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () {
+          for (final id in rmIds) {
+            Stores.history.delete(id);
+            _allHistories.remove(id);
+          }
+          _historyRN.build();
+          if (!_allHistories.keys.contains(_curChatId)) {
+            _switchChat();
+          }
+        },
+        child: Text(l10n.delete, style: UIs.textRed),
+      ),
+    ],
   );
 }
 

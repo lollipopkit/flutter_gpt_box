@@ -38,6 +38,7 @@ part 'impl/webdav.dart';
 part 'impl/icloud.dart';
 part 'impl/gpt_next.dart';
 part 'impl/openai.dart';
+part 'impl/shared.dart';
 
 final _webdavLoading = ValueNotifier(false);
 

@@ -386,7 +386,7 @@ Future<void> _genChatTitle(
 Create a simple and clear title based on user content.
 If the language is Chinese, Japanese or Korean, the title should be within 10 characters; 
 if it is English, French, German, Latin and other Western languages, the number of title characters should not exceed 23. 
-The title should be the same as the language entered by the user.''',
+The title should be the same as the language entered by the user as below:''',
         role: ChatRole.system,
       ).toOpenAI,
       ChatHistoryItem.single(

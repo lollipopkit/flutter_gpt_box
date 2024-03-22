@@ -95,6 +95,7 @@
   "settings": "Settings",
   "share": "Share",
   "shareFrom": "Share from",
+  "skipSameTitle": "Skip chats with titles that are the same as local chats.",
   "softWrap": "Soft wrap",
   "stt": "stt",
   "success": "Success 🏅 ~",
