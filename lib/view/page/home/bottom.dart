@@ -77,6 +77,24 @@ class _HomeBottom extends StatelessWidget {
                       },
                     ),
                     const Spacer(),
+                    ValueListenableBuilder(
+                      valueListenable: Stores.setting.calcTokenLen.listenable(),
+                      builder: (_, calc, __) {
+                        return ListenableBuilder(
+                          listenable: _inputCtrl,
+                          builder: (_, __) {
+                            final encoder =
+                                encodingForModel(OpenAICfg.current.model);
+                            final len = encoder.encode(_inputCtrl.text).length;
+                            return Text(
+                              '#$len',
+                              style: UIs.text13Grey,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    UIs.width13,
                     _buildSwitchChatType(),
                     UIs.width7,
                   ],

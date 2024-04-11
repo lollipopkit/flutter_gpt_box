@@ -605,6 +605,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildScrollBottom(),
       _buildSoftWrap(),
       _buildAutoRmDupChat(),
+      _buildCalcTokenLen(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
@@ -675,6 +676,14 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Icons.delete),
       title: Text(l10n.autoRmDupChat),
       trailing: StoreSwitch(prop: _store.autoRmDupChat),
+    );
+  }
+
+  Widget _buildCalcTokenLen() {
+    return ListTile(
+      leading: const Icon(Icons.calculate),
+      title: Text(l10n.calcTokenLen),
+      trailing: StoreSwitch(prop: _store.calcTokenLen),
     );
   }
 }

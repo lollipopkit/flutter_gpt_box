@@ -17,6 +17,7 @@
   "backupRestorationSuccessful": "Successfully restored backup",
   "backupSuccessful": "Backup completed successfully",
   "backupTip": "Please keep backup files private and safe!",
+  "calcTokenLen": "Calculate tokens length",
   "cancel": "Cancel",
   "changeModelTip": "Different keys may be able to access different lists of models, so if you don't understand the mechanism and get an error, it is recommended to reset the model.",
   "chat": "Chat",

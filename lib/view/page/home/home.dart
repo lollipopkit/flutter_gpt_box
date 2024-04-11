@@ -18,7 +18,6 @@ import 'package:flutter_chatgpt/core/ext/iterable.dart';
 import 'package:flutter_chatgpt/core/ext/list.dart';
 import 'package:flutter_chatgpt/core/ext/media_query.dart';
 import 'package:flutter_chatgpt/core/ext/num.dart';
-import 'package:flutter_chatgpt/core/ext/string.dart';
 import 'package:flutter_chatgpt/core/ext/value_notifier.dart';
 import 'package:flutter_chatgpt/core/ext/widget.dart';
 import 'package:flutter_chatgpt/core/ext/xfile.dart';
@@ -58,6 +57,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shortid/shortid.dart';
+import 'package:tiktoken/tiktoken.dart';
 import 'package:uni_links/uni_links.dart';
 
 part 'chat.dart';

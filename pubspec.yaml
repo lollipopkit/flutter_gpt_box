@@ -57,6 +57,7 @@ dependencies:
   cross_file: ^0.3.4
   shortid: ^0.1.2
   icons_plus: ^5.0.0
+  tiktoken: ^1.0.3
 
 dev_dependencies:
   flutter_test:

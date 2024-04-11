@@ -43,4 +43,7 @@ class SettingStore extends Store {
 
   /// Picture upload config
   late final picUploadUrl = property('picUploadUrl', '');
+
+  /// Calcualte tokens length
+  late final calcTokenLen = property('calcTokenLen', true);
 }
