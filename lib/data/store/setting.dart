@@ -46,4 +46,6 @@ class SettingStore extends Store {
 
   /// Calcualte tokens length
   late final calcTokenLen = property('calcTokenLen', true);
+
+  late final replay = property('replay', false);
 }

@@ -196,6 +196,8 @@ class _ChatPageState extends State<_ChatPage>
     ChatHistoryItem chatItem,
   ) {
     final isBright = UIs.primaryColor.isBrightColor;
+    final replayEnabled =
+        chatItem.role == ChatRole.user && Stores.setting.replay.fetch();
     return Row(
       children: [
         Container(
@@ -213,7 +215,7 @@ class _ChatPageState extends State<_ChatPage>
           ),
         ),
         const Spacer(),
-        if (chatItem.role == ChatRole.user)
+        if (replayEnabled)
           ListenableBuilder(
             listenable: _sendBtnRN,
             builder: (_, __) {
@@ -233,7 +235,7 @@ class _ChatPageState extends State<_ChatPage>
               );
             },
           ),
-        if (chatItem.role == ChatRole.user)
+        if (replayEnabled)
           IconButton(
             onPressed: () => _onTapEditMsg(context, chatItem),
             icon: const Icon(Icons.edit, size: 17),

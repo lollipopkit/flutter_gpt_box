@@ -1,8 +1,23 @@
 /// OpenAI chat request related funcs
 part of 'home.dart';
 
+bool _checkSettingsValid(BuildContext context) {
+  final config = OpenAICfg.current;
+  if (config.url == 'https://api.openai.com' ||
+      config.url == 'https://api.chatgpt.com' ||
+      config.url.isEmpty && config.key.isEmpty) {
+    final msg = l10n.emptyFields('${l10n.secretKey} & Api Url');
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return false;
+  }
+  return true;
+}
+
 /// Auto select model and send the request
 void _onCreateRequest(BuildContext context, String chatId) async {
+  if (!_checkSettingsValid(context)) return;
+
   final chatType = _chatType.value;
   final notSupport = switch (chatType) {
     /// Dart package `openai` uses [io.File], which is not supported on web
@@ -419,6 +434,8 @@ void _onReplay({
   required String chatId,
   required ChatHistoryItem item,
 }) async {
+  if (!_checkSettingsValid(context)) return;
+  
   // If is receiving the reply, ignore this action
   if (_chatStreamSubs.containsKey(chatId)) {
     final msg = 'Replay Chat($chatId) is receiving reply';

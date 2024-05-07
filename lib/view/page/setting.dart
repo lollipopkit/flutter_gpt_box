@@ -606,6 +606,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildSoftWrap(),
       _buildAutoRmDupChat(),
       _buildCalcTokenLen(),
+      _buildReplay(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
@@ -684,6 +685,18 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Icons.calculate),
       title: Text(l10n.calcTokenLen),
       trailing: StoreSwitch(prop: _store.calcTokenLen),
+    );
+  }
+
+  Widget _buildReplay() {
+    return ListTile(
+      leading: const Icon(Icons.replay),
+      title: Text(l10n.replay),
+      subtitle: Text(
+        '${l10n.attention}: experimental feature',
+        style: UIs.text13Grey,
+      ),
+      trailing: StoreSwitch(prop: _store.replay),
     );
   }
 }

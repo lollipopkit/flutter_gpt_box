@@ -199,10 +199,10 @@ class _HomePageState extends State<HomePage>
                 }
               },
               leading: const Icon(Icons.backup),
-              title: Text(l10n.backup),
+              title: Text('${l10n.backup} & ${l10n.restore}'),
             ).card,
             ListTile(
-              leading: const Icon(Icons.file_open),
+              leading: const Icon(BoxIcons.bxs_videos),
               title: Text(l10n.res),
               onTap: () => Routes.res.go(context),
             ).card,
