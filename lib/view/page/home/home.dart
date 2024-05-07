@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:after_layout/after_layout.dart';
+import 'package:app_links/app_links.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,6 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shortid/shortid.dart';
 import 'package:tiktoken/tiktoken.dart';
-import 'package:uni_links/uni_links.dart';
 
 part 'chat.dart';
 part 'history.dart';
@@ -89,6 +89,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with AfterLayoutMixin<HomePage>, TickerProviderStateMixin {
   Timer? _refreshTimeTimer;
+  final _appLink = AppLinks();
 
   @override
   void initState() {
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage>
         if (mounted) _timeRN.build();
       },
     );
-    _initUniLinks();
+    _initUrlScheme();
     AudioCard.listenAudioPlayer();
   }
 
@@ -233,13 +234,13 @@ class _HomePageState extends State<HomePage>
     }
   }
 
-  Future<void> _initUniLinks() async {
+  Future<void> _initUrlScheme() async {
     if (isWeb) {
-      final uri = await getInitialUri();
+      final uri = await _appLink.getInitialLink();
       if (uri == null) return;
       AppLink.handle(context, uri);
     } else {
-      uriLinkStream.listen((Uri? uri) {
+      _appLink.uriLinkStream.listen((Uri? uri) {
         if (uri == null) return;
         if (!mounted) return;
         AppLink.handle(context, uri);

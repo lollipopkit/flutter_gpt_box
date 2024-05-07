@@ -50,14 +50,14 @@ dependencies:
   screenshot: ^2.3.0
   after_layout: ^1.2.0
   # flutter_math_fork: ^0.7.2
-  uni_links: ^0.5.1
-  uni_links_desktop: ^0.1.7
+  app_links: ^6.0.1
   image_picker: ^1.0.7
   audioplayers: ^6.0.0
   cross_file: ^0.3.4
   shortid: ^0.1.2
   icons_plus: ^5.0.0
   tiktoken: ^1.0.3
+  win32_registry: ^1.1.3
 
 dev_dependencies:
   flutter_test:

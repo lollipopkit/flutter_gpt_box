@@ -10,6 +10,7 @@ import 'package:flutter_chatgpt/core/build_mode.dart';
 import 'package:flutter_chatgpt/core/logger.dart';
 import 'package:flutter_chatgpt/core/util/datetime.dart';
 import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:flutter_chatgpt/core/util/platform/win.dart';
 import 'package:flutter_chatgpt/core/util/sync/base.dart';
 import 'package:flutter_chatgpt/data/model/chat/config.dart';
 import 'package:flutter_chatgpt/data/model/chat/history.dart';
@@ -20,7 +21,6 @@ import 'package:flutter_chatgpt/data/store/all.dart';
 import 'package:flutter_chatgpt/view/widget/appbar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
-import 'package:uni_links_desktop/uni_links_desktop.dart';
 import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
@@ -65,7 +65,7 @@ Future<void> _initApp() async {
   SyncService.sync(force: true);
 
   if (isWindows) {
-    registerProtocol('lk-gptbox');
+    Win32.registerProtocol('lk-gptbox');
   }
 
   Paths.createAll();

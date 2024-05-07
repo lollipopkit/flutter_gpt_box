@@ -7,14 +7,45 @@
 
 #include <uni_links_desktop/uni_links_desktop_plugin.h>
 
+bool SendAppLinkToInstance(const std::wstring& title) {
+  // Find our exact window
+  HWND hwnd = ::FindWindow(L"FLUTTER_RUNNER_WIN32_WINDOW", title.c_str());
+
+  if (hwnd) {
+    // Dispatch new link to current window
+    SendAppLink(hwnd);
+
+    // (Optional) Restore our window to front in same state
+    WINDOWPLACEMENT place = { sizeof(WINDOWPLACEMENT) };
+    GetWindowPlacement(hwnd, &place);
+
+    switch(place.showCmd) {
+      case SW_SHOWMAXIMIZED:
+          ShowWindow(hwnd, SW_SHOWMAXIMIZED);
+          break;
+      case SW_SHOWMINIMIZED:
+          ShowWindow(hwnd, SW_RESTORE);
+          break;
+      default:
+          ShowWindow(hwnd, SW_NORMAL);
+          break;
+    }
+
+    SetWindowPos(0, HWND_TOP, 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOMOVE);
+    SetForegroundWindow(hwnd);
+    // END Restore
+
+    // Window has been found, don't create another one.
+    return true;
+  }
+
+  return false;
+}
+
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
-  HWND hwnd = ::FindWindow(L"FLUTTER_RUNNER_WIN32_WINDOW", L"GPT Box");
-  if (hwnd != NULL) {
-    DispatchToUniLinksDesktop(hwnd);
-    ::ShowWindow(hwnd, SW_NORMAL);
-    ::SetForegroundWindow(hwnd);
-    return EXIT_FAILURE;
+  if (SendAppLinkToInstance(L"GPT Box")) {
+    return EXIT_SUCCESS;
   }
 
   // Attach to console when present (e.g., 'flutter run') or create a

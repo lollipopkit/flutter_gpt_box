@@ -24,7 +24,7 @@
 - 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chat.openai.com) 恢复
 - 文本 / 图片 / 音频聊天（网页版仅支持文本）
 - 以图片形式分享聊天
-- Uni-Link，例如：`lk-gptbox://chat/new?msg=你好` (Linux 除外)
+- Url Scheme，例如：`lk-gptbox://chat/new?msg=你好`
 - 与 WebDAV / iCloud 同步
 - 全平台支持
 - 渲染 代码块 / LaTeX 公式
