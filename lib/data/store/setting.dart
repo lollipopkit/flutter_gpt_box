@@ -29,7 +29,7 @@ class SettingStore extends Store {
   late final softWrap = property('softWrap', true);
 
   late final autoRmDupChat = property('autoRmDupChat', true);
-  
+
   late final genTitle = property('genTitle', true);
 
   /// Webdav sync

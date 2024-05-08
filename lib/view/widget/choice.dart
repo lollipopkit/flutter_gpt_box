@@ -2,13 +2,12 @@ import 'package:choice/selection.dart';
 import 'package:flutter/material.dart';
 
 class ChoiceChipX<T> extends StatelessWidget {
-  const ChoiceChipX({
-    super.key,
-    required this.label,
-    required this.state,
-    required this.value,
-    this.onSelected
-  });
+  const ChoiceChipX(
+      {super.key,
+      required this.label,
+      required this.state,
+      required this.value,
+      this.onSelected});
 
   final String label;
   final ChoiceController<T> state;

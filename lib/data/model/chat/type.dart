@@ -26,18 +26,19 @@ enum ChatType {
       };
 
   static List<PopupMenuItem<ChatType>> get btns => ChatType.values
-    .map(
-      (e) => PopupMenuItem(
-        value: e,
-        child: Row(
-          children: [
-            Icon(e.icon, size: 19),
-            UIs.width13,
-            Text(e.name, style: UIs.text13),
-          ],
+      .map(
+        (e) => PopupMenuItem(
+          value: e,
+          child: Row(
+            children: [
+              Icon(e.icon, size: 19),
+              UIs.width13,
+              Text(e.name, style: UIs.text13),
+            ],
+          ),
         ),
-      ),
-    ).toList();
+      )
+      .toList();
 }
 
 enum ChatApiType {

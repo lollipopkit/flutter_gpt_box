@@ -1,4 +1,6 @@
 PODS:
+  - app_links (0.0.1):
+    - Flutter
   - audioplayers_darwin (0.0.1):
     - Flutter
   - countly_flutter (24.1.1):
@@ -55,12 +57,11 @@ PODS:
   - share_plus (0.0.1):
     - Flutter
   - SwiftyGif (5.4.4)
-  - uni_links (0.0.1):
-    - Flutter
   - url_launcher_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - app_links (from `.symlinks/plugins/app_links/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - countly_flutter (from `.symlinks/plugins/countly_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
@@ -71,7 +72,6 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - r_upgrade (from `.symlinks/plugins/r_upgrade/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -82,6 +82,8 @@ SPEC REPOS:
     - SwiftyGif
 
 EXTERNAL SOURCES:
+  app_links:
+    :path: ".symlinks/plugins/app_links/ios"
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/ios"
   countly_flutter:
@@ -102,12 +104,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/r_upgrade/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
-  uni_links:
-    :path: ".symlinks/plugins/uni_links/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  app_links: e70ca16b4b0f88253b3b3660200d4a10b4ea9795
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   countly_flutter: 2203707ed19c165b824d030e4dc807ab53437b76
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
@@ -122,7 +123,6 @@ SPEC CHECKSUMS:
   SDWebImage: 96e0c18ef14010b7485210e92fac888587ebb958
   share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
-  uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
   url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
 
 PODFILE CHECKSUM: 075ddf6b19cdcced44581bd8fbdfb58404a78f8a

@@ -8,6 +8,7 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:gpt_box/core/build_mode.dart';
 import 'package:gpt_box/core/ext/chat_history.dart';
 import 'package:gpt_box/core/ext/color.dart';
@@ -59,7 +60,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shortid/shortid.dart';
-import 'package:tiktoken/tiktoken.dart';
 
 part 'chat.dart';
 part 'history.dart';
