@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/util/markdown.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:gpt_box/core/util/markdown.dart';
+import 'package:gpt_box/data/res/ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 final class SimpleMarkdown extends StatelessWidget {

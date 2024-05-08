@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/data/model/app/dyn_color.dart';
+import 'package:gpt_box/data/model/app/dyn_color.dart';
 
 abstract final class UIs {
   /// Font style

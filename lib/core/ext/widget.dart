@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/util/func.dart';
-import 'package:flutter_chatgpt/view/widget/card.dart';
+import 'package:gpt_box/core/util/func.dart';
+import 'package:gpt_box/view/widget/card.dart';
 
 extension WidgetX on Widget {
   Widget tap({

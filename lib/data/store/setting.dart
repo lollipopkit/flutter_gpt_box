@@ -1,4 +1,4 @@
-import 'package:flutter_chatgpt/core/store.dart';
+import 'package:gpt_box/core/store.dart';
 
 class SettingStore extends Store {
   SettingStore() : super('setting');
@@ -23,9 +23,13 @@ class SettingStore extends Store {
 
   /// Auto scroll to bottom when new message comes.
   late final scrollBottom = property('scrollBottom', true);
+
   late final locale = property('locale', '');
+
   late final softWrap = property('softWrap', true);
+
   late final autoRmDupChat = property('autoRmDupChat', true);
+  
   late final genTitle = property('genTitle', true);
 
   /// Webdav sync
@@ -48,4 +52,6 @@ class SettingStore extends Store {
   late final calcTokenLen = property('calcTokenLen', true);
 
   late final replay = property('replay', false);
+
+  late final countly = property('countly', true);
 }

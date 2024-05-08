@@ -1,29 +1,29 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/ext/color.dart';
-import 'package:flutter_chatgpt/core/ext/context/base.dart';
-import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
-import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
-import 'package:flutter_chatgpt/core/ext/locale.dart';
-import 'package:flutter_chatgpt/core/ext/string.dart';
-import 'package:flutter_chatgpt/core/rebuild.dart';
-import 'package:flutter_chatgpt/core/store.dart';
-import 'package:flutter_chatgpt/core/update.dart';
-import 'package:flutter_chatgpt/core/util/func.dart';
-import 'package:flutter_chatgpt/core/util/platform/base.dart';
-import 'package:flutter_chatgpt/core/util/ui.dart';
-import 'package:flutter_chatgpt/data/model/chat/config.dart';
-import 'package:flutter_chatgpt/data/res/build.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/openai.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/data/store/all.dart';
-import 'package:flutter_chatgpt/view/widget/appbar.dart';
-import 'package:flutter_chatgpt/view/widget/card.dart';
-import 'package:flutter_chatgpt/view/widget/color_picker.dart';
-import 'package:flutter_chatgpt/view/widget/expand_tile.dart';
-import 'package:flutter_chatgpt/view/widget/input.dart';
-import 'package:flutter_chatgpt/view/widget/switch.dart';
+import 'package:gpt_box/core/ext/color.dart';
+import 'package:gpt_box/core/ext/context/base.dart';
+import 'package:gpt_box/core/ext/context/dialog.dart';
+import 'package:gpt_box/core/ext/context/snackbar.dart';
+import 'package:gpt_box/core/ext/locale.dart';
+import 'package:gpt_box/core/ext/string.dart';
+import 'package:gpt_box/core/rebuild.dart';
+import 'package:gpt_box/core/store.dart';
+import 'package:gpt_box/core/update.dart';
+import 'package:gpt_box/core/util/func.dart';
+import 'package:gpt_box/core/util/platform/base.dart';
+import 'package:gpt_box/core/util/ui.dart';
+import 'package:gpt_box/data/model/chat/config.dart';
+import 'package:gpt_box/data/res/build.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/openai.dart';
+import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/widget/appbar.dart';
+import 'package:gpt_box/view/widget/card.dart';
+import 'package:gpt_box/view/widget/color_picker.dart';
+import 'package:gpt_box/view/widget/expand_tile.dart';
+import 'package:gpt_box/view/widget/input.dart';
+import 'package:gpt_box/view/widget/switch.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shortid/shortid.dart';
@@ -85,6 +85,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildColorSeed(),
       _buildThemeMode(),
       if (!isWeb) _buildCheckUpdate(),
+      _buildAppMore(),
     ];
     return Column(
       children: children.map((e) => CardX(child: e)).toList(),
@@ -695,6 +696,24 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Icons.replay),
       title: Text('${l10n.replay} (experimental)'),
       trailing: StoreSwitch(prop: _store.replay),
+    );
+  }
+
+  Widget _buildAppMore() {
+    return ExpandTile(
+      leading: const Icon(MingCute.more_3_fill),
+      title: Text(l10n.more),
+      children: [
+        _buildCountly(),
+      ],
+    );
+  }
+
+  Widget _buildCountly() {
+    return ListTile(
+      leading: const Icon(Icons.analytics),
+      title: const Text('Countly'),
+      trailing: StoreSwitch(prop: _store.countly),
     );
   }
 }

@@ -1,5 +1,5 @@
-import 'package:flutter_chatgpt/core/ext/iterable.dart';
-import 'package:flutter_chatgpt/data/model/chat/history.dart';
+import 'package:gpt_box/core/ext/iterable.dart';
+import 'package:gpt_box/data/model/chat/history.dart';
 
 abstract final class OpenAIConvertor {
   static ChatHistory toChatHistory(Map session) {

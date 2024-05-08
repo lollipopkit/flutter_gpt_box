@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/path.dart';
-import 'package:flutter_chatgpt/view/page/image.dart';
-import 'package:flutter_chatgpt/view/widget/appbar.dart';
-import 'package:flutter_chatgpt/view/widget/audio.dart';
-import 'package:flutter_chatgpt/view/widget/card.dart';
-import 'package:flutter_chatgpt/view/widget/image.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/path.dart';
+import 'package:gpt_box/view/page/image.dart';
+import 'package:gpt_box/view/widget/appbar.dart';
+import 'package:gpt_box/view/widget/audio.dart';
+import 'package:gpt_box/view/widget/card.dart';
+import 'package:gpt_box/view/widget/image.dart';
 
 final class ResPage extends StatefulWidget {
   final Never? args;

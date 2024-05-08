@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:gpt_box/data/res/ui.dart';
 
 class PopupMenu<T> extends StatelessWidget {
   final List<PopupMenuEntry<T>> items;

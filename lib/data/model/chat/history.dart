@@ -1,9 +1,9 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chatgpt/core/ext/iterable.dart';
-import 'package:flutter_chatgpt/data/model/chat/type.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/url.dart';
+import 'package:gpt_box/core/ext/iterable.dart';
+import 'package:gpt_box/data/model/chat/type.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/url.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shortid/shortid.dart';
 

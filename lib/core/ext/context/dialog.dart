@@ -1,9 +1,9 @@
 import 'package:choice/choice.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/ext/context/base.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/view/widget/choice.dart';
+import 'package:gpt_box/core/ext/context/base.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/view/widget/choice.dart';
 
 extension DialogX on BuildContext {
   Future<T?> showRoundDialog<T>({

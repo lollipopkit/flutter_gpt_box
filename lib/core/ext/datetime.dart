@@ -1,4 +1,4 @@
-import 'package:flutter_chatgpt/data/res/l10n.dart';
+import 'package:gpt_box/data/res/l10n.dart';
 
 extension DatetimeX on DateTime {
   /// eg: 1 min ago, 2 days ago

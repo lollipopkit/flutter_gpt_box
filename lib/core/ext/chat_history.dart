@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/rebuild.dart';
-import 'package:flutter_chatgpt/core/util/markdown.dart';
-import 'package:flutter_chatgpt/data/model/chat/history.dart';
-import 'package:flutter_chatgpt/data/res/build.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/view/widget/code.dart';
+import 'package:gpt_box/core/rebuild.dart';
+import 'package:gpt_box/core/util/markdown.dart';
+import 'package:gpt_box/data/model/chat/history.dart';
+import 'package:gpt_box/data/res/build.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/view/widget/code.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 

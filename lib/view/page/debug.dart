@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_chatgpt/core/ext/context/base.dart';
-import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
-import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
-import 'package:flutter_chatgpt/core/util/ui.dart';
-import 'package:flutter_chatgpt/data/provider/debug.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/view/widget/appbar.dart';
+import 'package:gpt_box/core/ext/context/base.dart';
+import 'package:gpt_box/core/ext/context/dialog.dart';
+import 'package:gpt_box/core/ext/context/snackbar.dart';
+import 'package:gpt_box/core/util/ui.dart';
+import 'package:gpt_box/data/provider/debug.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/view/widget/appbar.dart';
 
 class DebugPage extends StatelessWidget {
   final Never? args;

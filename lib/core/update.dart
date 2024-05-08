@@ -2,16 +2,16 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/ext/context/base.dart';
-import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
-import 'package:flutter_chatgpt/core/ext/context/snackbar.dart';
-import 'package:flutter_chatgpt/core/ext/string.dart';
-import 'package:flutter_chatgpt/core/logger.dart';
-import 'package:flutter_chatgpt/core/util/platform/base.dart';
-import 'package:flutter_chatgpt/data/model/app/update.dart';
-import 'package:flutter_chatgpt/data/res/build.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/path.dart';
+import 'package:gpt_box/core/ext/context/base.dart';
+import 'package:gpt_box/core/ext/context/dialog.dart';
+import 'package:gpt_box/core/ext/context/snackbar.dart';
+import 'package:gpt_box/core/ext/string.dart';
+import 'package:gpt_box/core/logger.dart';
+import 'package:gpt_box/core/util/platform/base.dart';
+import 'package:gpt_box/data/model/app/update.dart';
+import 'package:gpt_box/data/res/build.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/path.dart';
 import 'package:r_upgrade/r_upgrade.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

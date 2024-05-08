@@ -1,5 +1,5 @@
-name: flutter_chatgpt
-description: "A new Flutter project."
+name: gpt_box
+description: "A third-party GPT Client for OpenAI API on all platforms."
 publish_to: 'none'
 version: 1.0.0+1
 

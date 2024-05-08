@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:countly_flutter/countly_flutter.dart';
-import 'package:flutter_chatgpt/core/build_mode.dart';
-import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:gpt_box/core/build_mode.dart';
+import 'package:gpt_box/core/util/platform/base.dart';
 
 class Analysis {
   static const _url = 'https://countly.lolli.tech';

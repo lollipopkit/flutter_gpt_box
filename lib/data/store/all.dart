@@ -1,7 +1,7 @@
-import 'package:flutter_chatgpt/core/store.dart';
-import 'package:flutter_chatgpt/data/store/config.dart';
-import 'package:flutter_chatgpt/data/store/history.dart';
-import 'package:flutter_chatgpt/data/store/setting.dart';
+import 'package:gpt_box/core/store.dart';
+import 'package:gpt_box/data/store/config.dart';
+import 'package:gpt_box/data/store/history.dart';
+import 'package:gpt_box/data/store/setting.dart';
 
 abstract final class Stores {
   static final history = HistoryStore();

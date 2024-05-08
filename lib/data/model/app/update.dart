@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:gpt_box/core/util/platform/base.dart';
 
 class AppUpdate {
   const AppUpdate({

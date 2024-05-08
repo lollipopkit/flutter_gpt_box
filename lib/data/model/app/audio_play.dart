@@ -1,4 +1,4 @@
-import 'package:flutter_chatgpt/data/model/chat/history.dart';
+import 'package:gpt_box/data/model/chat/history.dart';
 
 final class AudioPlayStatus {
   /// [ChatContent]'s id

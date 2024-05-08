@@ -1,6 +1,6 @@
-import 'package:flutter_chatgpt/core/logger.dart';
-import 'package:flutter_chatgpt/core/store.dart';
-import 'package:flutter_chatgpt/data/model/chat/history.dart';
+import 'package:gpt_box/core/logger.dart';
+import 'package:gpt_box/core/store.dart';
+import 'package:gpt_box/data/model/chat/history.dart';
 
 class HistoryStore extends Store {
   HistoryStore() : super('history');

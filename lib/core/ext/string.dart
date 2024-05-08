@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
+import 'package:gpt_box/data/res/l10n.dart';
 
 extension StringX on String {
   /// Format: `#8b2252` or `8b2252`

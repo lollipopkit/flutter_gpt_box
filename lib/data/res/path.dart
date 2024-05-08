@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter_chatgpt/core/util/platform/base.dart';
-import 'package:flutter_chatgpt/core/util/platform/file.dart';
-import 'package:flutter_chatgpt/data/model/app/backup.dart';
+import 'package:gpt_box/core/util/platform/base.dart';
+import 'package:gpt_box/core/util/platform/file.dart';
+import 'package:gpt_box/data/model/app/backup.dart';
 import 'package:path_provider/path_provider.dart';
 
 abstract final class Paths {

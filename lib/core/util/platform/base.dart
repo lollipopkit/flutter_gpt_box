@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chatgpt/core/ext/string.dart';
+import 'package:gpt_box/core/ext/string.dart';
 
 /// Platforms.
 enum Pfs {

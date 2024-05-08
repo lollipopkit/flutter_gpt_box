@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/ext/widget.dart';
-import 'package:flutter_chatgpt/data/model/app/audio_play.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/view/widget/future.dart';
+import 'package:gpt_box/core/ext/widget.dart';
+import 'package:gpt_box/data/model/app/audio_play.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/view/widget/future.dart';
 
 final _audioPlayer = AudioPlayer();
 // Map for audio player value notifiers which stores the current playing status

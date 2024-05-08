@@ -1,8 +1,8 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chatgpt/core/logger.dart';
-import 'package:flutter_chatgpt/data/model/chat/config.dart';
-import 'package:flutter_chatgpt/data/store/all.dart';
+import 'package:gpt_box/core/logger.dart';
+import 'package:gpt_box/data/model/chat/config.dart';
+import 'package:gpt_box/data/store/all.dart';
 
 abstract final class OpenAICfg {
   static final nameNotifier = ValueNotifier(_cfg.name);

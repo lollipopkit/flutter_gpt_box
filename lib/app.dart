@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/ext/locale.dart';
-import 'package:flutter_chatgpt/core/rebuild.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/data/store/all.dart';
-import 'package:flutter_chatgpt/view/page/home/home.dart';
+import 'package:gpt_box/core/ext/locale.dart';
+import 'package:gpt_box/core/rebuild.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/page/home/home.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 
 class MyApp extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/store.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:gpt_box/core/store.dart';
+import 'package:gpt_box/data/res/ui.dart';
 
 class StoreSwitch extends StatelessWidget {
   final StorePropertyBase<bool> prop;

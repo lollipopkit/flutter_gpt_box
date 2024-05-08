@@ -3,9 +3,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chatgpt/core/logger.dart';
-import 'package:flutter_chatgpt/core/util/func.dart';
-import 'package:flutter_chatgpt/core/util/sync/base.dart';
+import 'package:gpt_box/core/logger.dart';
+import 'package:gpt_box/core/util/func.dart';
+import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class Store {

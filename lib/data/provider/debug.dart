@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/ext/datetime.dart';
-import 'package:flutter_chatgpt/core/rebuild.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
+import 'package:gpt_box/core/ext/datetime.dart';
+import 'package:gpt_box/core/rebuild.dart';
+import 'package:gpt_box/data/res/ui.dart';
 import 'package:logging/logging.dart';
 
 const _kMaxDebugLogLines = 177;

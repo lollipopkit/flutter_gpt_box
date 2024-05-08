@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter_chatgpt/core/util/platform/base.dart';
+import 'package:gpt_box/core/util/platform/base.dart';
 import 'package:win32_registry/win32_registry.dart';
 
 abstract final class Win32 {

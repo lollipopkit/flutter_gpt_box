@@ -1,4 +1,4 @@
-import 'package:flutter_chatgpt/data/model/chat/config.dart';
+import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:shortid/shortid.dart';
 
 import 'history.dart';

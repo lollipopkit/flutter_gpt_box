@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_chatgpt/core/ext/context/dialog.dart';
-import 'package:flutter_chatgpt/core/ext/num.dart';
-import 'package:flutter_chatgpt/core/route/page.dart';
-import 'package:flutter_chatgpt/data/res/l10n.dart';
-import 'package:flutter_chatgpt/data/res/ui.dart';
-import 'package:flutter_chatgpt/view/page/image.dart';
-import 'package:flutter_chatgpt/view/widget/card.dart';
+import 'package:gpt_box/core/ext/context/dialog.dart';
+import 'package:gpt_box/core/ext/num.dart';
+import 'package:gpt_box/core/route/page.dart';
+import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/view/page/image.dart';
+import 'package:gpt_box/view/widget/card.dart';
 
 final class ImageCard extends StatefulWidget {
   final String imageUrl;

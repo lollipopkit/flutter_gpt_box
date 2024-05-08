@@ -3,13 +3,13 @@ library route;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/core/analysis.dart';
-import 'package:flutter_chatgpt/view/page/about.dart';
-import 'package:flutter_chatgpt/view/page/backup/view.dart';
-import 'package:flutter_chatgpt/view/page/debug.dart';
-import 'package:flutter_chatgpt/view/page/image.dart';
-import 'package:flutter_chatgpt/view/page/res.dart';
-import 'package:flutter_chatgpt/view/page/setting.dart';
+import 'package:gpt_box/core/analysis.dart';
+import 'package:gpt_box/view/page/about.dart';
+import 'package:gpt_box/view/page/backup/view.dart';
+import 'package:gpt_box/view/page/debug.dart';
+import 'package:gpt_box/view/page/image.dart';
+import 'package:gpt_box/view/page/res.dart';
+import 'package:gpt_box/view/page/setting.dart';
 
 part 'base.dart';
 

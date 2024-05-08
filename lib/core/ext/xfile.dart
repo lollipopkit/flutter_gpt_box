@@ -1,5 +1,5 @@
 import 'package:cross_file/cross_file.dart';
-import 'package:flutter_chatgpt/core/ext/uint8list.dart';
+import 'package:gpt_box/core/ext/uint8list.dart';
 
 extension XFileX on XFile? {
   Future<String?> get base64 async {
