@@ -12,7 +12,6 @@ import 'package:gpt_box/data/model/app/update.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/path.dart';
-import 'package:r_upgrade/r_upgrade.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 abstract final class AppUpdateIface {
@@ -94,14 +93,7 @@ abstract final class AppUpdateIface {
     }
 
     switch (Pfs.type) {
-      case Pfs.android:
-        final fileName = url.split('/').last;
-        await RUpgrade.upgrade(url, fileName: fileName);
-        break;
-      case Pfs.ios || Pfs.macos:
-        await RUpgrade.upgradeFromAppStore('6476033062');
-        break;
-      case Pfs.windows || Pfs.linux:
+      case Pfs.windows || Pfs.linux || Pfs.ios || Pfs.macos || Pfs.android:
         await launchUrlString(url);
         break;
       case Pfs.web:

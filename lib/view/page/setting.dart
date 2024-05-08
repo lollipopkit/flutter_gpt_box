@@ -717,7 +717,7 @@ class _SettingPageState extends State<SettingPage> {
       trailing: StoreSwitch(prop: _store.countly),
     );
   }
-  
+
   Widget _buildCupertinoRoute() {
     return ListTile(
       leading: const Icon(MingCute.route_fill),

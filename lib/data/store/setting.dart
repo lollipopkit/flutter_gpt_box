@@ -5,22 +5,12 @@ class SettingStore extends Store {
   SettingStore() : super('setting');
 
   late final themeMode = property('themeMode', 0);
+  
   late final themeColorSeed = property('themeColorSeed', 4287106639);
-  //late final fontSize = property('fontSize', 12.0);
-  late final autoCheckUpdate = property('autoCheckUpdate', true);
 
-  // late final openaiApiUrl = property(
-  //   'openaiApiUrl',
-  //   'https://api.openai.com',
-  // );
-  // late final openaiApiKey = property('openaiApiKey', '');
-  // late final openaiModel = property('openaiModel', 'gpt-3.5-turbo-1106');
-  // late final openaiGenTitleModel = property(
-  //   'openaiGenTitleModel',
-  //   'gpt-3.5-turbo',
-  // );
-  // late final prompt = property('prompt', '');
-  // late final historyLength = property('historyLength', 7);
+  //late final fontSize = property('fontSize', 12.0);
+
+  late final autoCheckUpdate = property('autoCheckUpdate', true);
 
   /// Auto scroll to bottom when new message comes.
   late final scrollBottom = property('scrollBottom', true);

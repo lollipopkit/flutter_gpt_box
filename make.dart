@@ -268,7 +268,7 @@ Future<void> changeAppleVersion() async {
 }
 
 Future<void> killJava() async {
-  if (Platform.isWindows) return;
+  if (!Platform.isMacOS) return;
   final result = await Process.run('ps', ['-A']);
   final lines = (result.stdout as String).split('\n');
   for (final line in lines) {
