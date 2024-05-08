@@ -4,8 +4,6 @@
 
 <p align="center">
 一个支持 OpenAI API 的 第三方全平台客户端。
-<br>
-<a href="https://gpt.lolli.tech/">尝试网页版</a> （推荐使用客户端以获得更好的性能）
 </p>
 
 <!-- Badges-->
@@ -21,7 +19,7 @@
 
 
 ## 🪄 特性
-- 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chat.openai.com) 恢复
+- 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
 - 文本 / 图片 / 音频聊天（网页版仅支持文本）
 - 以图片形式分享聊天
 - Url Scheme，例如：`lk-gptbox://chat/new?msg=你好`
@@ -42,9 +40,9 @@
 
 
 ## ⬇️ 使用
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (慢且更新不及时)](https://gpt.lolli.tech/)
 
-- 由于中国政策原因，且**目前**无法完成[备案](https://github.com/lollipopkit/flutter_server_box/discussions/180)。请移步 AppStore 其他区下载。
+- 由于中国政策原因，且**目前**无法完成备案。请移步 AppStore 其他区下载。
 - 关于安全：
   - 为了防止注入攻击等因素，请勿从不可信来源下载。
   - 由于 `Linux / Windows` 使用了默认签名，因此建议[自行构建](https://github.com/lollipopkit/flutter_server_box/wiki/%E4%B8%BB%E9%A1%B5#%E8%87%AA%E7%BC%96%E8%AF%91)。

@@ -4,8 +4,6 @@ English | [简体中文](README_zh.md)
 
 <p align="center">
 A third-party GPT Client for OpenAI API on all platforms.
-<br>
-<a href="https://gpt.lolli.tech/">Try on web</a> (suggest using app for better performance)
 </p>
 
 <!-- Badges-->
@@ -21,7 +19,7 @@ Please don't use it in production environment, and don't use it for important da
 
 
 ## 🪄 Features
-- Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI's export file](https://chat.openai.com).
+- Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI's export file](https://chatgpt.com).
 - Text / Image / Audio chat. (Web only support text)
 - Share chat by picture.
 - Render code block / latex formula.
@@ -42,9 +40,9 @@ Please don't use it in production environment, and don't use it for important da
 
 
 ## ⬇️ Use
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (Slow & Old)](https://gpt.lolli.tech/)
 
-- Due to Chinese government policy and the [BEIAN](https://github.com/lollipopkit/flutter_server_box/discussions/180) issue. Please download it from other regions of AppStore.
+- Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
 - Security:
   - To prevent injection attacks and etc., please don't download from untrusted sources.
   - Since `Linux / Windows` is signed with flutter default certificate, it is recommended to [build it yourself](https://github.com/lollipopkit/flutter_server_box/wiki#compile-yourself).

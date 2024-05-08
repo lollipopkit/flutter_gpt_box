@@ -2,8 +2,8 @@
 
 class Build {
   static const String name = "GPTBox";
-  static const int build = 149;
+  static const int build = 151;
   static const String engine = "3.19.6";
-  static const String buildAt = "2024-05-08 23:02:36";
-  static const int modifications = 3;
+  static const String buildAt = "2024-05-08 23:38:40";
+  static const int modifications = 2;
 }
