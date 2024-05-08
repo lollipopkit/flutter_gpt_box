@@ -136,18 +136,31 @@ class _ChatPageState extends State<_ChatPage>
           _buildChatItemTitle(chatItems, chatItem),
           UIs.height13,
           BlurOverlay(
+            key: Key(chatItem.id),
             bottom: () => _buildChatItemFuncs(chatItems, chatItem).card,
-            popup: () => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 11),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(vertical: 7),
-                child: SelectableText(
-                  chatItem.toMarkdown,
-                  showCursor: true,
-                  style: const TextStyle(fontSize: 15),
+            popup: () {
+              final child = Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 11),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(vertical: 7),
+                  child: SelectableText(
+                    chatItem.toMarkdown,
+                    showCursor: true,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: UIs.textColor.fromBool(RNode.dark.value),
+                    ),
+                  ),
                 ),
-              ),
-            ).card,
+              );
+              return Material(
+                color: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: child,
+              );
+            },
             child: ListenableBuilder(
               listenable: node,
               builder: (_, __) {

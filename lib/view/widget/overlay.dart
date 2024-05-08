@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
-
+import 'package:gpt_box/core/ext/value_notifier.dart';
 import 'package:gpt_box/data/res/ui.dart';
 
-/// A Cupertino like overlay with blur effect.
 class BlurOverlay extends StatefulWidget {
   final Widget child;
   final Widget Function() popup;
@@ -25,16 +23,23 @@ class BlurOverlay extends StatefulWidget {
 class _BlurOverlayState extends State<BlurOverlay>
     with SingleTickerProviderStateMixin {
   OverlayEntry? _overlayEntry;
-  final LayerLink _layerLink = LayerLink();
 
   /// Can't use `late` because it's not initialized in [dispose]
   ///
   /// The animation controller is created when the overlay is shown.
   AnimationController? _animeCtrl;
-  Animation<double>? _blurAnime;
+  Animation<Offset>? _offsetAnime;
   Animation<double>? _fadeAnime;
+  Animation<Color?>? _colorAnime;
 
   MediaQueryData? _media;
+
+  final _isShowingOverlay = false.vn;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   void didChangeDependencies() {
@@ -49,7 +54,7 @@ class _BlurOverlayState extends State<BlurOverlay>
     BlurOverlay.close = null;
   }
 
-  void _showOverlay(BuildContext context) {
+  void _showOverlay(BuildContext context) async {
     /// Set it here, so [BlurOverlay.close] must point to this function owned by
     /// this instance.
     BlurOverlay.close = _removeOverlay;
@@ -59,24 +64,41 @@ class _BlurOverlayState extends State<BlurOverlay>
       vsync: this,
       duration: Durations.medium1,
     );
-    _blurAnime = Tween(begin: 0.0, end: 5.0).animate(
+
+    final renderBox = context.findRenderObject() as RenderBox;
+    var startOffset = renderBox.localToGlobal(Offset.zero);
+    final overlayState = Overlay.of(context);
+    final overlayBox = overlayState.context.findRenderObject() as RenderBox;
+    var endOffset = overlayBox.size.centerLeft(Offset.zero);
+    _offsetAnime = Tween(
+      begin: startOffset - endOffset,
+      end: Offset.zero,
+    ).animate(
       CurvedAnimation(parent: _animeCtrl!, curve: Curves.easeInOutCubic),
     );
+
     _fadeAnime = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animeCtrl!, curve: Curves.easeInOutCubic),
+    );
+    _colorAnime = ColorTween(
+      begin: Colors.transparent,
+      end: Colors.black,
+    ).animate(
       CurvedAnimation(parent: _animeCtrl!, curve: Curves.easeInOutCubic),
     );
 
     _overlayEntry = _createOverlayEntry(context);
-    Overlay.of(context).insert(_overlayEntry!);
+    overlayState.insert(_overlayEntry!);
 
-    _animeCtrl?.forward();
+    await _animeCtrl?.forward();
+    _isShowingOverlay.value = true;
   }
 
-  void _removeOverlay() {
-    _animeCtrl!.reverse().then((value) {
-      _overlayEntry?.remove();
-      _overlayEntry = null;
-    });
+  void _removeOverlay() async {
+    await _animeCtrl!.reverse();
+    _overlayEntry!.remove();
+    _overlayEntry = null;
+    _isShowingOverlay.value = false;
   }
 
   OverlayEntry _createOverlayEntry(BuildContext context) {
@@ -87,30 +109,27 @@ class _BlurOverlayState extends State<BlurOverlay>
         child: AnimatedBuilder(
           animation: _animeCtrl!,
           builder: (_, __) {
-            return BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: _blurAnime!.value,
-                sigmaY: _blurAnime!.value,
-              ),
-              child: Container(
-                color: const Color.fromARGB(77, 0, 0, 0),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 7),
-                child: FadeTransition(
-                  opacity: _fadeAnime!,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ConstrainedBox(
+            return Container(
+              color: _colorAnime!.value,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 11),
+              child: FadeTransition(
+                opacity: _fadeAnime!,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Transform.translate(
+                      offset: _offsetAnime!.value,
+                      child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxHeight: (_media?.size.height ?? 700) * 0.7,
+                          maxHeight: (_media?.size.height ?? 700) * 0.6,
                         ),
                         child: widget.popup(),
                       ),
-                      if (widget.bottom != null) UIs.height13,
-                      if (widget.bottom != null) widget.bottom!(),
-                    ],
-                  ),
+                    ),
+                    if (widget.bottom != null) UIs.height13,
+                    if (widget.bottom != null) widget.bottom!(),
+                  ],
                 ),
               ),
             );
@@ -122,16 +141,21 @@ class _BlurOverlayState extends State<BlurOverlay>
 
   @override
   Widget build(BuildContext context) {
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: PopScope(
-        canPop: false,
-        onPopInvoked: (_) => _removeOverlay(),
-        child: GestureDetector(
-          onLongPress: () => _showOverlay(context),
-          child: widget.child,
-        ),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: _isShowingOverlay,
+      builder: (_, isShowing, __) {
+        return PopScope(
+          canPop: !isShowing,
+          onPopInvoked: (didPop) {
+            if (_overlayEntry == null) return;
+            _removeOverlay();
+          },
+          child: GestureDetector(
+            onLongPress: () => _showOverlay(context),
+            child: widget.child,
+          ),
+        );
+      },
     );
   }
 }
