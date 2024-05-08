@@ -43,9 +43,19 @@ enum HomePageEnum {
   Widget buildAppbarActions(BuildContext context) {
     final items = <IconButton>[
       IconButton(
-        onPressed: () => Routes.debug.go(context),
-        icon: const Icon(Icons.developer_board),
-        tooltip: 'Debug',
+        onPressed: () async {
+          final profiles = Stores.config.fetchAll().values.toList();
+          final select = await context.showPickSingleDialog(
+            title: l10n.profile,
+            items: profiles,
+            name: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
+            initial: OpenAICfg.current,
+          );
+          if (select == null) return;
+          OpenAICfg.switchTo(select.id);
+        },
+        icon: const Icon(Iconsax.profile_2user_bold),
+        tooltip: l10n.profile,
       ),
     ];
 
@@ -97,4 +107,54 @@ final class _MoreAction {
     required this.onTap,
     this.onHomePage = const [],
   });
+}
+
+enum _HistoryMenu {
+  delete,
+  rename,
+  ;
+
+  String get label {
+    switch (this) {
+      case _HistoryMenu.delete:
+        return l10n.delete;
+      case _HistoryMenu.rename:
+        return l10n.rename;
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case _HistoryMenu.delete:
+        return Icons.delete;
+      case _HistoryMenu.rename:
+        return Icons.edit;
+    }
+  }
+
+  void onTap(BuildContext context, String chatId) {
+    switch (this) {
+      case _HistoryMenu.delete:
+        _onTapDeleteChat(chatId, context);
+        break;
+      case _HistoryMenu.rename:
+        _onTapRenameChat(chatId, context);
+        break;
+    }
+  }
+
+  PopupMenuItem<_HistoryMenu> toPopupMenuItem() {
+    return PopupMenuItem(
+      value: this,
+      child: Row(
+        children: [
+          Icon(icon, size: 17),
+          UIs.width13,
+          Text(label),
+        ],
+      ),
+    );
+  }
+
+  static final btns = values.map((e) => e.toPopupMenuItem()).toList();
 }

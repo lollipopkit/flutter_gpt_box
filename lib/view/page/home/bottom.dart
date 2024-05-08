@@ -42,16 +42,16 @@ class _HomeBottom extends StatelessWidget {
                       icon: const Icon(MingCute.add_fill, size: 17),
                       tooltip: l10n.newChat,
                     ),
-                    IconButton(
-                      onPressed: () => _onTapRenameChat(_curChatId, context),
-                      icon: const Icon(Icons.edit, size: 19),
-                      tooltip: l10n.rename,
-                    ),
-                    IconButton(
-                      onPressed: () => _onTapDeleteChat(_curChatId, context),
-                      icon: const Icon(Icons.delete, size: 19),
-                      tooltip: l10n.delete,
-                    ),
+                    // IconButton(
+                    //   onPressed: () => _onTapRenameChat(_curChatId, context),
+                    //   icon: const Icon(Icons.edit, size: 19),
+                    //   tooltip: l10n.rename,
+                    // ),
+                    // IconButton(
+                    //   onPressed: () => _onTapDeleteChat(_curChatId, context),
+                    //   icon: const Icon(Icons.delete, size: 19),
+                    //   tooltip: l10n.delete,
+                    // ),
                     ListenableBuilder(
                       listenable: _filePicked,
                       builder: (_, __) {
@@ -77,23 +77,7 @@ class _HomeBottom extends StatelessWidget {
                       },
                     ),
                     const Spacer(),
-                    ValueListenableBuilder(
-                      valueListenable: Stores.setting.calcTokenLen.listenable(),
-                      builder: (_, calc, __) {
-                        return ListenableBuilder(
-                          listenable: _inputCtrl,
-                          builder: (_, __) {
-                            final encoder =
-                                encodingForModel(OpenAICfg.current.model);
-                            final len = encoder.encode(_inputCtrl.text).length;
-                            return Text(
-                              '#$len',
-                              style: UIs.text13Grey,
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    _buildTokenCount(),
                     UIs.width13,
                     _buildSwitchChatType(),
                     UIs.width7,
@@ -193,13 +177,39 @@ class _HomeBottom extends StatelessWidget {
           onSelected: (val) => _chatType.value = val,
           initialValue: _chatType.value,
           tooltip: l10n.choose,
-          child: Row(
-            children: [
-              Text(_chatType.value.name, style: UIs.text13),
-              UIs.width7,
-              const Icon(Icons.keyboard_arrow_down, size: 19),
-            ],
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(17),
+              color: const Color.fromARGB(35, 151, 151, 151),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+            child: Row(
+              children: [
+                Icon(_chatType.value.icon, size: 19),
+                UIs.width7,
+                Text(_chatType.value.name, style: UIs.text13),
+              ],
+            ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTokenCount() {
+    return ValueListenableBuilder(
+      valueListenable: Stores.setting.calcTokenLen.listenable(),
+      builder: (_, calc, __) {
+        return ListenableBuilder(
+          listenable: _inputCtrl,
+          builder: (_, __) {
+            final encoder = encodingForModel(OpenAICfg.current.model);
+            final len = encoder.encode(_inputCtrl.text).length;
+            return Text(
+              '# $len',
+              style: UIs.text13Grey,
+            );
+          },
         );
       },
     );

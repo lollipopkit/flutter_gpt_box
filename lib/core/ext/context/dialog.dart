@@ -59,10 +59,15 @@ extension DialogX on BuildContext {
     List<T>? initial,
     bool clearable = false,
     List<Widget>? actions,
+
+    /// Return value immediately without confirmation, only valid for non-multi
+    bool noConfirm = true,
+    String? title,
   }) async {
+    assert(!noConfirm || !multi);
     var vals = initial ?? <T>[];
     final sure = await showRoundDialog<bool>(
-      title: l10n.choose,
+      title: title ?? l10n.choose,
       child: SingleChildScrollView(
         child: Choice<T>(
           onChanged: (value) => vals = value,
@@ -80,6 +85,12 @@ extension DialogX on BuildContext {
                     label: name?.call(item) ?? item.toString(),
                     state: state,
                     value: item,
+                    onSelected: noConfirm
+                        ? (_) {
+                            state.onSelected(item);
+                            pop(true);
+                          }
+                        : null,
                   );
                 },
               ),
@@ -87,13 +98,15 @@ extension DialogX on BuildContext {
           },
         ),
       ),
-      actions: [
-        if (actions != null) ...actions,
-        TextButton(
-          onPressed: () => pop(true),
-          child: Text(l10n.ok),
-        ),
-      ],
+      actions: noConfirm
+          ? null
+          : [
+              if (actions != null) ...actions,
+              TextButton(
+                onPressed: () => pop(true),
+                child: Text(l10n.ok),
+              ),
+            ],
     );
     if (sure == true && vals.isNotEmpty) {
       return vals;
@@ -107,8 +120,13 @@ extension DialogX on BuildContext {
     T? initial,
     bool clearable = false,
     List<Widget>? actions,
+
+    /// Return value immediately without confirmation
+    bool noConfirm = true,
+    String? title,
   }) async {
     final vals = await showPickDialog<T>(
+      title: title,
       items: items,
       name: name,
       multi: false,

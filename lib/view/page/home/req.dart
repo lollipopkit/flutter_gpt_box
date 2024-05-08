@@ -3,10 +3,11 @@ part of 'home.dart';
 
 bool _checkSettingsValid(BuildContext context) {
   final config = OpenAICfg.current;
-  if (config.url == 'https://api.openai.com' ||
+  final urlEmpty = config.url == 'https://api.openai.com' ||
       config.url == 'https://api.chatgpt.com' ||
-      config.url.isEmpty && config.key.isEmpty) {
-    final msg = l10n.emptyFields('${l10n.secretKey} & Api Url');
+      config.url.isEmpty;
+  if (urlEmpty && config.key.isEmpty) {
+    final msg = l10n.emptyFields('Api${l10n.secretKey}');
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     return false;
@@ -435,7 +436,7 @@ void _onReplay({
   required ChatHistoryItem item,
 }) async {
   if (!_checkSettingsValid(context)) return;
-  
+
   // If is receiving the reply, ignore this action
   if (_chatStreamSubs.containsKey(chatId)) {
     final msg = 'Replay Chat($chatId) is receiving reply';

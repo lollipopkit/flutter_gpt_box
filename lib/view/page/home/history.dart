@@ -66,21 +66,25 @@ class _HistoryPageState extends State<_HistoryPage>
           );
         },
       ),
-      contentPadding: const EdgeInsets.only(left: 17, right: 11),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          isDesktop
-              ? IconBtn(
-                  onTap: () => _onTapDeleteChat(chatId, context),
-                  icon: Icons.delete,
-                  size: 17,
-                )
-              : IconButton(
-                  onPressed: () => _onTapDeleteChat(chatId, context),
-                  icon: const Icon(Icons.delete, size: 17),
-                ),
-        ],
+      contentPadding: const EdgeInsets.only(left: 17, right: 13),
+      // trailing: Row(
+      //   mainAxisSize: MainAxisSize.min,
+      //   children: [
+      //     isDesktop
+      //         ? IconBtn(
+      //             onTap: () => _onTapDeleteChat(chatId, context),
+      //             icon: Icons.delete,
+      //             size: 17,
+      //           )
+      //         : IconButton(
+      //             onPressed: () => _onTapDeleteChat(chatId, context),
+      //             icon: const Icon(Icons.delete, size: 17),
+      //           ),
+      //   ],
+      // ),
+      trailing: PopupMenu(
+        items: _HistoryMenu.btns,
+        onSelected: (val) => val.onTap(context, chatId),
       ),
       onTap: () {
         Funcs.throttle(

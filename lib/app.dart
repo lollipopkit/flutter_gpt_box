@@ -36,9 +36,7 @@ class MyApp extends StatelessWidget {
           home: Builder(
             builder: (context) {
               final l10n_ = AppLocalizations.of(context);
-              if (l10n_ != null) {
-                l10n = l10n_;
-              }
+              if (l10n_ != null) l10n = l10n_;
               return const HomePage();
             },
           ),
