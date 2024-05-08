@@ -322,6 +322,7 @@ void _gotoHistory(String chatId) {
 void _onTapReplay(
     BuildContext context, String chatId, ChatHistoryItem item) async {
   if (item.role != ChatRole.user) return;
+  BlurOverlay.close?.call();
   final sure = await context.showRoundDialog<bool>(
     title: l10n.attention,
     child: Text('${l10n.replay} ?'),
@@ -332,6 +333,7 @@ void _onTapReplay(
 }
 
 void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
+  BlurOverlay.close?.call();
   final ctrl = TextEditingController(text: chatItem.toMarkdown);
   await context.showRoundDialog(
     title: l10n.edit,

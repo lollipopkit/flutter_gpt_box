@@ -160,5 +160,6 @@ enum _HistoryMenu {
     );
   }
 
-  static final btns = values.map((e) => e._toPopupMenuItem()).toList();
+  static List<PopupMenuItem<_HistoryMenu>> get btns =>
+      values.map((e) => e._toPopupMenuItem()).toList();
 }

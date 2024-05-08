@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/ext/iterable.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/ui.dart';
 
 enum ChatType {
   text,
@@ -23,6 +24,20 @@ enum ChatType {
         img => l10n.image,
         audio => l10n.audio,
       };
+
+  static List<PopupMenuItem<ChatType>> get btns => ChatType.values
+    .map(
+      (e) => PopupMenuItem(
+        value: e,
+        child: Row(
+          children: [
+            Icon(e.icon, size: 19),
+            UIs.width13,
+            Text(e.name, style: UIs.text13),
+          ],
+        ),
+      ),
+    ).toList();
 }
 
 enum ChatApiType {

@@ -53,7 +53,7 @@
   "hoursAgo": "{hours} hours ago",
   "ignoreTip": "Ignore tips",
   "image": "Image",
-  "initChatHelp": "### 📖 Tip\n- Overscroll on the chat page to switch chat history.\n- Long press code block to copy\n- URL Scheme usage can be found [here]({unilink})\n\n### 🔍 Help\n- If you have found a bug, please use [Github Issue]({issue})",
+  "initChatHelp": "### 📖 Tip\n- Overscroll on the chat page to switch chat history.\n- Long press non-code block to free copy raw markdown data / delete / etc., long press code block to free copy code.\n- URL Scheme usage can be found [here]({unilink})\n\n### 🔍 Help\n- If you have found a bug, please use [Github Issue]({issue})",
   "invalidLinkFmt": "Invalid link: {uri}",
   "justNow": "Just now",
   "lang": "Language",

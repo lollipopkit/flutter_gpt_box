@@ -133,23 +133,39 @@ class _ChatPageState extends State<_ChatPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildChatItemBtn(chatItems, chatItem),
-          ListenableBuilder(
-            listenable: node,
-            builder: (_, __) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: chatItem.content
-                    .map((e) => switch (e.type) {
-                          ChatContentType.audio => _buildAudio(e),
-                          ChatContentType.image => _buildImage(e),
-                          _ => _buildText(e),
-                        })
-                    .joinWith(UIs.height13),
-              );
-            },
+          _buildChatItemTitle(chatItems, chatItem),
+          UIs.height13,
+          BlurOverlay(
+            bottom: () => _buildChatItemFuncs(chatItems, chatItem).card,
+            popup: () => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 11),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(vertical: 7),
+                child: SelectableText(
+                  chatItem.toMarkdown,
+                  showCursor: true,
+                  style: const TextStyle(fontSize: 15),
+                ),
+              ),
+            ).card,
+            child: ListenableBuilder(
+              listenable: node,
+              builder: (_, __) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: chatItem.content
+                      .map((e) => switch (e.type) {
+                            ChatContentType.audio => _buildAudio(e),
+                            ChatContentType.image => _buildImage(e),
+                            _ => _buildText(e),
+                          })
+                      .joinWith(UIs.height13),
+                );
+              },
+            ),
           ),
+          UIs.height13,
         ],
       ),
     );
@@ -191,13 +207,11 @@ class _ChatPageState extends State<_ChatPage>
     return AudioCard(id: content.id, path: content.raw);
   }
 
-  Widget _buildChatItemBtn(
+  Widget _buildChatItemTitle(
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
     final isBright = UIs.primaryColor.isBrightColor;
-    final replayEnabled =
-        chatItem.role == ChatRole.user && Stores.setting.replay.fetch();
     return Row(
       children: [
         Container(
@@ -214,7 +228,19 @@ class _ChatPageState extends State<_ChatPage>
             ),
           ),
         ),
-        const Spacer(),
+      ],
+    );
+  }
+
+  Widget _buildChatItemFuncs(
+    List<ChatHistoryItem> chatItems,
+    ChatHistoryItem chatItem,
+  ) {
+    final replayEnabled =
+        chatItem.role == ChatRole.user && Stores.setting.replay.fetch();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
         if (replayEnabled)
           ListenableBuilder(
             listenable: _sendBtnRN,
@@ -242,6 +268,7 @@ class _ChatPageState extends State<_ChatPage>
           ),
         IconButton(
           onPressed: () async {
+            BlurOverlay.close?.call();
             final idx = chatItems.indexOf(chatItem) + 1;
             final result = await context.showRoundDialog<bool>(
               title: l10n.attention,
@@ -267,6 +294,7 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   void _onCopy(String content) {
+    BlurOverlay.close?.call();
     Clipboard.setData(ClipboardData(text: content));
     //context.showSnackBar(l10n.copied);
   }

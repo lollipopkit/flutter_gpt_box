@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:gpt_box/core/logger.dart';
 import 'package:gpt_box/core/util/func.dart';
 import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -82,9 +81,7 @@ extension BoxX on Box {
       }
       try {
         json[key] = get(key) as T;
-      } catch (e) {
-        Loggers.app.warning(e);
-      }
+      } catch (_) {}
     }
     return json;
   }

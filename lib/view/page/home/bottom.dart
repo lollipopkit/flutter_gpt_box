@@ -160,26 +160,13 @@ class _HomeBottom extends StatelessWidget {
       listenable: _chatType,
       builder: (_, __) {
         return PopupMenu(
-          items: ChatType.values
-              .map(
-                (e) => PopupMenuItem(
-                  value: e,
-                  child: Row(
-                    children: [
-                      Icon(e.icon, size: 19),
-                      UIs.width7,
-                      Text(e.name, style: UIs.text13),
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
+          items: ChatType.btns,
           onSelected: (val) => _chatType.value = val,
           initialValue: _chatType.value,
           tooltip: l10n.choose,
           child: _buildRoundRect(Row(
             children: [
-              Icon(_chatType.value.icon, size: 19),
+              Icon(_chatType.value.icon, size: 15),
               UIs.width7,
               Text(_chatType.value.name, style: UIs.text13),
             ],

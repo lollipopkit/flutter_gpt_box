@@ -48,6 +48,7 @@ import 'package:gpt_box/view/widget/code.dart';
 import 'package:gpt_box/view/widget/future.dart';
 import 'package:gpt_box/view/widget/image.dart';
 import 'package:gpt_box/view/widget/input.dart';
+import 'package:gpt_box/view/widget/overlay.dart';
 import 'package:gpt_box/view/widget/popup_menu.dart';
 import 'package:gpt_box/view/widget/slide_trans.dart';
 import 'package:gpt_box/view/widget/switch_page_indicator.dart';
@@ -68,7 +69,7 @@ part 'enum.dart';
 part 'search.dart';
 part 'appbar.dart';
 part 'bottom.dart';
-part 'uni_link.dart';
+part 'url_scheme.dart';
 part 'req.dart';
 
 class HomePage extends StatefulWidget {
