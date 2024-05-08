@@ -52,7 +52,10 @@ enum HomePageEnum {
             initial: OpenAICfg.current,
             actions: profiles.length == 1
                 ? TextButton(
-                    onPressed: () => Routes.setting.go(context),
+                    onPressed: () {
+                      context.pop();
+                      Routes.setting.go(context);
+                    },
                     child: Text(l10n.add),
                   ).asList
                 : null,

@@ -1,9 +1,7 @@
 part of 'home.dart';
 
 CustomAppBar _buildAppBar(BuildContext context) {
-  return CustomAppBar(
-    centerTitle: false,
-    title: ListenableBuilder(
+  final title = ListenableBuilder(
       listenable: _appbarTitleRN,
       builder: (_, __) {
         final entity = _curChat;
@@ -46,6 +44,12 @@ CustomAppBar _buildAppBar(BuildContext context) {
           ),
         );
       },
+    );
+  return CustomAppBar(
+    centerTitle: false,
+    title: GestureDetector(
+      onLongPress: () => Routes.debug.go(context),
+      child: title,
     ),
     actions: [
       ValueListenableBuilder(
