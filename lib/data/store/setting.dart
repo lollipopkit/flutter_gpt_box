@@ -49,7 +49,7 @@ class SettingStore extends Store {
   late final picUploadUrl = property('picUploadUrl', '');
 
   /// Calcualte tokens length
-  late final calcTokenLen = property('calcTokenLen', true);
+  // late final calcTokenLen = property('calcTokenLen', true);
 
   late final replay = property('replay', false);
 

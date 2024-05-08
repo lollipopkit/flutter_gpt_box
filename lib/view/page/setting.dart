@@ -608,7 +608,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildScrollBottom(),
       _buildSoftWrap(),
       _buildAutoRmDupChat(),
-      _buildCalcTokenLen(),
+      //_buildCalcTokenLen(),
       _buildReplay(),
     ];
     return Column(
@@ -683,13 +683,13 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildCalcTokenLen() {
-    return ListTile(
-      leading: const Icon(Icons.calculate),
-      title: Text(l10n.calcTokenLen),
-      trailing: StoreSwitch(prop: _store.calcTokenLen),
-    );
-  }
+  // Widget _buildCalcTokenLen() {
+  //   return ListTile(
+  //     leading: const Icon(Icons.calculate),
+  //     title: Text(l10n.calcTokenLen),
+  //     trailing: StoreSwitch(prop: _store.calcTokenLen),
+  //   );
+  // }
 
   Widget _buildReplay() {
     return ListTile(

@@ -77,7 +77,7 @@ class _HomeBottom extends StatelessWidget {
                       },
                     ),
                     const Spacer(),
-                    _buildTokenCount(),
+                    // _buildTokenCount(),
                     UIs.width7,
                     _buildSwitchChatType(),
                     UIs.width7,
@@ -176,22 +176,22 @@ class _HomeBottom extends StatelessWidget {
     );
   }
 
-  Widget _buildTokenCount() {
-    return ValueListenableBuilder(
-      valueListenable: Stores.setting.calcTokenLen.listenable(),
-      builder: (_, calc, __) {
-        if (!calc) return UIs.placeholder;
-        return _buildRoundRect(ListenableBuilder(
-          listenable: _inputCtrl,
-          builder: (_, __) {
-            final encoder = encodingForModel(OpenAICfg.current.model);
-            final len = encoder.encode(_inputCtrl.text).length;
-            return Text('# $len');
-          },
-        ));
-      },
-    );
-  }
+  // Widget _buildTokenCount() {
+  //   return ValueListenableBuilder(
+  //     valueListenable: Stores.setting.calcTokenLen.listenable(),
+  //     builder: (_, calc, __) {
+  //       if (!calc) return UIs.placeholder;
+  //       return _buildRoundRect(ListenableBuilder(
+  //         listenable: _inputCtrl,
+  //         builder: (_, __) {
+  //           final encoder = encodingForModel(OpenAICfg.current.model);
+  //           final len = encoder.encode(_inputCtrl.text).length;
+  //           return Text('# $len');
+  //         },
+  //       ));
+  //     },
+  //   );
+  // }
 
   Widget _buildRoundRect(Widget child) {
     return Container(

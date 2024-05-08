@@ -481,14 +481,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_tiktoken:
-    dependency: "direct main"
-    description:
-      name: flutter_tiktoken
-      sha256: a9fa91490c627e630d7feaefc0d6ade6fa56f21c4338a4a7bab9eadcbb07164f
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
