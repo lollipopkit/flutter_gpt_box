@@ -13,7 +13,7 @@ class _HomeBottom extends StatelessWidget {
         final isDark = RNode.dark.value;
         return Container(
           padding: isDesktop
-              ? const EdgeInsets.only(left: 11, right: 11, top: 7, bottom: 17)
+              ? const EdgeInsets.only(left: 11, right: 11, top: 5, bottom: 17)
               : const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
@@ -78,7 +78,7 @@ class _HomeBottom extends StatelessWidget {
                     ),
                     const Spacer(),
                     _buildTokenCount(),
-                    UIs.width13,
+                    UIs.width7,
                     _buildSwitchChatType(),
                     UIs.width7,
                   ],
@@ -177,20 +177,13 @@ class _HomeBottom extends StatelessWidget {
           onSelected: (val) => _chatType.value = val,
           initialValue: _chatType.value,
           tooltip: l10n.choose,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(17),
-              color: const Color.fromARGB(35, 151, 151, 151),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
-            child: Row(
-              children: [
-                Icon(_chatType.value.icon, size: 19),
-                UIs.width7,
-                Text(_chatType.value.name, style: UIs.text13),
-              ],
-            ),
-          ),
+          child: _buildRoundRect(Row(
+            children: [
+              Icon(_chatType.value.icon, size: 19),
+              UIs.width7,
+              Text(_chatType.value.name, style: UIs.text13),
+            ],
+          )),
         );
       },
     );
@@ -200,18 +193,27 @@ class _HomeBottom extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: Stores.setting.calcTokenLen.listenable(),
       builder: (_, calc, __) {
-        return ListenableBuilder(
+        if (!calc) return UIs.placeholder;
+        return _buildRoundRect(ListenableBuilder(
           listenable: _inputCtrl,
           builder: (_, __) {
             final encoder = encodingForModel(OpenAICfg.current.model);
             final len = encoder.encode(_inputCtrl.text).length;
-            return Text(
-              '# $len',
-              style: UIs.text13Grey,
-            );
+            return Text('# $len');
           },
-        );
+        ));
       },
+    );
+  }
+
+  Widget _buildRoundRect(Widget child) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(17),
+        color: const Color.fromARGB(35, 151, 151, 151),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+      child: child,
     );
   }
 }

@@ -44,16 +44,23 @@ enum HomePageEnum {
     final items = <IconButton>[
       IconButton(
         onPressed: () async {
+          final profiles = Stores.config.fetchAll().values.toList();
           final select = await context.showPickSingleDialog(
             title: l10n.profile,
-            items: Stores.config.fetchAll().values.toList(),
+            items: profiles,
             name: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
             initial: OpenAICfg.current,
+            actions: profiles.length == 1
+                ? TextButton(
+                    onPressed: () => Routes.setting.go(context),
+                    child: Text(l10n.add),
+                  ).asList
+                : null,
           );
           if (select == null) return;
           OpenAICfg.current = select;
         },
-        icon: const Icon(Iconsax.profile_2user_bold),
+        icon: const Icon(Icons.switch_account),
         tooltip: l10n.profile,
       ),
       IconButton(
@@ -129,7 +136,7 @@ enum _HistoryMenu {
     }
   }
 
-  void onTap(BuildContext context, String chatId) {
+  void _onTap(BuildContext context, String chatId) {
     switch (this) {
       case _HistoryMenu.delete:
         _onTapDeleteChat(chatId, context);
@@ -140,7 +147,7 @@ enum _HistoryMenu {
     }
   }
 
-  PopupMenuItem<_HistoryMenu> toPopupMenuItem() {
+  PopupMenuItem<_HistoryMenu> _toPopupMenuItem() {
     return PopupMenuItem(
       value: this,
       child: Row(
@@ -153,5 +160,5 @@ enum _HistoryMenu {
     );
   }
 
-  static final btns = values.map((e) => e.toPopupMenuItem()).toList();
+  static final btns = values.map((e) => e._toPopupMenuItem()).toList();
 }

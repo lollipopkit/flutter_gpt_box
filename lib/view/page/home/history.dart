@@ -84,7 +84,7 @@ class _HistoryPageState extends State<_HistoryPage>
       // ),
       trailing: PopupMenu(
         items: _HistoryMenu.btns,
-        onSelected: (val) => val.onTap(context, chatId),
+        onSelected: (val) => val._onTap(context, chatId),
       ),
       onTap: () {
         Funcs.throttle(

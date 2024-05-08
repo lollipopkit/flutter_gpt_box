@@ -60,7 +60,7 @@ class _ChatSearchDelegate extends SearchDelegate<ChatHistory> {
   }
 
   Widget _buildSuggestionList(BuildContext context) {
-    return FutureWidget<List<ChatHistory>>(
+    return FutureWidget(
       future: _filterChats(query),
       loading: SizedBox(
         width: _media?.size.width ?? 300,
