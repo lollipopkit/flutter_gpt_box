@@ -44,19 +44,25 @@ enum HomePageEnum {
     final items = <IconButton>[
       IconButton(
         onPressed: () async {
-          final profiles = Stores.config.fetchAll().values.toList();
           final select = await context.showPickSingleDialog(
             title: l10n.profile,
-            items: profiles,
+            items: Stores.config.fetchAll().values.toList(),
             name: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
             initial: OpenAICfg.current,
           );
           if (select == null) return;
-          OpenAICfg.switchTo(select.id);
+          OpenAICfg.current = select;
         },
         icon: const Icon(Iconsax.profile_2user_bold),
         tooltip: l10n.profile,
       ),
+      IconButton(
+        onPressed: () => showSearch(
+          context: context,
+          delegate: _ChatSearchDelegate(),
+        ),
+        icon: const Icon(Icons.search),
+      )
     ];
 
     /// Put it here, or it's l10n string won't rebuild every time
@@ -66,15 +72,6 @@ enum HomePageEnum {
         icon: Icons.share,
         onTap: () => _onShareChat(context),
         onHomePage: [HomePageEnum.chat],
-      ),
-      _MoreAction(
-        title: l10n.search,
-        icon: Icons.search,
-        onHomePage: [HomePageEnum.history],
-        onTap: () => showSearch(
-          context: context,
-          delegate: _ChatSearchDelegate(),
-        ),
       ),
     ]) {
       if (!_isWide.value && !item.onHomePage.contains(this)) {

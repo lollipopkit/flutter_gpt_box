@@ -52,20 +52,28 @@ extension DialogX on BuildContext {
     }
   }
 
+  /// [noConfirm] Return value immediately without confirmation,
+  /// only valid if [multi] is false
   Future<List<T>?> showPickDialog<T>({
-    required List<T?> items,
+    required List<T> items,
     String Function(T)? name,
     bool multi = true,
     List<T>? initial,
-    bool clearable = false,
+    bool clearable = true,
     List<Widget>? actions,
-
-    /// Return value immediately without confirmation, only valid for non-multi
     bool noConfirm = true,
     String? title,
   }) async {
     assert(!noConfirm || !multi);
     var vals = initial ?? <T>[];
+    final actions_ = [
+      if (actions != null) ...actions,
+      if (!noConfirm)
+        TextButton(
+          onPressed: () => pop(true),
+          child: Text(l10n.ok),
+        ),
+    ];
     final sure = await showRoundDialog<bool>(
       title: title ?? l10n.choose,
       child: SingleChildScrollView(
@@ -80,14 +88,13 @@ extension DialogX on BuildContext {
                 items.length,
                 (index) {
                   final item = items[index];
-                  if (item == null) return UIs.placeholder;
                   return ChoiceChipX<T>(
                     label: name?.call(item) ?? item.toString(),
                     state: state,
                     value: item,
                     onSelected: noConfirm
                         ? (_) {
-                            state.onSelected(item);
+                            vals = [item];
                             pop(true);
                           }
                         : null,
@@ -98,15 +105,7 @@ extension DialogX on BuildContext {
           },
         ),
       ),
-      actions: noConfirm
-          ? null
-          : [
-              if (actions != null) ...actions,
-              TextButton(
-                onPressed: () => pop(true),
-                child: Text(l10n.ok),
-              ),
-            ],
+      actions: actions_.isEmpty ? null : actions_,
     );
     if (sure == true && vals.isNotEmpty) {
       return vals;
@@ -115,10 +114,9 @@ extension DialogX on BuildContext {
   }
 
   Future<T?> showPickSingleDialog<T>({
-    required List<T?> items,
+    required List<T> items,
     String Function(T)? name,
     T? initial,
-    bool clearable = false,
     List<Widget>? actions,
 
     /// Return value immediately without confirmation
@@ -134,6 +132,7 @@ extension DialogX on BuildContext {
       actions: actions,
     );
     if (vals != null && vals.isNotEmpty) {
+      assert(vals.length == 1);
       return vals.first;
     }
     return null;

@@ -5,6 +5,9 @@ import 'package:flutter_chatgpt/data/model/chat/config.dart';
 final class ConfigStore extends Store {
   ConfigStore() : super('config');
 
+  static const SELECTED_KEY = 'selectedKey';
+  late final selectedKey = property(SELECTED_KEY, ChatConfig.defaultId);
+
   ChatConfig? fetch(String id) {
     final val = box.get(id) as ChatConfig?;
     if (val == null && id == ChatConfig.defaultId) {
@@ -29,6 +32,7 @@ final class ConfigStore extends Store {
     final map = <String, ChatConfig>{};
     var errCount = 0;
     for (final key in box.keys) {
+      if (key == SELECTED_KEY) continue;
       final item = box.get(key);
       if (item != null) {
         if (item is ChatConfig) {

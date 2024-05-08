@@ -66,7 +66,7 @@ class _HistoryPageState extends State<_HistoryPage>
           );
         },
       ),
-      contentPadding: const EdgeInsets.only(left: 17, right: 13),
+      contentPadding: const EdgeInsets.only(left: 17, right: 15),
       // trailing: Row(
       //   mainAxisSize: MainAxisSize.min,
       //   children: [

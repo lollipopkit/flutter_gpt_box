@@ -6,29 +6,35 @@ import 'package:flutter_chatgpt/data/store/all.dart';
 
 abstract final class OpenAICfg {
   static final nameNotifier = ValueNotifier(_cfg.name);
-  static ChatConfig _cfg =
-      Stores.config.fetch(ChatConfig.defaultId) ?? ChatConfig.defaultOne;
+
+  static ChatConfig _cfg = () {
+    final selectedKey = Stores.config.selectedKey.fetch();
+    final selected = Stores.config.fetch(selectedKey);
+    return selected ?? ChatConfig.defaultOne;
+  }();
+
   static ChatConfig get current => _cfg;
   static set current(ChatConfig config) {
     _cfg = config;
     apply();
     config.save();
+    Stores.config.selectedKey.put(config.id);
     nameNotifier.value = config.name;
   }
 
   static void apply() {
+    Loggers.app.info('Switch profile [${_cfg.name}]');
     OpenAI.apiKey = _cfg.key;
     OpenAI.baseUrl = _cfg.url;
   }
 
-  static bool switchTo(String id) {
-    final cfg = Stores.config.fetch(id);
+  static void switchToDefault() {
+    final cfg = Stores.config.fetch(ChatConfig.defaultId);
     if (cfg != null) {
-      _cfg = cfg;
-      apply();
-      return true;
+      current = cfg;
+    } else {
+      current = ChatConfig.defaultOne;
+      Loggers.app.warning('Default config not found');
     }
-    Loggers.app.warning('Config not found: $id');
-    return false;
   }
 }

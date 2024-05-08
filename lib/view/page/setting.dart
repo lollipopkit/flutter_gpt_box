@@ -99,6 +99,7 @@ class _SettingPageState extends State<SettingPage> {
         title: Text(l10n.themeMode),
         onTap: () async {
           final result = await context.showPickSingleDialog(
+            title: l10n.themeMode,
             items: ThemeMode.values,
             name: (e) => e.name,
             initial: ThemeMode.values[val],
@@ -183,9 +184,10 @@ class _SettingPageState extends State<SettingPage> {
         ),
         onTap: () async {
           final result = await context.showPickSingleDialog<Locale>(
+            title: l10n.lang,
             items: AppLocalizations.supportedLocales,
             name: (e) => e.toLanguageTag(),
-            initial: val.toLocale,
+            initial: val.toLocale ?? l10n.localeName.toLocale,
           );
           if (result != null) {
             final newLocaleStr = result.toLanguageTag();
@@ -261,7 +263,7 @@ class _SettingPageState extends State<SettingPage> {
                 _cfgRN.build();
                 context.pop();
                 if (cfg.id == value.id) {
-                  OpenAICfg.switchTo(ChatConfig.defaultId);
+                  OpenAICfg.switchToDefault();
                   _cfgRN.build();
                 }
               },
@@ -275,14 +277,14 @@ class _SettingPageState extends State<SettingPage> {
           value: cfg.id == value.id,
           onChanged: (val) {
             if (val != true) return;
-            OpenAICfg.switchTo(value.id);
+            OpenAICfg.current = value;
             _cfgRN.build();
           },
         ),
         title: Text(value.name.isEmpty ? l10n.defaulT : value.name),
         onTap: () {
           if (cfg.id == value.id) return;
-          OpenAICfg.switchTo(value.id);
+          OpenAICfg.current = value;
           _cfgRN.build();
         },
         trailing: value.id != ChatConfig.defaultId ? delBtn : null,
@@ -305,7 +307,7 @@ class _SettingPageState extends State<SettingPage> {
           id: shortid.generate(),
           name: name,
         )..save();
-        OpenAICfg.switchTo(cfg.id);
+        OpenAICfg.current = cfg;
         _cfgRN.build();
       },
       title: Text(l10n.add),
@@ -691,11 +693,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildReplay() {
     return ListTile(
       leading: const Icon(Icons.replay),
-      title: Text(l10n.replay),
-      subtitle: Text(
-        '${l10n.attention}: experimental feature',
-        style: UIs.text13Grey,
-      ),
+      title: Text('${l10n.replay} (experimental)'),
       trailing: StoreSwitch(prop: _store.replay),
     );
   }
