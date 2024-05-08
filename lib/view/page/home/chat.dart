@@ -135,34 +135,27 @@ class _ChatPageState extends State<_ChatPage>
         children: [
           _buildChatItemTitle(chatItems, chatItem),
           UIs.height13,
-          GestureDetector(
-            onLongPress: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => _MarkdownCopyPage(
-                  text: chatItem.toMarkdown,
-                  actions: _buildChatItemFuncs(chatItems, chatItem),
-                  heroTag: chatItem.id,
-                ),
-              ));
-            },
-            child: Hero(
-              tag: chatItem.id,
-              child: ListenableBuilder(
-                listenable: node,
-                builder: (_, __) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: chatItem.content
-                        .map((e) => switch (e.type) {
-                              ChatContentType.audio => _buildAudio(e),
-                              ChatContentType.image => _buildImage(e),
-                              _ => _buildText(e),
-                            })
-                        .joinWith(UIs.height13),
-                  );
-                },
-              ),
+          BlurOverlay(
+            popup: () => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _buildChatItemFuncs(chatItems, chatItem)
+                  .joinWith(UIs.width13),
+            ),
+            child: ListenableBuilder(
+              listenable: node,
+              builder: (_, __) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: chatItem.content
+                      .map((e) => switch (e.type) {
+                            ChatContentType.audio => _buildAudio(e),
+                            ChatContentType.image => _buildImage(e),
+                            _ => _buildText(e),
+                          })
+                      .joinWith(UIs.height13),
+                );
+              },
             ),
           ),
           UIs.height13,
@@ -232,6 +225,37 @@ class _ChatPageState extends State<_ChatPage>
     );
   }
 
+  Widget _buildCircleBtn({
+    required String text,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return ClipOval(
+      child: Material(
+        color: const Color.fromARGB(239, 47, 47, 47),
+        child: InkWell(
+          onTap: () {
+            BlurOverlay.close?.call();
+            onTap();
+          },
+          child: SizedBox(
+            width: 77,
+            height: 77,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 20),
+                const SizedBox(height: 9),
+                Text(text),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   List<Widget> _buildChatItemFuncs(
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
@@ -239,6 +263,15 @@ class _ChatPageState extends State<_ChatPage>
     final replayEnabled =
         chatItem.role == ChatRole.user && Stores.setting.replay.fetch();
     return [
+      _buildCircleBtn(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => _MarkdownCopyPage(text: chatItem.toMarkdown),
+          ),
+        ),
+        text: l10n.freeCopy,
+        icon: BoxIcons.bxs_crop,
+      ),
       if (replayEnabled)
         ListenableBuilder(
           listenable: _sendBtnRN,
@@ -249,23 +282,25 @@ class _ChatPageState extends State<_ChatPage>
             if (isImgChat) return UIs.placeholder;
             final isWorking = _chatStreamSubs.containsKey(_curChatId);
             if (isWorking) return UIs.placeholder;
-            return IconButton(
-              onPressed: () => _onTapReplay(
+            return _buildCircleBtn(
+              onTap: () => _onTapReplay(
                 context,
                 _curChatId,
                 chatItem,
               ),
-              icon: const Icon(Icons.refresh),
+              text: l10n.replay,
+              icon: Icons.refresh,
             );
           },
         ),
       if (replayEnabled)
-        IconButton(
-          onPressed: () => _onTapEditMsg(context, chatItem),
-          icon: const Icon(Icons.edit),
+        _buildCircleBtn(
+          onTap: () => _onTapEditMsg(context, chatItem),
+          text: l10n.edit,
+          icon: Icons.edit,
         ),
-      IconButton(
-        onPressed: () async {
+      _buildCircleBtn(
+        onTap: () async {
           BlurOverlay.close?.call();
           final idx = chatItems.indexOf(chatItem) + 1;
           final result = await context.showRoundDialog<bool>(
@@ -281,11 +316,13 @@ class _ChatPageState extends State<_ChatPage>
           _historyRNMap[_curChatId]?.build();
           _chatRN.build();
         },
-        icon: const Icon(Icons.delete),
+        text: l10n.delete,
+        icon: Icons.delete,
       ),
-      IconButton(
-        onPressed: () => _onCopy(chatItem.toMarkdown),
-        icon: const Icon(MingCute.copy_2_fill),
+      _buildCircleBtn(
+        onTap: () => _onCopy(chatItem.toMarkdown),
+        text: l10n.copy,
+        icon: MingCute.copy_2_fill,
       ),
     ];
   }

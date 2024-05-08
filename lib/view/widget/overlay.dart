@@ -1,16 +1,15 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/ext/value_notifier.dart';
-import 'package:gpt_box/data/res/ui.dart';
 
 class BlurOverlay extends StatefulWidget {
   final Widget child;
   final Widget Function() popup;
-  final Widget Function()? bottom;
 
   const BlurOverlay({
     super.key,
     required this.child,
-    this.bottom,
     required this.popup,
   });
 
@@ -28,11 +27,8 @@ class _BlurOverlayState extends State<BlurOverlay>
   ///
   /// The animation controller is created when the overlay is shown.
   AnimationController? _animeCtrl;
-  Animation<Offset>? _offsetAnime;
+  Animation<double>? _blurAnime;
   Animation<double>? _fadeAnime;
-  Animation<Color?>? _colorAnime;
-
-  MediaQueryData? _media;
 
   final _isShowingOverlay = false.vn;
 
@@ -40,12 +36,6 @@ class _BlurOverlayState extends State<BlurOverlay>
   // void initState() {
   //   super.initState();
   // }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _media = MediaQuery.of(context);
-  }
 
   @override
   void dispose() {
@@ -59,31 +49,18 @@ class _BlurOverlayState extends State<BlurOverlay>
     /// this instance.
     BlurOverlay.close = _removeOverlay;
 
+    final overlayState = Overlay.of(context);
+
     /// Only create once (`??=`)
     _animeCtrl ??= AnimationController(
       vsync: this,
       duration: Durations.medium1,
     );
-
-    final renderBox = context.findRenderObject() as RenderBox;
-    var startOffset = renderBox.localToGlobal(Offset.zero);
-    final overlayState = Overlay.of(context);
-    final overlayBox = overlayState.context.findRenderObject() as RenderBox;
-    var endOffset = overlayBox.size.centerLeft(Offset.zero);
-    _offsetAnime = Tween(
-      begin: startOffset - endOffset,
-      end: Offset.zero,
-    ).animate(
+    _blurAnime = Tween(begin: 0.0, end: 5.0).animate(
       CurvedAnimation(parent: _animeCtrl!, curve: Curves.easeInOutCubic),
     );
 
     _fadeAnime = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animeCtrl!, curve: Curves.easeInOutCubic),
-    );
-    _colorAnime = ColorTween(
-      begin: Colors.transparent,
-      end: Colors.black,
-    ).animate(
       CurvedAnimation(parent: _animeCtrl!, curve: Curves.easeInOutCubic),
     );
 
@@ -109,27 +86,20 @@ class _BlurOverlayState extends State<BlurOverlay>
         child: AnimatedBuilder(
           animation: _animeCtrl!,
           builder: (_, __) {
-            return Container(
-              color: _colorAnime!.value,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 11),
-              child: FadeTransition(
-                opacity: _fadeAnime!,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Transform.translate(
-                      offset: _offsetAnime!.value,
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight: (_media?.size.height ?? 700) * 0.6,
-                        ),
-                        child: widget.popup(),
-                      ),
-                    ),
-                    if (widget.bottom != null) UIs.height13,
-                    if (widget.bottom != null) widget.bottom!(),
-                  ],
+            return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: _blurAnime!.value,
+                sigmaY: _blurAnime!.value,
+              ),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 11),
+                child: FadeTransition(
+                  opacity: _fadeAnime!,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [widget.popup()],
+                  ),
                 ),
               ),
             );
