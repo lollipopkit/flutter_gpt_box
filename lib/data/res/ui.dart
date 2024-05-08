@@ -82,4 +82,8 @@ abstract final class UIs {
   static const bgColor = DynColor(light: Colors.white, dark: Colors.black);
 
   static const textColor = DynColor(light: Colors.black, dark: Colors.white);
+
+  /// Sizes
+
+  static const textSize = 13.0;
 }

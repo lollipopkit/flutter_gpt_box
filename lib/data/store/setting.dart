@@ -1,4 +1,5 @@
 import 'package:gpt_box/core/store.dart';
+import 'package:gpt_box/core/util/platform/base.dart';
 
 class SettingStore extends Store {
   SettingStore() : super('setting');
@@ -54,4 +55,6 @@ class SettingStore extends Store {
   late final replay = property('replay', false);
 
   late final countly = property('countly', true);
+
+  late final cupertinoRoute = property('cupertinoRoute', isIOS || isMacOS);
 }

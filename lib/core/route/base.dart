@@ -26,13 +26,16 @@ class AppRoute<Ret, Arg> {
     final ret = middlewares?.any((e) => !e((context: context, route: this)));
     if (ret == true) return Future.value(null);
 
-    return Navigator.push<Ret>(
-      context,
-      MaterialPageRoute(
-        builder: (context) => page(key: key, args: args),
-        settings: RouteSettings(name: path),
-      ),
-    );
+    final route = Stores.setting.cupertinoRoute.fetch()
+        ? CupertinoPageRoute<Ret>(
+            builder: (_) => page(key: key, args: args),
+            settings: RouteSettings(name: path),
+          )
+        : MaterialPageRoute<Ret>(
+            builder: (_) => page(key: key, args: args),
+            settings: RouteSettings(name: path),
+          );
+    return Navigator.push<Ret>(context, route);
   }
 }
 

@@ -705,6 +705,7 @@ class _SettingPageState extends State<SettingPage> {
       title: Text(l10n.more),
       children: [
         _buildCountly(),
+        _buildCupertinoRoute(),
       ],
     );
   }
@@ -714,6 +715,14 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Icons.analytics),
       title: const Text('Countly'),
       trailing: StoreSwitch(prop: _store.countly),
+    );
+  }
+  
+  Widget _buildCupertinoRoute() {
+    return ListTile(
+      leading: const Icon(MingCute.route_fill),
+      title: Text('Cupertino ${l10n.route}'),
+      trailing: StoreSwitch(prop: _store.cupertinoRoute),
     );
   }
 }

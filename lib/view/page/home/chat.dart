@@ -135,47 +135,34 @@ class _ChatPageState extends State<_ChatPage>
         children: [
           _buildChatItemTitle(chatItems, chatItem),
           UIs.height13,
-          BlurOverlay(
-            key: Key(chatItem.id),
-            bottom: () => _buildChatItemFuncs(chatItems, chatItem).card,
-            popup: () {
-              final child = Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 11),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(vertical: 7),
-                  child: SelectableText(
-                    chatItem.toMarkdown,
-                    showCursor: true,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: UIs.textColor.fromBool(RNode.dark.value),
-                    ),
-                  ),
+          GestureDetector(
+            onLongPress: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => _MarkdownCopyPage(
+                  text: chatItem.toMarkdown,
+                  actions: _buildChatItemFuncs(chatItems, chatItem),
+                  heroTag: chatItem.id,
                 ),
-              );
-              return Material(
-                color: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: child,
-              );
+              ));
             },
-            child: ListenableBuilder(
-              listenable: node,
-              builder: (_, __) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: chatItem.content
-                      .map((e) => switch (e.type) {
-                            ChatContentType.audio => _buildAudio(e),
-                            ChatContentType.image => _buildImage(e),
-                            _ => _buildText(e),
-                          })
-                      .joinWith(UIs.height13),
-                );
-              },
+            child: Hero(
+              tag: chatItem.id,
+              child: ListenableBuilder(
+                listenable: node,
+                builder: (_, __) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: chatItem.content
+                        .map((e) => switch (e.type) {
+                              ChatContentType.audio => _buildAudio(e),
+                              ChatContentType.image => _buildImage(e),
+                              _ => _buildText(e),
+                            })
+                        .joinWith(UIs.height13),
+                  );
+                },
+              ),
             ),
           ),
           UIs.height13,
@@ -245,65 +232,62 @@ class _ChatPageState extends State<_ChatPage>
     );
   }
 
-  Widget _buildChatItemFuncs(
+  List<Widget> _buildChatItemFuncs(
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
     final replayEnabled =
         chatItem.role == ChatRole.user && Stores.setting.replay.fetch();
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (replayEnabled)
-          ListenableBuilder(
-            listenable: _sendBtnRN,
-            builder: (_, __) {
-              /// TODO: Can't replay image message.
-              final isImgChat =
-                  chatItem.content.any((e) => e.type == ChatContentType.image);
-              if (isImgChat) return UIs.placeholder;
-              final isWorking = _chatStreamSubs.containsKey(_curChatId);
-              if (isWorking) return UIs.placeholder;
-              return IconButton(
-                onPressed: () => _onTapReplay(
-                  context,
-                  _curChatId,
-                  chatItem,
-                ),
-                icon: const Icon(Icons.refresh, size: 17),
-              );
-            },
-          ),
-        if (replayEnabled)
-          IconButton(
-            onPressed: () => _onTapEditMsg(context, chatItem),
-            icon: const Icon(Icons.edit, size: 17),
-          ),
-        IconButton(
-          onPressed: () async {
-            BlurOverlay.close?.call();
-            final idx = chatItems.indexOf(chatItem) + 1;
-            final result = await context.showRoundDialog<bool>(
-              title: l10n.attention,
-              child: Text(
-                l10n.delFmt('${chatItem.role.localized}#$idx', l10n.chat),
+    return [
+      if (replayEnabled)
+        ListenableBuilder(
+          listenable: _sendBtnRN,
+          builder: (_, __) {
+            /// TODO: Can't replay image message.
+            final isImgChat =
+                chatItem.content.any((e) => e.type == ChatContentType.image);
+            if (isImgChat) return UIs.placeholder;
+            final isWorking = _chatStreamSubs.containsKey(_curChatId);
+            if (isWorking) return UIs.placeholder;
+            return IconButton(
+              onPressed: () => _onTapReplay(
+                context,
+                _curChatId,
+                chatItem,
               ),
-              actions: Btns.oks(onTap: () => context.pop(true), red: true),
+              icon: const Icon(Icons.refresh),
             );
-            if (result != true) return;
-            chatItems.remove(chatItem);
-            _storeChat(_curChatId, context);
-            _historyRNMap[_curChatId]?.build();
-            _chatRN.build();
           },
-          icon: const Icon(Icons.delete, size: 17),
         ),
+      if (replayEnabled)
         IconButton(
-          onPressed: () => _onCopy(chatItem.toMarkdown),
-          icon: const Icon(Icons.copy, size: 15),
+          onPressed: () => _onTapEditMsg(context, chatItem),
+          icon: const Icon(Icons.edit),
         ),
-      ],
-    );
+      IconButton(
+        onPressed: () async {
+          BlurOverlay.close?.call();
+          final idx = chatItems.indexOf(chatItem) + 1;
+          final result = await context.showRoundDialog<bool>(
+            title: l10n.attention,
+            child: Text(
+              l10n.delFmt('${chatItem.role.localized}#$idx', l10n.chat),
+            ),
+            actions: Btns.oks(onTap: () => context.pop(true), red: true),
+          );
+          if (result != true) return;
+          chatItems.remove(chatItem);
+          _storeChat(_curChatId, context);
+          _historyRNMap[_curChatId]?.build();
+          _chatRN.build();
+        },
+        icon: const Icon(Icons.delete),
+      ),
+      IconButton(
+        onPressed: () => _onCopy(chatItem.toMarkdown),
+        icon: const Icon(MingCute.copy_2_fill),
+      ),
+    ];
   }
 
   void _onCopy(String content) {
