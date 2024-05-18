@@ -9,7 +9,7 @@ abstract final class GithubId {
     'ParperCube',
   };
 
-  static String get markdownStr {
+  static final String markdownStr = () {
     final sb = StringBuffer();
     sb.write('- Participants: ');
     for (final p in participants) {
@@ -21,5 +21,5 @@ abstract final class GithubId {
       sb.write('[$c](https://github.com/$c) ');
     }
     return sb.toString();
-  }
+  }();
 }

@@ -38,7 +38,7 @@ dependencies:
       path: flutter_highlight
     # path: ../highlight.dart/flutter_highlight
   google_fonts: ^6.1.0
-  intl: ^0.18.0
+  intl: ^0.19.0
   url_launcher: ^6.2.3
   dio: ^5.4.0
   webdav_client:
@@ -48,7 +48,6 @@ dependencies:
   icloud_storage: ^2.2.0
   screenshot: ^2.3.0
   after_layout: ^1.2.0
-  # flutter_math_fork: ^0.7.2
   app_links: ^6.0.1
   image_picker: ^1.0.7
   audioplayers: ^6.0.0

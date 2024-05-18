@@ -5,7 +5,7 @@ import 'package:gpt_box/core/ext/value_notifier.dart';
 
 class BlurOverlay extends StatefulWidget {
   final Widget child;
-  final Widget Function() popup;
+  final Widget popup;
 
   const BlurOverlay({
     super.key,
@@ -96,9 +96,8 @@ class _BlurOverlayState extends State<BlurOverlay>
                 padding: const EdgeInsets.symmetric(horizontal: 11),
                 child: FadeTransition(
                   opacity: _fadeAnime!,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [widget.popup()],
+                  child: Center(
+                    child: widget.popup,
                   ),
                 ),
               ),

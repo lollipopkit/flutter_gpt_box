@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/ext/context/base.dart';
@@ -11,7 +9,6 @@ import 'package:gpt_box/core/util/platform/base.dart';
 import 'package:gpt_box/data/model/app/update.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/path.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 abstract final class AppUpdateIface {
@@ -32,7 +29,6 @@ abstract final class AppUpdateIface {
     bool force = false,
   }) async {
     if (isWeb) return;
-    await _rmDownloadApks();
 
     final update = await AppUpdate.fromUrl();
 
@@ -105,15 +101,6 @@ abstract final class AppUpdateIface {
       default:
         Loggers.app.warning('Update not supported on ${Pfs.type}');
         break;
-    }
-  }
-
-  /// rmdir Download
-  static Future<void> _rmDownloadApks() async {
-    if (!isAndroid) return;
-    final dlDir = Directory(await Paths.dl);
-    if (await dlDir.exists()) {
-      await dlDir.delete(recursive: true);
     }
   }
 }

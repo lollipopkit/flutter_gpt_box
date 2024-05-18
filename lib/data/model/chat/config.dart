@@ -5,12 +5,12 @@ import 'package:shortid/shortid.dart';
 part 'config.g.dart';
 
 const _kUrl = 'https://api.openai.com';
-const _kModel = 'gpt-4-turbo-preview';
+const _kModel = 'gpt-4o';
 const _kHistoryLen = 7;
 const _kImgModel = 'dall-e-3';
 const _kSpeechModel = 'tts-1';
 const _kTranscribeModel = 'whisper-1';
-const _kVisionModel = 'gpt-4-vision-preview';
+const _kVisionModel = 'gpt-4o';
 
 @HiveType(typeId: 6)
 final class ChatConfig {

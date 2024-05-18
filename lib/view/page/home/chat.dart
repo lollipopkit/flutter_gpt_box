@@ -136,7 +136,7 @@ class _ChatPageState extends State<_ChatPage>
           _buildChatItemTitle(chatItems, chatItem),
           UIs.height13,
           BlurOverlay(
-            popup: () => Row(
+            popup: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: _buildChatItemFuncs(chatItems, chatItem)
                   .joinWith(UIs.width13),

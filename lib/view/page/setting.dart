@@ -428,6 +428,9 @@ class _SettingPageState extends State<SettingPage> {
         );
         final modelStrs = models.map((e) => e.id).toList();
         modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+        if (modelStrs.isEmpty) {
+          modelStrs.addAll(models.map((e) => e.id));
+        }
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,
@@ -461,6 +464,9 @@ class _SettingPageState extends State<SettingPage> {
         );
         final modelStrs = models.map((e) => e.id).toList();
         modelStrs.removeWhere((element) => !element.startsWith('dall-e'));
+        if (modelStrs.isEmpty) {
+          modelStrs.addAll(models.map((e) => e.id));
+        }
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,
@@ -494,6 +500,9 @@ class _SettingPageState extends State<SettingPage> {
         );
         final modelStrs = models.map((e) => e.id).toList();
         modelStrs.removeWhere((element) => !element.startsWith('tts'));
+        if (modelStrs.isEmpty) {
+          modelStrs.addAll(models.map((e) => e.id));
+        }
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,
@@ -527,6 +536,9 @@ class _SettingPageState extends State<SettingPage> {
         );
         final modelStrs = models.map((e) => e.id).toList();
         modelStrs.removeWhere((element) => !element.startsWith('whisper'));
+        if (modelStrs.isEmpty) {
+          modelStrs.addAll(models.map((e) => e.id));
+        }
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,

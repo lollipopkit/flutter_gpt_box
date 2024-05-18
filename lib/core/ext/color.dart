@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-const _interactiveStates = <MaterialState>{
-  MaterialState.pressed,
-  MaterialState.hovered,
-  MaterialState.focused,
-  MaterialState.selected
+const _interactiveStates = <WidgetState>{
+  WidgetState.pressed,
+  WidgetState.hovered,
+  WidgetState.focused,
+  WidgetState.selected
 };
 
 extension ColorX on Color {
@@ -23,8 +23,8 @@ extension ColorX on Color {
     return ThemeData.estimateBrightnessForColor(this);
   }
 
-  MaterialStateProperty<Color?> get materialStateColor {
-    return MaterialStateProperty.resolveWith((states) {
+  WidgetStateProperty<Color?> get materialStateColor {
+    return WidgetStateProperty.resolveWith((states) {
       if (states.any(_interactiveStates.contains)) {
         return this;
       }
