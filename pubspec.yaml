@@ -21,7 +21,7 @@ dependencies:
     #   ref: main
     #   url: https://github.com/lollipopkit/dart_openai
   markdown: ^7.1.1
-  flutter_markdown: ^0.6.18+2
+  flutter_markdown: ^0.7.1
   flutter_markdown_latex: ^0.3.0
     # path: ../flutter_markdown_latex
     # git:
@@ -29,7 +29,7 @@ dependencies:
     #   url: https://github.com/xushengs/flutter_markdown_latex
   choice: ^2.3.0
   file_picker: ^8.0.0+1
-  share_plus: ^8.0.2
+  share_plus: ^9.0.0
   universal_html: ^2.2.4
   flutter_highlight: # ^0.7.0
     git:
@@ -46,7 +46,7 @@ dependencies:
       ref: main
       url: https://github.com/lollipopkit/webdav_client
   icloud_storage: ^2.2.0
-  screenshot: ^2.3.0
+  screenshot: ^3.0.0
   after_layout: ^1.2.0
   app_links: ^6.0.1
   image_picker: ^1.0.7
@@ -59,7 +59,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
   build_runner: ^2.4.7
   hive_generator: ^2.0.1
   flutter_native_splash: ^2.3.9

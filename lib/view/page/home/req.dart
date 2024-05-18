@@ -96,7 +96,7 @@ Future<void> _onCreateText(String chatId, BuildContext context) async {
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
   final chatStream = OpenAI.instance.chat.createStream(
-    model: imgUrl == null ? config.model : config.visionModel,
+    model: config.model,
     messages: [...historyCarried.reversed, questionForApi.toOpenAI],
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);

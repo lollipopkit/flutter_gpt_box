@@ -10,7 +10,6 @@ const _kHistoryLen = 7;
 const _kImgModel = 'dall-e-3';
 const _kSpeechModel = 'tts-1';
 const _kTranscribeModel = 'whisper-1';
-const _kVisionModel = 'gpt-4o';
 
 @HiveType(typeId: 6)
 final class ChatConfig {
@@ -34,8 +33,10 @@ final class ChatConfig {
   final String speechModel;
   @HiveField(12, defaultValue: _kTranscribeModel)
   final String transcribeModel;
-  @HiveField(13, defaultValue: _kVisionModel)
-  final String visionModel;
+  /// TODO: Delete this comment after add a new field with correct HiveField 
+  /// index [14]
+  // @HiveField(13, defaultValue: _kModel)
+  // final String visionModel;
 
   const ChatConfig({
     required this.prompt,
@@ -48,7 +49,6 @@ final class ChatConfig {
     required this.imgModel,
     required this.speechModel,
     required this.transcribeModel,
-    required this.visionModel,
   });
 
   static final apiUrlReg = RegExp(r'^https?://[0-9A-Za-z\.]+(:\d+)?$');
@@ -64,7 +64,6 @@ final class ChatConfig {
     imgModel: _kImgModel,
     speechModel: _kSpeechModel,
     transcribeModel: _kTranscribeModel,
-    visionModel: _kVisionModel,
   );
 
   void save() => Stores.config.put(this);
@@ -80,7 +79,6 @@ final class ChatConfig {
     String? imgModel,
     String? speechModel,
     String? transcribeModel,
-    String? visionModel,
   }) =>
       ChatConfig(
         id: id ?? this.id,
@@ -93,7 +91,6 @@ final class ChatConfig {
         imgModel: imgModel ?? this.imgModel,
         speechModel: speechModel ?? this.speechModel,
         transcribeModel: transcribeModel ?? this.transcribeModel,
-        visionModel: visionModel ?? this.visionModel,
       );
 
   Map<String, dynamic> toJson() {
@@ -108,7 +105,6 @@ final class ChatConfig {
       'imgModel': imgModel,
       'speechModel': speechModel,
       'transcribeModel': transcribeModel,
-      'visionModel': visionModel,
     };
   }
 
@@ -124,7 +120,6 @@ final class ChatConfig {
       imgModel: json['imgModel'] as String? ?? _kImgModel,
       speechModel: json['speechModel'] as String? ?? _kSpeechModel,
       transcribeModel: json['transcribeModel'] as String? ?? _kTranscribeModel,
-      visionModel: json['visionModel'] as String? ?? _kVisionModel,
     );
   }
 }

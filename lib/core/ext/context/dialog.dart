@@ -16,8 +16,8 @@ extension DialogX on BuildContext {
     return await showDialog<T>(
       context: this,
       barrierDismissible: barrierDismiss,
-      builder: (_) {
-        onContext?.call(_);
+      builder: (ctx) {
+        onContext?.call(ctx);
         return AlertDialog(
           title: title == null ? null : Text(title),
           content: child,
