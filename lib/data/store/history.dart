@@ -1,8 +1,7 @@
-import 'package:gpt_box/core/logger.dart';
-import 'package:gpt_box/core/store.dart';
+import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
 
-class HistoryStore extends Store {
+class HistoryStore extends PersistentStore {
   HistoryStore() : super('history');
 
   Map<String, ChatHistory> fetchAll() {

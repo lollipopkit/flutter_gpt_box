@@ -26,7 +26,7 @@ class _HistoryPageState extends State<_HistoryPage>
             itemCount: len,
             itemBuilder: (_, index) {
               final chatId = keys[index];
-              return _buildHistoryListItem(chatId).card;
+              return _buildHistoryListItem(chatId).cardx;
             },
           );
         },
@@ -56,7 +56,9 @@ class _HistoryPageState extends State<_HistoryPage>
         listenable: _timeRN,
         builder: (_, __) {
           final len = '${entity.items.length} ${l10n.message}';
-          final time = entity.items.lastOrNull?.createdAt.toAgo;
+          final time = entity.items.lastOrNull?.createdAt
+              .difference(DateTime.now())
+              .toAgoStr;
           if (time == null) return Text(len, style: UIs.textGrey);
           return Text(
             '$len · $time',
@@ -82,9 +84,18 @@ class _HistoryPageState extends State<_HistoryPage>
       //           ),
       //   ],
       // ),
-      trailing: PopupMenu(
-        items: _HistoryMenu.btns,
-        onSelected: (val) => val._onTap(context, chatId),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconBtn(
+            onTap: () => _onTapRenameChat(chatId, context),
+            icon: Icons.abc,
+          ),
+          IconBtn(
+            onTap: () => _onTapDeleteChat(chatId, context),
+            icon: Icons.delete,
+          ),
+        ],
       ),
       onTap: () {
         Funcs.throttle(
@@ -95,7 +106,7 @@ class _HistoryPageState extends State<_HistoryPage>
             }
           },
           id: 'history_item',
-          durationMills: 70,
+          duration: 70,
         );
       },
     );

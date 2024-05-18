@@ -79,6 +79,7 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
         context.pop();
       },
       red: true,
+      okStr: l10n.ok,
     ),
   );
 }
@@ -108,7 +109,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
       autoFocus: true,
       onSubmitted: (p0) => context.pop(p0),
     ),
-    actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+    actions: Btns.oks(onTap: () => context.pop(ctrl.text), okStr: l10n.ok),
   );
   if (title == null || title.isEmpty) return;
   entity.name = title;
@@ -306,7 +307,7 @@ void _locateHistoryListener() => Funcs.throttle(
         _locateHistoryBtn.value = !visible;
       },
       id: 'calcChatLocateBtn',
-      durationMills: 10,
+      duration: 10,
     );
 
 void _gotoHistory(String chatId) {
@@ -326,7 +327,11 @@ void _onTapReplay(
   final sure = await context.showRoundDialog<bool>(
     title: l10n.attention,
     child: Text('${l10n.replay} ?'),
-    actions: Btns.oks(onTap: () => context.pop(true), red: true),
+    actions: Btns.oks(
+      onTap: () => context.pop(true),
+      red: true,
+      okStr: l10n.ok,
+    ),
   );
   if (sure != true) return;
   _onReplay(context: context, chatId: chatId, item: item);

@@ -6,7 +6,7 @@ class DateTimeAdapter extends TypeAdapter<DateTime> {
 
   @override
   DateTime read(BinaryReader reader) {
-    var microseconds = reader.readInt();
+    final microseconds = reader.readInt();
     return DateTime.fromMicrosecondsSinceEpoch(microseconds);
   }
 

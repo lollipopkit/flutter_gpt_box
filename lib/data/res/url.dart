@@ -6,4 +6,7 @@ abstract final class Urls {
   static const repoIssue = '$repoBase/issues';
   static const unilinkDoc = '$repoBase/blob/main/doc/uni_link.md';
   static const openaiRestoreDoc = '$repoBase/blob/main/doc/openai_restore.md';
+
+  static const backendBase = 'https://cdn.lolli.tech/gptbox/';
+  static const appUpdateCfg = '$backendBase/update.json';
 }

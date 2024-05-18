@@ -1,8 +1,8 @@
-import 'package:gpt_box/core/logger.dart';
-import 'package:gpt_box/core/store.dart';
+
+import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 
-final class ConfigStore extends Store {
+final class ConfigStore extends PersistentStore {
   ConfigStore() : super('config');
 
   static const SELECTED_KEY = 'selectedKey';

@@ -1,6 +1,6 @@
 import 'package:dart_openai/dart_openai.dart';
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gpt_box/core/logger.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/store/all.dart';
 
@@ -23,7 +23,11 @@ abstract final class OpenAICfg {
   }
 
   static void apply() {
-    Loggers.app.info('Switch profile [${_cfg.name}]');
+    if (_cfg.id == ChatConfig.defaultId) {
+      Loggers.app.info('Using default profile');
+    } else {
+      Loggers.app.info('Profile [${_cfg.name}]');
+    }
     OpenAI.apiKey = _cfg.key;
     OpenAI.baseUrl = _cfg.url;
   }

@@ -1,34 +1,24 @@
 library route;
 
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:gpt_box/core/analysis.dart';
-import 'package:gpt_box/data/store/all.dart';
+import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/view/page/about.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
-import 'package:gpt_box/view/page/debug.dart';
 import 'package:gpt_box/view/page/image.dart';
 import 'package:gpt_box/view/page/res.dart';
 import 'package:gpt_box/view/page/setting.dart';
 
-part 'base.dart';
-
-/// NEVER use [Navigator.pushNamed], it's [arguments] is not type safe.
-/// USE [Routes] instead.
 sealed class Routes {
-  static const setting = AppRoute(
+  static const setting = AppRoute<Never, Never>(
     page: SettingPage.new,
     path: '/setting',
   );
 
-  static const debug = AppRoute(
+  static const debug = AppRoute<Never, DebugPageArgs>(
     page: DebugPage.new,
     path: '/debug',
   );
 
-  static const about = AppRoute(
+  static const about = AppRoute<Never, Never>(
     page: AboutPage.new,
     path: '/about',
   );
@@ -48,7 +38,7 @@ sealed class Routes {
     path: '/image',
   );
 
-  static const res = AppRoute(
+  static const res = AppRoute<Never, Never>(
     page: ResPage.new,
     path: '/res',
   );

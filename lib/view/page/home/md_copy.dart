@@ -33,7 +33,7 @@ final class _MarkdownCopyPage extends StatelessWidget {
         showCursor: true,
         style: TextStyle(
           fontSize: 14,
-          color: UIs.textColor.fromBool(RNode.dark.value),
+          color: UIs.textColor.fromBool(RNodes.dark.value),
         ),
       ),
     );

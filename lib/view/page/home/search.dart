@@ -83,7 +83,7 @@ class _ChatSearchDelegate extends SearchDelegate<ChatHistory> {
           itemBuilder: (_, index) {
             final chat = data[index];
             final len = '${chat.items.length} ${l10n.message}';
-            final time = chat.items.lastOrNull?.createdAt.toAgo;
+            final time = chat.items.lastOrNull?.createdAt.ymdhms();
             return ListTile(
               title: Text(chat.name ?? l10n.untitled),
               subtitle: time == null
@@ -102,7 +102,7 @@ class _ChatSearchDelegate extends SearchDelegate<ChatHistory> {
                   _switchPage(HomePageEnum.chat);
                 }
               },
-            ).card;
+            ).cardx;
           },
         );
       },

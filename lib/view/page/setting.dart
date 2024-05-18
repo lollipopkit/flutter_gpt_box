@@ -1,29 +1,13 @@
 import 'package:dart_openai/dart_openai.dart';
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/ext/color.dart';
-import 'package:gpt_box/core/ext/context/base.dart';
-import 'package:gpt_box/core/ext/context/dialog.dart';
-import 'package:gpt_box/core/ext/context/snackbar.dart';
-import 'package:gpt_box/core/ext/locale.dart';
-import 'package:gpt_box/core/ext/string.dart';
-import 'package:gpt_box/core/rebuild.dart';
-import 'package:gpt_box/core/store.dart';
-import 'package:gpt_box/core/update.dart';
-import 'package:gpt_box/core/util/func.dart';
-import 'package:gpt_box/core/util/platform/base.dart';
-import 'package:gpt_box/core/util/ui.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
-import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/data/res/rnode.dart';
+import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/widget/appbar.dart';
-import 'package:gpt_box/view/widget/card.dart';
-import 'package:gpt_box/view/widget/color_picker.dart';
-import 'package:gpt_box/view/widget/expand_tile.dart';
-import 'package:gpt_box/view/widget/input.dart';
-import 'package:gpt_box/view/widget/switch.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shortid/shortid.dart';
@@ -109,7 +93,7 @@ class _SettingPageState extends State<SettingPage> {
             _store.themeMode.put(result.index);
 
             /// Set delay to true to wait for db update.
-            RNode.app.build(delay: true);
+            RNodes.app.build(delay: true);
           }
         },
         trailing: Text(
@@ -155,6 +139,7 @@ class _SettingPageState extends State<SettingPage> {
                   _onSaveColor(ctrl.text);
                   context.pop();
                 },
+                okStr: l10n.ok,
               ),
             );
           },
@@ -170,7 +155,7 @@ class _SettingPageState extends State<SettingPage> {
       return;
     }
     _store.themeColorSeed.put(color.value);
-    RNode.app.build(delay: true);
+    RNodes.app.build(delay: true);
   }
 
   Widget _buildLocale() {
@@ -193,7 +178,7 @@ class _SettingPageState extends State<SettingPage> {
           if (result != null) {
             final newLocaleStr = result.toLanguageTag();
             _store.locale.put(newLocaleStr);
-            await RNode.app.build(delay: true);
+            await RNodes.app.build(delay: true);
             setState(() {
               localeStr = newLocaleStr;
             });
@@ -218,7 +203,11 @@ class _SettingPageState extends State<SettingPage> {
           return Text(text, style: UIs.textGrey);
         },
       ),
-      onTap: () => Funcs.throttle(() => AppUpdateIface.doUpdate(context)),
+      onTap: () => Funcs.throttle(() => AppUpdateIface.doUpdate(
+            build: Build.build,
+            url: Urls.appUpdateCfg,
+            context: context,
+          )),
       trailing: StoreSwitch(prop: _store.autoCheckUpdate),
     );
   }
@@ -269,6 +258,7 @@ class _SettingPageState extends State<SettingPage> {
                 }
               },
               red: true,
+              okStr: l10n.ok,
             ),
           );
         },
@@ -301,7 +291,10 @@ class _SettingPageState extends State<SettingPage> {
             hint: l10n.name,
             icon: Icons.text_fields,
           ),
-          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+          actions: Btns.oks(
+            onTap: () => context.pop(ctrl.text),
+            okStr: l10n.ok,
+          ),
         );
         if (name == null) return;
         final cfg = ChatConfig.defaultOne.copyWith(
@@ -350,7 +343,10 @@ class _SettingPageState extends State<SettingPage> {
             hint: 'sk-xxx',
             maxLines: 3,
           ),
-          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+          actions: Btns.oks(
+            onTap: () => context.pop(ctrl.text),
+            okStr: l10n.ok,
+          ),
         );
         if (result == null) return;
         OpenAICfg.current = OpenAICfg.current.copyWith(key: result);
@@ -377,14 +373,21 @@ class _SettingPageState extends State<SettingPage> {
             hint: 'https://api.openai.com',
             maxLines: 3,
           ),
-          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+          actions: Btns.oks(
+            onTap: () => context.pop(ctrl.text),
+            okStr: l10n.ok,
+          ),
         );
         if (result == null) return;
         if (result.contains('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
           final sure = await context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.apiUrlTip),
-            actions: Btns.oks(onTap: () => context.pop(true), red: true),
+            actions: Btns.oks(
+              onTap: () => context.pop(true),
+              red: true,
+              okStr: l10n.ok,
+            ),
           );
           if (sure != true) return;
         }
@@ -419,7 +422,10 @@ class _SettingPageState extends State<SettingPage> {
           context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: () => context.pop()),
+            actions: Btns.oks(
+              onTap: () => context.pop(),
+              okStr: l10n.ok,
+            ),
           );
           return;
         }
@@ -434,6 +440,7 @@ class _SettingPageState extends State<SettingPage> {
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,
+          title: l10n.model,
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
@@ -455,7 +462,10 @@ class _SettingPageState extends State<SettingPage> {
           context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: () => context.pop()),
+            actions: Btns.oks(
+              onTap: () => context.pop(),
+              okStr: l10n.ok,
+            ),
           );
           return;
         }
@@ -470,6 +480,7 @@ class _SettingPageState extends State<SettingPage> {
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,
+          title: l10n.model,
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
@@ -491,7 +502,10 @@ class _SettingPageState extends State<SettingPage> {
           context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: () => context.pop()),
+            actions: Btns.oks(
+              onTap: () => context.pop(),
+              okStr: l10n.ok,
+            ),
           );
           return;
         }
@@ -506,6 +520,7 @@ class _SettingPageState extends State<SettingPage> {
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,
+          title: l10n.model,
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
@@ -527,7 +542,10 @@ class _SettingPageState extends State<SettingPage> {
           context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: () => context.pop()),
+            actions: Btns.oks(
+              onTap: () => context.pop(),
+              okStr: l10n.ok,
+            ),
           );
           return;
         }
@@ -542,6 +560,7 @@ class _SettingPageState extends State<SettingPage> {
         final model = await context.showPickSingleDialog(
           items: modelStrs,
           initial: val,
+          title: l10n.model,
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
@@ -572,7 +591,10 @@ class _SettingPageState extends State<SettingPage> {
             controller: ctrl,
             maxLines: 3,
           ),
-          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+          actions: Btns.oks(
+            onTap: () => context.pop(ctrl.text),
+            okStr: l10n.ok,
+          ),
         );
         if (result == null) return;
         OpenAICfg.current = OpenAICfg.current.copyWith(prompt: result);
@@ -599,7 +621,10 @@ class _SettingPageState extends State<SettingPage> {
             hint: '7',
             type: TextInputType.number,
           ),
-          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+          actions: Btns.oks(
+            onTap: () => context.pop(ctrl.text),
+            okStr: l10n.ok,
+          ),
         );
         if (result == null) return;
         final newVal = int.tryParse(result);

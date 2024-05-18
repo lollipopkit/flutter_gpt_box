@@ -10,8 +10,8 @@ Widget _buildFile(BuildContext context) {
           title: Text(l10n.backup),
           trailing: const Icon(Icons.save),
           onTap: () async {
-            final content = await Backup.backup();
-            await FileUtil.save('gptbox_bak.json', content, suffix: 'json');
+            await Backup.backupToFile();
+            await Pfs.sharePath(Paths.bakPath);
           },
         ),
         ListTile(
@@ -25,7 +25,7 @@ Widget _buildFile(BuildContext context) {
 }
 
 void _onTapFileRestore(BuildContext context) async {
-  final text = await FileUtil.pickString();
+  final text = await Pfs.pickFileString();
   if (text == null) return;
 
   try {

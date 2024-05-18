@@ -1,12 +1,12 @@
 import 'dart:io';
 
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:webdav_client/webdav_client.dart';
 
 import '../../../data/model/app/backup.dart';
 import '../../../data/model/app/error.dart';
-import '../../../data/res/path.dart';
 import '../../../data/store/all.dart';
 
 abstract final class Webdav {
@@ -38,7 +38,7 @@ abstract final class Webdav {
   }) async {
     try {
       await _client.writeFile(
-        localPath ?? '${await Paths.doc}/$relativePath',
+        localPath ?? Paths.doc.joinPath(relativePath),
         _prefix + relativePath,
       );
     } catch (e, s) {
@@ -65,7 +65,7 @@ abstract final class Webdav {
     try {
       await _client.readFile(
         _prefix + relativePath,
-        localPath ?? '${await Paths.doc}/$relativePath',
+        localPath ?? Paths.doc.joinPath(relativePath),
       );
     } catch (e, s) {
       _logger.warning('Download $relativePath failed', e, s);
@@ -100,7 +100,7 @@ abstract final class Webdav {
     final dlErr = await download(relativePath: Paths.bakName);
     if (dlErr != null) return await backup();
 
-    final dlFile = await File(await Paths.bak).readAsString();
+    final dlFile = await File(Paths.bakPath).readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     if (dlBak == null) return await backup();
 

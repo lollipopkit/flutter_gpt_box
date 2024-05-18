@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/ext/widget.dart';
 import 'package:gpt_box/data/model/app/audio_play.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/ui.dart';
-import 'package:gpt_box/view/widget/future.dart';
 
 final _audioPlayer = AudioPlayer();
 // Map for audio player value notifiers which stores the current playing status
@@ -127,7 +125,7 @@ class _AudioCardState extends State<AudioCard> {
                 ],
               )
             ],
-          ).card;
+          ).cardx;
         }
         return ListTile(
           leading: IconButton(
@@ -145,7 +143,7 @@ class _AudioCardState extends State<AudioCard> {
               listenable.value = val.copyWith(played: nowMilli);
             },
           ),
-        ).card;
+        ).cardx;
       },
     );
   }

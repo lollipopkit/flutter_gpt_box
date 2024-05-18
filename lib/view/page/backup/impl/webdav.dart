@@ -15,7 +15,7 @@ Widget _buildWebdav(BuildContext context) {
           title: Text(l10n.auto),
           trailing: StoreSwitch(
             prop: Stores.setting.webdavSync,
-            validator: (p0) async {
+            validator: (p0) {
               if (Stores.setting.icloudSync.fetch() && p0) {
                 context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
                 return false;
@@ -28,7 +28,7 @@ Widget _buildWebdav(BuildContext context) {
                   return false;
                 }
               }
-              await Webdav.sync();
+              Webdav.sync();
               return true;
             },
           ),
@@ -72,7 +72,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
       context.showSnackBar(l10n.backupRestorationFailed(result.toString()));
       return;
     }
-    final dlFile = await File(await Paths.bak).readAsString();
+    final dlFile = await File(Paths.bakPath).readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak?.merge(force: true);
     context.showSnackBar(l10n.backupRestorationSuccessful);
@@ -87,7 +87,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
 Future<void> _onTapWebdavUp(BuildContext context) async {
   _webdavLoading.value = true;
   final content = await Backup.backup();
-  await File(await Paths.bak).writeAsString(content);
+  await File(Paths.bakPath).writeAsString(content);
   final uploadResult = await Webdav.upload(relativePath: Paths.bakName);
   if (uploadResult != null) {
     Loggers.app.warning('Upload webdav backup failed: $uploadResult');
@@ -123,7 +123,7 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
     context.showRoundDialog(
       title: l10n.error,
       child: Text(err),
-      actions: Btns.oks(onTap: () => context.pop()),
+      actions: Btns.oks(onTap: context.pop, okStr: l10n.ok),
     );
   }
 
@@ -156,6 +156,6 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
         ),
       ],
     ),
-    actions: Btns.oks(onTap: onSubmit),
+    actions: Btns.oks(onTap: onSubmit, okStr: l10n.ok),
   );
 }

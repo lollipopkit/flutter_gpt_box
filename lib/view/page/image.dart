@@ -1,9 +1,6 @@
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/ext/context/base.dart';
-import 'package:gpt_box/core/ext/context/dialog.dart';
-import 'package:gpt_box/core/util/ui.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/ui.dart';
 
 final class ImagePageArgs {
   final String? title;
@@ -43,7 +40,7 @@ final class ImagePage extends StatelessWidget {
               title: l10n.delete,
               child:
                   Text(l10n.delFmt(args?.title ?? l10n.untitled, l10n.image)),
-              actions: Btns.oks(onTap: () => context.pop(true)),
+              actions: Btns.oks(onTap: () => context.pop(true), okStr: l10n.ok,),
             );
             if (sure != true) return;
             context.pop(const ImagePageRet(isDeleted: true));

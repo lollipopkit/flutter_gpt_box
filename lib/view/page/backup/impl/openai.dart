@@ -6,17 +6,17 @@ Widget _buildOpenAI(BuildContext context) {
     leading: const Icon(MingCute.openai_fill),
     subtitle: SimpleMarkdown(
       data: l10n.restoreOpenaiTip(Urls.openaiRestoreDoc),
-      style: MarkdownStyleSheet(
+      styleSheet: MarkdownStyleSheet(
         p: UIs.textGrey,
       ),
     ),
     trailing: const Icon(Icons.chevron_right),
     onTap: () => _onTapRestoreOpenAI(context),
-  ).card;
+  ).cardx;
 }
 
 void _onTapRestoreOpenAI(BuildContext context) async {
-  final picked = await FileUtil.pickString();
+  final picked = await Pfs.pickFileString();
   if (picked == null) return;
 
   final chats = await context.showLoadingDialog(fn: () async {

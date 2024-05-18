@@ -7,7 +7,9 @@ CustomAppBar _buildAppBar(BuildContext context) {
       final entity = _curChat;
       if (entity == null) return Text(l10n.empty);
       final len = '${entity.items.length} ${l10n.message}';
-      final time = entity.items.lastOrNull?.createdAt.toAgo;
+      final time = entity.items.lastOrNull?.createdAt
+          .difference(DateTime.now())
+          .toAgoStr;
       return AnimatedSwitcher(
         duration: _durationMedium,
         switchInCurve: Easing.standardDecelerate,
@@ -48,7 +50,10 @@ CustomAppBar _buildAppBar(BuildContext context) {
   return CustomAppBar(
     centerTitle: false,
     title: GestureDetector(
-      onLongPress: () => Routes.debug.go(context),
+      onLongPress: () => Routes.debug.go(
+        context,
+        args: (notifier: Pros.debug.widgets, onClear: Pros.debug.clear),
+      ),
       child: title,
     ),
     actions: [

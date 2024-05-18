@@ -1,12 +1,10 @@
 import 'dart:io';
 
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/path.dart';
 import 'package:gpt_box/view/page/image.dart';
-import 'package:gpt_box/view/widget/appbar.dart';
 import 'package:gpt_box/view/widget/audio.dart';
-import 'package:gpt_box/view/widget/card.dart';
 import 'package:gpt_box/view/widget/image.dart';
 
 final class ResPage extends StatefulWidget {
@@ -160,8 +158,8 @@ enum _ResType {
   ;
 
   Future<Directory> get dir async => switch (this) {
-        audio => Directory(await Paths.audio),
-        image => Directory(await Paths.image),
+        audio => Directory(Paths.audio),
+        image => Directory(Paths.img),
       };
 
   Stream<FileSystemEntity> get all async* {

@@ -6,11 +6,11 @@ Widget _buildGPTNext(BuildContext context) {
     leading: const Icon(MingCute.chat_2_fill),
     trailing: const Icon(Icons.chevron_right),
     onTap: () => _onTapRestoreGPTNext(context),
-  ).card;
+  ).cardx;
 }
 
 void _onTapRestoreGPTNext(BuildContext context) async {
-  final picked = await FileUtil.pickString();
+  final picked = await Pfs.pickFileString();
   if (picked == null) return;
 
   final chats = await context.showLoadingDialog(fn: () async {

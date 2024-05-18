@@ -77,15 +77,15 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   Widget _buildChat() {
-    var switchDirection = SwitchPageDirection.next;
-    return SwitchPageIndicator(
+    var switchDirection = SwitchDirection.next;
+    return SwitchIndicator(
       onSwitchPage: (direction) {
         switchDirection = direction;
         switch (direction) {
-          case SwitchPageDirection.previous:
+          case SwitchDirection.previous:
             _switchPreviousChat();
             break;
-          case SwitchPageDirection.next:
+          case SwitchDirection.next:
             _switchNextChat();
             break;
         }
@@ -102,7 +102,7 @@ class _ChatPageState extends State<_ChatPage>
             switchOutCurve: Easing.standardDecelerate,
             transitionBuilder: (child, animation) => SlideTransitionX(
               position: animation,
-              direction: switchDirection == SwitchPageDirection.next
+              direction: switchDirection == SwitchDirection.next
                   ? AxisDirection.up
                   : AxisDirection.down,
               child: child,
@@ -153,6 +153,7 @@ class _ChatPageState extends State<_ChatPage>
                             ChatContentType.image => _buildImage(e),
                             _ => _buildText(e),
                           })
+                      .toList()
                       .joinWith(UIs.height13),
                 );
               },
@@ -308,7 +309,11 @@ class _ChatPageState extends State<_ChatPage>
             child: Text(
               l10n.delFmt('${chatItem.role.localized}#$idx', l10n.chat),
             ),
-            actions: Btns.oks(onTap: () => context.pop(true), red: true),
+            actions: Btns.oks(
+              onTap: () => context.pop(true),
+              red: true,
+              okStr: l10n.ok,
+            ),
           );
           if (result != true) return;
           chatItems.remove(chatItem);

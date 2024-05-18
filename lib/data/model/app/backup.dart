@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:gpt_box/core/rebuild.dart';
+import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/core/util/json.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
-import 'package:gpt_box/data/res/path.dart';
+import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:logging/logging.dart';
@@ -83,7 +83,7 @@ class Backup {
   }
 
   static Future<void> backupToFile() async {
-    await File(await Paths.bak).writeAsString(await backup());
+    await File(Paths.bakPath).writeAsString(await backup());
   }
 
   Future<void> merge({bool force = false}) async {
@@ -127,7 +127,7 @@ class Backup {
       Stores.config.put(configs.firstWhere((e) => e.id == id));
     }
 
-    RNode.app.build();
+    RNodes.app.build();
     HomePage.afterRestore();
     _logger.info('Merge done');
   }

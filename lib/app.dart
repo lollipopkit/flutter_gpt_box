@@ -1,8 +1,8 @@
+import 'package:fl_lib/fl_lib.dart';
+import 'package:fl_lib/l10n/gen/lib_l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/ext/locale.dart';
-import 'package:gpt_box/core/rebuild.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
@@ -12,8 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemUIs.setTransparentNavigationBar(context);
     return ListenableBuilder(
-      listenable: RNode.app,
+      listenable: RNodes.app,
       builder: (_, __) {
         UIs.colorSeed = Color(Stores.setting.themeColorSeed.fetch());
         final themeMode = switch (Stores.setting.themeMode.fetch()) {
@@ -25,7 +26,10 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'GPT Box',
           locale: Stores.setting.locale.fetch().toLocale,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: const [
+            ...AppLocalizations.localizationsDelegates,
+            LibLocalizations.delegate,
+          ],
           supportedLocales: AppLocalizations.supportedLocales,
           themeMode: themeMode,
           theme: ThemeData(colorSchemeSeed: UIs.colorSeed),
@@ -37,6 +41,7 @@ class MyApp extends StatelessWidget {
             builder: (context) {
               final l10n_ = AppLocalizations.of(context);
               if (l10n_ != null) l10n = l10n_;
+              context.setLibL10n();
               return const HomePage();
             },
           ),

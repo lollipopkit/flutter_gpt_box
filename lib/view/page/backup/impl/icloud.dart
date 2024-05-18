@@ -7,13 +7,12 @@ Widget _buildIcloud(BuildContext context) {
       title: const Text('iCloud'),
       trailing: StoreSwitch(
         prop: Stores.setting.icloudSync,
-        updateLastModTime: false,
-        validator: (p0) async {
+        validator: (p0) {
           if (Stores.setting.webdavSync.fetch() && p0) {
             context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
             return false;
           }
-          await ICloud.sync();
+          ICloud.sync();
           return true;
         },
       ),

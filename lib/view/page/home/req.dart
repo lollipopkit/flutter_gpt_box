@@ -69,7 +69,7 @@ Future<void> _onCreateText(String chatId, BuildContext context) async {
   final (imgUrl, imgPath) = await () async {
     final value = _filePicked.value;
     if (value == null) return (null, null);
-    final imgPath = FileUtil.joinPath(await Paths.image, shortid.generate());
+    final imgPath = Paths.img.joinPath(shortid.generate());
     await value.saveTo(imgPath);
     // Convert to base64 url
     return (await value.base64, imgPath);
@@ -188,7 +188,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
       model: config.speechModel,
       input: questionContent,
       voice: 'nova',
-      outputDirectory: Directory(await Paths.audio),
+      outputDirectory: Directory(Paths.audio),
       outputFileName: replyContent.id,
       responseFormat: OpenAIAudioSpeechResponseFormat.aac,
     );

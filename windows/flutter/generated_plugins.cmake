@@ -6,6 +6,8 @@ list(APPEND FLUTTER_PLUGIN_LIST
   app_links
   audioplayers_windows
   file_selector_windows
+  local_auth_windows
+  permission_handler_windows
   screen_retriever
   share_plus
   url_launcher_windows

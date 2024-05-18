@@ -1,10 +1,9 @@
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/rebuild.dart';
-import 'package:gpt_box/core/util/markdown.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/view/widget/code.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
@@ -41,7 +40,7 @@ extension ChatHistoryShare on ChatHistory {
     final widget = InheritedTheme.captureAll(
       context,
       Material(
-        color: UIs.bgColor.fromBool(RNode.dark.value),
+        color: UIs.bgColor.fromBool(RNodes.dark.value),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Column(

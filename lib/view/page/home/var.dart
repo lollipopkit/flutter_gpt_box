@@ -3,7 +3,7 @@ part of 'home.dart';
 final _inputCtrl = TextEditingController();
 final _chatScrollCtrl = ScrollController()
   ..addListener(() {
-    Funcs.throttle(_chatFabRN.build, id: 'chat_fab_rn', durationMills: 30);
+    Funcs.throttle(_chatFabRN.build, id: 'chat_fab_rn', duration: 30);
   });
 final _historyScrollCtrl = ScrollController()
   ..addListener(_locateHistoryListener);
@@ -30,6 +30,7 @@ final _sendBtnRN = RNode();
 // Default false: the history item is visible on app start, no need to locate
 final _locateHistoryBtn = false.vn;
 final _chatFabRN = RNode();
+final _homeBottomRN = RNode();
 
 var _allHistories = <String, ChatHistory>{};
 String _curChatId = 'fake-non-exist-id';

@@ -1,11 +1,8 @@
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/res/github_id.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/ui.dart';
 import 'package:gpt_box/data/res/url.dart';
-import 'package:gpt_box/view/widget/appbar.dart';
-import 'package:gpt_box/view/widget/card.dart';
-import 'package:gpt_box/view/widget/markdown.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AboutPage extends StatelessWidget {

@@ -1,7 +1,6 @@
-import 'package:gpt_box/core/store.dart';
-import 'package:gpt_box/core/util/platform/base.dart';
+import 'package:fl_lib/fl_lib.dart';
 
-class SettingStore extends Store {
+class SettingStore extends PersistentStore {
   SettingStore() : super('setting');
 
   late final themeMode = property('themeMode', 0);
@@ -24,13 +23,15 @@ class SettingStore extends Store {
   late final genTitle = property('genTitle', true);
 
   /// Webdav sync
-  late final webdavSync = property('webdavSync', false, updateModTime: false);
-  late final webdavUrl = property('webdavUrl', '', updateModTime: false);
-  late final webdavUser = property('webdavUser', '', updateModTime: false);
-  late final webdavPwd = property('webdavPwd', '', updateModTime: false);
+  late final webdavSync =
+      property('webdavSync', false, updateLastModified: false);
+  late final webdavUrl = property('webdavUrl', '', updateLastModified: false);
+  late final webdavUser = property('webdavUser', '', updateLastModified: false);
+  late final webdavPwd = property('webdavPwd', '', updateLastModified: false);
 
   /// Only valid on iOS and macOS
-  late final icloudSync = property('icloudSync', false, updateModTime: false);
+  late final icloudSync =
+      property('icloudSync', false, updateLastModified: false);
   late final onlySyncOnLaunch = property('onlySyncOnLaunch', false);
 
   late final initHelpShown = property('initHelpShown', false);
@@ -47,4 +48,6 @@ class SettingStore extends Store {
   late final countly = property('countly', true);
 
   late final cupertinoRoute = property('cupertinoRoute', isIOS || isMacOS);
+
+  late final hideTitleBar = property('hideTitleBar', false);
 }

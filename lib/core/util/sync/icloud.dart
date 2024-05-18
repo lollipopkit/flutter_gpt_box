@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:icloud_storage/icloud_storage.dart';
 import 'package:logging/logging.dart';
@@ -8,7 +9,6 @@ import 'package:logging/logging.dart';
 import '../../../data/model/app/backup.dart';
 import '../../../data/model/app/error.dart';
 import '../../../data/model/app/sync.dart';
-import '../../../data/res/path.dart';
 
 abstract final class ICloud {
   static const _containerId = 'iCloud.tech.lolli.gptbox';
@@ -31,7 +31,7 @@ abstract final class ICloud {
     try {
       await ICloudStorage.upload(
         containerId: _containerId,
-        filePath: localPath ?? '${await Paths.doc}/$relativePath',
+        filePath: localPath ?? Paths.doc.joinPath(relativePath),
         destinationRelativePath: relativePath,
         onProgress: (stream) {
           stream.listen(
@@ -84,7 +84,7 @@ abstract final class ICloud {
       await ICloudStorage.download(
         containerId: _containerId,
         relativePath: relativePath,
-        destinationFilePath: localPath ?? '${await Paths.doc}/$relativePath',
+        destinationFilePath: localPath ?? Paths.doc.joinPath(relativePath),
         onProgress: (stream) {
           stream.listen(
             null,
@@ -138,7 +138,7 @@ abstract final class ICloud {
         }
       }));
 
-      final docPath = await Paths.doc;
+      final docPath = Paths.doc;
 
       /// compare files in iCloud and local
       missions.addAll(allFiles.map((file) async {
@@ -200,7 +200,7 @@ abstract final class ICloud {
     final result = await download(relativePath: Paths.bakName);
     if (result != null) return await backup();
 
-    final dlFile = await File(await Paths.bak).readAsString();
+    final dlFile = await File(Paths.bakPath).readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     if (dlBak == null) return await backup();
 
@@ -211,7 +211,7 @@ abstract final class ICloud {
 
   static Future<void> backup() async {
     final content = await Backup.backup();
-    await File(await Paths.bak).writeAsString(content);
+    await File(Paths.bakPath).writeAsString(content);
     final uploadResult = await upload(relativePath: Paths.bakName);
     if (uploadResult != null) {
       _logger.warning('Upload backup failed: $uploadResult');

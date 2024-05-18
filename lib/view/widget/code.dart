@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/rebuild.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gpt_box/data/res/rnode.dart';
 import 'package:markdown/markdown.dart' as md;
 
 final _textStyle = GoogleFonts.robotoMono();
@@ -22,7 +22,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     String language = '';
 
     if (element.attributes['class'] != null) {
-      String lg = element.attributes['class'] as String;
+      final lg = element.attributes['class'] as String;
       language = lg.substring(9);
     }
 
@@ -98,7 +98,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
   }
 
   Map<String, TextStyle> get _theme {
-    return RNode.dark.value ? _darkTheme : _lightTheme;
+    return RNodes.dark.value ? _darkTheme : _lightTheme;
   }
 }
 

@@ -1,58 +1,31 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io';
 
 import 'package:after_layout/after_layout.dart';
 import 'package:app_links/app_links.dart';
 import 'package:dart_openai/dart_openai.dart';
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:flutter_tiktoken/flutter_tiktoken.dart';
-import 'package:gpt_box/core/build_mode.dart';
 import 'package:gpt_box/core/ext/chat_history.dart';
-import 'package:gpt_box/core/ext/color.dart';
-import 'package:gpt_box/core/ext/context/base.dart';
-import 'package:gpt_box/core/ext/context/dialog.dart';
-import 'package:gpt_box/core/ext/context/snackbar.dart';
-import 'package:gpt_box/core/ext/datetime.dart';
-import 'package:gpt_box/core/ext/iterable.dart';
-import 'package:gpt_box/core/ext/list.dart';
-import 'package:gpt_box/core/ext/media_query.dart';
-import 'package:gpt_box/core/ext/num.dart';
-import 'package:gpt_box/core/ext/obj.dart';
-import 'package:gpt_box/core/ext/value_notifier.dart';
-import 'package:gpt_box/core/ext/widget.dart';
 import 'package:gpt_box/core/ext/xfile.dart';
-import 'package:gpt_box/core/logger.dart';
-import 'package:gpt_box/core/rebuild.dart';
 import 'package:gpt_box/core/route/page.dart';
-import 'package:gpt_box/core/update.dart';
-import 'package:gpt_box/core/util/func.dart';
-import 'package:gpt_box/core/util/markdown.dart';
-import 'package:gpt_box/core/util/platform/base.dart';
-import 'package:gpt_box/core/util/platform/file.dart';
 import 'package:gpt_box/core/util/sync/base.dart';
-import 'package:gpt_box/core/util/ui.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
+import 'package:gpt_box/data/provider/all.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
-import 'package:gpt_box/data/res/path.dart';
-import 'package:gpt_box/data/res/ui.dart';
+import 'package:gpt_box/data/res/rnode.dart';
+import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/widget/appbar.dart';
 import 'package:gpt_box/view/widget/audio.dart';
 import 'package:gpt_box/view/widget/code.dart';
-import 'package:gpt_box/view/widget/future.dart';
 import 'package:gpt_box/view/widget/image.dart';
-import 'package:gpt_box/view/widget/input.dart';
-import 'package:gpt_box/view/widget/overlay.dart';
-import 'package:gpt_box/view/widget/popup_menu.dart';
-import 'package:gpt_box/view/widget/slide_trans.dart';
-import 'package:gpt_box/view/widget/switch_page_indicator.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -119,8 +92,8 @@ class _HomePageState extends State<HomePage>
   @override
   void didChangeDependencies() {
     _media = MediaQuery.of(context);
-    RNode.dark.value = context.isDark;
-    _isWide.value = _media.isWide;
+    RNodes.dark.value = context.isDark;
+    _isWide.value = (_media?.size.width ?? 0) > 639;
     super.didChangeDependencies();
     _homeBottomRN.build();
 
@@ -134,9 +107,9 @@ class _HomePageState extends State<HomePage>
       drawer: _buildDrawer(),
       appBar: _buildAppBar(context),
       body: _buildBody(),
-      bottomNavigationBar: ValueListenableBuilder(
-        valueListenable: _isWide,
-        builder: (_, isWide, __) {
+      bottomNavigationBar: ValBuilder(
+        listenable: _isWide,
+        builder: (isWide) {
           if (isWide) return UIs.placeholder;
           return const _HomeBottom();
         },
@@ -167,7 +140,7 @@ class _HomePageState extends State<HomePage>
   Widget _buildDrawer() {
     return Container(
       width: _isWide.value ? 270 : (_media?.size.width ?? 300) * 0.7,
-      color: UIs.bgColor.fromBool(RNode.dark.value),
+      color: UIs.bgColor.fromBool(RNodes.dark.value),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Column(
@@ -190,7 +163,7 @@ class _HomePageState extends State<HomePage>
               onLongPress: () => _onLongTapSetting(context),
               leading: const Icon(Icons.settings),
               title: Text(l10n.settings),
-            ).card,
+            ).cardx,
             ListTile(
               onTap: () async {
                 final ret = await Routes.backup.go(context);
@@ -202,17 +175,17 @@ class _HomePageState extends State<HomePage>
               },
               leading: const Icon(Icons.backup),
               title: Text('${l10n.backup} & ${l10n.restore}'),
-            ).card,
+            ).cardx,
             ListTile(
               leading: const Icon(BoxIcons.bxs_videos),
               title: Text(l10n.res),
               onTap: () => Routes.res.go(context),
-            ).card,
+            ).cardx,
             ListTile(
               onTap: () => Routes.about.go(context),
               leading: const Icon(Icons.info),
               title: Text(l10n.about),
-            ).card,
+            ).cardx,
             SizedBox(height: (_media?.padding.bottom ?? 0) + 13),
           ],
         ),
@@ -232,7 +205,11 @@ class _HomePageState extends State<HomePage>
     _removeDuplicateHistory(context);
 
     if (Stores.setting.autoCheckUpdate.fetch()) {
-      AppUpdateIface.doUpdate(context);
+      AppUpdateIface.doUpdate(
+        build: Build.build,
+        url: Urls.appUpdateCfg,
+        context: context,
+      );
     }
   }
 

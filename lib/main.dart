@@ -3,25 +3,19 @@
 import 'dart:async';
 
 import 'package:dart_openai/dart_openai.dart';
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
-import 'package:gpt_box/core/analysis.dart';
-import 'package:gpt_box/core/build_mode.dart';
-import 'package:gpt_box/core/logger.dart';
 import 'package:gpt_box/core/util/datetime.dart';
-import 'package:gpt_box/core/util/platform/base.dart';
-import 'package:gpt_box/core/util/platform/win.dart';
 import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
-import 'package:gpt_box/data/provider/debug.dart';
+import 'package:gpt_box/data/provider/all.dart';
+import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/openai.dart';
-import 'package:gpt_box/data/res/path.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/widget/appbar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
-import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   _runInZone(() async {
@@ -49,26 +43,12 @@ void _runInZone(void Function() body) {
 
 Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   _setupLogger();
-  await _initDesktopWindow();
+  await Paths.init(Build.name);
 
-  // Base of all data.
   await _initDb();
-  await _loadStores();
-
-  Analysis.init();
-
-  OpenAI.showLogs = !BuildMode.isRelease;
-  OpenAI.showResponsesLogs = !BuildMode.isRelease;
-  OpenAICfg.apply();
-
-  SyncService.sync(force: true);
-
-  if (isWindows) {
-    Win32.registerProtocol('lk-gptbox');
-  }
-
-  Paths.createAll();
+  _initAppComponents();
 }
 
 Future<void> _initDb() async {
@@ -84,38 +64,35 @@ Future<void> _initDb() async {
 
   /// MUST put it back of all chat related adapters.
   Hive.registerAdapter(ChatHistoryAdapter());
+
+  await Stores.history.init();
+  await Stores.setting.init();
+  await Stores.config.init();
 }
 
 void _setupLogger() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
-    DebugNotifier.addLog(record);
+    Pros.debug.addLog(record);
     print(record);
     if (record.error != null) print(record.error);
     if (record.stackTrace != null) print(record.stackTrace);
   });
 }
 
-Future<void> _initDesktopWindow() async {
-  if (!isDesktop) return;
+Future<void> _initAppComponents() async {
+  SystemUIs.initDesktopWindow(Stores.setting.hideTitleBar.fetch());
 
-  await windowManager.ensureInitialized();
-  await CustomAppBar.updateTitlebarHeight();
+  if (Stores.setting.countly.fetch()) {
+    Analysis.init(
+      'https://countly.lolli.tech',
+      '54f29be34c4ef369ddf4249f353cece142ef78d9',
+    );
+  }
 
-  const windowOptions = WindowOptions(
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.hidden,
-  );
-  await windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
-}
+  OpenAI.showLogs = !BuildMode.isRelease;
+  OpenAI.showResponsesLogs = !BuildMode.isRelease;
+  OpenAICfg.apply();
 
-Future<void> _loadStores() async {
-  await Stores.history.init();
-  await Stores.setting.init();
-  await Stores.config.init();
+  SyncService.sync(force: true);
 }

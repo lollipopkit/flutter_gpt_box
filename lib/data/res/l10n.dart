@@ -1,3 +1,4 @@
 import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n_en.dart';
 
-late AppLocalizations l10n;
+AppLocalizations l10n = AppLocalizationsEn();

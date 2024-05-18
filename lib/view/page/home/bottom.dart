@@ -1,7 +1,5 @@
 part of 'home.dart';
 
-final _homeBottomRN = RNode();
-
 class _HomeBottom extends StatelessWidget {
   const _HomeBottom();
 
@@ -10,7 +8,7 @@ class _HomeBottom extends StatelessWidget {
     return ListenableBuilder(
       listenable: _homeBottomRN,
       builder: (_, __) {
-        final isDark = RNode.dark.value;
+        final isDark = RNodes.dark.value;
         return Container(
           padding: isDesktop
               ? const EdgeInsets.only(left: 11, right: 11, top: 5, bottom: 17)
