@@ -396,9 +396,11 @@ packages:
   fl_lib:
     dependency: "direct main"
     description:
-      path: "../fl_lib"
-      relative: true
-    source: path
+      path: "."
+      ref: main
+      resolved-ref: "1b10cf8fa05e6d45b73df25dd19b587c7a606ce7"
+      url: "https://github.com/lollipopkit/fl_lib"
+    source: git
     version: "0.0.1"
   flutter:
     dependency: "direct main"
