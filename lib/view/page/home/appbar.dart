@@ -53,10 +53,9 @@ CustomAppBar _buildAppBar(BuildContext context) {
       onLongPress: () => Routes.debug.go(
         context,
         args: DebugPageArgs(
-          notifier: Pros.debug.widgets,
-          onClear: Pros.debug.clear,
-          title: 'Logs(${Build.build})'
-        ),
+            notifier: Pros.debug.widgets,
+            onClear: Pros.debug.clear,
+            title: 'Logs(${Build.build})'),
       ),
       child: title,
     ),

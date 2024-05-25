@@ -40,7 +40,10 @@ final class ImagePage extends StatelessWidget {
               title: l10n.delete,
               child:
                   Text(l10n.delFmt(args?.title ?? l10n.untitled, l10n.image)),
-              actions: Btns.oks(onTap: () => context.pop(true), okStr: l10n.ok,),
+              actions: Btns.oks(
+                onTap: () => context.pop(true),
+                okStr: l10n.ok,
+              ),
             );
             if (sure != true) return;
             context.pop(const ImagePageRet(isDeleted: true));
