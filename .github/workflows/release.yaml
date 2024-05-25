@@ -21,8 +21,8 @@ jobs:
         uses: subosito/flutter-action@v2
       - name: Fetch secrets
         run: |
-          curl -u ${{ env.BASIC_AUTH }} -o android/app ${{ env.URL_PREFIX }}fjy.android.key
-          curl -u ${{ env.BASIC_AUTH }} -o android ${{ env.URL_PREFIX }}key.properties
+          curl -u ${{ secrets.BASIC_AUTH }} -o android/app/app.key ${{ secrets.URL_PREFIX }}app.key
+          curl -u ${{ secrets.BASIC_AUTH }} -o android/key.properties ${{ secrets.URL_PREFIX }}key.properties
       - name: Build
         run: dart run fl_build -p android,linux
       - name: Create Release
