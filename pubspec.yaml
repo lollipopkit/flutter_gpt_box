@@ -12,9 +12,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   dart_openai: ^5.1.0
-    # git:
-    #   ref: main
-    #   url: https://github.com/lollipopkit/dart_openai
   file_picker: ^8.0.0+1
   flutter_highlight: # ^0.7.0
     git:

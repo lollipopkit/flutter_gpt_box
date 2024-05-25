@@ -45,7 +45,7 @@ Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   _setupLogger();
-  await Paths.init(Build.name);
+  await Paths.init(Build.name, bakName: 'gptbox');
 
   await _initDb();
   _initAppComponents();

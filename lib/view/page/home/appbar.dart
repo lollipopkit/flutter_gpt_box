@@ -52,7 +52,11 @@ CustomAppBar _buildAppBar(BuildContext context) {
     title: GestureDetector(
       onLongPress: () => Routes.debug.go(
         context,
-        args: (notifier: Pros.debug.widgets, onClear: Pros.debug.clear),
+        args: DebugPageArgs(
+          notifier: Pros.debug.widgets,
+          onClear: Pros.debug.clear,
+          title: 'Logs(${Build.build})'
+        ),
       ),
       child: title,
     ),

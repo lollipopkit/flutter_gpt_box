@@ -398,7 +398,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "1b10cf8fa05e6d45b73df25dd19b587c7a606ce7"
+      resolved-ref: a2aa5359253ad83000ff2612ed2c5729cb0dcfc5
       url: "https://github.com/lollipopkit/fl_lib"
     source: git
     version: "0.0.1"
