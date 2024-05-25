@@ -1,0 +1,37 @@
+name: Flutter Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  releaseAL:
+    name: Release android and linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+      - name: Fetch secrets
+        run: |
+          curl -u ${{ env.BASIC_AUTH }} -o android/app ${{ env.URL_PREFIX }}fjy.android.key
+          curl -u ${{ env.BASIC_AUTH }} -o android ${{ env.URL_PREFIX }}key.properties
+      - name: Build
+        run: dart run fl_build -p android,linux
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/app/outputs/flutter-apk/${{ env.APP_NAME }}_${{ env.BUILD_NUMBER }}_arm64.apk
+            build/app/outputs/flutter-apk/${{ env.APP_NAME }}_${{ env.BUILD_NUMBER }}_arm.apk
+            build/app/outputs/flutter-apk/${{ env.APP_NAME }}_${{ env.BUILD_NUMBER }}_amd64.apk
+            ${{ env.APP_NAME }}_${{ env.BUILD_NUMBER }}_amd64.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -393,6 +393,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  fl_build:
+    dependency: "direct dev"
+    description:
+      path: "."
+      ref: main
+      resolved-ref: f0841fcfb4b1ce78cc088ffa7a0c97a5db9ba642
+      url: "https://github.com/lollipopkit/fl_build.git"
+    source: git
+    version: "1.0.0"
   fl_lib:
     dependency: "direct main"
     description:

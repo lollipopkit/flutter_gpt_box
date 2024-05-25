@@ -33,8 +33,7 @@ final class ChatConfig {
   final String speechModel;
   @HiveField(12, defaultValue: _kTranscribeModel)
   final String transcribeModel;
-  /// TODO: Delete this comment after add a new field with correct HiveField 
-  /// index [14]
+  /// TODO: Delete this comment after add a new field with correct HiveField index [14]
   // @HiveField(13, defaultValue: _kModel)
   // final String visionModel;
 
