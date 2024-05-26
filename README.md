@@ -40,7 +40,9 @@ Please don't use it in production environment, and don't use it for important da
 
 
 ## ⬇️ Use
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (Slow & Old)](https://gpt.lolli.tech/)
+🎉 **Now Android / Linux version is built by GitHub action**, if you need, please visit GitHub Releases. The following links use personal servers to provide downloads.
+
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (Deprecated)](https://gpt.lolli.tech/)
 
 - Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
 - Security:
