@@ -39,7 +39,7 @@ dev_dependencies:
   fl_build:
     git:
       url: https://github.com/lollipopkit/fl_build.git
-      ref: main
+      ref: 52b78c04e73e49b39e2b291241f57c564faab881
 
 flutter:
   generate: true
