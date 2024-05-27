@@ -123,7 +123,7 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
     context.showRoundDialog(
       title: l10n.error,
       child: Text(err),
-      actions: Btns.oks(onTap: context.pop, okStr: l10n.ok),
+      actions: Btns.oks(onTap: context.pop),
     );
   }
 
@@ -156,6 +156,6 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
         ),
       ],
     ),
-    actions: Btns.oks(onTap: onSubmit, okStr: l10n.ok),
+    actions: Btns.oks(onTap: onSubmit),
   );
 }

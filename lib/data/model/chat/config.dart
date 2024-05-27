@@ -5,7 +5,7 @@ import 'package:shortid/shortid.dart';
 part 'config.g.dart';
 
 const _kUrl = 'https://api.openai.com';
-const _kModel = 'gpt-4o';
+const kChatModel = 'gpt-4o';
 const _kHistoryLen = 7;
 const _kImgModel = 'dall-e-3';
 const _kSpeechModel = 'tts-1';
@@ -19,7 +19,7 @@ final class ChatConfig {
   final String url;
   @HiveField(2, defaultValue: '')
   final String key;
-  @HiveField(3, defaultValue: _kModel)
+  @HiveField(3, defaultValue: kChatModel)
   final String model;
   @HiveField(7, defaultValue: _kHistoryLen)
   final int historyLen;
@@ -58,7 +58,7 @@ final class ChatConfig {
     prompt: '',
     url: _kUrl,
     key: '',
-    model: _kModel,
+    model: kChatModel,
     historyLen: _kHistoryLen,
     name: '',
     imgModel: _kImgModel,

@@ -312,7 +312,6 @@ class _ChatPageState extends State<_ChatPage>
             actions: Btns.oks(
               onTap: () => context.pop(true),
               red: true,
-              okStr: l10n.ok,
             ),
           );
           if (result != true) return;

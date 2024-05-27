@@ -79,7 +79,6 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
         context.pop();
       },
       red: true,
-      okStr: l10n.ok,
     ),
   );
 }
@@ -109,7 +108,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
       autoFocus: true,
       onSubmitted: (p0) => context.pop(p0),
     ),
-    actions: Btns.oks(onTap: () => context.pop(ctrl.text), okStr: l10n.ok),
+    actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
   );
   if (title == null || title.isEmpty) return;
   entity.name = title;
@@ -330,7 +329,6 @@ void _onTapReplay(
     actions: Btns.oks(
       onTap: () => context.pop(true),
       red: true,
-      okStr: l10n.ok,
     ),
   );
   if (sure != true) return;

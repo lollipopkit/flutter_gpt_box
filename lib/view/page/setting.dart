@@ -139,7 +139,6 @@ class _SettingPageState extends State<SettingPage> {
                   _onSaveColor(ctrl.text);
                   context.pop();
                 },
-                okStr: l10n.ok,
               ),
             );
           },
@@ -258,7 +257,6 @@ class _SettingPageState extends State<SettingPage> {
                 }
               },
               red: true,
-              okStr: l10n.ok,
             ),
           );
         },
@@ -293,7 +291,6 @@ class _SettingPageState extends State<SettingPage> {
           ),
           actions: Btns.oks(
             onTap: () => context.pop(ctrl.text),
-            okStr: l10n.ok,
           ),
         );
         if (name == null) return;
@@ -345,7 +342,6 @@ class _SettingPageState extends State<SettingPage> {
           ),
           actions: Btns.oks(
             onTap: () => context.pop(ctrl.text),
-            okStr: l10n.ok,
           ),
         );
         if (result == null) return;
@@ -375,7 +371,6 @@ class _SettingPageState extends State<SettingPage> {
           ),
           actions: Btns.oks(
             onTap: () => context.pop(ctrl.text),
-            okStr: l10n.ok,
           ),
         );
         if (result == null) return;
@@ -386,7 +381,6 @@ class _SettingPageState extends State<SettingPage> {
             actions: Btns.oks(
               onTap: () => context.pop(true),
               red: true,
-              okStr: l10n.ok,
             ),
           );
           if (sure != true) return;
@@ -422,10 +416,7 @@ class _SettingPageState extends State<SettingPage> {
           context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(
-              onTap: () => context.pop(),
-              okStr: l10n.ok,
-            ),
+            actions: Btns.oks(onTap: context.pop),
           );
           return;
         }
@@ -441,6 +432,26 @@ class _SettingPageState extends State<SettingPage> {
           items: modelStrs,
           initial: val,
           title: l10n.model,
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pop();
+                context.showRoundDialog(
+                  title: l10n.custom,
+                  child: Input(
+                    hint: kChatModel,
+                    onSubmitted: (s) {
+                      context.pop();
+                      OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                      _cfgRN.build();
+                    },
+                  ),
+                  actions: Btns.oks(onTap: context.pop),
+                );
+              },
+              child: Text(l10n.custom),
+            ),
+          ],
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
@@ -462,10 +473,7 @@ class _SettingPageState extends State<SettingPage> {
           context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(
-              onTap: () => context.pop(),
-              okStr: l10n.ok,
-            ),
+            actions: Btns.oks(onTap: context.pop),
           );
           return;
         }
@@ -502,10 +510,7 @@ class _SettingPageState extends State<SettingPage> {
           context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(
-              onTap: () => context.pop(),
-              okStr: l10n.ok,
-            ),
+            actions: Btns.oks(onTap: context.pop),
           );
           return;
         }
@@ -542,10 +547,7 @@ class _SettingPageState extends State<SettingPage> {
           context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(
-              onTap: () => context.pop(),
-              okStr: l10n.ok,
-            ),
+            actions: Btns.oks(onTap: context.pop),
           );
           return;
         }
@@ -593,7 +595,6 @@ class _SettingPageState extends State<SettingPage> {
           ),
           actions: Btns.oks(
             onTap: () => context.pop(ctrl.text),
-            okStr: l10n.ok,
           ),
         );
         if (result == null) return;
@@ -623,7 +624,6 @@ class _SettingPageState extends State<SettingPage> {
           ),
           actions: Btns.oks(
             onTap: () => context.pop(ctrl.text),
-            okStr: l10n.ok,
           ),
         );
         if (result == null) return;

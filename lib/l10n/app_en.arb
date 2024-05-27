@@ -32,6 +32,7 @@
   "copied": "Copied",
   "copy": "Copy",
   "current": "Current",
+  "custom": "Custom",
   "day": "day",
   "defaulT": "Default",
   "delFmt": "Delete {type}({id})?",
