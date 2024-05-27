@@ -435,18 +435,22 @@ class _SettingPageState extends State<SettingPage> {
           actions: [
             TextButton(
               onPressed: () {
+                void onSave(String s) {
+                  context.pop();
+                  OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                  _cfgRN.build();
+                }
+
                 context.pop();
+                final ctrl = TextEditingController();
                 context.showRoundDialog(
                   title: l10n.custom,
                   child: Input(
+                    controller: ctrl,
                     hint: kChatModel,
-                    onSubmitted: (s) {
-                      context.pop();
-                      OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
-                      _cfgRN.build();
-                    },
+                    onSubmitted: (s) => onSave(s),
                   ),
-                  actions: Btns.oks(onTap: context.pop),
+                  actions: Btns.oks(onTap: () => onSave(ctrl.text)),
                 );
               },
               child: Text(l10n.custom),
@@ -489,6 +493,30 @@ class _SettingPageState extends State<SettingPage> {
           items: modelStrs,
           initial: val,
           title: l10n.model,
+          actions: [
+            TextButton(
+              onPressed: () {
+                void onSave(String s) {
+                  context.pop();
+                  OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                  _cfgRN.build();
+                }
+
+                context.pop();
+                final ctrl = TextEditingController();
+                context.showRoundDialog(
+                  title: l10n.custom,
+                  child: Input(
+                    controller: ctrl,
+                    hint: kChatModel,
+                    onSubmitted: (s) => onSave(s),
+                  ),
+                  actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+                );
+              },
+              child: Text(l10n.custom),
+            ),
+          ],
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
@@ -526,6 +554,30 @@ class _SettingPageState extends State<SettingPage> {
           items: modelStrs,
           initial: val,
           title: l10n.model,
+          actions: [
+            TextButton(
+              onPressed: () {
+                void onSave(String s) {
+                  context.pop();
+                  OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                  _cfgRN.build();
+                }
+
+                context.pop();
+                final ctrl = TextEditingController();
+                context.showRoundDialog(
+                  title: l10n.custom,
+                  child: Input(
+                    controller: ctrl,
+                    hint: kChatModel,
+                    onSubmitted: (s) => onSave(s),
+                  ),
+                  actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+                );
+              },
+              child: Text(l10n.custom),
+            ),
+          ],
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
@@ -563,6 +615,30 @@ class _SettingPageState extends State<SettingPage> {
           items: modelStrs,
           initial: val,
           title: l10n.model,
+          actions: [
+            TextButton(
+              onPressed: () {
+                void onSave(String s) {
+                  context.pop();
+                  OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                  _cfgRN.build();
+                }
+
+                context.pop();
+                final ctrl = TextEditingController();
+                context.showRoundDialog(
+                  title: l10n.custom,
+                  child: Input(
+                    controller: ctrl,
+                    hint: kChatModel,
+                    onSubmitted: (s) => onSave(s),
+                  ),
+                  actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+                );
+              },
+              child: Text(l10n.custom),
+            ),
+          ],
         );
         if (model != null) {
           OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
