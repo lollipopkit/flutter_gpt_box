@@ -24,10 +24,10 @@ dependencies:
   image_picker: ^1.0.7
   audioplayers: ^6.0.0
   fl_lib:
-    # git:
-    #   url: https://github.com/lollipopkit/fl_lib
-    #   ref: main
-    path: ../fl_lib
+    git:
+      url: https://github.com/lollipopkit/fl_lib
+      ref: main
+    # path: ../fl_lib
 
 dev_dependencies:
   flutter_test:

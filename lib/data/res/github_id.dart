@@ -3,6 +3,7 @@ abstract final class GithubId {
     'SeaHI-Robot',
     'Http-200',
     'bxoooooo',
+    'Annalasu',
   };
 
   static const contributors = {
