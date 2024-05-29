@@ -6,6 +6,7 @@ import 'package:gpt_box/data/store/all.dart';
 
 abstract final class OpenAICfg {
   static final nameNotifier = ValueNotifier(_cfg.name);
+  static final models = <String>[].vn;
 
   static ChatConfig _cfg = () {
     final selectedKey = Stores.config.selectedKey.fetch();
@@ -20,6 +21,18 @@ abstract final class OpenAICfg {
     config.save();
     Stores.config.selectedKey.put(config.id);
     nameNotifier.value = config.name;
+
+    updateModels();
+  }
+
+  static void updateModels() {
+    try {
+      OpenAI.instance.model.list().then((value) {
+        models.value = value.map((e) => e.id).toList();
+      });
+    } catch (e) {
+      Loggers.app.warning('Failed to update models', e);
+    }
   }
 
   static void apply() {

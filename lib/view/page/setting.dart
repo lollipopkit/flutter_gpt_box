@@ -1,4 +1,3 @@
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
@@ -392,19 +391,24 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _buildOpenAIModels(ChatConfig cfg) {
-    return ExpandTile(
-      leading: const Icon(Icons.model_training),
-      title: Text(l10n.model),
-      children: [
-        _buildOpenAIChatModel(cfg),
-        _buildOpenAIImgModel(cfg),
-        _buildOpenAISpeechModel(cfg),
-        _buildOpenAITranscribeModel(cfg),
-      ],
+    return ValBuilder(
+      listenable: OpenAICfg.models,
+      builder: (models) {
+        return ExpandTile(
+          leading: const Icon(Icons.model_training),
+          title: Text(l10n.model),
+          children: [
+            _buildOpenAIChatModel(cfg, models),
+            _buildOpenAIImgModel(cfg, models),
+            _buildOpenAISpeechModel(cfg, models),
+            _buildOpenAITranscribeModel(cfg, models),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildOpenAIChatModel(ChatConfig cfg) {
+  Widget _buildOpenAIChatModel(ChatConfig cfg, List<String> models) {
     final val = cfg.model;
     return ListTile(
       leading: const Icon(Icons.chat),
@@ -420,13 +424,10 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        final models = await context.showLoadingDialog(
-          fn: () async => await OpenAI.instance.model.list(),
-        );
-        final modelStrs = models.map((e) => e.id).toList();
+        final modelStrs = List<String>.from(models);
         modelStrs.removeWhere((element) => !element.startsWith('gpt'));
         if (modelStrs.isEmpty) {
-          modelStrs.addAll(models.map((e) => e.id));
+          modelStrs.addAll(models);
         }
         final model = await context.showPickSingleDialog(
           items: modelStrs,
@@ -465,7 +466,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildOpenAIImgModel(ChatConfig cfg) {
+  Widget _buildOpenAIImgModel(ChatConfig cfg, List<String> models) {
     final val = cfg.imgModel;
     return ListTile(
       leading: const Icon(Icons.photo),
@@ -481,13 +482,11 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        final models = await context.showLoadingDialog(
-          fn: () async => await OpenAI.instance.model.list(),
-        );
-        final modelStrs = models.map((e) => e.id).toList();
+
+        final modelStrs = List<String>.from(models);
         modelStrs.removeWhere((element) => !element.startsWith('dall-e'));
         if (modelStrs.isEmpty) {
-          modelStrs.addAll(models.map((e) => e.id));
+          modelStrs.addAll(models);
         }
         final model = await context.showPickSingleDialog(
           items: modelStrs,
@@ -526,7 +525,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildOpenAISpeechModel(ChatConfig cfg) {
+  Widget _buildOpenAISpeechModel(ChatConfig cfg, List<String> models) {
     final val = cfg.speechModel;
     return ListTile(
       leading: const Icon(Icons.speaker),
@@ -542,13 +541,11 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        final models = await context.showLoadingDialog(
-          fn: () async => await OpenAI.instance.model.list(),
-        );
-        final modelStrs = models.map((e) => e.id).toList();
+
+        final modelStrs = List<String>.from(models);
         modelStrs.removeWhere((element) => !element.startsWith('tts'));
         if (modelStrs.isEmpty) {
-          modelStrs.addAll(models.map((e) => e.id));
+          modelStrs.addAll(models);
         }
         final model = await context.showPickSingleDialog(
           items: modelStrs,
@@ -587,7 +584,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildOpenAITranscribeModel(ChatConfig cfg) {
+  Widget _buildOpenAITranscribeModel(ChatConfig cfg, List<String> models) {
     final val = cfg.transcribeModel;
     return ListTile(
       leading: const Icon(Icons.transcribe),
@@ -603,13 +600,11 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        final models = await context.showLoadingDialog(
-          fn: () async => await OpenAI.instance.model.list(),
-        );
-        final modelStrs = models.map((e) => e.id).toList();
+
+        final modelStrs = List<String>.from(models);
         modelStrs.removeWhere((element) => !element.startsWith('whisper'));
         if (modelStrs.isEmpty) {
-          modelStrs.addAll(models.map((e) => e.id));
+          modelStrs.addAll(models);
         }
         final model = await context.showPickSingleDialog(
           items: modelStrs,

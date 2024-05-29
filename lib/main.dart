@@ -93,6 +93,7 @@ Future<void> _initAppComponents() async {
   OpenAI.showLogs = !BuildMode.isRelease;
   OpenAI.showResponsesLogs = !BuildMode.isRelease;
   OpenAICfg.apply();
+  OpenAICfg.updateModels();
 
   SyncService.sync(force: true);
 }

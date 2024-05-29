@@ -129,7 +129,7 @@ class _ChatPageState extends State<_ChatPage>
     final chatItem = chatItems[idx];
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
     return Padding(
-      padding: const EdgeInsets.all(7),
+      padding: const EdgeInsets.all(2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -157,7 +157,7 @@ class _ChatPageState extends State<_ChatPage>
                       .joinWith(UIs.height13),
                 );
               },
-            ),
+            ).paddingSymmetric(horizontal: 7, vertical: 3),
           ),
           UIs.height13,
         ],
@@ -214,6 +214,7 @@ class _ChatPageState extends State<_ChatPage>
             color: UIs.primaryColor,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
+          margin: const EdgeInsets.symmetric(horizontal: 7),
           child: Text(
             chatItem.role.localized,
             style: TextStyle(
