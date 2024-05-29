@@ -11,7 +11,10 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  dart_openai: ^5.1.0
+  dart_openai: #^5.1.0
+    git:
+      url: https://github.com/lollipopkit/dart_openai
+      ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
   file_picker: ^8.0.0+1
   flutter_highlight: # ^0.7.0
     git:
@@ -39,7 +42,8 @@ dev_dependencies:
   fl_build:
     git:
       url: https://github.com/lollipopkit/fl_build.git
-      ref: 52b78c04e73e49b39e2b291241f57c564faab881
+      ref: v1.0.11
+    # path: ../fl_build
 
 flutter:
   generate: true

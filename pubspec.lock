@@ -284,10 +284,11 @@ packages:
   dart_openai:
     dependency: "direct main"
     description:
-      name: dart_openai
-      sha256: "853bb57fed6a71c3ba0324af5cb40c16d196cf3aa55b91d244964ae4a241ccf1"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
+      resolved-ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
+      url: "https://github.com/lollipopkit/dart_openai"
+    source: git
     version: "5.1.0"
   dart_style:
     dependency: transitive
@@ -397,8 +398,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: "52b78c04e73e49b39e2b291241f57c564faab881"
-      resolved-ref: "52b78c04e73e49b39e2b291241f57c564faab881"
+      ref: "v1.0.11"
+      resolved-ref: ead58f6e985600c03cd27fb6563c10b6afa2d640
       url: "https://github.com/lollipopkit/fl_build.git"
     source: git
     version: "1.0.0"

@@ -44,6 +44,6 @@ app.*.map.json
 
 /android/app/app.key
 linux.AppDir
-GPTBox-x86_64.AppImage
+GPTBox*.AppImage
 
 **/*.bak
