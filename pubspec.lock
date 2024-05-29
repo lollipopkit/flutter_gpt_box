@@ -407,8 +407,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "72a52694b7c023c309475043627f599dd916f5ef"
-      resolved-ref: "72a52694b7c023c309475043627f599dd916f5ef"
+      ref: "v1.0.24"
+      resolved-ref: "3c95d07aa27446f1c05baf8fa02bd2e7392f52d0"
       url: "https://github.com/lollipopkit/fl_lib"
     source: git
     version: "0.0.1"

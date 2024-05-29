@@ -42,6 +42,7 @@
   "empty": "Empty",
   "emptyFields": "{fields} is empty",
   "error": "Error",
+  "failed": "Failed",
   "file": "File",
   "fileNotFound": "File({file}) not found",
   "fileTooLarge": "File too large: {size}",

@@ -42,6 +42,7 @@
   "empty": "空",
   "emptyFields": "{fields} 为空",
   "error": "错误",
+  "failed": "失败",
   "file": "文件",
   "fileNotFound": "文件（{file}）未能找到",
   "fileTooLarge": "文件过大：{size}",

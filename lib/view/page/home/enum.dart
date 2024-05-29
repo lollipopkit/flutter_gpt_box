@@ -61,7 +61,7 @@ enum HomePageEnum {
                 : null,
           );
           if (select == null) return;
-          OpenAICfg.current = select;
+          OpenAICfg.setTo(select, context);
         },
         icon: const Icon(Icons.switch_account),
         tooltip: l10n.profile,

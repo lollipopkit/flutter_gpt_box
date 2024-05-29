@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           themeMode: themeMode,
           theme: ThemeData(colorSchemeSeed: UIs.colorSeed),
-          darkTheme: _getAmoledTheme(ThemeData(
+          darkTheme: ThemeData(
             brightness: Brightness.dark,
             colorSchemeSeed: UIs.colorSeed,
-          )),
+          ).toAmoled,
           home: Builder(
             builder: (context) {
               final l10n_ = AppLocalizations.of(context);
@@ -50,18 +50,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-ThemeData _getAmoledTheme(ThemeData darkTheme) => darkTheme.copyWith(
-      scaffoldBackgroundColor: Colors.black,
-      dialogBackgroundColor: Colors.black,
-      drawerTheme: const DrawerThemeData(backgroundColor: Colors.black),
-      appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
-      dialogTheme: const DialogTheme(backgroundColor: Colors.black),
-      bottomSheetTheme:
-          const BottomSheetThemeData(backgroundColor: Colors.black),
-      listTileTheme: const ListTileThemeData(tileColor: Colors.transparent),
-      cardTheme: const CardTheme(color: Colors.black12),
-      navigationBarTheme:
-          const NavigationBarThemeData(backgroundColor: Colors.black),
-      popupMenuTheme: const PopupMenuThemeData(color: Colors.black),
-    );

@@ -6,10 +6,6 @@ CustomAppBar _buildAppBar(BuildContext context) {
     builder: (_, __) {
       final entity = _curChat;
       if (entity == null) return Text(l10n.empty);
-      final len = '${entity.items.length} ${l10n.message}';
-      final time = entity.items.lastOrNull?.createdAt
-          .difference(DateTime.now())
-          .toAgoStr;
       return AnimatedSwitcher(
         duration: _durationMedium,
         switchInCurve: Easing.standardDecelerate,
@@ -25,39 +21,80 @@ CustomAppBar _buildAppBar(BuildContext context) {
         child: SizedBox(
           key: Key(entity.id),
           width: (_media?.size.width ?? 300) * 0.5,
-          child: RichText(
-            maxLines: 2,
+          child: Text(
+            _curChat?.name ?? l10n.untitled,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.left,
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: _curChat?.name ?? l10n.untitled,
-                  style: UIs.text13
-                      .copyWith(color: UIs.textColor.fromBool(context.isDark)),
-                ),
-                TextSpan(
-                  text: '\n$len · ${time ?? l10n.empty}',
-                  style: UIs.text11Grey,
-                ),
-              ],
-            ),
+            style: UIs.text15,
           ),
         ),
       );
     },
   );
+
+  final subtitle = ValBuilder(
+    listenable: OpenAICfg.vn,
+    builder: (val) {
+      final text = val.name.isEmpty ? l10n.defaulT : val.name;
+      return AnimatedSwitcher(
+        duration: _durationMedium,
+        switchInCurve: Easing.standardDecelerate,
+        switchOutCurve: Easing.standardDecelerate,
+        transitionBuilder: (child, animation) => SlideTransitionX(
+          position: animation,
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        ),
+        // Use a SizedBox to avoid the title jumping when switching chats.
+        child: Text(
+          key: ValueKey(val),
+          '$text·${val.model}',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.left,
+          style: UIs.text12Grey,
+        ),
+      );
+    },
+  );
+
   return CustomAppBar(
     centerTitle: false,
     title: GestureDetector(
       onLongPress: () => Routes.debug.go(
         context,
         args: DebugPageArgs(
-            notifier: Pros.debug.widgets,
-            onClear: Pros.debug.clear,
-            title: 'Logs(${Build.build})'),
+          notifier: Pros.debug.widgets,
+          onClear: Pros.debug.clear,
+          title: 'Logs(${Build.build})',
+        ),
       ),
-      child: title,
+      onTap: () => _onSwitchModel(context),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          title,
+          SizedBox(
+            width: (_media?.size.width ?? 300) * 0.5,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                subtitle,
+                const Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 15,
+                  color: Colors.grey,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     ),
     actions: [
       ValueListenableBuilder(
@@ -66,4 +103,30 @@ CustomAppBar _buildAppBar(BuildContext context) {
       )
     ],
   );
+}
+
+void _onSwitchModel(BuildContext context) async {
+  final cfg = OpenAICfg.current;
+  if (cfg.key.isEmpty) {
+    context.showRoundDialog(
+      title: l10n.attention,
+      child: Text(l10n.needOpenAIKey),
+      actions: Btns.oks(onTap: context.pop),
+    );
+    return;
+  }
+  final models = OpenAICfg.models.value;
+  final modelStrs = List<String>.from(models);
+  modelStrs.removeWhere((element) => !element.startsWith('gpt'));
+  if (modelStrs.isEmpty) {
+    modelStrs.addAll(models);
+  }
+
+  final model = await context.showPickSingleDialog(
+    items: modelStrs,
+    initial: cfg.model,
+    title: l10n.model,
+  );
+  if (model == null) return;
+  OpenAICfg.setTo(cfg.copyWith(model: model), context);
 }

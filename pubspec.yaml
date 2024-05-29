@@ -29,7 +29,7 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lollipopkit/fl_lib
-      ref: 72a52694b7c023c309475043627f599dd916f5ef
+      ref: v1.0.24
     # path: ../fl_lib
 
 dev_dependencies:

@@ -251,7 +251,7 @@ class _SettingPageState extends State<SettingPage> {
                 _cfgRN.build();
                 context.pop();
                 if (cfg.id == value.id) {
-                  OpenAICfg.switchToDefault();
+                  OpenAICfg.switchToDefault(context);
                   _cfgRN.build();
                 }
               },
@@ -265,14 +265,14 @@ class _SettingPageState extends State<SettingPage> {
           value: cfg.id == value.id,
           onChanged: (val) {
             if (val != true) return;
-            OpenAICfg.current = value;
+            OpenAICfg.setTo(value, context);
             _cfgRN.build();
           },
         ),
         title: Text(value.name.isEmpty ? l10n.defaulT : value.name),
         onTap: () {
           if (cfg.id == value.id) return;
-          OpenAICfg.current = value;
+          OpenAICfg.setTo(value, context);
           _cfgRN.build();
         },
         trailing: value.id != ChatConfig.defaultId ? delBtn : null,
@@ -297,7 +297,7 @@ class _SettingPageState extends State<SettingPage> {
           id: shortid.generate(),
           name: name,
         )..save();
-        OpenAICfg.current = cfg;
+        OpenAICfg.setTo(cfg, context);
         _cfgRN.build();
       },
       title: Text(l10n.add),
@@ -344,7 +344,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
         );
         if (result == null) return;
-        OpenAICfg.current = OpenAICfg.current.copyWith(key: result);
+        OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result), context);
         _cfgRN.build();
       },
     );
@@ -384,7 +384,7 @@ class _SettingPageState extends State<SettingPage> {
           );
           if (sure != true) return;
         }
-        OpenAICfg.current = OpenAICfg.current.copyWith(url: result);
+        OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result), context);
         _cfgRN.build();
       },
     );
@@ -438,7 +438,10 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 void onSave(String s) {
                   context.pop();
-                  OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                  OpenAICfg.setTo(
+                    OpenAICfg.current.copyWith(model: s),
+                    context,
+                  );
                   _cfgRN.build();
                 }
 
@@ -459,7 +462,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model), context);
           _cfgRN.build();
         }
       },
@@ -497,7 +500,10 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 void onSave(String s) {
                   context.pop();
-                  OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                  OpenAICfg.setTo(
+                    OpenAICfg.current.copyWith(model: s),
+                    context,
+                  );
                   _cfgRN.build();
                 }
 
@@ -518,7 +524,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model), context);
           _cfgRN.build();
         }
       },
@@ -556,7 +562,10 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 void onSave(String s) {
                   context.pop();
-                  OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                  OpenAICfg.setTo(
+                    OpenAICfg.current.copyWith(model: s),
+                    context,
+                  );
                   _cfgRN.build();
                 }
 
@@ -577,7 +586,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model), context);
           _cfgRN.build();
         }
       },
@@ -615,7 +624,10 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 void onSave(String s) {
                   context.pop();
-                  OpenAICfg.current = OpenAICfg.current.copyWith(model: s);
+                  OpenAICfg.setTo(
+                    OpenAICfg.current.copyWith(model: s),
+                    context,
+                  );
                   _cfgRN.build();
                 }
 
@@ -636,7 +648,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.current = OpenAICfg.current.copyWith(model: model);
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model), context);
           _cfgRN.build();
         }
       },
@@ -669,7 +681,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
         );
         if (result == null) return;
-        OpenAICfg.current = OpenAICfg.current.copyWith(prompt: result);
+        OpenAICfg.setTo(OpenAICfg.current.copyWith(prompt: result), context);
         _cfgRN.build();
       },
     );
@@ -703,7 +715,10 @@ class _SettingPageState extends State<SettingPage> {
           context.showSnackBar('Invalid number: $result');
           return;
         }
-        OpenAICfg.current = OpenAICfg.current.copyWith(historyLen: newVal);
+        OpenAICfg.setTo(
+          OpenAICfg.current.copyWith(historyLen: newVal),
+          context,
+        );
         _cfgRN.build();
       },
     );

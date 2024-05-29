@@ -110,10 +110,13 @@ abstract final class AppLink {
           Loggers.app.warning(msg);
           return true;
         }
-        OpenAICfg.current = OpenAICfg.current.copyWith(
-          url: openAiUrl,
-          key: openAiKey,
-          model: openAiModel,
+        OpenAICfg.setTo(
+          OpenAICfg.current.copyWith(
+            url: openAiUrl,
+            key: openAiKey,
+            model: openAiModel,
+          ),
+          context,
         );
         return true;
       default:
