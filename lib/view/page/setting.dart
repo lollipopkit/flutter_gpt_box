@@ -426,13 +426,8 @@ class _SettingPageState extends State<SettingPage> {
           );
           return;
         }
-        final modelStrs = List<String>.from(models);
-        modelStrs.removeWhere((element) => !element.startsWith('gpt'));
-        if (modelStrs.isEmpty) {
-          modelStrs.addAll(models);
-        }
         final model = await context.showPickSingleDialog(
-          items: modelStrs,
+          items: models,
           initial: val,
           title: l10n.model,
           actions: [
@@ -488,13 +483,8 @@ class _SettingPageState extends State<SettingPage> {
           return;
         }
 
-        final modelStrs = List<String>.from(models);
-        modelStrs.removeWhere((element) => !element.startsWith('dall-e'));
-        if (modelStrs.isEmpty) {
-          modelStrs.addAll(models);
-        }
         final model = await context.showPickSingleDialog(
-          items: modelStrs,
+          items: models,
           initial: val,
           title: l10n.model,
           actions: [
@@ -503,7 +493,7 @@ class _SettingPageState extends State<SettingPage> {
                 void onSave(String s) {
                   context.pop();
                   OpenAICfg.setTo(
-                    OpenAICfg.current.copyWith(model: s),
+                    OpenAICfg.current.copyWith(imgModel: s),
                     context,
                   );
                   _cfgRN.build();
@@ -526,7 +516,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model), context);
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model), context);
           _cfgRN.build();
         }
       },
@@ -550,13 +540,8 @@ class _SettingPageState extends State<SettingPage> {
           return;
         }
 
-        final modelStrs = List<String>.from(models);
-        modelStrs.removeWhere((element) => !element.startsWith('tts'));
-        if (modelStrs.isEmpty) {
-          modelStrs.addAll(models);
-        }
         final model = await context.showPickSingleDialog(
-          items: modelStrs,
+          items: models,
           initial: val,
           title: l10n.model,
           actions: [
@@ -565,7 +550,7 @@ class _SettingPageState extends State<SettingPage> {
                 void onSave(String s) {
                   context.pop();
                   OpenAICfg.setTo(
-                    OpenAICfg.current.copyWith(model: s),
+                    OpenAICfg.current.copyWith(speechModel: s),
                     context,
                   );
                   _cfgRN.build();
@@ -588,7 +573,10 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model), context);
+          OpenAICfg.setTo(
+            OpenAICfg.current.copyWith(speechModel: model),
+            context,
+          );
           _cfgRN.build();
         }
       },
@@ -612,13 +600,8 @@ class _SettingPageState extends State<SettingPage> {
           return;
         }
 
-        final modelStrs = List<String>.from(models);
-        modelStrs.removeWhere((element) => !element.startsWith('whisper'));
-        if (modelStrs.isEmpty) {
-          modelStrs.addAll(models);
-        }
         final model = await context.showPickSingleDialog(
-          items: modelStrs,
+          items: models,
           initial: val,
           title: l10n.model,
           actions: [
@@ -627,7 +610,7 @@ class _SettingPageState extends State<SettingPage> {
                 void onSave(String s) {
                   context.pop();
                   OpenAICfg.setTo(
-                    OpenAICfg.current.copyWith(model: s),
+                    OpenAICfg.current.copyWith(transcribeModel: s),
                     context,
                   );
                   _cfgRN.build();
@@ -650,7 +633,10 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model), context);
+          OpenAICfg.setTo(
+            OpenAICfg.current.copyWith(transcribeModel: model),
+            context,
+          );
           _cfgRN.build();
         }
       },
@@ -678,9 +664,7 @@ class _SettingPageState extends State<SettingPage> {
             controller: ctrl,
             maxLines: 3,
           ),
-          actions: Btns.oks(
-            onTap: () => context.pop(ctrl.text),
-          ),
+          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(prompt: result), context);

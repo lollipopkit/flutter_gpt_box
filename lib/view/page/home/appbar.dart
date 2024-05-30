@@ -36,26 +36,35 @@ CustomAppBar _buildAppBar(BuildContext context) {
   final subtitle = ValBuilder(
     listenable: OpenAICfg.vn,
     builder: (val) {
-      return AnimatedSwitcher(
-        duration: _durationMedium,
-        switchInCurve: Easing.standardDecelerate,
-        switchOutCurve: Easing.standardDecelerate,
-        transitionBuilder: (child, animation) => SlideTransitionX(
-          position: animation,
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-        ),
-        // Use a SizedBox to avoid the title jumping when switching chats.
-        child: Text(
-          key: ValueKey(val),
-          val.model,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.left,
-          style: UIs.text12Grey,
-        ),
+      return ValBuilder(
+        listenable: _chatType,
+        builder: (type) {
+          return AnimatedSwitcher(
+            duration: _durationMedium,
+            switchInCurve: Easing.standardDecelerate,
+            switchOutCurve: Easing.standardDecelerate,
+            transitionBuilder: (child, animation) => SlideTransitionX(
+              position: animation,
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            ),
+            // Use a SizedBox to avoid the title jumping when switching chats.
+            child: Text(
+              key: ValueKey(val),
+              switch (type) {
+                ChatType.text => val.model,
+                ChatType.img => val.imgModel,
+                ChatType.audio => val.speechModel,
+              },
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.left,
+              style: UIs.text12Grey,
+            ),
+          );
+        },
       );
     },
   );

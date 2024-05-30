@@ -131,17 +131,19 @@ class _ChatPageState extends State<_ChatPage>
     return InkWell(
       borderRadius: BorderRadius.circular(13),
       onLongPress: () {
-        final funcs =
-            _buildChatItemFuncs(chatItems, chatItem).joinWith(UIs.width13);
+        final funcs = _buildChatItemFuncs(chatItems, chatItem);
         context.showRoundDialog(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: funcs,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: funcs,
+            ),
           ),
         );
       },
       child: Padding(
-        padding: const EdgeInsets.only(top: 13, left: 13, right: 13, bottom: 2),
+        padding: const EdgeInsets.only(top: 11, left: 11, right: 11, bottom: 2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -257,6 +259,7 @@ class _ChatPageState extends State<_ChatPage>
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              UIs.height7,
               Icon(icon, size: 20),
               UIs.height7,
               Text(text),
@@ -282,16 +285,13 @@ class _ChatPageState extends State<_ChatPage>
           builder: (_, __) {
             /// TODO: Can't replay image message.
             final isImgChat =
-                chatItem.content.any((e) => e.type == ChatContentType.image);
+                chatItem.content.any((e) => e.type == ChatContentType.image) ||
+                    _chatType.value != ChatType.text;
             if (isImgChat) return UIs.placeholder;
             final isWorking = _chatStreamSubs.containsKey(_curChatId);
             if (isWorking) return UIs.placeholder;
             return buildCircleBtn(
-              onTap: () => _onTapReplay(
-                context,
-                _curChatId,
-                chatItem,
-              ),
+              onTap: () => _onTapReplay(context, _curChatId, chatItem),
               text: l10n.replay,
               icon: Icons.refresh,
             );
