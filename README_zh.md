@@ -3,7 +3,7 @@
 <h2 align="center">Flutter GPT Box</h2>
 
 <p align="center">
-一个支持 OpenAI API 的 第三方全平台客户端。
+一个支持 OpenAI API 的 第三方客户端。
 </p>
 
 <!-- Badges-->
@@ -24,7 +24,7 @@
 - 以图片形式分享聊天
 - Url Scheme，例如：`lk-gptbox://chat/new?msg=你好`
 - 与 WebDAV / iCloud 同步
-- 全平台支持
+- 移动端 & 桌面端 支持
 - 渲染 代码块 / LaTeX 公式
 
 
@@ -40,9 +40,9 @@
 
 
 ## ⬇️ 使用
-🎉 **现在 Android / Linux 版本使用 GitHub action 构建**。
+🎉 **现在 Android / Linux 版本使用 GitHub Actions 构建**。
 
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://github.com/lollipopkit/flutter_gpt_box/releases) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://github.com/lollipopkit/flutter_gpt_box/releases) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (已废弃)](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://github.com/lollipopkit/flutter_gpt_box/releases) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://github.com/lollipopkit/flutter_gpt_box/releases) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip)
 
 - 由于中国政策原因，且**目前**无法完成备案。请移步 AppStore 其他区下载。
 - 关于安全：

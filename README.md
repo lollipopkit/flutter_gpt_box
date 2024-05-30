@@ -3,7 +3,7 @@ English | [简体中文](README_zh.md)
 <h2 align="center">Flutter GPT Box</h2>
 
 <p align="center">
-A third-party GPT Client for OpenAI API on all platforms.
+A third-party GPT Client for OpenAI API.
 </p>
 
 <!-- Badges-->
@@ -15,16 +15,16 @@ A third-party GPT Client for OpenAI API on all platforms.
 
 ## 😣 Attention
 This app is now under development, some features may be missing / not available.
-Please don't use it in production environment, and don't use it for important data.
+Please refrain from using it in production environments or for critical data.
 
 
 ## 🪄 Features
-- Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI's export file](https://chatgpt.com).
+- Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
 - Text / Image / Audio chat. (Web only support text)
 - Share chat by picture.
 - Render code block / latex formula.
 - Url Scheme, eg: `lk-gptbox://chat/new?msg=hello`
-- All platforms support.
+- Mobile & Desktop supports.
 - Sync with WebDAV / iCloud.
 
 
@@ -40,9 +40,9 @@ Please don't use it in production environment, and don't use it for important da
 
 
 ## ⬇️ Use
-🎉 **Now Android / Linux version is built by GitHub action**
+🎉 **The Android / Linux version are now built via GitHub Actions**
 
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://github.com/lollipopkit/flutter_gpt_box/releases) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://github.com/lollipopkit/flutter_gpt_box/releases) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (Deprecated)](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://github.com/lollipopkit/flutter_gpt_box/releases) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://github.com/lollipopkit/flutter_gpt_box/releases) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip)
 
 - Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
 - Security:
