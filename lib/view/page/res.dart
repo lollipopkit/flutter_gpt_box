@@ -22,6 +22,7 @@ final class _ResPageState extends State<ResPage> {
   late final _resType = ValueNotifier(_ResType.image)..addListener(_load);
   final _listKey = GlobalKey<AnimatedGridState>();
   final _filesList = <FileSystemEntity>[];
+  bool _isWide = false;
 
   @override
   void dispose() {
@@ -33,6 +34,13 @@ final class _ResPageState extends State<ResPage> {
   void initState() {
     _load();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final size = MediaQuery.of(context).size;
+    _isWide = size.width / size.height > 1.5;
   }
 
   @override
@@ -57,8 +65,8 @@ final class _ResPageState extends State<ResPage> {
         builder: (_, __) {
           return AnimatedGrid(
             key: _listKey,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: _isWide ? 5 : 2,
               crossAxisSpacing: 13,
               mainAxisSpacing: 13,
             ),

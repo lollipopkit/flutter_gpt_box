@@ -40,48 +40,50 @@ final class AudioCard extends StatefulWidget {
     _audioPlayer.onPlayerComplete.listen((_) {
       final status = _audioPlayerMap[_nowPlayingId];
       if (status == null) return;
+      _nowPlayingId = null;
       status.value = status.value.copyWith(playing: false, played: 0);
     });
   }
 }
 
 class _AudioCardState extends State<AudioCard> {
-  late final _file = File(widget.path);
+  File get _file => File(widget.path);
 
   @override
   Widget build(BuildContext context) {
-    var inited = true;
-    final listenable = _audioPlayerMap.putIfAbsent(
-      widget.id,
-      () {
-        inited = false;
-        return ValueNotifier(AudioPlayStatus(id: widget.id));
-      },
-    );
-    if (inited) {
-      return _buildItem(listenable);
-    }
-    final initWidget = () async {
-      await AudioCard.loadingMap[widget.id]?.future;
-      AudioCard.loadingMap.remove(widget.id);
-      if (!await _file.exists()) {
-        throw l10n.fileNotFound(widget.path);
-      }
-      final player = AudioPlayer();
-      player.setSource(DeviceFileSource(widget.path));
-      final duration = await player.getDuration();
-
-      listenable.value = listenable.value.copyWith(
-        total: duration?.inMilliseconds ?? 0,
-      );
-    }();
     return FutureWidget(
-      future: initWidget,
+      future: () async {
+        await AudioCard.loadingMap[widget.id]?.future;
+        AudioCard.loadingMap.remove(widget.id);
+        if (!await _file.exists()) {
+          throw l10n.fileNotFound(widget.path);
+        }
+
+        var durationInited = true;
+        final listenable = _audioPlayerMap.putIfAbsent(
+          widget.id,
+          () {
+            durationInited = false;
+            return ValueNotifier(AudioPlayStatus(id: widget.id));
+          },
+        );
+        if (!durationInited) {
+          final player = AudioPlayer();
+          player.setSource(DeviceFileSource(widget.path));
+          final duration = await player.getDuration();
+
+          listenable.value = listenable.value.copyWith(
+            total: duration?.inMilliseconds ?? 0,
+          );
+        }
+        return listenable;
+      }(),
       error: (error, trace) {
         return Text('$error');
       },
       loading: UIs.centerSizedLoading,
-      success: (duration) {
+      success: (listenable) {
+        if (listenable == null) return UIs.placeholder;
         return _buildItem(listenable);
       },
     );
@@ -96,12 +98,14 @@ class _AudioCardState extends State<AudioCard> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              UIs.height7,
               Text(
                 widget.id,
                 style: UIs.text13Bold,
                 maxLines: 1,
                 overflow: TextOverflow.fade,
               ),
+              UIs.height7,
               Text(listenable.value.progress),
               Row(
                 mainAxisSize: MainAxisSize.min,

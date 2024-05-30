@@ -194,10 +194,8 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
     );
     replyContent.raw = file.path;
     _storeChat(chatId, context);
-
-    /// Wait for writing the audio file to disk
-    await Future.delayed(Durations.short2);
     completer.complete();
+    _chatItemRNMap[assistReply.id]?.build();
   } catch (e) {
     _onStopStreamSub(chatId);
     final msg = 'Audio create speech: $e';
