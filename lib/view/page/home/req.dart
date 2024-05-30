@@ -193,8 +193,11 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
       responseFormat: OpenAIAudioSpeechResponseFormat.aac,
     );
     replyContent.raw = file.path;
-    completer.complete();
     _storeChat(chatId, context);
+
+    /// Wait for writing the audio file to disk
+    await Future.delayed(Durations.short2);
+    completer.complete();
   } catch (e) {
     _onStopStreamSub(chatId);
     final msg = 'Audio create speech: $e';

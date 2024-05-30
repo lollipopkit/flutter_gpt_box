@@ -345,6 +345,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result), context);
+        OpenAICfg.updateModels();
         _cfgRN.build();
       },
     );
@@ -385,6 +386,7 @@ class _SettingPageState extends State<SettingPage> {
           if (sure != true) return;
         }
         OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result), context);
+        OpenAICfg.updateModels();
         _cfgRN.build();
       },
     );

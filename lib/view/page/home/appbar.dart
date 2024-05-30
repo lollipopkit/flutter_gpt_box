@@ -36,7 +36,6 @@ CustomAppBar _buildAppBar(BuildContext context) {
   final subtitle = ValBuilder(
     listenable: OpenAICfg.vn,
     builder: (val) {
-      final text = val.name.isEmpty ? l10n.defaulT : val.name;
       return AnimatedSwitcher(
         duration: _durationMedium,
         switchInCurve: Easing.standardDecelerate,
@@ -51,7 +50,7 @@ CustomAppBar _buildAppBar(BuildContext context) {
         // Use a SizedBox to avoid the title jumping when switching chats.
         child: Text(
           key: ValueKey(val),
-          '$text·${val.model}',
+          val.model,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.left,

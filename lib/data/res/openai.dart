@@ -28,7 +28,7 @@ abstract final class OpenAICfg {
       Funcs.throttle(
         updateModels,
         id: 'setTo-${config.id}',
-        duration: 1000 * 30,
+        duration: 1000,
       )?.then((ok) {
         if (!ok && context.mounted) {
           context.showSnackBar('${l10n.failed}: update models list');

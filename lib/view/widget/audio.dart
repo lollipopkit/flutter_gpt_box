@@ -110,8 +110,11 @@ class _AudioCardState extends State<AudioCard> {
                     icon: val.playing
                         ? const Icon(Icons.stop, size: 19)
                         : const Icon(Icons.play_arrow, size: 19),
-                    onPressed: () =>
-                        _onTapAudioCtrl(val, widget.id, listenable),
+                    onPressed: () => _onTapAudioCtrl(
+                      val,
+                      widget.id,
+                      listenable,
+                    ),
                   ),
                   IconButton(
                     onPressed: () async {
@@ -127,6 +130,11 @@ class _AudioCardState extends State<AudioCard> {
             ],
           ).cardx;
         }
+
+        final sliderVal = () {
+          if (val.total == 0) return 0.0;
+          return val.played / val.total;
+        }();
         return ListTile(
           leading: IconButton(
             icon: val.playing
@@ -135,7 +143,7 @@ class _AudioCardState extends State<AudioCard> {
             onPressed: () => _onTapAudioCtrl(val, widget.id, listenable),
           ),
           title: Slider(
-            value: val.played / val.total,
+            value: sliderVal,
             onChanged: (v) {
               final nowMilli = (val.total * v).toInt();
               final duration = Duration(milliseconds: nowMilli);
