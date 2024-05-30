@@ -115,8 +115,8 @@ final class ChatHistoryItem {
     return content
         .map((e) => switch (e.type) {
               ChatContentType.text => e.raw,
-              ChatContentType.image => '![](${e.raw})',
-              final type => throw UnimplementedError('type: $type'),
+              ChatContentType.image => '![$id](${e.raw})',
+              ChatContentType.audio => '[$id](${e.raw})',
             })
         .join('\n');
   }

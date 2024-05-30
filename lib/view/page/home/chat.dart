@@ -128,20 +128,26 @@ class _ChatPageState extends State<_ChatPage>
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildChatItemTitle(chatItems, chatItem),
-          UIs.height13,
-          BlurOverlay(
-            popup: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: _buildChatItemFuncs(chatItems, chatItem)
-                  .joinWith(UIs.width13),
-            ),
-            child: ListenableBuilder(
+    return InkWell(
+      borderRadius: BorderRadius.circular(13),
+      onLongPress: () {
+        final funcs =
+            _buildChatItemFuncs(chatItems, chatItem).joinWith(UIs.width13);
+        context.showRoundDialog(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: funcs,
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 13, left: 13, right: 13, bottom: 2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildChatItemTitle(chatItems, chatItem),
+            UIs.height13,
+            ListenableBuilder(
               listenable: node,
               builder: (_, __) {
                 return Column(
@@ -157,10 +163,10 @@ class _ChatPageState extends State<_ChatPage>
                       .joinWith(UIs.height13),
                 );
               },
-            ).paddingSymmetric(horizontal: 7, vertical: 3),
-          ),
-          UIs.height13,
-        ],
+            ).paddingSymmetric(horizontal: 2),
+            UIs.height13,
+          ],
+        ),
       ),
     );
   }
@@ -214,7 +220,6 @@ class _ChatPageState extends State<_ChatPage>
             color: UIs.primaryColor,
           ),
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
-          margin: const EdgeInsets.symmetric(horizontal: 7),
           child: Text(
             chatItem.role.localized,
             style: TextStyle(
@@ -227,45 +232,42 @@ class _ChatPageState extends State<_ChatPage>
     );
   }
 
-  Widget _buildCircleBtn({
-    required String text,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return ClipOval(
-      child: Material(
-        color: const Color.fromARGB(239, 47, 47, 47),
-        child: InkWell(
-          onTap: () {
-            BlurOverlay.close?.call();
-            onTap();
-          },
-          child: SizedBox(
-            width: 77,
-            height: 77,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, size: 20),
-                const SizedBox(height: 9),
-                Text(text),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   List<Widget> _buildChatItemFuncs(
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
     final replayEnabled =
         chatItem.role == ChatRole.user && Stores.setting.replay.fetch();
+
+    Widget buildCircleBtn({
+      required VoidCallback onTap,
+      required String text,
+      required IconData icon,
+    }) {
+      return InkWell(
+        borderRadius: BorderRadius.circular(13),
+        onTap: () {
+          context.pop();
+          onTap();
+        },
+        child: SizedBox(
+          width: 77,
+          height: 77,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 20),
+              UIs.height7,
+              Text(text),
+            ],
+          ),
+        ),
+      );
+    }
+
     return [
-      _buildCircleBtn(
+      buildCircleBtn(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => _MarkdownCopyPage(text: chatItem.toMarkdown),
@@ -284,7 +286,7 @@ class _ChatPageState extends State<_ChatPage>
             if (isImgChat) return UIs.placeholder;
             final isWorking = _chatStreamSubs.containsKey(_curChatId);
             if (isWorking) return UIs.placeholder;
-            return _buildCircleBtn(
+            return buildCircleBtn(
               onTap: () => _onTapReplay(
                 context,
                 _curChatId,
@@ -296,14 +298,13 @@ class _ChatPageState extends State<_ChatPage>
           },
         ),
       if (replayEnabled)
-        _buildCircleBtn(
+        buildCircleBtn(
           onTap: () => _onTapEditMsg(context, chatItem),
           text: l10n.edit,
           icon: Icons.edit,
         ),
-      _buildCircleBtn(
+      buildCircleBtn(
         onTap: () async {
-          BlurOverlay.close?.call();
           final idx = chatItems.indexOf(chatItem) + 1;
           final result = await context.showRoundDialog<bool>(
             title: l10n.attention,
@@ -324,7 +325,7 @@ class _ChatPageState extends State<_ChatPage>
         text: l10n.delete,
         icon: Icons.delete,
       ),
-      _buildCircleBtn(
+      buildCircleBtn(
         onTap: () => _onCopy(chatItem.toMarkdown),
         text: l10n.copy,
         icon: MingCute.copy_2_fill,
@@ -333,7 +334,6 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   void _onCopy(String content) {
-    BlurOverlay.close?.call();
     Clipboard.setData(ClipboardData(text: content));
     //context.showSnackBar(l10n.copied);
   }
