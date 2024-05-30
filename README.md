@@ -40,9 +40,9 @@ Please don't use it in production environment, and don't use it for important da
 
 
 ## ⬇️ Use
-🎉 **Now Android / Linux version is built by GitHub action**, if you need, please visit GitHub Releases. The following links use personal servers to provide downloads.
+🎉 **Now Android / Linux version is built by GitHub action**
 
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (Deprecated)](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://github.com/lollipopkit/flutter_gpt_box/releases) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://github.com/lollipopkit/flutter_gpt_box/releases) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (Deprecated)](https://gpt.lolli.tech/)
 
 - Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
 - Security:

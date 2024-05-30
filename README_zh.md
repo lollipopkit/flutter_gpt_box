@@ -40,9 +40,9 @@
 
 
 ## ⬇️ 使用
-🎉 **现在 Android / Linux 版本使用 GitHub action 构建**，如果需要，请访问 GitHub Releases。下方链接使用的个人服务器提供下载。
+🎉 **现在 Android / Linux 版本使用 GitHub action 构建**。
 
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://res.lolli.tech/gptbox/latest.apk) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://res.lolli.tech/gptbox/latest.AppImage) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (已废弃)](https://gpt.lolli.tech/)
+[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://github.com/lollipopkit/flutter_gpt_box/releases) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://github.com/lollipopkit/flutter_gpt_box/releases) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip) / [Web (已废弃)](https://gpt.lolli.tech/)
 
 - 由于中国政策原因，且**目前**无法完成备案。请移步 AppStore 其他区下载。
 - 关于安全：
