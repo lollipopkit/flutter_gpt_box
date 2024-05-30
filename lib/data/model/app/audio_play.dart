@@ -40,4 +40,9 @@ final class AudioPlayStatus {
         '${total.inMinutes.toString().padLeft(2, '0')}:${total.inSeconds.remainder(60).toString().padLeft(2, '0')}';
     return '$playedStr / $totalStr';
   }
+
+  @override
+  String toString() {
+    return 'AudioPlayStatus{id: $id, played: $played, total: $total, playing: $playing}';
+  }
 }

@@ -37,12 +37,23 @@ final class AudioCard extends StatefulWidget {
       if (status == null) return;
       status.value = status.value.copyWith(played: position.inMilliseconds);
     });
-    _audioPlayer.onPlayerComplete.listen((_) {
+    _audioPlayer.onPlayerStateChanged.listen((state) {
       final status = _audioPlayerMap[_nowPlayingId];
       if (status == null) return;
-      _nowPlayingId = null;
-      status.value = status.value.copyWith(playing: false, played: 0);
+      if (state == PlayerState.completed) {
+        _nowPlayingId = null;
+        status.value = status.value.copyWith(playing: false, played: 0);
+      }
     });
+
+    /// This functions works wrong
+    // _audioPlayer.onPlayerComplete.listen((_) {
+    //   final status = _audioPlayerMap[_nowPlayingId];
+    //   if (status == null) return;
+    //   _nowPlayingId = null;
+    //   status.value = status.value.copyWith(playing: false, played: 0);
+    //   print('Audio completed');
+    // });
   }
 }
 
@@ -115,7 +126,6 @@ class _AudioCardState extends State<AudioCard> {
                         ? const Icon(Icons.stop, size: 19)
                         : const Icon(Icons.play_arrow, size: 19),
                     onPressed: () => _onTapAudioCtrl(
-                      val,
                       widget.id,
                       listenable,
                     ),
@@ -144,7 +154,7 @@ class _AudioCardState extends State<AudioCard> {
             icon: val.playing
                 ? const Icon(Icons.stop, size: 19)
                 : const Icon(Icons.play_arrow, size: 19),
-            onPressed: () => _onTapAudioCtrl(val, widget.id, listenable),
+            onPressed: () => _onTapAudioCtrl(widget.id, listenable),
           ),
           title: Slider(
             value: sliderVal,
@@ -161,10 +171,11 @@ class _AudioCardState extends State<AudioCard> {
   }
 
   void _onTapAudioCtrl(
-    AudioPlayStatus val,
     String id,
     ValueNotifier<AudioPlayStatus> listenable,
   ) async {
+    final val = listenable.value;
+    print('$val $_nowPlayingId');
     if (val.playing) {
       _audioPlayer.pause();
       _nowPlayingId = null;
