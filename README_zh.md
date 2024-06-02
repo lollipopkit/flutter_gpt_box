@@ -21,6 +21,7 @@
 ## 🪄 特性
 - 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
 - 文本 / 图片 / 音频聊天（网页版仅支持文本）
+- 本地化（简体中文 / English）
 - 以图片形式分享聊天
 - Url Scheme，例如：`lk-gptbox://chat/new?msg=你好`
 - 与 WebDAV / iCloud 同步
@@ -31,18 +32,18 @@
 ## 🏙️ 截屏
 <table>
   <tr>
-    <td><img width="277px" src="media/main.png"></td>
-    <td><img width="277px" src="media/history.png"></td>
-    <td><img width="277px" src="media/settings.png"></td>
-    <td><img width="277px" src="media/share.png"></td>
+    <td><img width="277px" src="media/main.jpg"></td>
+    <td><img width="277px" src="media/history.jpg"></td>
+    <td><img width="277px" src="media/search.jpg"></td>
+    <td><img width="277px" src="media/settings.jpg"></td>
   </tr>
 </table>
 
 
 ## ⬇️ 使用
-🎉 **现在 Android / Linux 版本使用 GitHub Actions 构建**。
+🎉 **现在 `Android / Linux / Windows` 版本使用 GitHub Actions 构建**。
 
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://github.com/lollipopkit/flutter_gpt_box/releases) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://github.com/lollipopkit/flutter_gpt_box/releases) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip)
+[iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
 
 - 由于中国政策原因，且**目前**无法完成备案。请移步 AppStore 其他区下载。
 - 关于安全：

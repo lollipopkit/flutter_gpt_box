@@ -21,6 +21,7 @@ Please refrain from using it in production environments or for critical data.
 ## 🪄 Features
 - Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
 - Text / Image / Audio chat. (Web only support text)
+- L10n. (简体中文 / English)
 - Share chat by picture.
 - Render code block / latex formula.
 - Url Scheme, eg: `lk-gptbox://chat/new?msg=hello`
@@ -40,9 +41,9 @@ Please refrain from using it in production environments or for critical data.
 
 
 ## ⬇️ Use
-🎉 **The Android / Linux version are now built via GitHub Actions**
+🎉 **The `Android / Linux / Windows` version are now built via GitHub Actions**
 
-[iOS](https://apps.apple.com/app/id6476033062) / [Android](https://github.com/lollipopkit/flutter_gpt_box/releases) / [macOS](https://apps.apple.com/app/id6476033062) / [Linux](https://github.com/lollipopkit/flutter_gpt_box/releases) / [Windows](https://res.lolli.tech/gptbox/latest.win.zip)
+[iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
 
 - Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
 - Security:
