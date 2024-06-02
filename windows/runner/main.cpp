@@ -5,7 +5,7 @@
 #include "flutter_window.h"
 #include "utils.h"
 
-#include <uni_links_desktop/uni_links_desktop_plugin.h>
+#include "app_links/app_links_plugin_c_api.h"
 
 bool SendAppLinkToInstance(const std::wstring& title) {
   // Find our exact window

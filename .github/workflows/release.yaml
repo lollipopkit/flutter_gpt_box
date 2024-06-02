@@ -29,6 +29,7 @@ jobs:
           curl -u ${{ secrets.BASIC_AUTH }} -o android/key.properties ${{ secrets.URL_PREFIX }}key.properties
       - name: Install dependencies
         run: |
+          sudo apt update
           sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libunwind-dev
       - name: Build
         run: dart run fl_build -p android,linux

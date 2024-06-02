@@ -34,7 +34,7 @@ packages:
     source: hosted
     version: "2.0.2"
   app_links:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: app_links
       sha256: "96e677810b83707ff5e10fac11e4839daa0ea4e0123c35864c092699165eb3db"
@@ -423,8 +423,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.27"
-      resolved-ref: "7f329a63eff761bbb2013d4865515a4aeaecf3e8"
+      ref: "v1.0.28"
+      resolved-ref: "391a9bf38c6971700bac9037dd9d5cc8698fc6fe"
       url: "https://github.com/lollipopkit/fl_lib"
     source: git
     version: "0.0.1"
