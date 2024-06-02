@@ -2,7 +2,6 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
-import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 
 abstract final class OpenAICfg {
@@ -25,15 +24,7 @@ abstract final class OpenAICfg {
     Stores.config.selectedKey.put(config.id);
 
     if (old.id != config.id) {
-      Funcs.throttle(
-        updateModels,
-        id: 'setTo-${config.id}',
-        duration: 1000,
-      )?.then((ok) {
-        if (!ok && context.mounted) {
-          context.showSnackBar('${l10n.failed}: update models list');
-        }
-      });
+      Funcs.throttle(updateModels, id: 'setTo-${config.id}', duration: 1000);
     }
   }
 

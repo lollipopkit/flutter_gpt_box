@@ -29,7 +29,8 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lollipopkit/fl_lib
-      ref: v1.0.24
+      ref: v1.0.27
+  extended_image: ^8.2.1
     # path: ../fl_lib
 
 dev_dependencies:
@@ -42,7 +43,7 @@ dev_dependencies:
   fl_build:
     git:
       url: https://github.com/lollipopkit/fl_build.git
-      ref: v1.0.11
+      ref: v1.0.13
     # path: ../fl_build
 
 flutter:

@@ -175,7 +175,6 @@ class _AudioCardState extends State<AudioCard> {
     ValueNotifier<AudioPlayStatus> listenable,
   ) async {
     final val = listenable.value;
-    print('$val $_nowPlayingId');
     if (val.playing) {
       _audioPlayer.pause();
       _nowPlayingId = null;

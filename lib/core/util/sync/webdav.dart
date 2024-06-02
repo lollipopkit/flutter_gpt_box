@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gpt_box/data/res/url.dart';
 import 'package:logging/logging.dart';
 import 'package:webdav_client/webdav_client.dart';
 
@@ -97,10 +98,10 @@ abstract final class Webdav {
   }
 
   static Future<void> sync() async {
-    final dlErr = await download(relativePath: Paths.bakName);
+    final dlErr = await download(relativePath: Urls.bakFileName);
     if (dlErr != null) return await backup();
 
-    final dlFile = await File(Paths.bakPath).readAsString();
+    final dlFile = await File(Paths.bak).readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     if (dlBak == null) return await backup();
 
@@ -112,7 +113,7 @@ abstract final class Webdav {
   /// Create a local backup and upload it to WebDAV
   static Future<void> backup() async {
     await Backup.backupToFile();
-    final err = await upload(relativePath: Paths.bakName);
+    final err = await upload(relativePath: Urls.bakFileName);
     if (err != null) {
       _logger.warning('Upload failed: $err');
     }

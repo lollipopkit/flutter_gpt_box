@@ -83,7 +83,7 @@ class Backup {
   }
 
   static Future<void> backupToFile() async {
-    await File(Paths.bakPath).writeAsString(await backup());
+    await File(Paths.bak).writeAsString(await backup());
   }
 
   Future<void> merge({bool force = false}) async {

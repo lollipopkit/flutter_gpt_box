@@ -11,7 +11,7 @@ Widget _buildFile(BuildContext context) {
           trailing: const Icon(Icons.save),
           onTap: () async {
             await Backup.backupToFile();
-            await Pfs.sharePath(Paths.bakPath);
+            await Pfs.sharePath(Paths.bak);
           },
         ),
         ListTile(

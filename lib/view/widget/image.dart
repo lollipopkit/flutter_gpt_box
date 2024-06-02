@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,9 +33,9 @@ class _ImageCardState extends State<ImageCard> {
   @override
   Widget build(BuildContext context) {
     final imageUrl = widget.imageUrl;
-    final ImageProvider provider = switch (imageUrl) {
+    final provider = switch (imageUrl) {
       _ when imageUrl.startsWith('http') =>
-        NetworkImage(imageUrl) as ImageProvider,
+        ExtendedNetworkImageProvider(imageUrl, cache: true) as ImageProvider,
       _ when imageUrl.startsWith('assets') => AssetImage(imageUrl),
       _ => FileImage(File(imageUrl)),
     };
