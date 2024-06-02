@@ -46,9 +46,7 @@ Please refrain from using it in production environments or for critical data.
 [iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
 
 - Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
-- Security:
-  - To prevent injection attacks and etc., please don't download from untrusted sources.
-  - Since `Linux / Windows` is signed with flutter default certificate, it is recommended to [build it yourself](https://github.com/lollipopkit/flutter_server_box/wiki#compile-yourself).
+- To prevent injection attacks and etc., please don't download from untrusted sources. Since `Linux / Windows` is signed with flutter default certificate, it is recommended to [build it yourself](https://github.com/lollipopkit/flutter_server_box/wiki#compile-yourself).
 
 
 ## 🆘 Help
