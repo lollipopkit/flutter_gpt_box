@@ -12,6 +12,7 @@ import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
 import 'package:gpt_box/data/provider/all.dart';
 import 'package:gpt_box/data/res/build.dart';
+import 'package:gpt_box/data/res/misc.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -45,7 +46,7 @@ Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   _setupLogger();
-  await Paths.init(Build.name, bakName: 'gptbox');
+  await Paths.init(Build.name, bakName: Miscs.bakFileName);
 
   await _initDb();
   _initAppComponents();

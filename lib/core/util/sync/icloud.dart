@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gpt_box/data/res/misc.dart';
 import 'package:icloud_storage/icloud_storage.dart';
 import 'package:logging/logging.dart';
 
@@ -197,7 +198,7 @@ abstract final class ICloud {
   }
 
   static Future<void> sync() async {
-    final result = await download(relativePath: Paths.bak);
+    final result = await download(relativePath: Miscs.bakFileName);
     if (result != null) return await backup();
 
     final dlFile = await File(Paths.bak).readAsString();
@@ -212,7 +213,7 @@ abstract final class ICloud {
   static Future<void> backup() async {
     final content = await Backup.backup();
     await File(Paths.bak).writeAsString(content);
-    final uploadResult = await upload(relativePath: Paths.bak);
+    final uploadResult = await upload(relativePath: Miscs.bakFileName);
     if (uploadResult != null) {
       _logger.warning('Upload backup failed: $uploadResult');
     }

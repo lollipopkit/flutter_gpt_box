@@ -9,6 +9,4 @@ abstract final class Urls {
 
   static const backendBase = 'https://cdn.lolli.tech/gptbox/';
   static const appUpdateCfg = '$backendBase/update.json';
-
-  static const bakFileName = 'gptbox_backup.json';
 }

@@ -66,19 +66,25 @@ Widget _buildWebdav(BuildContext context) {
 Future<void> _onTapWebdavDl(BuildContext context) async {
   _webdavLoading.value = true;
   try {
-    final result = await Webdav.download(relativePath: Urls.bakFileName);
+    final files = await Webdav.list();
+    if (files.isEmpty) return context.showSnackBar(l10n.empty);
+
+    final fileName = await context.showPickSingleDialog(
+      title: l10n.choose,
+      items: files,
+    );
+    if (fileName == null) return;
+
+    final result = await Webdav.download(relativePath: fileName);
     if (result != null) {
-      Loggers.app.warning('Download webdav backup failed: $result');
-      context.showSnackBar(l10n.backupRestorationFailed(result.toString()));
-      return;
+      return Loggers.app.warning('Download webdav backup failed: $result');
     }
-    final dlFile = await File(Paths.bak).readAsString();
+    final dlFile = await File('${Paths.doc}/$fileName').readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak?.merge(force: true);
-    context.showSnackBar(l10n.backupRestorationSuccessful);
-  } catch (e, s) {
-    Loggers.app.warning('Download webdav backup failed', e, s);
+  } catch (e) {
     context.showSnackBar(e.toString());
+    rethrow;
   } finally {
     _webdavLoading.value = false;
   }
@@ -88,7 +94,7 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
   _webdavLoading.value = true;
   final content = await Backup.backup();
   await File(Paths.bak).writeAsString(content);
-  final uploadResult = await Webdav.upload(relativePath: Urls.bakFileName);
+  final uploadResult = await Webdav.upload(relativePath: Miscs.bakFileName);
   if (uploadResult != null) {
     Loggers.app.warning('Upload webdav backup failed: $uploadResult');
     context.showSnackBar(l10n.backupFailed(uploadResult.toString()));
