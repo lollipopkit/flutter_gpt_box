@@ -123,18 +123,18 @@ void _onSwitchModel(BuildContext context) async {
     );
     return;
   }
-  final models = OpenAICfg.models.value;
-  final modelStrs = List<String>.from(models);
-  modelStrs.removeWhere((element) => !element.startsWith('gpt'));
-  if (modelStrs.isEmpty) {
-    modelStrs.addAll(models);
-  }
 
+  final models = OpenAICfg.models.value;
   final model = await context.showPickSingleDialog(
-    items: modelStrs,
+    items: models,
     initial: cfg.model,
     title: l10n.model,
   );
   if (model == null) return;
-  OpenAICfg.setTo(cfg.copyWith(model: model), context);
+  final newModel = switch (_chatType.value) {
+    ChatType.text => cfg.copyWith(model: model),
+    ChatType.img => cfg.copyWith(imgModel: model),
+    ChatType.audio => cfg.copyWith(speechModel: model),
+  };
+  OpenAICfg.setTo(newModel, context);
 }
