@@ -36,44 +36,24 @@ class _HomeBottom extends StatelessWidget {
                       onPressed: () {
                         _switchChat(_newChat().id);
                         _historyRN.build();
+                        if (_curPage.value == HomePageEnum.history) {
+                          _switchPage(HomePageEnum.chat);
+                        }
                       },
                       icon: const Icon(MingCute.add_fill, size: 17),
                       tooltip: l10n.newChat,
                     ),
-                    // IconButton(
-                    //   onPressed: () => _onTapRenameChat(_curChatId, context),
-                    //   icon: const Icon(Icons.edit, size: 19),
-                    //   tooltip: l10n.rename,
-                    // ),
+                    IconButton(
+                      onPressed: () => _onTapRenameChat(_curChatId, context),
+                      icon: const Icon(Icons.edit, size: 19),
+                      tooltip: l10n.rename,
+                    ),
                     // IconButton(
                     //   onPressed: () => _onTapDeleteChat(_curChatId, context),
                     //   icon: const Icon(Icons.delete, size: 19),
                     //   tooltip: l10n.delete,
                     // ),
-                    ListenableBuilder(
-                      listenable: _filePicked,
-                      builder: (_, __) {
-                        return ListenableBuilder(
-                          listenable: _chatType,
-                          builder: (_, __) {
-                            return switch (_chatType.value) {
-                              ChatType.text || ChatType.img => Badge(
-                                  isLabelVisible: _filePicked.value != null,
-                                  child: IconButton(
-                                    onPressed: () => _onTapImgPick(context),
-                                    icon: const Icon(Icons.photo, size: 19),
-                                  ),
-                                ),
-                              // ChatType.audio => const IconButton(
-                              //   onPressed: _onTapAudioPick,
-                              //   icon: Icon(Icons.mic, size: 19),
-                              // ),
-                              _ => UIs.placeholder,
-                            };
-                          },
-                        );
-                      },
-                    ),
+                    _buildFileBtn(context),
                     const Spacer(),
                     // _buildTokenCount(),
                     UIs.width7,
@@ -86,6 +66,33 @@ class _HomeBottom extends StatelessWidget {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFileBtn(BuildContext context) {
+    return ListenableBuilder(
+      listenable: _filePicked,
+      builder: (_, __) {
+        return ListenableBuilder(
+          listenable: _chatType,
+          builder: (_, __) {
+            return switch (_chatType.value) {
+              ChatType.text || ChatType.img => Badge(
+                  isLabelVisible: _filePicked.value != null,
+                  child: IconButton(
+                    onPressed: () => _onTapImgPick(context),
+                    icon: const Icon(Icons.image, size: 19),
+                  ),
+                ),
+              // ChatType.audio => const IconButton(
+              //   onPressed: _onTapAudioPick,
+              //   icon: Icon(Icons.mic, size: 19),
+              // ),
+              _ => UIs.placeholder,
+            };
+          },
         );
       },
     );

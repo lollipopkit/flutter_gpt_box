@@ -1,5 +1,5 @@
 name: gpt_box
-description: "A third-party GPT Client for OpenAI API on all platforms."
+description: "A third-party GPT Client for OpenAI API."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -28,8 +28,8 @@ dependencies:
   audioplayers: ^6.0.0
   fl_lib:
     git:
-      url: https://github.com/lollipopkit/fl_lib
-      ref: v1.0.28
+      url: https://github.com/lppcg/fl_lib
+      ref: v1.0.31
     # path: ../fl_lib
   extended_image: ^8.2.1
   app_links: ^6.1.1
@@ -43,7 +43,7 @@ dev_dependencies:
   flutter_native_splash: ^2.3.9
   fl_build:
     git:
-      url: https://github.com/lollipopkit/fl_build.git
+      url: https://github.com/lppcg/fl_build.git
       ref: v1.0.13
     # path: ../fl_build
 

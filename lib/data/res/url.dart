@@ -8,5 +8,5 @@ abstract final class Urls {
   static const openaiRestoreDoc = '$repoBase/blob/main/doc/openai_restore.md';
 
   static const backendBase = 'https://cdn.lolli.tech/gptbox/';
-  static const appUpdateCfg = '$backendBase/update.json';
+  static const appUpdateCfg = '$backendBase/update2.json';
 }

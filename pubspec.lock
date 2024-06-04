@@ -416,16 +416,16 @@ packages:
       path: "."
       ref: "v1.0.13"
       resolved-ref: baded8103bd046806929b8d6547d5bce38060b06
-      url: "https://github.com/lollipopkit/fl_build.git"
+      url: "https://github.com/lppcg/fl_build.git"
     source: git
     version: "1.0.0"
   fl_lib:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.28"
-      resolved-ref: "391a9bf38c6971700bac9037dd9d5cc8698fc6fe"
-      url: "https://github.com/lollipopkit/fl_lib"
+      ref: "v1.0.31"
+      resolved-ref: f6322c5c2fad5230d1a882e79d52d1a0d246b8f4
+      url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
   flutter:
