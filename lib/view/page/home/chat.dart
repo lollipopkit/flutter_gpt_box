@@ -137,9 +137,9 @@ class _ChatPageState extends State<_ChatPage>
       onLongPress: () {
         final funcs = _buildChatItemFuncs(chatItems, chatItem);
         context.showRoundDialog(
+          contentPadding: const EdgeInsets.all(11),
           child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: funcs,
             ),
@@ -184,6 +184,12 @@ class _ChatPageState extends State<_ChatPage>
         'code': CodeElementBuilder(onCopy: _onCopy),
         'latex': LatexElementBuilder(),
       },
+      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+        codeblockDecoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(7),
+        ),
+      ),
       extensionSet: MarkdownUtils.extensionSet,
       onTapLink: MarkdownUtils.onLinkTap,
       shrinkWrap: false,
@@ -256,20 +262,13 @@ class _ChatPageState extends State<_ChatPage>
           context.pop();
           onTap();
         },
-        child: SizedBox(
-          width: 77,
-          height: 77,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              UIs.height7,
-              Icon(icon, size: 20),
-              UIs.height7,
-              Text(text),
-            ],
-          ),
-        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 20),
+            const SizedBox(width: 27),
+            Text(text, style: const TextStyle(fontSize: 16.5)),
+          ],
+        ).paddingSymmetric(horizontal: 23, vertical: 15),
       );
     }
 
