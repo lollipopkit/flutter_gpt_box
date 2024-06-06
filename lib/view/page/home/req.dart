@@ -31,16 +31,17 @@ void _onCreateRequest(BuildContext context, String chatId) async {
     context.showSnackBar(msg);
     return;
   }
-  return await switch ((chatType, _filePicked.value)) {
-    (ChatType.text, _) => _onCreateText(chatId, context),
-    (ChatType.img, null) => _onCreateImg(context),
-    (ChatType.img, _) => _onCreateImgEdit(context),
-    (ChatType.audio, null) => _onCreateTTS(context, chatId),
-    (ChatType.audio, _) => _onCreateSTT(context),
+  final func = switch ((chatType, _filePicked.value)) {
+    (ChatType.text, _) => _onCreateText,
+    (ChatType.img, null) => _onCreateImg,
+    (ChatType.img, _) => _onCreateImgEdit,
+    (ChatType.audio, null) => _onCreateTTS,
+    (ChatType.audio, _) => _onCreateSTT,
   };
+  return await func(context, chatId);
 }
 
-Future<void> _onCreateText(String chatId, BuildContext context) async {
+Future<void> _onCreateText(BuildContext context, String chatId) async {
   if (_inputCtrl.text.isEmpty) return;
   _imeFocus.unfocus();
   final workingChat = _allHistories[chatId];
@@ -103,30 +104,18 @@ Future<void> _onCreateText(String chatId, BuildContext context) async {
   workingChat.items.add(assistReply);
   _chatRN.build();
   _filePicked.value = null;
+
   try {
     final sub = chatStream.listen(
-      (event) {
-        final delta = event.choices.first.delta.content?.first?.text;
+      (eve) {
+        final delta = eve.choices.firstOrNull?.delta.content?.firstOrNull?.text;
         if (delta == null) return;
         assistReply.content.first.raw += delta;
         _chatItemRNMap[assistReply.id]?.build();
 
         _autoScroll(chatId);
       },
-      onError: (e, trace) {
-        Loggers.app.warning('Listen chat stream: $e');
-        _onStopStreamSub(chatId);
-
-        final msg = 'Error: $e\nTrace:\n$trace';
-        workingChat.items.add(ChatHistoryItem.single(
-          type: ChatContentType.text,
-          raw: msg,
-          role: ChatRole.system,
-        ));
-        _chatRN.build();
-        _storeChat(chatId, context);
-        _sendBtnRN.build();
-      },
+      onError: (e, s) => _onErr(e, s, chatId, 'Listen text stream'),
       onDone: () async {
         _onStopStreamSub(chatId);
         _storeChat(chatId, context);
@@ -138,13 +127,8 @@ Future<void> _onCreateText(String chatId, BuildContext context) async {
     );
     _chatStreamSubs[chatId] = sub;
     _sendBtnRN.build();
-  } catch (e) {
-    _onStopStreamSub(chatId);
-    final msg = 'Chat stream: $e';
-    Loggers.app.warning(msg);
-    context.showSnackBar(msg);
-    assistReply.content.first.raw += '\n$msg';
-    _sendBtnRN.build();
+  } catch (e, s) {
+    _onErr(e, s, chatId, 'Listen text stream');
   }
 }
 
@@ -193,28 +177,23 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
       responseFormat: OpenAIAudioSpeechResponseFormat.aac,
     );
     replyContent.raw = file.path;
-    _storeChat(chatId, context);
     completer.complete();
     _chatItemRNMap[assistReply.id]?.build();
-  } catch (e) {
-    _onStopStreamSub(chatId);
-    final msg = 'Audio create speech: $e';
-    Loggers.app.warning(msg);
-    context.showSnackBar(msg);
-    assistReply.content.first.raw += '\n$msg';
-    _sendBtnRN.build();
+    _storeChat(chatId, context);
+  } catch (e, s) {
+    _onErr(e, s, chatId, 'Audio create speech');
   }
 }
 
-Future<void> _onCreateImg(BuildContext context) async {
+Future<void> _onCreateImg(BuildContext context, String chatId) async {
   final prompt = _inputCtrl.text;
   if (prompt.isEmpty) return;
   _imeFocus.unfocus();
   _inputCtrl.clear();
 
-  final workingChat = _allHistories[_curChatId];
+  final workingChat = _allHistories[chatId];
   if (workingChat == null) {
-    final msg = 'Chat($_curChatId) not found';
+    final msg = 'Chat($chatId) not found';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     return;
@@ -249,21 +228,14 @@ Future<void> _onCreateImg(BuildContext context) async {
       role: ChatRole.assist,
       content: imgs.map((e) => ChatContent.image(e)).toList(),
     ));
-    _storeChat(_curChatId, context);
-  } catch (e) {
-    final msg = 'Create image: $e';
-    Loggers.app.warning(msg);
-    workingChat.items.add(ChatHistoryItem.single(
-      role: ChatRole.system,
-      type: ChatContentType.text,
-      raw: msg,
-    ));
-  } finally {
+    _storeChat(chatId, context);
     _chatRN.build();
+  } catch (e, s) {
+    _onErr(e, s, chatId, 'Create image');
   }
 }
 
-Future<void> _onCreateImgEdit(BuildContext context) async {
+Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   final prompt = _inputCtrl.text;
   if (prompt.isEmpty) return;
   _imeFocus.unfocus();
@@ -271,7 +243,7 @@ Future<void> _onCreateImgEdit(BuildContext context) async {
 
   final val = _filePicked.value;
   if (val == null) return;
-  final workingChat = _allHistories[_curChatId];
+  final workingChat = _allHistories[chatId];
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.gen(
     role: ChatRole.user,
@@ -300,31 +272,21 @@ Future<void> _onCreateImgEdit(BuildContext context) async {
     }
 
     if (imgs.isEmpty) {
-      const msg = 'Edit image: empty resp';
-      Loggers.app.warning(msg);
-      context.showSnackBar(msg);
-      return;
+      throw 'Edit image: empty resp';
     }
 
     workingChat.items.add(ChatHistoryItem.gen(
       role: ChatRole.assist,
       content: imgs.map((e) => ChatContent.image(e)).toList(),
     ));
-    _storeChat(_curChatId, context);
-  } catch (e) {
-    final msg = 'Edit image: $e';
-    Loggers.app.warning(msg);
-    workingChat.items.add(ChatHistoryItem.single(
-      role: ChatRole.system,
-      type: ChatContentType.text,
-      raw: msg,
-    ));
-  } finally {
+    _storeChat(chatId, context);
     _chatRN.build();
+  } catch (e, s) {
+    _onErr(e, s, chatId, 'Edit image');
   }
 }
 
-Future<void> _onCreateSTT(BuildContext context) async {
+Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   if (isWeb) {
     final msg = l10n.notSupported('Audio to Text Web');
     Loggers.app.warning(msg);
@@ -333,7 +295,7 @@ Future<void> _onCreateSTT(BuildContext context) async {
   }
   final val = _filePicked.value;
   if (val == null) return;
-  final workingChat = _allHistories[_curChatId];
+  final workingChat = _allHistories[chatId];
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.single(
     type: ChatContentType.audio,
@@ -342,14 +304,14 @@ Future<void> _onCreateSTT(BuildContext context) async {
   );
   workingChat.items.add(chatItem);
   _chatRN.build();
-  _storeChat(_curChatId, context);
+  _storeChat(chatId, context);
   _filePicked.value = null;
 
   try {
     final resp = await OpenAI.instance.audio.createTranscription(
       model: OpenAICfg.current.speechModel,
       file: File(val.path),
-      prompt: '',
+      //prompt: '',
     );
     final text = resp.text;
     if (text.isEmpty) {
@@ -363,17 +325,10 @@ Future<void> _onCreateSTT(BuildContext context) async {
       type: ChatContentType.text,
       raw: text,
     ));
-    _storeChat(_curChatId, context);
-  } catch (e) {
-    final msg = 'Audio to Text: $e';
-    Loggers.app.warning(msg);
-    workingChat.items.add(ChatHistoryItem.single(
-      role: ChatRole.system,
-      type: ChatContentType.text,
-      raw: msg,
-    ));
-  } finally {
+    _storeChat(chatId, context);
     _chatRN.build();
+  } catch (e, s) {
+    _onErr(e, s, chatId, 'Audio to Text');
   }
 }
 
@@ -395,7 +350,7 @@ Future<void> _genChatTitle(
   }
   if (entity.items.length != 1) return;
 
-  final resp = await OpenAI.instance.chat.create(
+  final stream = OpenAI.instance.chat.createStream(
     model: cfg.model,
     messages: [
       ChatHistoryItem.single(
@@ -403,7 +358,7 @@ Future<void> _genChatTitle(
 Create a simple and clear title based on user content.
 If the language is Chinese, Japanese or Korean, the title should be within 10 characters; 
 if it is English, French, German, Latin and other Western languages, the number of title characters should not exceed 23. 
-The title should be the same as the language entered by the user as below:''',
+The title should be the same as the language entered by the user (except the code block) as below:''',
         role: ChatRole.system,
       ).toOpenAI,
       ChatHistoryItem.single(
@@ -415,18 +370,40 @@ The title should be the same as the language entered by the user as below:''',
       ).toOpenAI,
     ],
   );
-  final title = resp.choices.firstOrNull?.message.content?.firstOrNull?.text;
-  if (title == null) {
-    final msg = 'Gen Chat($chatId) title: null resp';
-    Loggers.app.warning(msg);
-    context.showSnackBar(msg);
-    return;
+
+  void onErr(Object e, StackTrace s) {
+    Loggers.app.warning('Gen title: $e');
+    _historyRNMap[chatId]?.build();
+    if (chatId == _curChatId) _appbarTitleRN.build();
   }
 
-  /// These punctions which not affect the meaning of the title will be removed
-  entity.name = title.replaceAll(_punctionsRm, '');
-  _historyRNMap[chatId]?.build();
-  if (chatId == _curChatId) _appbarTitleRN.build();
+  try {
+    stream.listen(
+      (eve) {
+        final title = eve.choices.firstOrNull?.delta.content?.firstOrNull?.text;
+        if (title == null) return;
+
+        /// These punctions which not affect the meaning of the title will be removed
+        entity.name = (entity.name ?? '') + title;
+        _historyRNMap[chatId]?.build();
+        if (chatId == _curChatId) _appbarTitleRN.build();
+      },
+      onError: (e, s) => onErr(e, s),
+      onDone: () {
+        // Prettiy the title
+        entity.name = (entity.name ?? '').replaceAll(_punctionsRm, '');
+        if (entity.name!.length > 23) {
+          entity.name = entity.name!.substring(0, 23);
+        }
+
+        _historyRNMap[chatId]?.build();
+        if (chatId == _curChatId) _appbarTitleRN.build();
+        _storeChat(chatId, context);
+      },
+    );
+  } catch (e, s) {
+    onErr(e, s);
+  }
 }
 
 /// Remove the [ChatHistoryItem] behind this [item], and resend the [item] like
@@ -544,4 +521,34 @@ void _onReplay({
     assistReply.content.first.raw += '\n$msg';
     _sendBtnRN.build();
   }
+}
+
+void _onErr(Object e, StackTrace s, String chatId, String action) {
+  Loggers.app.warning('$action: $e');
+  _onStopStreamSub(chatId);
+
+  final msg = 'Error: $e\nTrace:\n$s';
+  final workingChat = _allHistories[chatId];
+  if (workingChat == null) return;
+
+  // If previous msg is assistant reply and it's empty, remove it
+  if (workingChat.items.isNotEmpty) {
+    final last = workingChat.items.last;
+    if (last.role == ChatRole.assist &&
+        last.content.every((e) => e.raw.isEmpty)) {
+      workingChat.items.removeLast();
+    }
+  }
+
+  // Add error msg to the chat
+  workingChat.items.add(ChatHistoryItem.single(
+    type: ChatContentType.text,
+    raw: msg,
+    role: ChatRole.system,
+  ));
+
+  _chatRN.build();
+  // Do not store if error
+  // _storeChat(chatId, context);
+  _sendBtnRN.build();
 }
