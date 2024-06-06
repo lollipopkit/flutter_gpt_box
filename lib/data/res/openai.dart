@@ -8,7 +8,7 @@ abstract final class OpenAICfg {
   static final models = <String>[].vn;
 
   static final vn = () {
-    final selectedKey = Stores.config.selectedKey.fetch();
+    final selectedKey = Stores.setting.profileId.fetch();
     final selected = Stores.config.fetch(selectedKey);
     return selected ?? ChatConfig.defaultOne;
   }()
@@ -21,7 +21,7 @@ abstract final class OpenAICfg {
     vn.value = config;
     apply();
     config.save();
-    Stores.config.selectedKey.put(config.id);
+    Stores.setting.profileId.put(config.id);
 
     if (old.id != config.id) {
       Funcs.throttle(updateModels, id: 'setTo-${config.id}', duration: 1000);

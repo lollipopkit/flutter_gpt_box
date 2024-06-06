@@ -1,4 +1,5 @@
 import 'package:fl_lib/fl_lib.dart';
+import 'package:gpt_box/data/model/chat/config.dart';
 
 class SettingStore extends PersistentStore {
   SettingStore() : super('setting');
@@ -50,4 +51,6 @@ class SettingStore extends PersistentStore {
   late final cupertinoRoute = property('cupertinoRoute', isIOS || isMacOS);
 
   late final hideTitleBar = property('hideTitleBar', false);
+
+  late final profileId = property('profileId', ChatConfig.defaultId);
 }

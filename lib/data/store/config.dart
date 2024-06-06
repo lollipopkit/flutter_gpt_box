@@ -4,8 +4,7 @@ import 'package:gpt_box/data/model/chat/config.dart';
 final class ConfigStore extends PersistentStore {
   ConfigStore() : super('config');
 
-  static const SELECTED_KEY = 'selectedKey';
-  late final selectedKey = property(SELECTED_KEY, ChatConfig.defaultId);
+  static const _SELECTED_KEY = 'selectedKey';
 
   ChatConfig? fetch(String id) {
     final val = box.get(id) as ChatConfig?;
@@ -31,7 +30,7 @@ final class ConfigStore extends PersistentStore {
     final map = <String, ChatConfig>{};
     var errCount = 0;
     for (final key in box.keys) {
-      if (key == SELECTED_KEY) continue;
+      if (key == _SELECTED_KEY) continue;
       final item = box.get(key);
       if (item != null) {
         if (item is ChatConfig) {
