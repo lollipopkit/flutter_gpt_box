@@ -36,9 +36,11 @@ var _allHistories = <String, ChatHistory>{};
 String _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
 final _chatStreamSubs = <String, StreamSubscription>{};
+
+var _dontCloseIme = false;
 final _curPage = HomePageEnum.chat.vn
   ..addListener(() {
-    _imeFocus.unfocus();
+    if (!_dontCloseIme) _imeFocus.unfocus();
   });
 
 final _imeFocus = FocusNode();

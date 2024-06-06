@@ -518,8 +518,8 @@ Future<void> _onLongTapSetting(BuildContext context) async {
   // }
 }
 
-void _switchPage(HomePageEnum page) {
-  _pageCtrl.animateToPage(
+Future<void> _switchPage(HomePageEnum page) {
+  return _pageCtrl.animateToPage(
     page.index,
     duration: _durationMedium,
     curve: Curves.fastEaseInToSlowEaseOut,

@@ -48,11 +48,11 @@ class _HomeBottom extends StatelessWidget {
                       icon: const Icon(Icons.edit, size: 19),
                       tooltip: l10n.rename,
                     ),
-                    // IconButton(
-                    //   onPressed: () => _onTapDeleteChat(_curChatId, context),
-                    //   icon: const Icon(Icons.delete, size: 19),
-                    //   tooltip: l10n.delete,
-                    // ),
+                    IconButton(
+                      onPressed: () => _onTapDeleteChat(_curChatId, context),
+                      icon: const Icon(Icons.delete, size: 19),
+                      tooltip: l10n.delete,
+                    ),
                     _buildFileBtn(context),
                     const Spacer(),
                     // _buildTokenCount(),
@@ -114,9 +114,11 @@ class _HomeBottom extends StatelessWidget {
       onSubmitted: (p0) {
         _onCreateRequest(context, _curChatId);
       },
-      onTap: () {
+      onTap: () async {
         if (_curPage.value != HomePageEnum.chat) {
-          _switchPage(HomePageEnum.chat);
+          _dontCloseIme = true;
+          await _switchPage(HomePageEnum.chat);
+          _dontCloseIme = false;
         }
       },
       contextMenuBuilder: (context, editableTextState) {
