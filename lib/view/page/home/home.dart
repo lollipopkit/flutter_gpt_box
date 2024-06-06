@@ -123,8 +123,8 @@ class _HomePageState extends State<HomePage>
     if (_isWide.value) {
       return const Row(
         children: [
-          SizedBox(width: 257, child: history),
-          Expanded(child: chat),
+          Expanded(flex: 1, child: history),
+          Expanded(flex: 3, child: chat),
         ],
       );
     }

@@ -26,25 +26,29 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   Widget _buildFAB() {
-    return ListenableBuilder(
-      listenable: _chatFabRN,
-      builder: (_, __) {
-        final valid = _chatScrollCtrl.positions.length == 1 &&
-            _chatScrollCtrl.position.hasContentDimensions &&
-            _chatScrollCtrl.position.maxScrollExtent > 0;
-        return AnimatedSwitcher(
-          transitionBuilder: (child, animation) {
-            return ScaleTransition(
-              scale: animation,
-              child: child,
-            );
-          },
-          duration: _durationShort,
-          switchInCurve: Curves.easeInOut,
-          switchOutCurve: Curves.easeInOut,
-          child: valid ? _buildFABBtn() : UIs.placeholder,
-        );
-      },
+    return AutoHide(
+      controller: _chatScrollCtrl,
+      direction: AxisDirection.right,
+      child: ListenableBuilder(
+        listenable: _chatFabRN,
+        builder: (_, __) {
+          final valid = _chatScrollCtrl.positions.length == 1 &&
+              _chatScrollCtrl.position.hasContentDimensions &&
+              _chatScrollCtrl.position.maxScrollExtent > 0;
+          return AnimatedSwitcher(
+            transitionBuilder: (child, animation) {
+              return ScaleTransition(
+                scale: animation,
+                child: child,
+              );
+            },
+            duration: _durationShort,
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            child: valid ? _buildFABBtn() : UIs.placeholder,
+          );
+        },
+      ),
     );
   }
 

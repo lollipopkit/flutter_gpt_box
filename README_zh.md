@@ -20,7 +20,7 @@
 
 ## 🪄 特性
 - 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
-- 文本 / 图片 / 音频聊天（网页版仅支持文本）
+- 文本 / 图片 / 音频聊天
 - 本地化（简体中文 / English）
 - 以图片形式分享聊天
 - Url Scheme，例如：`lk-gptbox://chat/new?msg=你好`
@@ -45,8 +45,7 @@
 
 [iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
 
-所有已弃用的包可以在[这里](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid)找到。
-
+- 所有已弃用的包 (< `v1.0.183`) 可以在[这里](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid)找到。
 - 由于中国政策原因，且**目前**无法完成备案。请移步 AppStore 其他区下载。
 - 为了防止注入攻击等因素，请勿从不可信来源下载。由于 `Linux / Windows` 使用了默认签名，因此建议[自行构建](https://github.com/lollipopkit/flutter_server_box/wiki/%E4%B8%BB%E9%A1%B5#%E8%87%AA%E7%BC%96%E8%AF%91)。
 

@@ -20,13 +20,13 @@ Please refrain from using it in production environments or for critical data.
 
 ## 🪄 Features
 - Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
-- Text / Image / Audio chat. (Web only support text)
-- L10n. (简体中文 / English)
-- Share chat by picture.
-- Render code block / latex formula.
+- Text / Image / Audio chat.
+- Localization. (简体中文 / English)
+- Share chat as image.
 - Url Scheme, eg: `lk-gptbox://chat/new?msg=hello`
-- Mobile & Desktop supports.
 - Sync with WebDAV / iCloud.
+- Mobile & Desktop supports.
+- Render code block / latex formula.
 
 
 ## 🏙️ Screenshots
@@ -45,8 +45,7 @@ Please refrain from using it in production environments or for critical data.
 
 [iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
 
-All deprecated pkgs can be found in [here](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid).
-
+- All deprecated pkgs (< `v1.0.183`) can be found in [here](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid).
 - Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
 - To prevent injection attacks and etc., please don't download from untrusted sources. Since `Linux / Windows` is signed with flutter default certificate, it is recommended to [build it yourself](https://github.com/lollipopkit/flutter_server_box/wiki#compile-yourself).
 
