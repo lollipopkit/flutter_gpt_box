@@ -16,7 +16,7 @@ abstract final class OpenAICfg {
 
   static ChatConfig get current => vn.value;
 
-  static void setTo(ChatConfig config, BuildContext context) {
+  static void setTo(ChatConfig config) {
     final old = vn.value;
     vn.value = config;
     apply();
@@ -52,9 +52,9 @@ abstract final class OpenAICfg {
   static void switchToDefault(BuildContext context) {
     final cfg = Stores.config.fetch(ChatConfig.defaultId);
     if (cfg != null) {
-      setTo(cfg, context);
+      setTo(cfg);
     } else {
-      setTo(ChatConfig.defaultOne, context);
+      setTo(ChatConfig.defaultOne);
       Loggers.app.warning('Default config not found');
     }
   }

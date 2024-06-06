@@ -118,7 +118,7 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
       onError: (e, s) => _onErr(e, s, chatId, 'Listen text stream'),
       onDone: () async {
         _onStopStreamSub(chatId);
-        _storeChat(chatId, context);
+        _storeChat(chatId, type: ChatType.text, model: config.model);
         _sendBtnRN.build();
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
@@ -179,7 +179,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
     replyContent.raw = file.path;
     completer.complete();
     _chatItemRNMap[assistReply.id]?.build();
-    _storeChat(chatId, context);
+    _storeChat(chatId, type: ChatType.audio, model: config.speechModel);
   } catch (e, s) {
     _onErr(e, s, chatId, 'Audio create speech');
   }
@@ -206,9 +206,10 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
   workingChat.items.add(userQuestion);
   _chatRN.build();
 
+  final model = OpenAICfg.current.imgModel;
   try {
     final resp = await OpenAI.instance.image.create(
-      model: OpenAICfg.current.imgModel,
+      model: model,
       prompt: prompt,
     );
     final imgs = <String>[];
@@ -228,7 +229,7 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
       role: ChatRole.assist,
       content: imgs.map((e) => ChatContent.image(e)).toList(),
     ));
-    _storeChat(chatId, context);
+    _storeChat(chatId, type: ChatType.img, model: model);
     _chatRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Create image');
@@ -256,9 +257,10 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   _chatRN.build();
   _filePicked.value = null;
 
+  final model = OpenAICfg.current.imgModel;
   try {
     final resp = await OpenAI.instance.image.edit(
-      model: OpenAICfg.current.imgModel,
+      model: model,
       image: File(val.path),
       prompt: prompt,
     );
@@ -279,7 +281,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
       role: ChatRole.assist,
       content: imgs.map((e) => ChatContent.image(e)).toList(),
     ));
-    _storeChat(chatId, context);
+    _storeChat(chatId, type: ChatType.img, model: model);
     _chatRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Edit image');
@@ -304,12 +306,13 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   );
   workingChat.items.add(chatItem);
   _chatRN.build();
-  _storeChat(chatId, context);
+  _storeChat(chatId);
   _filePicked.value = null;
 
+  final model = OpenAICfg.current.speechModel;
   try {
     final resp = await OpenAI.instance.audio.createTranscription(
-      model: OpenAICfg.current.speechModel,
+      model: model,
       file: File(val.path),
       //prompt: '',
     );
@@ -325,7 +328,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
       type: ChatContentType.text,
       raw: text,
     ));
-    _storeChat(chatId, context);
+    _storeChat(chatId, type: ChatType.audio, model: model);
     _chatRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Audio to Text');
@@ -398,7 +401,7 @@ The title should be the same as the language entered by the user (except the cod
 
         _historyRNMap[chatId]?.build();
         if (chatId == _curChatId) _appbarTitleRN.build();
-        _storeChat(chatId, context);
+        _storeChat(chatId);
       },
     );
   } catch (e, s) {
@@ -500,12 +503,12 @@ void _onReplay({
           role: ChatRole.system,
         ));
         _chatRN.build();
-        _storeChat(chatId, context);
+        _storeChat(chatId);
         _sendBtnRN.build();
       },
       onDone: () {
         _onStopStreamSub(chatId);
-        _storeChat(chatId, context);
+        _storeChat(chatId);
         _sendBtnRN.build();
         _appbarTitleRN.build();
         SyncService.sync();

@@ -11,6 +11,28 @@ void _switchChat([String? id]) {
     // Different chats have different height
     _chatFabRN.build();
   });
+
+  final chat = _allHistories[id];
+  if (chat == null) {
+    final msg = 'Switch Chat($id) not found';
+    Loggers.app.warning(msg);
+    return;
+  }
+
+  final model = chat.model;
+  final type = chat.type;
+  if (model != null && type != null) {
+    final followModel = Stores.setting.followModel.fetch();
+    if (followModel) {
+      final cfg = OpenAICfg.current;
+      final newCfg = switch (type) {
+        ChatType.text => cfg.copyWith(model: model),
+        ChatType.img => cfg.copyWith(imgModel: model),
+        ChatType.audio => cfg.copyWith(speechModel: model),
+      };
+      OpenAICfg.setTo(newCfg);
+    }
+  }
 }
 
 void _switchPreviousChat() {
@@ -25,14 +47,18 @@ void _switchNextChat() {
   _switchChat(_allHistories.keys.elementAt(idx - 1));
 }
 
-void _storeChat(String chatId, BuildContext context) {
+void _storeChat(String chatId, {ChatType? type, String? model}) {
   final chat = _allHistories[chatId];
   if (chat == null) {
     final msg = 'Store Chat($chatId) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
     return;
   }
+
+  /// Only set type and model when it is null
+  chat.type ??= type;
+  chat.model ??= model;
+
   Stores.history.put(chat);
 }
 
@@ -113,7 +139,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
   if (title == null || title.isEmpty) return;
   entity.name = title;
   _historyRNMap[chatId]?.build();
-  _storeChat(chatId, context);
+  _storeChat(chatId);
   _appbarTitleRN.build();
 }
 
@@ -320,7 +346,10 @@ void _gotoHistory(String chatId) {
 }
 
 void _onTapReplay(
-    BuildContext context, String chatId, ChatHistoryItem item) async {
+  BuildContext context,
+  String chatId,
+  ChatHistoryItem item,
+) async {
   if (item.role != ChatRole.user) return;
   BlurOverlay.close?.call();
   final sure = await context.showRoundDialog<bool>(
@@ -351,7 +380,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
       onSubmitted: (p0) {
         chatItem.content.clear();
         chatItem.content.add(ChatContent.text(p0));
-        _storeChat(_curChatId, context);
+        _storeChat(_curChatId);
         _chatRN.build();
         context.pop();
       },
@@ -369,6 +398,34 @@ void _autoScroll(String chatId) {
       _chatScrollCtrl.jumpTo(_chatScrollCtrl.position.maxScrollExtent);
     }
   }
+}
+
+void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
+  final cfg = OpenAICfg.current;
+  if (cfg.key.isEmpty) {
+    if (notifyKey) {
+      context.showRoundDialog(
+        title: l10n.attention,
+        child: Text(l10n.needOpenAIKey),
+        actions: Btns.oks(onTap: context.pop),
+      );
+    }
+    return;
+  }
+
+  final models = OpenAICfg.models.value;
+  final model = await context.showPickSingleDialog(
+    items: models,
+    initial: cfg.model,
+    title: l10n.model,
+  );
+  if (model == null) return;
+  final newModel = switch (_chatType.value) {
+    ChatType.text => cfg.copyWith(model: model),
+    ChatType.img => cfg.copyWith(imgModel: model),
+    ChatType.audio => cfg.copyWith(speechModel: model),
+  };
+  OpenAICfg.setTo(newModel);
 }
 
 // /// The chat type is determined by the following order:

@@ -75,6 +75,42 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  Widget _buildChat() {
+    return ListenableBuilder(
+      listenable: _cfgRN,
+      builder: (_, __) {
+        final cfg = OpenAICfg.current;
+        final children = [
+          _buildSwitchCfg(cfg),
+          _buildOpenAIKey(cfg.key),
+          _buildOpenAIUrl(cfg.url),
+          _buildOpenAIModels(cfg),
+          _buildPrompt(cfg.prompt),
+          _buildHistoryLength(cfg.historyLen),
+        ];
+        return Column(
+          children: children.map((e) => CardX(child: e)).toList(),
+        );
+      },
+    );
+  }
+
+  Widget _buildMore() {
+    final children = [
+      _buildFollowChatModel(),
+      //_buildFontSize(),
+      _buildGenTitle(),
+      _buildScrollBottom(),
+      _buildSoftWrap(),
+      _buildAutoRmDupChat(),
+      //_buildCalcTokenLen(),
+      _buildReplay(),
+    ];
+    return Column(
+      children: children.map((e) => CardX(child: e)).toList(),
+    );
+  }
+
   Widget _buildThemeMode() {
     return ValueListenableBuilder(
       valueListenable: _store.themeMode.listenable(),
@@ -210,26 +246,6 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildChat() {
-    return ListenableBuilder(
-      listenable: _cfgRN,
-      builder: (_, __) {
-        final cfg = OpenAICfg.current;
-        final children = [
-          _buildSwitchCfg(cfg),
-          _buildOpenAIKey(cfg.key),
-          _buildOpenAIUrl(cfg.url),
-          _buildOpenAIModels(cfg),
-          _buildPrompt(cfg.prompt),
-          _buildHistoryLength(cfg.historyLen),
-        ];
-        return Column(
-          children: children.map((e) => CardX(child: e)).toList(),
-        );
-      },
-    );
-  }
-
   Widget _buildSwitchCfg(ChatConfig cfg) {
     final vals = Stores.config.box
         .toJson<ChatConfig>(includeInternal: false)
@@ -265,14 +281,14 @@ class _SettingPageState extends State<SettingPage> {
           value: cfg.id == value.id,
           onChanged: (val) {
             if (val != true) return;
-            OpenAICfg.setTo(value, context);
+            OpenAICfg.setTo(value);
             _cfgRN.build();
           },
         ),
         title: Text(value.name.isEmpty ? l10n.defaulT : value.name),
         onTap: () {
           if (cfg.id == value.id) return;
-          OpenAICfg.setTo(value, context);
+          OpenAICfg.setTo(value);
           _cfgRN.build();
         },
         trailing: value.id != ChatConfig.defaultId ? delBtn : null,
@@ -297,7 +313,7 @@ class _SettingPageState extends State<SettingPage> {
           id: shortid.generate(),
           name: name,
         )..save();
-        OpenAICfg.setTo(cfg, context);
+        OpenAICfg.setTo(cfg);
         _cfgRN.build();
       },
       title: Text(l10n.add),
@@ -344,7 +360,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
         );
         if (result == null) return;
-        OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result), context);
+        OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result));
         OpenAICfg.updateModels();
         _cfgRN.build();
       },
@@ -385,7 +401,7 @@ class _SettingPageState extends State<SettingPage> {
           );
           if (sure != true) return;
         }
-        OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result), context);
+        OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result));
         OpenAICfg.updateModels();
         _cfgRN.build();
       },
@@ -435,10 +451,7 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 void onSave(String s) {
                   context.pop();
-                  OpenAICfg.setTo(
-                    OpenAICfg.current.copyWith(model: s),
-                    context,
-                  );
+                  OpenAICfg.setTo(OpenAICfg.current.copyWith(model: s));
                   _cfgRN.build();
                 }
 
@@ -459,7 +472,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model), context);
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model));
           _cfgRN.build();
         }
       },
@@ -492,10 +505,7 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 void onSave(String s) {
                   context.pop();
-                  OpenAICfg.setTo(
-                    OpenAICfg.current.copyWith(imgModel: s),
-                    context,
-                  );
+                  OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: s));
                   _cfgRN.build();
                 }
 
@@ -516,7 +526,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model), context);
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model));
           _cfgRN.build();
         }
       },
@@ -549,10 +559,7 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {
                 void onSave(String s) {
                   context.pop();
-                  OpenAICfg.setTo(
-                    OpenAICfg.current.copyWith(speechModel: s),
-                    context,
-                  );
+                  OpenAICfg.setTo(OpenAICfg.current.copyWith(speechModel: s));
                   _cfgRN.build();
                 }
 
@@ -573,10 +580,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.setTo(
-            OpenAICfg.current.copyWith(speechModel: model),
-            context,
-          );
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(speechModel: model));
           _cfgRN.build();
         }
       },
@@ -610,9 +614,7 @@ class _SettingPageState extends State<SettingPage> {
                 void onSave(String s) {
                   context.pop();
                   OpenAICfg.setTo(
-                    OpenAICfg.current.copyWith(transcribeModel: s),
-                    context,
-                  );
+                      OpenAICfg.current.copyWith(transcribeModel: s));
                   _cfgRN.build();
                 }
 
@@ -633,10 +635,7 @@ class _SettingPageState extends State<SettingPage> {
           ],
         );
         if (model != null) {
-          OpenAICfg.setTo(
-            OpenAICfg.current.copyWith(transcribeModel: model),
-            context,
-          );
+          OpenAICfg.setTo(OpenAICfg.current.copyWith(transcribeModel: model));
           _cfgRN.build();
         }
       },
@@ -667,7 +666,7 @@ class _SettingPageState extends State<SettingPage> {
           actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
         );
         if (result == null) return;
-        OpenAICfg.setTo(OpenAICfg.current.copyWith(prompt: result), context);
+        OpenAICfg.setTo(OpenAICfg.current.copyWith(prompt: result));
         _cfgRN.build();
       },
     );
@@ -701,27 +700,9 @@ class _SettingPageState extends State<SettingPage> {
           context.showSnackBar('Invalid number: $result');
           return;
         }
-        OpenAICfg.setTo(
-          OpenAICfg.current.copyWith(historyLen: newVal),
-          context,
-        );
+        OpenAICfg.setTo(OpenAICfg.current.copyWith(historyLen: newVal));
         _cfgRN.build();
       },
-    );
-  }
-
-  Widget _buildMore() {
-    final children = [
-      //_buildFontSize(),
-      _buildGenTitle(),
-      _buildScrollBottom(),
-      _buildSoftWrap(),
-      _buildAutoRmDupChat(),
-      //_buildCalcTokenLen(),
-      _buildReplay(),
-    ];
-    return Column(
-      children: children.map((e) => CardX(child: e)).toList(),
     );
   }
 
@@ -832,6 +813,14 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(MingCute.route_fill),
       title: Text('Cupertino ${l10n.route}'),
       trailing: StoreSwitch(prop: _store.cupertinoRoute),
+    );
+  }
+
+  Widget _buildFollowChatModel() {
+    return ListTile(
+      leading: const Icon(Icons.chat),
+      title: Text(l10n.followChatModel),
+      trailing: StoreSwitch(prop: _store.followModel),
     );
   }
 }

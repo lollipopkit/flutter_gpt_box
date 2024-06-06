@@ -321,7 +321,7 @@ class _ChatPageState extends State<_ChatPage>
           );
           if (result != true) return;
           chatItems.remove(chatItem);
-          _storeChat(_curChatId, context);
+          _storeChat(_curChatId);
           _historyRNMap[_curChatId]?.build();
           _chatRN.build();
         },

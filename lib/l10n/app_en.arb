@@ -46,6 +46,7 @@
   "file": "File",
   "fileNotFound": "File({file}) not found",
   "fileTooLarge": "File too large: {size}",
+  "followChatModel": "Follow chat model",
   "fontSize": "Font size",
   "fontSizeSettingTip": "Applies only to code blocks",
   "freeCopy": "Free copy",

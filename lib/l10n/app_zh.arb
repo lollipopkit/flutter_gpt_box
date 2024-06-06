@@ -46,6 +46,7 @@
   "file": "文件",
   "fileNotFound": "文件（{file}）未能找到",
   "fileTooLarge": "文件过大：{size}",
+  "followChatModel": "跟随聊天模型",
   "fontSize": "字体大小",
   "fontSizeSettingTip": "仅对代码块生效",
   "freeCopy": "自由复制",

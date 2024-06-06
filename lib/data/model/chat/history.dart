@@ -17,20 +17,29 @@ final class ChatHistory {
   final List<ChatHistoryItem> items;
   @HiveField(2)
   String? name;
+
+  /// The type of this chat history.
   @HiveField(3)
-  ChatApiType? type;
+  ChatType? type;
+
+  /// The model used for this chat history. 
+  /// If this is not null, skip setting this field again.
+  @HiveField(4)
+  String? model;
 
   ChatHistory({
     required this.items,
     required this.id,
     this.name,
     this.type,
+    this.model,
   });
 
   ChatHistory.noid({
     required this.items,
     this.name,
     this.type,
+    this.model,
   }) : id = shortid.generate();
 
   static ChatHistory get empty => ChatHistory.noid(items: []);
@@ -45,6 +54,9 @@ final class ChatHistory {
     if (type != null) {
       map['type'] = type;
     }
+    if (model != null) {
+      map['model'] = model;
+    }
     return map;
   }
 
@@ -55,7 +67,8 @@ final class ChatHistory {
       items: (json['items'] as List)
           .map((e) => ChatHistoryItem.fromJson(e.cast<String, dynamic>()))
           .toList(),
-      type: ChatApiType.fromJson(json['type'] as int? ?? -1),
+      type: ChatType.fromIdx(json['type'] as int?),
+      model: json['model'] as String?,
     );
   }
 

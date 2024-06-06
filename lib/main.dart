@@ -10,6 +10,7 @@ import 'package:gpt_box/core/util/datetime.dart';
 import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
+import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/provider/all.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/misc.dart';
@@ -55,16 +56,14 @@ Future<void> _initApp() async {
 Future<void> _initDb() async {
   await Hive.initFlutter();
 
-  /// It's used by [ChatHistoryAdapter]
-  Hive.registerAdapter(DateTimeAdapter());
-  Hive.registerAdapter(ChatContentAdapter());
-  Hive.registerAdapter(ChatContentTypeAdapter());
-  Hive.registerAdapter(ChatRoleAdapter());
-  Hive.registerAdapter(ChatHistoryItemAdapter());
-  Hive.registerAdapter(ChatConfigAdapter());
-
-  /// MUST put it back of all chat related adapters.
-  Hive.registerAdapter(ChatHistoryAdapter());
+  Hive.registerAdapter(ChatHistoryItemAdapter()); // 0
+  Hive.registerAdapter(ChatContentTypeAdapter()); // 1
+  Hive.registerAdapter(ChatContentAdapter()); // 2
+  Hive.registerAdapter(ChatRoleAdapter()); // 3
+  Hive.registerAdapter(DateTimeAdapter()); // 4
+  Hive.registerAdapter(ChatHistoryAdapter()); // 5
+  Hive.registerAdapter(ChatConfigAdapter()); // 6
+  Hive.registerAdapter(ChatTypeAdapter()); // 7
 
   await Stores.history.init();
   await Stores.setting.init();

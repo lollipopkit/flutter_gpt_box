@@ -1,15 +1,30 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:hive_flutter/adapters.dart';
 
+part 'type.g.dart';
+
+@HiveType(typeId: 7)
 enum ChatType {
+  @HiveField(0)
   text,
+  @HiveField(1)
   img,
+  @HiveField(2)
   audio,
   ;
 
-  static ChatType? fromString(String val) {
+  static ChatType? fromString(String? val) {
     return ChatType.values.firstWhereOrNull((e) => e.name == val);
+  }
+
+  static ChatType? fromIdx(int? val) {
+    try {
+      return ChatType.values[val!];
+    } catch (e) {
+      return null;
+    }
   }
 
   IconData get icon => switch (this) {
@@ -38,28 +53,4 @@ enum ChatType {
         ),
       )
       .toList();
-}
-
-enum ChatApiType {
-  /// Chat in plain text
-  text,
-
-  /// Text chat with img
-  textImg,
-
-  /// Create img
-  img,
-  imgEdit,
-  tts,
-  stt,
-  ;
-
-  int toJson() => index;
-  static ChatApiType? fromJson(int val) {
-    try {
-      return ChatApiType.values[val];
-    } catch (e) {
-      return null;
-    }
-  }
 }

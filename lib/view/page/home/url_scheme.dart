@@ -110,14 +110,11 @@ abstract final class AppLink {
           Loggers.app.warning(msg);
           return true;
         }
-        OpenAICfg.setTo(
-          OpenAICfg.current.copyWith(
-            url: openAiUrl,
-            key: openAiKey,
-            model: openAiModel,
-          ),
-          context,
-        );
+        OpenAICfg.setTo(OpenAICfg.current.copyWith(
+          url: openAiUrl,
+          key: openAiKey,
+          model: openAiModel,
+        ));
         return true;
       default:
         if (isWeb && path == '/') return true;
