@@ -102,6 +102,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildGenTitle(),
       _buildScrollBottom(),
       _buildSoftWrap(),
+      _buildDeleteConfrim(),
       _buildAutoRmDupChat(),
       //_buildCalcTokenLen(),
       _buildReplay(),
@@ -743,7 +744,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildGenTitle() {
     return ListTile(
-      leading: const Icon(Icons.auto_awesome),
+      leading: const Icon(Icons.auto_awesome, size: 21),
       title: Text(l10n.genChatTitle),
       trailing: StoreSwitch(prop: _store.genTitle),
     );
@@ -818,9 +819,17 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildFollowChatModel() {
     return ListTile(
-      leading: const Icon(Icons.chat),
+      leading: const Icon(OctIcons.arrow_switch, size: 21),
       title: Text(l10n.followChatModel),
       trailing: StoreSwitch(prop: _store.followModel),
+    );
+  }
+
+  Widget _buildDeleteConfrim() {
+    return ListTile(
+      leading: const Icon(MingCute.check_circle_fill),
+      title: Text(l10n.deleteConfirm),
+      trailing: StoreSwitch(prop: _store.confrimDel),
     );
   }
 }

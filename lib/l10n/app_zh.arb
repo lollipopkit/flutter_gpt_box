@@ -37,6 +37,7 @@
   "defaulT": "默认",
   "delFmt": "删除 {type}（{id}）？",
   "delete": "删除",
+  "deleteConfirm": "删除前确认",
   "edit": "编辑",
   "editor": "编辑器",
   "empty": "空",

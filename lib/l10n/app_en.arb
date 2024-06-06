@@ -37,6 +37,7 @@
   "defaulT": "Default",
   "delFmt": "Delete {type}({id})?",
   "delete": "Delete",
+  "deleteConfirm": "Confirmation berfore delete",
   "edit": "Edit",
   "editor": "Editor",
   "empty": "Empty",
