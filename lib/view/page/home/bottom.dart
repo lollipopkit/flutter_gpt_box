@@ -79,11 +79,11 @@ class _HomeBottom extends StatelessWidget {
           listenable: _chatType,
           builder: (_, __) {
             return switch (_chatType.value) {
-              ChatType.text || ChatType.img => Badge(
-                  isLabelVisible: _filePicked.value != null,
-                  child: IconButton(
-                    onPressed: () => _onTapImgPick(context),
-                    icon: const Icon(Icons.image, size: 19),
+              ChatType.text || ChatType.img => IconButton(
+                  onPressed: () => _onTapImgPick(context),
+                  icon: Badge(
+                    isLabelVisible: _filePicked.value != null,
+                    child: const Icon(Icons.image, size: 19),
                   ),
                 ),
               // ChatType.audio => const IconButton(

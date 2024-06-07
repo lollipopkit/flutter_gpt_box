@@ -287,11 +287,6 @@ class _ChatPageState extends State<_ChatPage>
         ListenableBuilder(
           listenable: _sendBtnRN,
           builder: (_, __) {
-            /// TODO: Can't replay image message.
-            final isImgChat =
-                chatItem.content.any((e) => e.type == ChatContentType.image) ||
-                    _chatType.value != ChatType.text;
-            if (isImgChat) return UIs.placeholder;
             final isWorking = _chatStreamSubs.containsKey(_curChatId);
             if (isWorking) return UIs.placeholder;
             return buildCircleBtn(

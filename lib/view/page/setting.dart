@@ -692,7 +692,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildReplay() {
     return ListTile(
       leading: const Icon(Icons.replay),
-      title: Text('${l10n.replay} (experimental)'),
+      title: Text(l10n.replay),
       trailing: StoreSwitch(prop: _store.replay),
     );
   }

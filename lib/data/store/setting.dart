@@ -44,7 +44,7 @@ class SettingStore extends PersistentStore {
   /// Calcualte tokens length
   // late final calcTokenLen = property('calcTokenLen', true);
 
-  late final replay = property('replay', false);
+  late final replay = property('replay', true);
 
   late final countly = property('countly', true);
 

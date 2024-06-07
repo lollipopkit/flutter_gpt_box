@@ -17,6 +17,7 @@ GPTBOX>>>''';
     if (title.endsWith('》')) title = title.substring(0, title.length - 1);
 
     title = title.replaceAll(_punctionsRm, '');
+    title = title.replaceAll('\n', ' ');
 
     if (title.length > _maxLen) {
       title = title.substring(0, _maxLen);

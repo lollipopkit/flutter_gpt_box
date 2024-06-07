@@ -1,7 +1,7 @@
 /// OpenAI chat request related funcs
 part of 'home.dart';
 
-bool _checkSettingsValid(BuildContext context) {
+bool _validChatCfg(BuildContext context) {
   final config = OpenAICfg.current;
   final urlEmpty = config.url == 'https://api.openai.com' || config.url.isEmpty;
   if (urlEmpty && config.key.isEmpty) {
@@ -15,7 +15,7 @@ bool _checkSettingsValid(BuildContext context) {
 
 /// Auto select model and send the request
 void _onCreateRequest(BuildContext context, String chatId) async {
-  if (!_checkSettingsValid(context)) return;
+  if (!_validChatCfg(context)) return;
 
   final chatType = _chatType.value;
   final notSupport = switch (chatType) {
@@ -441,7 +441,7 @@ void _onReplay({
   required String chatId,
   required ChatHistoryItem item,
 }) async {
-  if (!_checkSettingsValid(context)) return;
+  if (!_validChatCfg(context)) return;
 
   // If is receiving the reply, ignore this action
   if (_chatStreamSubs.containsKey(chatId)) {
@@ -473,82 +473,17 @@ void _onReplay({
     chatHistory.items.removeAt(itemIdx + 1);
   }
 
-  final config = OpenAICfg.current;
-  final questionContent = switch ((
-    config.prompt,
-    config.historyLen,
-    chatHistory.items.length,
-  )) {
-    ('', _, _) => item.toMarkdown,
+  chatHistory.items.removeAt(itemIdx);
 
-    /// If prompt is not empty and historyCount == null || 0,
-    /// append it to the input
-    (final prompt, 0, _) => '$prompt\n${item.toMarkdown}',
+  final text =
+      item.content.firstWhereOrNull((e) => e.type == ChatContentType.text)?.raw;
+  if (text != null) _inputCtrl.text = text;
+  final img = item.content
+      .firstWhereOrNull((e) => e.type == ChatContentType.image)
+      ?.raw;
+  if (img != null) _filePicked.value = XFile(img);
 
-    /// If this the first msg, append it to the input
-    (final prompt, _, 1) => '$prompt\n${item.toMarkdown}',
-    _ => item.content.first.raw,
-  };
-  final question = ChatHistoryItem.single(
-    raw: questionContent,
-    role: ChatRole.user,
-  );
-
-  final historyCarried = chatHistory.items.reversed
-      .take(config.historyLen)
-      .map(
-        (e) => e.toOpenAI,
-      )
-      .toList();
-
-  final chatStream = OpenAI.instance.chat.createStream(
-    model: config.model,
-    messages: [...historyCarried.reversed, question.toOpenAI],
-  );
-  final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
-  chatHistory.items.insert(itemIdx + 1, assistReply);
-  _chatRN.build();
-  try {
-    final sub = chatStream.listen(
-      (event) {
-        final delta = event.choices.first.delta.content?.first?.text;
-        if (delta == null) return;
-        assistReply.content.first.raw += delta;
-        _chatItemRNMap[assistReply.id]?.build();
-
-        _autoScroll(chatId);
-      },
-      onError: (e, trace) {
-        Loggers.app.warning('Listen chat stream: $e');
-        _onStopStreamSub(chatId);
-
-        final msg = 'Error: $e\nTrace:\n$trace';
-        chatHistory.items.add(ChatHistoryItem.single(
-          raw: msg,
-          role: ChatRole.system,
-        ));
-        _chatRN.build();
-        _storeChat(chatId);
-        _sendBtnRN.build();
-      },
-      onDone: () {
-        _onStopStreamSub(chatId);
-        _storeChat(chatId);
-        _sendBtnRN.build();
-        _appbarTitleRN.build();
-        SyncService.sync();
-      },
-    );
-    _chatStreamSubs[chatId] = sub;
-    _sendBtnRN.build();
-  } catch (e) {
-    _onStopStreamSub(chatId);
-    final msg = 'Chat stream: $e';
-    Loggers.app.warning(msg);
-    context.showSnackBar(msg);
-    assistReply.content.first.raw += '\n$msg';
-    _sendBtnRN.build();
-  }
+  _onCreateRequest(context, chatId);
 }
 
 void _onErr(Object e, StackTrace s, String chatId, String action) {
