@@ -364,8 +364,6 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   }
 }
 
-final _punctionsRm = RegExp('[。"\'“”]');
-
 Future<void> _genChatTitle(
   BuildContext context,
   String chatId,
@@ -393,12 +391,7 @@ Future<void> _genChatTitle(
       model: cfg.model,
       messages: [
         ChatHistoryItem.single(
-          raw: '''
-Generate a condensed, simple title without additional punctuation for the user content behind `GPTBOX>>>` with three requirements: 
-0. the language of the generated title should be the same as the language of the user content.
-1. no more than 10 characters if Chinese, Japanese, Korean, etc., 
-2. or 23 letters if English, German, French, etc.; 
-GPTBOX>>>''',
+          raw: ChatTitleUtil.titlePrompt,
           role: ChatRole.system,
         ).toOpenAI,
         ChatHistoryItem.single(
@@ -425,11 +418,8 @@ GPTBOX>>>''',
         var title = entity.name;
         if (title == null) return;
 
-        // Prettiy the title
-        title = title.replaceAll(_punctionsRm, '');
-        if (title.length > 23) {
-          title = title.substring(0, 23);
-        }
+        title = ChatTitleUtil.prettify(title);
+
         if (title.isNotEmpty) {
           entity.name = title;
         }
