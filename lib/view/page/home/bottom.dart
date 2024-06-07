@@ -163,21 +163,24 @@ class _HomeBottom extends StatelessWidget {
   }
 
   Widget _buildSwitchChatType() {
-    return ListenableBuilder(
+    return ValBuilder(
       listenable: _chatType,
-      builder: (_, __) {
-        return PopupMenu(
-          items: ChatType.btns,
-          onSelected: (val) => _chatType.value = val,
-          initialValue: _chatType.value,
-          tooltip: l10n.choose,
-          child: _buildRoundRect(Row(
-            children: [
-              Icon(_chatType.value.icon, size: 15),
-              UIs.width7,
-              Text(_chatType.value.name, style: UIs.text13),
-            ],
-          )),
+      builder: (chatT) {
+        return FadeIn(
+          key: ValueKey(chatT),
+          child: PopupMenu(
+            items: ChatType.btns,
+            onSelected: (val) => _chatType.value = val,
+            initialValue: _chatType.value,
+            tooltip: l10n.choose,
+            child: _buildRoundRect(Row(
+              children: [
+                Icon(_chatType.value.icon, size: 15),
+                UIs.width7,
+                Text(_chatType.value.name, style: UIs.text13),
+              ],
+            )),
+          ),
         );
       },
     );

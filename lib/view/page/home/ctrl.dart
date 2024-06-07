@@ -21,16 +21,27 @@ void _switchChat([String? id]) {
 
   final model = chat.model;
   final type = chat.type;
-  if (model != null && type != null) {
+  final profileId = chat.profileId;
+  if (model != null && type != null && profileId != null) {
     final followModel = Stores.setting.followModel.fetch();
     if (followModel) {
-      final cfg = OpenAICfg.current;
+      final cfg = Stores.config.fetch(profileId);
+      if (cfg == null) {
+        final msg = 'Switch Chat($id) profile($profileId) not found';
+        Loggers.app.warning(msg);
+        return;
+      }
+      
       final newCfg = switch (type) {
         ChatType.text => cfg.copyWith(model: model),
         ChatType.img => cfg.copyWith(imgModel: model),
         ChatType.audio => cfg.copyWith(speechModel: model),
       };
       OpenAICfg.setTo(newCfg);
+
+      if (type != _chatType.value) {
+        _chatType.value = type;
+      }
     }
   }
 }
@@ -47,7 +58,12 @@ void _switchNextChat() {
   _switchChat(_allHistories.keys.elementAt(idx - 1));
 }
 
-void _storeChat(String chatId, {ChatType? type, String? model}) {
+void _storeChat(
+  String chatId, {
+  ChatType? type,
+  String? model,
+  String? profileId,
+}) {
   final chat = _allHistories[chatId];
   if (chat == null) {
     final msg = 'Store Chat($chatId) not found';
@@ -58,6 +74,7 @@ void _storeChat(String chatId, {ChatType? type, String? model}) {
   /// Only set type and model when it is null
   chat.type ??= type;
   chat.model ??= model;
+  chat.profileId ??= profileId;
 
   Stores.history.put(chat);
 }

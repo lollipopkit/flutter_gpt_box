@@ -3,11 +3,9 @@ part of 'home.dart';
 
 bool _checkSettingsValid(BuildContext context) {
   final config = OpenAICfg.current;
-  final urlEmpty = config.url == 'https://api.openai.com' ||
-      config.url == 'https://api.chatgpt.com' ||
-      config.url.isEmpty;
+  final urlEmpty = config.url == 'https://api.openai.com' || config.url.isEmpty;
   if (urlEmpty && config.key.isEmpty) {
-    final msg = l10n.emptyFields('Api${l10n.secretKey}');
+    final msg = l10n.emptyFields('${l10n.secretKey} | Api Url');
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     return false;
@@ -118,7 +116,12 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
       onError: (e, s) => _onErr(e, s, chatId, 'Listen text stream'),
       onDone: () async {
         _onStopStreamSub(chatId);
-        _storeChat(chatId, type: ChatType.text, model: config.model);
+        _storeChat(
+          chatId,
+          type: ChatType.text,
+          model: config.model,
+          profileId: config.id,
+        );
         _sendBtnRN.build();
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
@@ -179,7 +182,12 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
     replyContent.raw = file.path;
     completer.complete();
     _chatItemRNMap[assistReply.id]?.build();
-    _storeChat(chatId, type: ChatType.audio, model: config.speechModel);
+    _storeChat(
+      chatId,
+      type: ChatType.audio,
+      model: config.speechModel,
+      profileId: config.id,
+    );
   } catch (e, s) {
     _onErr(e, s, chatId, 'Audio create speech');
   }
@@ -206,10 +214,10 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
   workingChat.items.add(userQuestion);
   _chatRN.build();
 
-  final model = OpenAICfg.current.imgModel;
+  final cfg = OpenAICfg.current;
   try {
     final resp = await OpenAI.instance.image.create(
-      model: model,
+      model: cfg.model,
       prompt: prompt,
     );
     final imgs = <String>[];
@@ -229,7 +237,12 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
       role: ChatRole.assist,
       content: imgs.map((e) => ChatContent.image(e)).toList(),
     ));
-    _storeChat(chatId, type: ChatType.img, model: model);
+    _storeChat(
+      chatId,
+      type: ChatType.img,
+      model: cfg.model,
+      profileId: cfg.id,
+    );
     _chatRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Create image');
@@ -257,10 +270,10 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   _chatRN.build();
   _filePicked.value = null;
 
-  final model = OpenAICfg.current.imgModel;
+  final cfg = OpenAICfg.current;
   try {
     final resp = await OpenAI.instance.image.edit(
-      model: model,
+      model: cfg.imgModel,
       image: File(val.path),
       prompt: prompt,
     );
@@ -281,7 +294,12 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
       role: ChatRole.assist,
       content: imgs.map((e) => ChatContent.image(e)).toList(),
     ));
-    _storeChat(chatId, type: ChatType.img, model: model);
+    _storeChat(
+      chatId,
+      type: ChatType.img,
+      model: cfg.imgModel,
+      profileId: cfg.id,
+    );
     _chatRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Edit image');
@@ -309,10 +327,10 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   _storeChat(chatId);
   _filePicked.value = null;
 
-  final model = OpenAICfg.current.speechModel;
+  final cfg = OpenAICfg.current;
   try {
     final resp = await OpenAI.instance.audio.createTranscription(
-      model: model,
+      model: cfg.speechModel,
       file: File(val.path),
       //prompt: '',
     );
@@ -328,7 +346,12 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
       type: ChatContentType.text,
       raw: text,
     ));
-    _storeChat(chatId, type: ChatType.audio, model: model);
+    _storeChat(
+      chatId,
+      type: ChatType.audio,
+      model: cfg.speechModel,
+      profileId: cfg.id,
+    );
     _chatRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Audio to Text');
@@ -353,27 +376,6 @@ Future<void> _genChatTitle(
   }
   if (entity.items.length != 1) return;
 
-  final stream = OpenAI.instance.chat.createStream(
-    model: cfg.model,
-    messages: [
-      ChatHistoryItem.single(
-        raw: '''
-Create a simple and clear title based on user content.
-If the language is Chinese, Japanese or Korean, the title should be within 10 characters; 
-if it is English, French, German, Latin and other Western languages, the number of title characters should not exceed 23. 
-The title should be the same as the language entered by the user (except the code block) as below:''',
-        role: ChatRole.system,
-      ).toOpenAI,
-      ChatHistoryItem.single(
-        role: ChatRole.user,
-        raw: entity.items.first.content
-                .firstWhereOrNull((p0) => p0.type == ChatContentType.text)
-                ?.raw ??
-            '',
-      ).toOpenAI,
-    ],
-  );
-
   void onErr(Object e, StackTrace s) {
     Loggers.app.warning('Gen title: $e');
     _historyRNMap[chatId]?.build();
@@ -381,6 +383,27 @@ The title should be the same as the language entered by the user (except the cod
   }
 
   try {
+    final stream = OpenAI.instance.chat.createStream(
+      model: cfg.model,
+      messages: [
+        ChatHistoryItem.single(
+          raw: '''
+Generate a condensed, simple title for the user content behind `GPTBOX>>>` with three requirements: 
+0. the language of the generated title should be the same as the language of the user content.
+1. no more than 10 characters if Chinese, Japanese, Korean, etc., 
+2. or 23 letters if English, German, French, etc.; 
+GPTBOX>>>''',
+          role: ChatRole.system,
+        ).toOpenAI,
+        ChatHistoryItem.single(
+          role: ChatRole.user,
+          raw: entity.items.first.content
+              .firstWhere((p0) => p0.type == ChatContentType.text)
+              .raw,
+        ).toOpenAI,
+      ],
+    );
+
     stream.listen(
       (eve) {
         final title = eve.choices.firstOrNull?.delta.content?.firstOrNull?.text;
@@ -393,10 +416,16 @@ The title should be the same as the language entered by the user (except the cod
       },
       onError: (e, s) => onErr(e, s),
       onDone: () {
+        var title = entity.name;
+        if (title == null) return;
+
         // Prettiy the title
-        entity.name = (entity.name ?? '').replaceAll(_punctionsRm, '');
-        if (entity.name!.length > 23) {
-          entity.name = entity.name!.substring(0, 23);
+        title = title.replaceAll(_punctionsRm, '');
+        if (title.length > 23) {
+          title = title.substring(0, 23);
+        }
+        if (title.isNotEmpty) {
+          entity.name = title;
         }
 
         _historyRNMap[chatId]?.build();

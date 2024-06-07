@@ -27,12 +27,17 @@ final class ChatHistory {
   @HiveField(4)
   String? model;
 
+  /// Use `pfId` as json key to decrease backup size.
+  @HiveField(5)
+  String? profileId;
+
   ChatHistory({
     required this.items,
     required this.id,
     this.name,
     this.type,
     this.model,
+    this.profileId,
   });
 
   ChatHistory.noid({
@@ -40,6 +45,7 @@ final class ChatHistory {
     this.name,
     this.type,
     this.model,
+    this.profileId,
   }) : id = shortid.generate();
 
   static ChatHistory get empty => ChatHistory.noid(items: []);
@@ -57,6 +63,9 @@ final class ChatHistory {
     if (model != null) {
       map['model'] = model;
     }
+    if (profileId != null) {
+      map['pfId'] = profileId;
+    }
     return map;
   }
 
@@ -69,6 +78,7 @@ final class ChatHistory {
           .toList(),
       type: ChatType.fromIdx(json['type'] as int?),
       model: json['model'] as String?,
+      profileId: json['pfId'] as String?,
     );
   }
 
