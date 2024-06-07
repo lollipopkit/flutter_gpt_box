@@ -7,12 +7,8 @@ import 'package:gpt_box/data/store/all.dart';
 abstract final class OpenAICfg {
   static final models = <String>[].vn;
 
-  static final vn = () {
-    final selectedKey = Stores.setting.profileId.fetch();
-    final selected = Stores.config.fetch(selectedKey);
-    return selected ?? ChatConfig.defaultOne;
-  }()
-      .vn;
+  // ignore: deprecated_member_use_from_same_package
+  static final vn = _init.vn;
 
   static ChatConfig get current => vn.value;
 
@@ -24,17 +20,26 @@ abstract final class OpenAICfg {
     Stores.setting.profileId.put(config.id);
 
     if (old.id != config.id) {
-      Funcs.throttle(updateModels, id: 'setTo-${config.id}', duration: 1000);
+      updateModels();
     }
   }
 
-  static Future<bool> updateModels() async {
+  static void setToId(String id) {
+    final cfg = Stores.config.fetch(id);
+    if (cfg != null) {
+      setTo(cfg);
+    } else {
+      Loggers.app.warning('Config [$id] not found');
+    }
+  }
+
+  static Future<bool> updateModels({bool force = false}) async {
     try {
-      final val = await OpenAI.instance.model.list();
-      models.value = val.map((e) => e.id).toList();
+      models.value = await ModelsCacher.fetch(vn.value.id, force: force);
       return true;
     } catch (e) {
       Loggers.app.warning('Failed to update models', e);
+      models.value = [];
       return false;
     }
   }
@@ -51,11 +56,37 @@ abstract final class OpenAICfg {
 
   static void switchToDefault(BuildContext context) {
     final cfg = Stores.config.fetch(ChatConfig.defaultId);
-    if (cfg != null) {
-      setTo(cfg);
-    } else {
-      setTo(ChatConfig.defaultOne);
-      Loggers.app.warning('Default config not found');
+    if (cfg != null) return setTo(cfg);
+
+    setTo(ChatConfig.defaultOne);
+    Loggers.app.warning('Default config not found');
+  }
+
+  // Mark it as deprecated to avoid using it directly
+  // ignore: provide_deprecation_message
+  @deprecated
+  static final _init = () {
+    final selectedKey = Stores.setting.profileId.fetch();
+    final selected = Stores.config.fetch(selectedKey);
+    return selected ?? ChatConfig.defaultOne;
+  }();
+}
+
+abstract final class ModelsCacher {
+  static final models = <String, List<String>>{};
+  static final updateTime = <String, DateTime>{};
+
+  static Future<List<String>> fetch(String key, {bool force = false}) async {
+    final now = DateTime.now();
+    final last = updateTime[key];
+    if (!force && (last != null && now.difference(last).inMinutes < 5)) {
+      return models[key]!;
     }
+
+    final val = await OpenAI.instance.model.list();
+    final strs = val.map((e) => e.id).toList();
+    models[key] = strs;
+    updateTime[key] = now;
+    return strs;
   }
 }

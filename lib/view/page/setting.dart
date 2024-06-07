@@ -362,7 +362,7 @@ class _SettingPageState extends State<SettingPage> {
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result));
-        OpenAICfg.updateModels();
+        OpenAICfg.updateModels(force: true);
         _cfgRN.build();
       },
     );
@@ -403,7 +403,7 @@ class _SettingPageState extends State<SettingPage> {
           if (sure != true) return;
         }
         OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result));
-        OpenAICfg.updateModels();
+        OpenAICfg.updateModels(force: true);
         _cfgRN.build();
       },
     );
@@ -417,17 +417,68 @@ class _SettingPageState extends State<SettingPage> {
           leading: const Icon(Icons.model_training),
           title: Text(l10n.model),
           children: [
-            _buildOpenAIChatModel(cfg, models),
-            _buildOpenAIImgModel(cfg, models),
-            _buildOpenAISpeechModel(cfg, models),
-            _buildOpenAITranscribeModel(cfg, models),
+            _buildOpenAIChatModel(),
+            _buildOpenAIImgModel(),
+            _buildOpenAISpeechModel(),
+            // _buildOpenAITranscribeModel(),
           ],
         );
       },
     );
   }
 
-  Widget _buildOpenAIChatModel(ChatConfig cfg, List<String> models) {
+  Future<String?> _showPickModelDialog(String title, String val) async {
+    if (OpenAICfg.current.key.isEmpty) {
+      context.showRoundDialog(
+        title: l10n.attention,
+        child: Text(l10n.needOpenAIKey),
+        actions: Btns.oks(onTap: context.pop),
+      );
+      return null;
+    }
+
+    return context.showPickSingleDialog(
+      items: OpenAICfg.models.value,
+      initial: val,
+      title: title,
+      actions: [
+        TextButton(
+          onPressed: () async {
+            context.pop();
+            await context.showLoadingDialog(
+                fn: () => OpenAICfg.updateModels(force: true));
+            _showPickModelDialog(title, val);
+          },
+          child: Text(l10n.refresh),
+        ),
+        TextButton(
+          onPressed: () {
+            void onSave(String s) {
+              context.pop();
+              OpenAICfg.setTo(OpenAICfg.current.copyWith(model: s));
+              _cfgRN.build();
+            }
+
+            context.pop();
+            final ctrl = TextEditingController();
+            context.showRoundDialog(
+              title: l10n.custom,
+              child: Input(
+                controller: ctrl,
+                hint: kChatModel,
+                onSubmitted: (s) => onSave(s),
+              ),
+              actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+            );
+          },
+          child: Text(l10n.custom),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOpenAIChatModel() {
+    final cfg = OpenAICfg.current;
     final val = cfg.model;
     return ListTile(
       leading: const Icon(Icons.chat),
@@ -435,43 +486,7 @@ class _SettingPageState extends State<SettingPage> {
       trailing: const Icon(Icons.keyboard_arrow_right),
       subtitle: Text(val, style: UIs.text13Grey),
       onTap: () async {
-        if (cfg.key.isEmpty) {
-          context.showRoundDialog(
-            title: l10n.attention,
-            child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: context.pop),
-          );
-          return;
-        }
-        final model = await context.showPickSingleDialog(
-          items: models,
-          initial: val,
-          title: l10n.model,
-          actions: [
-            TextButton(
-              onPressed: () {
-                void onSave(String s) {
-                  context.pop();
-                  OpenAICfg.setTo(OpenAICfg.current.copyWith(model: s));
-                  _cfgRN.build();
-                }
-
-                context.pop();
-                final ctrl = TextEditingController();
-                context.showRoundDialog(
-                  title: l10n.custom,
-                  child: Input(
-                    controller: ctrl,
-                    hint: kChatModel,
-                    onSubmitted: (s) => onSave(s),
-                  ),
-                  actions: Btns.oks(onTap: () => onSave(ctrl.text)),
-                );
-              },
-              child: Text(l10n.custom),
-            ),
-          ],
-        );
+        final model = await _showPickModelDialog(l10n.model, val);
         if (model != null) {
           OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model));
           _cfgRN.build();
@@ -480,7 +495,8 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildOpenAIImgModel(ChatConfig cfg, List<String> models) {
+  Widget _buildOpenAIImgModel() {
+    final cfg = OpenAICfg.current;
     final val = cfg.imgModel;
     return ListTile(
       leading: const Icon(Icons.photo),
@@ -488,44 +504,8 @@ class _SettingPageState extends State<SettingPage> {
       trailing: const Icon(Icons.keyboard_arrow_right),
       subtitle: Text(val, style: UIs.text13Grey),
       onTap: () async {
-        if (cfg.key.isEmpty) {
-          context.showRoundDialog(
-            title: l10n.attention,
-            child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: context.pop),
-          );
-          return;
-        }
-
-        final model = await context.showPickSingleDialog(
-          items: models,
-          initial: val,
-          title: l10n.model,
-          actions: [
-            TextButton(
-              onPressed: () {
-                void onSave(String s) {
-                  context.pop();
-                  OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: s));
-                  _cfgRN.build();
-                }
-
-                context.pop();
-                final ctrl = TextEditingController();
-                context.showRoundDialog(
-                  title: l10n.custom,
-                  child: Input(
-                    controller: ctrl,
-                    hint: kChatModel,
-                    onSubmitted: (s) => onSave(s),
-                  ),
-                  actions: Btns.oks(onTap: () => onSave(ctrl.text)),
-                );
-              },
-              child: Text(l10n.custom),
-            ),
-          ],
-        );
+      
+        final model = await _showPickModelDialog(l10n.model, val);
         if (model != null) {
           OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model));
           _cfgRN.build();
@@ -534,7 +514,8 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildOpenAISpeechModel(ChatConfig cfg, List<String> models) {
+  Widget _buildOpenAISpeechModel() {
+    final cfg = OpenAICfg.current;
     final val = cfg.speechModel;
     return ListTile(
       leading: const Icon(Icons.speaker),
@@ -542,44 +523,7 @@ class _SettingPageState extends State<SettingPage> {
       trailing: const Icon(Icons.keyboard_arrow_right),
       subtitle: Text(val, style: UIs.text13Grey),
       onTap: () async {
-        if (cfg.key.isEmpty) {
-          context.showRoundDialog(
-            title: l10n.attention,
-            child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: context.pop),
-          );
-          return;
-        }
-
-        final model = await context.showPickSingleDialog(
-          items: models,
-          initial: val,
-          title: l10n.model,
-          actions: [
-            TextButton(
-              onPressed: () {
-                void onSave(String s) {
-                  context.pop();
-                  OpenAICfg.setTo(OpenAICfg.current.copyWith(speechModel: s));
-                  _cfgRN.build();
-                }
-
-                context.pop();
-                final ctrl = TextEditingController();
-                context.showRoundDialog(
-                  title: l10n.custom,
-                  child: Input(
-                    controller: ctrl,
-                    hint: kChatModel,
-                    onSubmitted: (s) => onSave(s),
-                  ),
-                  actions: Btns.oks(onTap: () => onSave(ctrl.text)),
-                );
-              },
-              child: Text(l10n.custom),
-            ),
-          ],
-        );
+        final model = await _showPickModelDialog(l10n.model, val);
         if (model != null) {
           OpenAICfg.setTo(OpenAICfg.current.copyWith(speechModel: model));
           _cfgRN.build();
@@ -588,60 +532,23 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildOpenAITranscribeModel(ChatConfig cfg, List<String> models) {
-    final val = cfg.transcribeModel;
-    return ListTile(
-      leading: const Icon(Icons.transcribe),
-      title: Text(l10n.stt),
-      trailing: const Icon(Icons.keyboard_arrow_right),
-      subtitle: Text(val, style: UIs.text13Grey),
-      onTap: () async {
-        if (cfg.key.isEmpty) {
-          context.showRoundDialog(
-            title: l10n.attention,
-            child: Text(l10n.needOpenAIKey),
-            actions: Btns.oks(onTap: context.pop),
-          );
-          return;
-        }
-
-        final model = await context.showPickSingleDialog(
-          items: models,
-          initial: val,
-          title: l10n.model,
-          actions: [
-            TextButton(
-              onPressed: () {
-                void onSave(String s) {
-                  context.pop();
-                  OpenAICfg.setTo(
-                      OpenAICfg.current.copyWith(transcribeModel: s));
-                  _cfgRN.build();
-                }
-
-                context.pop();
-                final ctrl = TextEditingController();
-                context.showRoundDialog(
-                  title: l10n.custom,
-                  child: Input(
-                    controller: ctrl,
-                    hint: kChatModel,
-                    onSubmitted: (s) => onSave(s),
-                  ),
-                  actions: Btns.oks(onTap: () => onSave(ctrl.text)),
-                );
-              },
-              child: Text(l10n.custom),
-            ),
-          ],
-        );
-        if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(transcribeModel: model));
-          _cfgRN.build();
-        }
-      },
-    );
-  }
+  // Widget _buildOpenAITranscribeModel() {
+  //   final cfg = OpenAICfg.current;
+  //   final val = cfg.transcribeModel;
+  //   return ListTile(
+  //     leading: const Icon(Icons.transcribe),
+  //     title: Text(l10n.stt),
+  //     trailing: const Icon(Icons.keyboard_arrow_right),
+  //     subtitle: Text(val, style: UIs.text13Grey),
+  //     onTap: () async {
+        // final model = await _showPickModelDialog(l10n.model, val);
+  //       if (model != null) {
+  //         OpenAICfg.setTo(OpenAICfg.current.copyWith(transcribeModel: model));
+  //         _cfgRN.build();
+  //       }
+  //     },
+  //   );
+  // }
 
   Widget _buildPrompt(String val) {
     return ListTile(
