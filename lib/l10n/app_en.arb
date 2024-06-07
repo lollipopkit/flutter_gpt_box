@@ -60,6 +60,7 @@
   "image": "Image",
   "initChatHelp": "### 📖 Tip\n- Overscroll on the chat page to switch chat history.\n- Long press non-code block to free copy raw markdown data / delete / etc., long press code block to free copy code.\n- URL Scheme usage can be found [here]({unilink})\n\n### 🔍 Help\n- If you have found a bug, please use [Github Issue]({issue})",
   "invalidLinkFmt": "Invalid link: {uri}",
+  "joinBeta": "Join Beta Program",
   "lang": "Language",
   "license": "License",
   "licenseMenuItem": "Open-source licenses",

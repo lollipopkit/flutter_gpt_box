@@ -22,7 +22,7 @@ final class ChatHistory {
   @HiveField(3)
   ChatType? type;
 
-  /// The model used for this chat history. 
+  /// The model used for this chat history.
   /// If this is not null, skip setting this field again.
   @HiveField(4)
   String? model;

@@ -92,7 +92,7 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
   }
 
   if (!Stores.setting.confrimDel.fetch()) return _onDeleteChat(chatId);
-  
+
   final name = entity.name ?? 'Untitled';
   context.showRoundDialog(
     title: l10n.attention,

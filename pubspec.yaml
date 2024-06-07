@@ -29,7 +29,7 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.35
+      ref: v1.0.36
     # path: ../fl_lib
   extended_image: ^8.2.1
   app_links: ^6.1.1

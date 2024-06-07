@@ -795,6 +795,7 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(MingCute.more_3_fill),
       title: Text(l10n.more),
       children: [
+        _buildJoinBeta(),
         _buildCountly(),
         _buildCupertinoRoute(),
       ],
@@ -830,6 +831,28 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(MingCute.check_circle_fill),
       title: Text(l10n.deleteConfirm),
       trailing: StoreSwitch(prop: _store.confrimDel),
+    );
+  }
+
+  Widget _buildJoinBeta() {
+    return ListTile(
+      leading: const Icon(Clarity.beta_solid),
+      title: Text(l10n.joinBeta),
+      trailing: StoreSwitch(
+        prop: _store.joinBeta,
+        callback: (val) async {
+          if (val) {
+            AppUpdate.chan = AppUpdateChan.beta;
+          } else {
+            AppUpdate.chan = AppUpdateChan.stable;
+          }
+          await AppUpdateIface.doUpdate(
+            context: context,
+            build: Build.build,
+            url: Urls.appUpdateCfg,
+          );
+        },
+      ),
     );
   }
 }

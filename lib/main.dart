@@ -96,4 +96,6 @@ Future<void> _initAppComponents() async {
   OpenAICfg.updateModels();
 
   SyncService.sync(force: true);
+
+  if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
 }

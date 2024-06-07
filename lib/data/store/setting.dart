@@ -54,10 +54,12 @@ class SettingStore extends PersistentStore {
 
   late final profileId = property('profileId', ChatConfig.defaultId);
 
-  /// If [ChatHistory.model] is not null, and the saved model ([followModel]) 
+  /// If [ChatHistory.model] is not null, and the saved model ([followModel])
   /// exists in current models list, then set current model to it.
   late final followModel = property('followModel', true);
 
   /// If it is false, delete without asking.
   late final confrimDel = property('confrimDel', true);
+
+  late final joinBeta = property('joinBeta', false);
 }
