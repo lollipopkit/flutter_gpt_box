@@ -104,6 +104,7 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
   _filePicked.value = null;
 
   try {
+    _chatFabAutoHideKey.currentState?.autoHideEnabled = false;
     final sub = chatStream.listen(
       (eve) {
         final delta = eve.choices.firstOrNull?.delta.content?.firstOrNull?.text;
@@ -113,7 +114,10 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
 
         _autoScroll(chatId);
       },
-      onError: (e, s) => _onErr(e, s, chatId, 'Listen text stream'),
+      onError: (e, s) {
+        _onErr(e, s, chatId, 'Listen text stream');
+        _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
+      },
       onDone: () async {
         _onStopStreamSub(chatId);
         _storeChat(
@@ -126,12 +130,14 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
         SyncService.sync();
+        _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
       },
     );
     _chatStreamSubs[chatId] = sub;
     _sendBtnRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Listen text stream');
+    _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
   }
 }
 
@@ -388,7 +394,7 @@ Future<void> _genChatTitle(
       messages: [
         ChatHistoryItem.single(
           raw: '''
-Generate a condensed, simple title for the user content behind `GPTBOX>>>` with three requirements: 
+Generate a condensed, simple title without additional punctuation for the user content behind `GPTBOX>>>` with three requirements: 
 0. the language of the generated title should be the same as the language of the user content.
 1. no more than 10 characters if Chinese, Japanese, Korean, etc., 
 2. or 23 letters if English, German, French, etc.; 
