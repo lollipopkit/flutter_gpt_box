@@ -17,8 +17,8 @@ final _chatItemRNMap = <String, RNode>{};
 // RebuildNodes for history list items
 final _historyRNMap = <String, RNode>{};
 
-/// Audio / Image / File
-final _filePicked = ValueNotifier<XFile?>(null);
+/// Audio / Image / File path
+final _filePicked = ValueNotifier<String?>(null);
 
 final _chatType = ChatType.text.vn;
 

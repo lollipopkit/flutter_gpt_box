@@ -31,7 +31,7 @@ void _switchChat([String? id]) {
         Loggers.app.warning(msg);
         return;
       }
-      
+
       final newCfg = switch (type) {
         ChatType.text => cfg.copyWith(model: model),
         ChatType.img => cfg.copyWith(imgModel: model),
@@ -193,10 +193,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
   if (val != null) {
     final delete = await context.showRoundDialog(
       title: l10n.file,
-      child: Image.memory(
-        await val.readAsBytes(),
-        fit: BoxFit.cover,
-      ),
+      child: Image.file(File(val), fit: BoxFit.cover),
       actions: [
         TextButton(
           onPressed: () => context.pop(true),
@@ -223,7 +220,18 @@ Future<void> _onTapImgPick(BuildContext context) async {
     context.showSnackBar(l10n.fileTooLarge(len.bytes2Str));
     return;
   }
-  _filePicked.value = result;
+
+  final imgPath = Paths.img.joinPath(shortid.generate());
+  final compressed = await context.showLoadingDialog(
+    fn: () async => compute(ImageUtil.compress, await result.readAsBytes()),
+  );
+  if (compressed == null) {
+    context.showSnackBar('${l10n.failed}: ${l10n.compress}');
+    await result.saveTo(imgPath);
+  } else {
+    await File(imgPath).writeAsBytes(compressed);
+  }
+  _filePicked.value = imgPath;
 }
 
 Set<String> findAllDuplicateIds(Map<String, ChatHistory> allHistories) {

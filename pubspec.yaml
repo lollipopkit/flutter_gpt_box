@@ -33,6 +33,7 @@ dependencies:
     # path: ../fl_lib
   extended_image: ^8.2.1
   app_links: ^6.1.1
+  image: ^4.2.0
 
 dev_dependencies:
   flutter_test:

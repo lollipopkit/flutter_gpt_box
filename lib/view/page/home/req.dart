@@ -65,14 +65,10 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
     (final prompt, _, 2) => '$prompt\n${_inputCtrl.text}',
     _ => _inputCtrl.text,
   };
-  final (imgUrl, imgPath) = await () async {
-    final value = _filePicked.value;
-    if (value == null) return (null, null);
-    final imgPath = Paths.img.joinPath(shortid.generate());
-    await value.saveTo(imgPath);
-    // Convert to base64 url
-    return (await value.base64, imgPath);
-  }();
+  final (imgUrl, imgPath) = switch (_filePicked.value) {
+    null => (null, null),
+    final imgPath => (await File(imgPath).base64, imgPath),
+  };
   final historyCarried = workingChat.items.reversed
       .take(config.historyLen)
       .map((e) => e.toOpenAI)
@@ -269,7 +265,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
     role: ChatRole.user,
     content: [
       ChatContent.text(prompt),
-      ChatContent.image(val.path),
+      ChatContent.image(val),
     ],
   );
   workingChat.items.add(chatItem);
@@ -280,7 +276,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   try {
     final resp = await OpenAI.instance.image.edit(
       model: cfg.imgModel,
-      image: File(val.path),
+      image: File(val),
       prompt: prompt,
     );
 
@@ -325,7 +321,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.single(
     type: ChatContentType.audio,
-    raw: val.path,
+    raw: val,
     role: ChatRole.user,
   );
   workingChat.items.add(chatItem);
@@ -337,7 +333,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   try {
     final resp = await OpenAI.instance.audio.createTranscription(
       model: cfg.speechModel,
-      file: File(val.path),
+      file: File(val),
       //prompt: '',
     );
     final text = resp.text;
@@ -481,7 +477,7 @@ void _onReplay({
   final img = item.content
       .firstWhereOrNull((e) => e.type == ChatContentType.image)
       ?.raw;
-  if (img != null) _filePicked.value = XFile(img);
+  if (img != null) _filePicked.value = img;
 
   _onCreateRequest(context, chatId);
 }

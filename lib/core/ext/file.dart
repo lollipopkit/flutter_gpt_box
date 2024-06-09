@@ -1,8 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:cross_file/cross_file.dart';
-
-extension XFileX on XFile? {
+extension FileX on File? {
   Future<String?> get base64 async {
     final format = this?.path.split('.').lastOrNull;
     if (format == null) return null;
