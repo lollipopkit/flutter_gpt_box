@@ -62,4 +62,6 @@ class SettingStore extends PersistentStore {
   late final confrimDel = property('confrimDel', true);
 
   late final joinBeta = property('joinBeta', false);
+
+  //late final compressImg = property('compressImg', true);
 }
