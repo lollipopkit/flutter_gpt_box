@@ -29,7 +29,8 @@ class _ChatPageState extends State<_ChatPage>
     return AutoHide(
       key: _chatFabAutoHideKey,
       controller: _chatScrollCtrl,
-      direction: AxisDirection.right,
+      direction: AxisDirection.down,
+      offset: 75,
       child: ListenableBuilder(
         listenable: _chatFabRN,
         builder: (_, __) {
@@ -38,14 +39,14 @@ class _ChatPageState extends State<_ChatPage>
               _chatScrollCtrl.position.maxScrollExtent > 0;
           return AnimatedSwitcher(
             transitionBuilder: (child, animation) {
-              return ScaleTransition(
-                scale: animation,
+              return RotationTransition(
+                turns: Tween<double>(begin: 0.5, end: 0).animate(animation),
                 child: child,
               );
             },
             duration: _durationShort,
-            switchInCurve: Curves.easeInOut,
-            switchOutCurve: Curves.easeInOut,
+            switchInCurve: Curves.fastEaseInToSlowEaseOut,
+            switchOutCurve: Curves.fastEaseInToSlowEaseOut,
             child: valid ? _buildFABBtn() : UIs.placeholder,
           );
         },

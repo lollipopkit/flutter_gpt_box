@@ -17,17 +17,9 @@ bool _validChatCfg(BuildContext context) {
 void _onCreateRequest(BuildContext context, String chatId) async {
   if (!_validChatCfg(context)) return;
 
-  final curChat = _curChat;
-  if (curChat == null) {
-    final msg = 'Chat($chatId) not found';
-    Loggers.app.warning(msg);
-    context.showSnackBar(msg);
-    return;
-  }
-
   // Issues #18.
   // Prohibit users from starting chatting in the initial chat
-  if (ChatHistory.isInitHelp(curChat)) {
+  if (_curChat?.isInitHelp ?? false) {
     final newId = _newChat().id;
     _switchChat(newId);
     chatId = newId;
@@ -502,7 +494,7 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   Loggers.app.warning('$action: $e');
   _onStopStreamSub(chatId);
 
-  final msg = 'Error: $e\nTrace:\n$s';
+  final msg = 'Error: $e\n\nTrace:\n$s';
   final workingChat = _allHistories[chatId];
   if (workingChat == null) return;
 
