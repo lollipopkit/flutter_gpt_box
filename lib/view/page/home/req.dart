@@ -17,9 +17,25 @@ bool _validChatCfg(BuildContext context) {
 void _onCreateRequest(BuildContext context, String chatId) async {
   if (!_validChatCfg(context)) return;
 
+  final curChat = _curChat;
+  if (curChat == null) {
+    final msg = 'Chat($chatId) not found';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+
+  // Issues #18.
+  // Prohibit users from starting chatting in the initial chat
+  if (ChatHistory.isInitHelp(curChat)) {
+    final newId = _newChat().id;
+    _switchChat(newId);
+    chatId = newId;
+  }
+
   final chatType = _chatType.value;
   final notSupport = switch (chatType) {
-    /// Dart package `openai` uses [io.File], which is not supported on web
+    // Dart package `openai` uses [io.File], which is not supported on web
     ChatType.img || ChatType.audio => isWeb,
     _ => false,
   };
