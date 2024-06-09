@@ -92,6 +92,13 @@ final class ChatHistory {
           ),
         ],
       );
+
+  static bool isInitHelp(ChatHistory history) =>
+      history.name == l10n.help &&
+      history.items.length == 1 &&
+      history.items.first.role == ChatRole.system &&
+      history.items.first.content.length == 1 &&
+      history.items.first.content.first.raw.contains(Urls.repoIssue);
 }
 
 @HiveType(typeId: 0)

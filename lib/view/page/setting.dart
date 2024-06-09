@@ -504,7 +504,6 @@ class _SettingPageState extends State<SettingPage> {
       trailing: const Icon(Icons.keyboard_arrow_right),
       subtitle: Text(val, style: UIs.text13Grey),
       onTap: () async {
-      
         final model = await _showPickModelDialog(l10n.model, val);
         if (model != null) {
           OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model));
@@ -541,7 +540,7 @@ class _SettingPageState extends State<SettingPage> {
   //     trailing: const Icon(Icons.keyboard_arrow_right),
   //     subtitle: Text(val, style: UIs.text13Grey),
   //     onTap: () async {
-        // final model = await _showPickModelDialog(l10n.model, val);
+  // final model = await _showPickModelDialog(l10n.model, val);
   //       if (model != null) {
   //         OpenAICfg.setTo(OpenAICfg.current.copyWith(transcribeModel: model));
   //         _cfgRN.build();
