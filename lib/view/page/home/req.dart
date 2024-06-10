@@ -134,13 +134,13 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
         SyncService.sync();
-        _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
       },
     );
     _chatStreamSubs[chatId] = sub;
     _sendBtnRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Listen text stream');
+  } finally {
     _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
   }
 }
@@ -217,10 +217,7 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
     return;
   }
 
-  final userQuestion = ChatHistoryItem.single(
-    role: ChatRole.user,
-    raw: prompt,
-  );
+  final userQuestion = ChatHistoryItem.single(role: ChatRole.user, raw: prompt);
   workingChat.items.add(userQuestion);
   _chatRN.build();
 
@@ -271,10 +268,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.gen(
     role: ChatRole.user,
-    content: [
-      ChatContent.text(prompt),
-      ChatContent.image(val),
-    ],
+    content: [ChatContent.text(prompt), ChatContent.image(val)],
   );
   workingChat.items.add(chatItem);
   _chatRN.build();
@@ -515,7 +509,7 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   ));
 
   _chatRN.build();
-  // Do not store if error
-  // _storeChat(chatId, context);
+
+  if (Stores.setting.saveErrChat.fetch()) _storeChat(chatId);
   _sendBtnRN.build();
 }

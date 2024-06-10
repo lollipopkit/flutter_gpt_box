@@ -103,10 +103,7 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
   }
 
   /// If items is empty, delete it directly
-  if (entity.items.isEmpty) {
-    _onDeleteChat(chatId);
-    return;
-  }
+  if (entity.items.isEmpty) return _onDeleteChat(chatId);
 
   if (!Stores.setting.confrimDel.fetch()) return _onDeleteChat(chatId);
 
@@ -197,10 +194,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
       actions: [
         TextButton(
           onPressed: () => context.pop(true),
-          child: Text(
-            l10n.clear,
-            style: UIs.textRed,
-          ),
+          child: Text(l10n.clear, style: UIs.textRed),
         ),
       ],
     );
@@ -374,21 +368,16 @@ void _onTapReplay(
   ChatHistoryItem item,
 ) async {
   if (item.role != ChatRole.user) return;
-  BlurOverlay.close?.call();
   final sure = await context.showRoundDialog<bool>(
     title: l10n.attention,
     child: Text('${l10n.replay} ?'),
-    actions: Btns.oks(
-      onTap: () => context.pop(true),
-      red: true,
-    ),
+    actions: Btns.oks(onTap: () => context.pop(true), red: true),
   );
   if (sure != true) return;
   _onReplay(context: context, chatId: chatId, item: item);
 }
 
 void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
-  BlurOverlay.close?.call();
   final ctrl = TextEditingController(text: chatItem.toMarkdown);
   await context.showRoundDialog(
     title: l10n.edit,

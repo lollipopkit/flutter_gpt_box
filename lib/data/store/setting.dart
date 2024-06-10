@@ -64,4 +64,9 @@ class SettingStore extends PersistentStore {
   late final joinBeta = property('joinBeta', false);
 
   //late final compressImg = property('compressImg', true);
+
+  late final titlePrompt = property('titlePrompt', '');
+
+  /// Save the chat after each message sent or received even if it has error.
+  late final saveErrChat = property('saveErrChat', false);
 }

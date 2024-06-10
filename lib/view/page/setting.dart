@@ -97,6 +97,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildMore() {
     final children = [
+      _buildSaveErrChat(),
       _buildFollowChatModel(),
       //_buildFontSize(),
       _buildGenTitle(),
@@ -759,6 +760,15 @@ class _SettingPageState extends State<SettingPage> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildSaveErrChat() {
+    return ListTile(
+      leading: const Icon(Icons.save),
+      title: Text(l10n.saveErrChat),
+      subtitle: Text(l10n.saveErrChatTip, style: UIs.textGrey),
+      trailing: StoreSwitch(prop: _store.saveErrChat),
     );
   }
 }
