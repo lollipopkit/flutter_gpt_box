@@ -183,7 +183,7 @@ class _ChatPageState extends State<_ChatPage>
     final child = MarkdownBody(
       data: content.raw,
       builders: {
-        'code': CodeElementBuilder(onCopy: _onCopy),
+        'code': CodeElementBuilder(onCopy: Pfs.copy),
         'latex': LatexElementBuilder(),
       },
       styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
@@ -304,38 +304,16 @@ class _ChatPageState extends State<_ChatPage>
           icon: Icons.edit,
         ),
       buildCircleBtn(
-        onTap: () async {
-          final idx = chatItems.indexOf(chatItem) + 1;
-          final result = await context.showRoundDialog<bool>(
-            title: l10n.attention,
-            child: Text(
-              l10n.delFmt('${chatItem.role.localized}#$idx', l10n.chat),
-            ),
-            actions: Btns.oks(
-              onTap: () => context.pop(true),
-              red: true,
-            ),
-          );
-          if (result != true) return;
-          chatItems.remove(chatItem);
-          _storeChat(_curChatId);
-          _historyRNMap[_curChatId]?.build();
-          _chatRN.build();
-        },
+        onTap: () => _onTapDelChatItem(context, chatItems, chatItem),
         text: l10n.delete,
         icon: Icons.delete,
       ),
       buildCircleBtn(
-        onTap: () => _onCopy(chatItem.toMarkdown),
+        onTap: () => Pfs.copy(chatItem.toMarkdown),
         text: l10n.copy,
         icon: MingCute.copy_2_fill,
       ),
     ];
-  }
-
-  void _onCopy(String content) {
-    Clipboard.setData(ClipboardData(text: content));
-    //context.showSnackBar(l10n.copied);
   }
 
   @override

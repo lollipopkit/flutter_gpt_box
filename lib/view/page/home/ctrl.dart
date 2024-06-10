@@ -93,6 +93,28 @@ ChatHistory _newChat() {
   return newHistory;
 }
 
+void _onTapDelChatItem(
+  BuildContext context,
+  List<ChatHistoryItem> chatItems,
+  ChatHistoryItem chatItem,
+) async {
+  // Capture it.
+  final chatId = _curChatId;
+  final idx = chatItems.indexOf(chatItem) + 1;
+  final result = await context.showRoundDialog<bool>(
+    title: l10n.attention,
+    child: Text(
+      l10n.delFmt('${chatItem.role.localized}#$idx', l10n.chat),
+    ),
+    actions: Btns.oks(onTap: () => context.pop(true), red: true),
+  );
+  if (result != true) return;
+  chatItems.remove(chatItem);
+  _storeChat(chatId);
+  _historyRNMap[chatId]?.build();
+  _chatRN.build();
+}
+
 void _onTapDeleteChat(String chatId, BuildContext context) {
   final entity = _allHistories[chatId];
   if (entity == null) {
@@ -169,18 +191,28 @@ void _onShareChat(BuildContext context) async {
     return;
   }
 
-  final pic = await context.showLoadingDialog(fn: () {
-    return _screenshotCtrl.captureFromLongWidget(
+  var isCompressed = false;
+  final pic = await context.showLoadingDialog(fn: () async {
+    final raw = await _screenshotCtrl.captureFromLongWidget(
       result,
       context: context,
       constraints: const BoxConstraints(maxWidth: 577),
       pixelRatio: _media?.devicePixelRatio ?? 1,
-      delay: const Duration(milliseconds: 277),
+      delay: Durations.short4,
     );
+    isCompressed = Stores.setting.compressImg.fetch();
+    if (isCompressed) {
+      final compressed = await ImageUtil.compress(raw);
+      if (compressed != null) return compressed;
+    }
+    return raw;
   });
+
   final title = _curChat?.name ?? l10n.untitled;
+  final ext = isCompressed ? 'jpg' : 'png';
+  final mime = isCompressed ? 'image/jpeg' : 'image/png';
   await Share.shareXFiles(
-    [XFile.fromData(pic, name: '$title.png', mimeType: 'image/png')],
+    [XFile.fromData(pic, name: '$title.$ext', mimeType: mime)],
     subject: '$title - GPT Box',
   );
 }
@@ -216,15 +248,20 @@ Future<void> _onTapImgPick(BuildContext context) async {
   }
 
   final imgPath = Paths.img.joinPath(shortid.generate());
-  final compressed = await context.showLoadingDialog(
-    fn: () async => compute(ImageUtil.compress, await result.readAsBytes()),
-  );
-  if (compressed == null) {
-    context.showSnackBar('${l10n.failed}: ${l10n.compress}');
-    await result.saveTo(imgPath);
-  } else {
-    await File(imgPath).writeAsBytes(compressed);
+  var isCompressed = Stores.setting.compressImg.fetch();
+  if (isCompressed) {
+    final compressed = await context.showLoadingDialog(
+      fn: () async => ImageUtil.compress(await result.readAsBytes()),
+    );
+    if (compressed == null) {
+      context.showSnackBar('${l10n.failed}: ${l10n.compress}');
+      isCompressed = false;
+    } else {
+      await File(imgPath).writeAsBytes(compressed);
+    }
   }
+
+  if (!isCompressed) await result.saveTo(imgPath);
   _filePicked.value = imgPath;
 }
 
@@ -267,9 +304,7 @@ Set<String> findAllDuplicateIds(Map<String, ChatHistory> allHistories) {
       final contentsA = contentMap.values.elementAt(idx);
       final contentsB = contentMap.values.elementAt(idx + 1);
       anyDup = contentsA.any((e) => contentsB.contains(e));
-      if (anyDup) {
-        break;
-      }
+      if (anyDup) break;
     }
 
     /// If there is no same content, skip
