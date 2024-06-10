@@ -70,9 +70,7 @@ class _SettingPageState extends State<SettingPage> {
       if (!isWeb) _buildCheckUpdate(),
       _buildAppMore(),
     ];
-    return Column(
-      children: children.map((e) => CardX(child: e)).toList(),
-    );
+    return Column(children: children.map((e) => e.cardx).toList());
   }
 
   Widget _buildChat() {
@@ -88,15 +86,14 @@ class _SettingPageState extends State<SettingPage> {
           _buildPrompt(cfg.prompt),
           _buildHistoryLength(cfg.historyLen),
         ];
-        return Column(
-          children: children.map((e) => CardX(child: e)).toList(),
-        );
+        return Column(children: children.map((e) => e.cardx).toList());
       },
     );
   }
 
   Widget _buildMore() {
     final children = [
+      _buildCompressImg(),
       _buildFollowChatModel(),
       //_buildFontSize(),
       _buildGenTitle(),
@@ -107,9 +104,7 @@ class _SettingPageState extends State<SettingPage> {
       //_buildCalcTokenLen(),
       _buildReplay(),
     ];
-    return Column(
-      children: children.map((e) => CardX(child: e)).toList(),
-    );
+    return Column(children: children.map((e) => e.cardx).toList());
   }
 
   Widget _buildThemeMode() {
@@ -759,6 +754,15 @@ class _SettingPageState extends State<SettingPage> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildCompressImg() {
+    return ListTile(
+      leading: const Icon(Icons.compress),
+      title: Text(l10n.compress),
+      subtitle: Text(l10n.compressImgTip, style: UIs.textGrey),
+      trailing: StoreSwitch(prop: _store.compressImg),
     );
   }
 }
