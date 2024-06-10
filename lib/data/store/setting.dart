@@ -63,5 +63,6 @@ class SettingStore extends PersistentStore {
 
   late final joinBeta = property('joinBeta', false);
 
-  //late final compressImg = property('compressImg', true);
+  /// For chat and share
+  late final compressImg = property('compressImg', true);
 }
