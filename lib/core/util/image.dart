@@ -8,6 +8,7 @@ abstract final class ImageUtil {
     Future<Uint8List?> encode(Image decoded) async {
       return encodeJpg(decoded, quality: quality);
     }
+
     return compute(encode, img);
   }
 }
