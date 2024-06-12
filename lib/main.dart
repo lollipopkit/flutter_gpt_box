@@ -36,7 +36,6 @@ void _runInZone(void Function() body) {
   runZonedGuarded(
     body,
     (obj, trace) {
-      Analysis.recordException(trace);
       Loggers.root.warning(obj, null, trace);
     },
     zoneSpecification: zoneSpec,
@@ -82,13 +81,6 @@ void _setupLogger() {
 
 Future<void> _initAppComponents() async {
   SystemUIs.initDesktopWindow(Stores.setting.hideTitleBar.fetch());
-
-  if (Stores.setting.countly.fetch()) {
-    Analysis.init(
-      'https://countly.lolli.tech',
-      '54f29be34c4ef369ddf4249f353cece142ef78d9',
-    );
-  }
 
   OpenAI.showLogs = !BuildMode.isRelease;
   OpenAI.showResponsesLogs = !BuildMode.isRelease;

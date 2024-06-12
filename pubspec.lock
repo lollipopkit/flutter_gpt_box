@@ -249,14 +249,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
-  countly_flutter:
-    dependency: transitive
-    description:
-      name: countly_flutter
-      sha256: "366f0c7769b998a06579235b0afd3797bc0bc7c8ce80bb673fca59c217f66012"
-      url: "https://pub.dev"
-    source: hosted
-    version: "24.4.1"
   cross_file:
     dependency: transitive
     description:
@@ -414,8 +406,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: "v1.0.13"
-      resolved-ref: baded8103bd046806929b8d6547d5bce38060b06
+      ref: "v1.0.15"
+      resolved-ref: "6a16e4ea3951ac14e1f84b69710ce3d366b021f7"
       url: "https://github.com/lppcg/fl_build.git"
     source: git
     version: "1.0.0"
@@ -423,8 +415,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.37"
-      resolved-ref: d2268c42c28c1adefcced91330b9120251c7eab2
+      ref: "v1.0.40"
+      resolved-ref: "1f547b45bc9083558ee88eafa61df92eb0abf552"
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
@@ -945,14 +937,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      sha256: "67fc27ed9639506c856c840ccce7594d0bdcd91bc8d53d6e52359449a1d50602"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.11.1"
   permission_handler:
     dependency: transitive
     description:

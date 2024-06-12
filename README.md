@@ -47,7 +47,7 @@ Please refrain from using it in production environments or for critical data.
 
 - All deprecated pkgs (< `v1.0.183`) can be found in [here](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid).
 - Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
-- To prevent injection attacks and etc., please don't download from untrusted sources. Since `Linux / Windows` is signed with flutter default certificate, it is recommended to [build it yourself](https://github.com/lollipopkit/flutter_server_box/wiki#compile-yourself).
+- To prevent injection attacks and etc., please don't download from untrusted sources.
 
 
 ## 🆘 Help

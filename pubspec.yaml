@@ -26,14 +26,14 @@ dependencies:
   screenshot: ^3.0.0
   image_picker: ^1.0.7
   audioplayers: ^6.0.0
-  fl_lib:
-    git:
-      url: https://github.com/lppcg/fl_lib
-      ref: v1.0.37
-    # path: ../fl_lib
   extended_image: ^8.2.1
   app_links: ^6.1.1
   image: ^4.2.0
+  fl_lib:
+    git:
+      url: https://github.com/lppcg/fl_lib
+      ref: v1.0.40
+    # path: ../fl_lib
 
 dev_dependencies:
   flutter_test:
@@ -45,7 +45,7 @@ dev_dependencies:
   fl_build:
     git:
       url: https://github.com/lppcg/fl_build.git
-      ref: v1.0.13
+      ref: v1.0.15
     # path: ../fl_build
 
 flutter:

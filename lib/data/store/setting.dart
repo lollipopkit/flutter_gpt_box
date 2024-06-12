@@ -46,8 +46,6 @@ class SettingStore extends PersistentStore {
 
   late final replay = property('replay', true);
 
-  late final countly = property('countly', true);
-
   late final cupertinoRoute = property('cupertinoRoute', isIOS || isMacOS);
 
   late final hideTitleBar = property('hideTitleBar', false);

@@ -698,17 +698,8 @@ class _SettingPageState extends State<SettingPage> {
       title: Text(l10n.more),
       children: [
         _buildJoinBeta(),
-        _buildCountly(),
         _buildCupertinoRoute(),
       ],
-    );
-  }
-
-  Widget _buildCountly() {
-    return ListTile(
-      leading: const Icon(Icons.analytics),
-      title: const Text('Countly'),
-      trailing: StoreSwitch(prop: _store.countly),
     );
   }
 
