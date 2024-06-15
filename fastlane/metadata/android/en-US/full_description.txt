@@ -1,0 +1,8 @@
+- Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
+- Text / Image / Audio chat.
+- Localization. (简体中文 / English)
+- Share chat as image.
+- Url Scheme, eg: `lk-gptbox://chat/new?msg=hello`
+- Sync with WebDAV / iCloud.
+- Mobile & Desktop supports.
+- Render code block / latex formula.
