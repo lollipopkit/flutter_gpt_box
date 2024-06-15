@@ -47,15 +47,29 @@ void _switchChat([String? id]) {
 }
 
 void _switchPreviousChat() {
-  final idx = _allHistories.keys.toList().indexOf(_curChatId);
-  if (idx < 0 || idx >= _allHistories.length - 1) return;
-  _switchChat(_allHistories.keys.elementAt(idx + 1));
+  final iter = _allHistories.keys.iterator;
+  bool next = false;
+  while (iter.moveNext()) {
+    if (next) {
+      _switchChat(iter.current);
+      return;
+    }
+    if (iter.current == _curChatId) next = true;
+  }
 }
 
 void _switchNextChat() {
-  final idx = _allHistories.keys.toList().indexOf(_curChatId);
-  if (idx <= 0) return;
-  _switchChat(_allHistories.keys.elementAt(idx - 1));
+  final iter = _allHistories.keys.iterator;
+  String? last;
+  while (iter.moveNext()) {
+    if (iter.current == _curChatId) {
+      if (last != null) {
+        _switchChat(last);
+        return;
+      }
+    }
+    last = iter.current;
+  }
 }
 
 void _storeChat(
@@ -145,10 +159,10 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
 
 void _onDeleteChat(String chatId) {
   Stores.history.delete(chatId);
-  _allHistories.remove(chatId);
   if (_curChatId == chatId) {
-    _switchChat();
+    _switchPreviousChat();
   }
+  _allHistories.remove(chatId);
   _historyRN.build();
 }
 
