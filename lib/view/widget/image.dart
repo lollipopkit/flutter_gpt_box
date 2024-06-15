@@ -44,10 +44,10 @@ class _ImageCardState extends State<ImageCard> {
       child: InkWell(
         onTap: () async {
           if (err != null || trace != null) {
-            final text = '$err\n\n$trace';
+            final text = '$err\n\n```sh\n$trace```';
             context.showRoundDialog(
               title: l10n.error,
-              child: SingleChildScrollView(child: Text(text)),
+              child: SimpleMarkdown(data: text),
               actions: [
                 TextButton(
                   onPressed: () {

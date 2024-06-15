@@ -16,13 +16,14 @@ final class ResPage extends StatefulWidget {
   State<ResPage> createState() => _ResPageState();
 }
 
-const _duration = Durations.medium1;
+const _dur = Durations.medium1;
 
 final class _ResPageState extends State<ResPage> {
   late final _resType = ValueNotifier(_ResType.image)..addListener(_load);
   final _listKey = GlobalKey<AnimatedGridState>();
   final _filesList = <FileSystemEntity>[];
   bool _isWide = false;
+  bool _loading = false;
 
   @override
   void dispose() {
@@ -53,16 +54,19 @@ final class _ResPageState extends State<ResPage> {
             listenable: _resType,
             builder: (_, __) {
               return IconButton(
-                onPressed: () => _resType.value = _resType.value.next,
+                onPressed: () {
+                  if (_loading) return;
+                  _resType.value = _resType.value.next;
+                },
                 icon: Icon(_resType.value.icon),
               );
             },
           )
         ],
       ),
-      body: ListenableBuilder(
+      body: ListenBuilder(
         listenable: _resType,
-        builder: (_, __) {
+        builder: () {
           return AnimatedGrid(
             key: _listKey,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -72,11 +76,7 @@ final class _ResPageState extends State<ResPage> {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 17),
             itemBuilder: (_, idx, anime) {
-              return FadeTransition(
-                // Use Curves.easeIn for the animation
-                opacity: anime.drive(CurveTween(curve: Curves.easeInOutCubic)),
-                child: _buildTile(idx),
-              );
+              return _buildTile(idx, anime);
             },
           );
         },
@@ -84,77 +84,75 @@ final class _ResPageState extends State<ResPage> {
     );
   }
 
-  Widget _buildTile(int idx) {
-    if (idx >= _filesList.length) {
-      return ListTile(
-        leading: const Icon(Icons.error),
-        title: Text(l10n.error),
-      );
-    }
+  Widget _buildTile(int idx, Animation<double> anime) {
     final entity = _filesList[idx];
-    return _buildCard(entity);
+    final child = switch (_resType.value) {
+      _ResType.audio => AudioCard(
+          id: entity.path.split('/').last,
+          path: entity.path,
+          buildSlider: false,
+          onDelete: () => _onAudioDelete(idx),
+        ),
+      _ResType.image => ImageCard(
+          imageUrl: entity.path,
+          heroTag: entity.path,
+          onRet: (p0) => _onImageRet(p0, entity, idx),
+        ),
+    };
+
+    return SlideTransitionX(
+      position: anime.drive(CurveTween(curve: Curves.fastEaseInToSlowEaseOut)),
+      direction: AxisDirection.left,
+      child: FadeTransition(opacity: anime, child: child),
+    );
   }
 
   void _load() async {
-    _listKey.currentState?.removeAllItems(_rmCardBuilder, duration: _duration);
-    await Future.delayed(_duration);
-    _filesList.clear();
-    await for (final entity in _resType.value.all) {
-      _filesList.add(entity);
-      _filesList.sort((a, b) => a.path.compareTo(b.path));
-      _listKey.currentState?.insertItem(_filesList.indexOf(entity));
-    }
-  }
-
-  Widget _rmCardBuilder(BuildContext context, Animation<double> animation) =>
-      FadeTransition(
-        opacity: animation.drive(CurveTween(curve: Curves.easeInOutCubic)),
-        child: CardX(
-          child: SizedBox(
-            height: ImageCard.height,
-            width: ImageCard.height,
+    try {
+      if (_loading) return;
+      _loading = true;
+      if (_filesList.isNotEmpty) {
+        _listKey.currentState?.removeAllItems(
+          (_, anime) => FadeTransition(
+            opacity: anime,
+            child: SizedBox(height: ImageCard.height, width: ImageCard.height),
           ),
-        ),
-      );
-
-  Widget _buildCard(FileSystemEntity entity) {
-    switch (_resType.value) {
-      case _ResType.audio:
-        final id = entity.path.split('/').last;
-        return AudioCard(
-          id: id,
-          path: entity.path,
-          buildSlider: false,
-          onDelete: () => _onAudioDelete(entity),
+          duration: _dur,
         );
-      case _ResType.image:
-        return ImageCard(
-          imageUrl: entity.path,
-          heroTag: entity.path,
-          onRet: (p0) => _onImageRet(p0, entity),
-        );
+        await Future.delayed(_dur);
+      }
+      _filesList.clear();
+      final items = await _resType.value.all.toList();
+      _filesList.addAll(items);
+      _listKey.currentState?.insertAllItems(0, items.length, duration: _dur);
+    } catch (e) {
+      rethrow;
+    } finally {
+      _loading = false;
     }
   }
 
-  void _onAudioDelete(FileSystemEntity entity) async {
+  void _onAudioDelete(int idx) async {
     _listKey.currentState?.removeItem(
-      _filesList.indexOf(entity),
-      _rmCardBuilder,
-      duration: _duration,
+      idx,
+      (_, anime) => _buildTile(idx, anime),
+      duration: _dur,
     );
-    _filesList.remove(entity);
+    await Future.delayed(_dur);
+    _filesList.removeAt(idx);
   }
 
-  void _onImageRet(ImagePageRet ret, FileSystemEntity entity) async {
+  void _onImageRet(ImagePageRet ret, FileSystemEntity entity, int idx) async {
     if (ret.isDeleted) {
       await File(entity.path).delete();
       // Wait for hero anime
-      await Future.delayed(_duration + Durations.short3);
+      await Future.delayed(_dur + Durations.medium1);
       _listKey.currentState?.removeItem(
         _filesList.indexOf(entity),
-        _rmCardBuilder,
-        duration: _duration,
+        (_, anime) => _buildTile(idx, anime),
+        duration: _dur,
       );
+      await Future.delayed(_dur);
       _filesList.remove(entity);
     }
   }
@@ -171,8 +169,7 @@ enum _ResType {
       };
 
   Stream<FileSystemEntity> get all async* {
-    final dir = await this.dir;
-    await for (final entity in dir.list()) {
+    await for (final entity in (await dir).list()) {
       yield entity;
     }
   }
