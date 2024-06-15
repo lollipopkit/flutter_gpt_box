@@ -9,7 +9,6 @@ A third-party GPT Client for OpenAI API.
 <!-- Badges-->
 <p align="center">
   <img alt="lang" src="https://img.shields.io/badge/lang-dart-pink">
-  <img alt="countly" src="https://img.shields.io/badge/analysis-countly-pink">
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
 </p>
 
@@ -32,10 +31,10 @@ Please refrain from using it in production environments or for critical data.
 ## 🏙️ Screenshots
 <table>
   <tr>
-    <td><img width="277px" src="media/main.jpg"></td>
-    <td><img width="277px" src="media/history.jpg"></td>
-    <td><img width="277px" src="media/search.jpg"></td>
-    <td><img width="277px" src="media/settings.jpg"></td>
+    <td><img width="277px" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg"></td>
+    <td><img width="277px" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg"></td>
+    <td><img width="277px" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg"></td>
+    <td><img width="277px" src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg"></td>
   </tr>
 </table>
 
