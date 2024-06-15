@@ -9,7 +9,6 @@
 <!-- Badges-->
 <p align="center">
   <img alt="lang" src="https://img.shields.io/badge/lang-dart-pink">
-  <img alt="countly" src="https://img.shields.io/badge/analysis-countly-pink">
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
 </p>
 
@@ -32,10 +31,10 @@
 ## 🏙️ 截屏
 <table>
   <tr>
-    <td><img width="277px" src="media/main.jpg"></td>
-    <td><img width="277px" src="media/history.jpg"></td>
-    <td><img width="277px" src="media/search.jpg"></td>
-    <td><img width="277px" src="media/settings.jpg"></td>
+    <td><img width="277px" src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/1.jpg"></td>
+    <td><img width="277px" src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/2.jpg"></td>
+    <td><img width="277px" src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/3.jpg"></td>
+    <td><img width="277px" src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/4.jpg"></td>
   </tr>
 </table>
 
