@@ -1,8 +1,10 @@
+import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gpt_box/data/res/rnode.dart';
+import 'package:gpt_box/data/store/all.dart';
 import 'package:markdown/markdown.dart' as md;
 
 final _textStyle = GoogleFonts.robotoMono();
@@ -74,27 +76,37 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     }
 
     final isMultiLine = textContent.contains('\n');
-    return isMultiLine
-        ? HighlightViewSync(
-            textContent,
-            key: ValueKey(textContent),
-            language: language,
-            theme: _theme,
-            textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
-            tabSize: 4,
-            selectable: true,
-            padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
-          )
-        : HighlightViewSync(
-            textContent,
-            key: ValueKey(textContent),
-            language: language,
-            theme: _theme,
-            textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
-            tabSize: 4,
-            selectable: true,
-            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-          );
+    if (!isMultiLine) {
+      return HighlightViewSync(
+        textContent,
+        key: ValueKey(textContent),
+        language: language,
+        theme: _theme,
+        textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
+        tabSize: 4,
+        selectable: true,
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+      );
+    }
+    final child = HighlightViewSync(
+      textContent,
+      key: ValueKey(textContent.hashCode),
+      language: language,
+      theme: _theme,
+      textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
+      tabSize: 4,
+      selectable: true,
+      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
+    );
+    return ValBuilder(
+      listenable: Stores.setting.softWrap.listenable(),
+      builder: (val) => val
+          ? child
+          : SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: child,
+            ),
+    );
   }
 
   Map<String, TextStyle> get _theme {

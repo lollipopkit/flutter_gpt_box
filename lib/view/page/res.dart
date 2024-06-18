@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
@@ -18,7 +19,7 @@ final class ResPage extends StatefulWidget {
 
 const _dur = Durations.medium1;
 
-final class _ResPageState extends State<ResPage> {
+final class _ResPageState extends State<ResPage> with AfterLayoutMixin {
   late final _resType = ValueNotifier(_ResType.image)..addListener(_load);
   final _listKey = GlobalKey<AnimatedGridState>();
   final _filesList = <FileSystemEntity>[];
@@ -29,12 +30,6 @@ final class _ResPageState extends State<ResPage> {
   void dispose() {
     _resType.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    _load();
-    super.initState();
   }
 
   @override
@@ -50,9 +45,9 @@ final class _ResPageState extends State<ResPage> {
       appBar: CustomAppBar(
         title: Text(l10n.res),
         actions: [
-          ListenableBuilder(
+          ListenBuilder(
             listenable: _resType,
-            builder: (_, __) {
+            builder: () {
               return IconButton(
                 onPressed: () {
                   if (_loading) return;
@@ -155,6 +150,11 @@ final class _ResPageState extends State<ResPage> {
       await Future.delayed(_dur);
       _filesList.remove(entity);
     }
+  }
+
+  @override
+  FutureOr<void> afterFirstLayout(BuildContext context) {
+    _load();
   }
 }
 

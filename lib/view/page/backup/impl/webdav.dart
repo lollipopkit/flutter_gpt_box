@@ -35,12 +35,11 @@ Widget _buildWebdav(BuildContext context) {
         ),
         ListTile(
           title: Text(l10n.manual),
-          trailing: ListenableBuilder(
+          trailing: ValBuilder(
             listenable: _webdavLoading,
-            builder: (_, __) {
-              if (_webdavLoading.value) {
-                return UIs.centerSizedLoadingSmall;
-              }
+            builder: (val) {
+              if (val) return UIs.centerSizedLoadingSmall;
+
               return Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

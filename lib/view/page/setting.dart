@@ -74,10 +74,10 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _buildChat() {
-    return ListenableBuilder(
+    return ListenBuilder(
       listenable: _cfgRN,
-      builder: (_, __) {
-        final cfg = OpenAICfg.current;
+      builder: () {
+        final cfg = OpenAICfg.current;    
         final children = [
           _buildSwitchCfg(cfg),
           _buildOpenAIKey(cfg.key),
@@ -664,6 +664,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Icons.wrap_text),
       title: Text(l10n.softWrap),
+      subtitle: Text(l10n.codeBlock, style: UIs.textGrey),
       trailing: StoreSwitch(prop: _store.softWrap),
     );
   }

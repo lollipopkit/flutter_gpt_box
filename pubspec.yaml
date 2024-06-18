@@ -32,7 +32,7 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.41
+      ref: v1.0.44
     # path: ../fl_lib
 
 dev_dependencies:

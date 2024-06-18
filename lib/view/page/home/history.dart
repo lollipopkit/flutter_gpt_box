@@ -13,9 +13,9 @@ class _HistoryPageState extends State<_HistoryPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: ListenableBuilder(
+      body: ListenBuilder(
         listenable: _historyRN,
-        builder: (_, __) {
+        builder: () {
           final keys = _allHistories.keys.toList();
           final len = keys.length;
           return ListView.builder(
@@ -43,18 +43,18 @@ class _HistoryPageState extends State<_HistoryPage>
     if (entity == null) return UIs.placeholder;
     final node = _historyRNMap.putIfAbsent(chatId, () => RNode());
     return ListTile(
-      title: ListenableBuilder(
+      title: ListenBuilder(
         listenable: node,
-        builder: (_, __) => Text(
+        builder: () => Text(
           entity.name ?? l10n.untitled,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: UIs.text15,
         ),
       ),
-      subtitle: ListenableBuilder(
+      subtitle: ListenBuilder(
         listenable: _timeRN,
-        builder: (_, __) {
+        builder: () {
           final len = '${entity.items.length} ${l10n.message}';
           final time = entity.items.lastOrNull?.createdAt
               .difference(DateTime.now())

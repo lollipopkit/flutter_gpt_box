@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:after_layout/after_layout.dart';
 import 'package:app_links/app_links.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';

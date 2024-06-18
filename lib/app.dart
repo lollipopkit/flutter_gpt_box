@@ -13,9 +13,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemUIs.setTransparentNavigationBar(context);
-    return ListenableBuilder(
+    return ListenBuilder(
       listenable: RNodes.app,
-      builder: (_, __) {
+      builder: () {
         UIs.colorSeed = Color(Stores.setting.themeColorSeed.fetch());
         final themeMode = switch (Stores.setting.themeMode.fetch()) {
           1 => ThemeMode.light,
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
             LibLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
+          localeListResolutionCallback: LocaleUtil.resolve,
           themeMode: themeMode,
           theme: ThemeData(colorSchemeSeed: UIs.colorSeed),
           darkTheme: ThemeData(

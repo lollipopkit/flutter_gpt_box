@@ -5,9 +5,9 @@ class _HomeBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
+    return ListenBuilder(
       listenable: _homeBottomRN,
-      builder: (_, __) {
+      builder: () {
         final isDark = RNodes.dark.value;
         return Container(
           padding: isDesktop
@@ -72,12 +72,12 @@ class _HomeBottom extends StatelessWidget {
   }
 
   Widget _buildFileBtn(BuildContext context) {
-    return ListenableBuilder(
+    return ListenBuilder(
       listenable: _filePicked,
-      builder: (_, __) {
-        return ListenableBuilder(
+      builder: () {
+        return ListenBuilder(
           listenable: _chatType,
-          builder: (_, __) {
+          builder: () {
             return switch (_chatType.value) {
               ChatType.text || ChatType.img => IconButton(
                   onPressed: () => _onTapImgPick(context),
@@ -144,9 +144,9 @@ class _HomeBottom extends StatelessWidget {
           buttonItems: buttonItems,
         );
       },
-      suffix: ListenableBuilder(
+      suffix: ListenBuilder(
         listenable: _sendBtnRN,
-        builder: (_, __) {
+        builder: () {
           final isWorking = _chatStreamSubs.containsKey(_curChatId);
           return isWorking
               ? IconButton(
