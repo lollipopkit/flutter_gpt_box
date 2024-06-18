@@ -31,9 +31,9 @@ class _ChatPageState extends State<_ChatPage>
       controller: _chatScrollCtrl,
       direction: AxisDirection.down,
       offset: 75,
-      child: ListenableBuilder(
+      child: ListenBuilder(
         listenable: _chatFabRN,
-        builder: (_, __) {
+        builder: () {
           final valid = _chatScrollCtrl.positions.length == 1 &&
               _chatScrollCtrl.position.hasContentDimensions &&
               _chatScrollCtrl.position.maxScrollExtent > 0;
@@ -97,9 +97,9 @@ class _ChatPageState extends State<_ChatPage>
         }
         return Future.value();
       },
-      child: ListenableBuilder(
+      child: ListenBuilder(
         listenable: _chatRN,
-        builder: (_, __) {
+        builder: () {
           final item = _curChat?.items;
           if (item == null) return UIs.placeholder;
           return AnimatedSwitcher(
@@ -155,9 +155,9 @@ class _ChatPageState extends State<_ChatPage>
           children: [
             _buildChatItemTitle(chatItems, chatItem),
             UIs.height13,
-            ListenableBuilder(
+            ListenBuilder(
               listenable: node,
-              builder: (_, __) {
+              builder: () {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -180,7 +180,7 @@ class _ChatPageState extends State<_ChatPage>
   }
 
   Widget _buildText(ChatContent content) {
-    final child = MarkdownBody(
+    return MarkdownBody(
       data: content.raw,
       builders: {
         'code': CodeElementBuilder(onCopy: Pfs.copy),
@@ -202,12 +202,6 @@ class _ChatPageState extends State<_ChatPage>
       /// User experience is better when this is false.
       selectable: false,
     );
-    return Stores.setting.softWrap.fetch()
-        ? child
-        : SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: child,
-          );
   }
 
   Widget _buildImage(ChatContent content) {
@@ -285,9 +279,9 @@ class _ChatPageState extends State<_ChatPage>
         icon: BoxIcons.bxs_crop,
       ),
       if (replayEnabled)
-        ListenableBuilder(
+        ListenBuilder(
           listenable: _sendBtnRN,
-          builder: (_, __) {
+          builder: () {
             final isWorking = _chatStreamSubs.containsKey(_curChatId);
             if (isWorking) return UIs.placeholder;
             return buildCircleBtn(

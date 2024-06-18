@@ -1,9 +1,9 @@
 part of 'home.dart';
 
 CustomAppBar _buildAppBar(BuildContext context) {
-  final title = ListenableBuilder(
+  final title = ListenBuilder(
     listenable: _appbarTitleRN,
-    builder: (_, __) {
+    builder: () {
       final entity = _curChat;
       if (entity == null) return Text(l10n.empty);
       return AnimatedSwitcher(

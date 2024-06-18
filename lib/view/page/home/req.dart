@@ -75,7 +75,9 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
   };
   final (imgUrl, imgPath) = switch (_filePicked.value) {
     null => (null, null),
-    final imgPath => (await File(imgPath).base64, imgPath),
+    final imgPath when imgPath.startsWith('http') => (imgPath, imgPath),
+    final p when p.startsWith('/') => (await File(p).base64, p),
+    _ => (null, null),
   };
   final historyCarried = workingChat.items.reversed
       .take(config.historyLen)
