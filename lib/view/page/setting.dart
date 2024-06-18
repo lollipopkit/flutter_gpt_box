@@ -77,7 +77,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListenBuilder(
       listenable: _cfgRN,
       builder: () {
-        final cfg = OpenAICfg.current;    
+        final cfg = OpenAICfg.current;
         final children = [
           _buildSwitchCfg(cfg),
           _buildOpenAIKey(cfg.key),
