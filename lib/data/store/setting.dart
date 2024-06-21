@@ -68,4 +68,6 @@ class SettingStore extends PersistentStore {
 
   /// Save the chat after each message sent or received even if it has error.
   late final saveErrChat = property('saveErrChat', false);
+
+  late final scrollSwitchChat = property('scrollSwitchChat', true);
 }

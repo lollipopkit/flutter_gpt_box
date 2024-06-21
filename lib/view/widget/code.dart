@@ -16,7 +16,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
   CodeElementBuilder({this.onCopy, this.isForCapture = false});
 
   static final _bgPaint = Paint()
-    ..color = const Color.fromARGB(28, 159, 159, 159);
+    ..color = const Color.fromARGB(23, 159, 159, 159);
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
