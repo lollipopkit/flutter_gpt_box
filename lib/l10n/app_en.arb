@@ -103,6 +103,7 @@
   "save": "Save",
   "saveErrChat": "Save chat with errors",
   "saveErrChatTip": "Save the chat after each message sent or received even if it has error.",
+  "scrollSwitchChat": "Scroll to switch chat",
   "search": "Search",
   "secretKey": "Secret key",
   "select": "Select",

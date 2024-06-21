@@ -103,6 +103,7 @@
   "save": "保存",
   "saveErrChat": "保存聊天错误",
   "saveErrChatTip": "在接收/发送每条消息后保存，即使有报错",
+  "scrollSwitchChat": "上下滑动切换聊天",
   "search": "搜索",
   "secretKey": "密钥",
   "select": "选择",

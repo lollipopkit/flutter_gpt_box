@@ -84,6 +84,44 @@ class _ChatPageState extends State<_ChatPage>
 
   Widget _buildChat() {
     var switchDirection = SwitchDirection.next;
+    final scrollSwitchChat = Stores.setting.scrollSwitchChat.fetch();
+
+    final child = ListenBuilder(
+      listenable: _chatRN,
+      builder: () {
+        final item = _curChat?.items;
+        if (item == null) return UIs.placeholder;
+        final listView = ListView.builder(
+          key: Key(_curChatId),
+          controller: _chatScrollCtrl,
+          padding: const EdgeInsets.all(7),
+          physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics(),
+          ),
+          itemCount: item.length,
+          itemBuilder: (_, index) {
+            return _buildChatItem(item, index);
+          },
+        );
+        if (!scrollSwitchChat) return listView;
+        return AnimatedSwitcher(
+          duration: _durationShort,
+          switchInCurve: Easing.standardDecelerate,
+          switchOutCurve: Easing.standardDecelerate,
+          transitionBuilder: (child, animation) => SlideTransitionX(
+            position: animation,
+            direction: switchDirection == SwitchDirection.next
+                ? AxisDirection.up
+                : AxisDirection.down,
+            child: child,
+          ),
+          child: listView,
+        );
+      },
+    );
+
+    if (!scrollSwitchChat) return child;
+
     return SwitchIndicator(
       onSwitchPage: (direction) {
         switchDirection = direction;
@@ -97,37 +135,7 @@ class _ChatPageState extends State<_ChatPage>
         }
         return Future.value();
       },
-      child: ListenBuilder(
-        listenable: _chatRN,
-        builder: () {
-          final item = _curChat?.items;
-          if (item == null) return UIs.placeholder;
-          return AnimatedSwitcher(
-            duration: _durationShort,
-            switchInCurve: Easing.standardDecelerate,
-            switchOutCurve: Easing.standardDecelerate,
-            transitionBuilder: (child, animation) => SlideTransitionX(
-              position: animation,
-              direction: switchDirection == SwitchDirection.next
-                  ? AxisDirection.up
-                  : AxisDirection.down,
-              child: child,
-            ),
-            child: ListView.builder(
-              key: Key(_curChatId),
-              controller: _chatScrollCtrl,
-              padding: const EdgeInsets.all(7),
-              physics: const AlwaysScrollableScrollPhysics(
-                parent: BouncingScrollPhysics(),
-              ),
-              itemCount: item.length,
-              itemBuilder: (_, index) {
-                return _buildChatItem(item, index);
-              },
-            ),
-          );
-        },
-      ),
+      child: child,
     );
   }
 
