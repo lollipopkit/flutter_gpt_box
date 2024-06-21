@@ -3,13 +3,24 @@ abstract final class ChatTitleUtil {
 
   static const userCotentLocator = 'GPTBOX>>>';
 
+  static final claudeEndReg = RegExp(r'\[\]\(ID:\d+\|UUID:\S+');
+
   static const titlePrompt = '''
 Generate a title for the user content behind `$userCotentLocator` with requirements: 
-0. the language of the generated title should be the same as the user content
-1. <= 10 characters if Chinese, Japanese, Korean, etc.
-2. <= $_maxLen letters if English, German, French, etc.
-3. the title should be meaningful, concise, no additional punctuation and only title itself.
+0. you are generating a title, not a content.
+1. the language of the generated title should be the same as the user content
+2. <= 10 characters if Chinese, Japanese, Korean, etc.
+3. <= $_maxLen letters if English, German, French, etc.
+4. the title should be meaningful, concise, no additional punctuation and only title itself.
 $userCotentLocator''';
+
+  /// TODO: Implement this method
+  static String getTitlePromptByModel(String model) {
+    return switch (model) {
+      _ when model.startsWith('claude') => '',
+      _ => titlePrompt,
+    };
+  }
 
   static final _punctionsRm = RegExp('[“”]');
 
@@ -25,6 +36,11 @@ $userCotentLocator''';
 
     if (title.length > _maxLen) {
       title = title.substring(0, _maxLen);
+    }
+
+    final claudeMatch = claudeEndReg.firstMatch(title);
+    if (claudeMatch != null) {
+      title = title.substring(0, claudeMatch.start);
     }
 
     return title;
