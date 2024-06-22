@@ -3,8 +3,6 @@ PODS:
     - Flutter
   - audioplayers_darwin (0.0.1):
     - Flutter
-  - countly_flutter (24.1.1):
-    - Flutter
   - DKImagePickerController/Core (4.3.4):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -46,10 +44,12 @@ PODS:
     - Flutter
   - image_picker_ios (0.0.1):
     - Flutter
+  - local_auth_darwin (0.0.1):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - r_upgrade (0.0.1):
+  - permission_handler_apple (9.3.0):
     - Flutter
   - SDWebImage (5.18.3):
     - SDWebImage/Core (= 5.18.3)
@@ -63,14 +63,14 @@ PODS:
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
-  - countly_flutter (from `.symlinks/plugins/countly_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - icloud_storage (from `.symlinks/plugins/icloud_storage/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
-  - r_upgrade (from `.symlinks/plugins/r_upgrade/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -86,8 +86,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/app_links/ios"
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/ios"
-  countly_flutter:
-    :path: ".symlinks/plugins/countly_flutter/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -98,10 +96,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/icloud_storage/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  local_auth_darwin:
+    :path: ".symlinks/plugins/local_auth_darwin/darwin"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
-  r_upgrade:
-    :path: ".symlinks/plugins/r_upgrade/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   url_launcher_ios:
@@ -110,20 +110,20 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_links: e70ca16b4b0f88253b3b3660200d4a10b4ea9795
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
-  countly_flutter: 2203707ed19c165b824d030e4dc807ab53437b76
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
+  flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
   icloud_storage: d9ac7a33ced81df08ba7ea1bf3099cc0ee58f60a
-  image_picker_ios: 99dfe1854b4fa34d0364e74a78448a0151025425
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
-  r_upgrade: 44d715c61914cce3d01ea225abffe894fd51c114
+  image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  local_auth_darwin: 4d56c90c2683319835a61274b57620df9c4520ab
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   SDWebImage: 96e0c18ef14010b7485210e92fac888587ebb958
   share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
-  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 
 PODFILE CHECKSUM: 075ddf6b19cdcced44581bd8fbdfb58404a78f8a
 
