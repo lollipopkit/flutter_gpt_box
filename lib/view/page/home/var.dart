@@ -14,11 +14,11 @@ final _timeRN = RNode();
 
 /// Map for [ChatHistoryItem]'s [RNode]
 final _chatItemRNMap = <String, RNode>{};
-// RebuildNodes for history list items
 final _historyRNMap = <String, RNode>{};
+final _loadingToolReplies = <String>[];
 
 /// Audio / Image / File path
-final _filePicked = ValueNotifier<String?>(null);
+final _filePicked = nvn<String>();
 
 final _chatType = ChatType.text.vn;
 
@@ -27,7 +27,6 @@ final _chatRN = RNode();
 final _historyRN = RNode();
 final _appbarTitleRN = RNode();
 final _sendBtnRN = RNode();
-// Default false: the history item is visible on app start, no need to locate
 final _locateHistoryBtn = false.vn;
 final _chatFabRN = RNode();
 final _homeBottomRN = RNode();

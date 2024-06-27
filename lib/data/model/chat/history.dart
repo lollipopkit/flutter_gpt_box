@@ -255,25 +255,22 @@ enum ChatRole {
   assist,
   @HiveField(2)
   system,
+  @HiveField(3)
+  tool,
   ;
 
-  OpenAIChatMessageRole get toOpenAI {
-    switch (this) {
-      case ChatRole.user:
-        return OpenAIChatMessageRole.user;
-      case ChatRole.assist:
-        return OpenAIChatMessageRole.assistant;
-      case ChatRole.system:
-        return OpenAIChatMessageRole.system;
-      default:
-        throw UnimplementedError();
-    }
-  }
+  OpenAIChatMessageRole get toOpenAI => switch (this) {
+    assist => OpenAIChatMessageRole.assistant,
+    system => OpenAIChatMessageRole.system,
+    user => OpenAIChatMessageRole.user,
+    tool => OpenAIChatMessageRole.system,
+  };
 
   String get localized => switch (this) {
         user => l10n.user,
         assist => l10n.assistant,
         system => l10n.system,
+        tool => l10n.tool,
       };
 
   static ChatRole? fromString(String? val) => switch (val) {

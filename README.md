@@ -18,6 +18,7 @@ Please refrain from using it in production environments or for critical data.
 
 
 ## 🪄 Features
+- (🥳 New) Api supports viewing the content of Http links, (developing) running JS scripts locally.
 - Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
 - Text / Image / Audio chat.
 - Localization. (简体中文 / English)

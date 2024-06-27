@@ -32,7 +32,7 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.44
+      ref: v1.0.50
     # path: ../fl_lib
 
 dev_dependencies:
@@ -45,7 +45,7 @@ dev_dependencies:
   fl_build:
     git:
       url: https://github.com/lppcg/fl_build.git
-      ref: v1.0.25
+      ref: v1.0.29
     # path: ../fl_build
 
 flutter:

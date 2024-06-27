@@ -47,7 +47,11 @@ void _onCreateRequest(BuildContext context, String chatId) async {
   return await func(context, chatId);
 }
 
-Future<void> _onCreateText(BuildContext context, String chatId) async {
+Future<void> _onCreateText(
+  BuildContext context,
+  String chatId, {
+  bool forceUseTool = true,
+}) async {
   if (_inputCtrl.text.isEmpty) return;
   _imeFocus.unfocus();
   final workingChat = _allHistories[chatId];
@@ -79,10 +83,11 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
     final p when p.startsWith('/') => (await File(p).base64, p),
     _ => (null, null),
   };
-  final historyCarried = workingChat.items.reversed
-      .take(config.historyLen)
-      .map((e) => e.toOpenAI)
-      .toList();
+  List<OpenAIChatCompletionChoiceMessageModel> historyCarried() =>
+      workingChat.items.reversed
+          .take(config.historyLen)
+          .map((e) => e.toOpenAI)
+          .toList();
   final question = ChatHistoryItem.gen(
     content: [
       ChatContent.text(questionContent),
@@ -100,9 +105,39 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
   );
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
+
+  final useTools = Stores.setting.useTools.fetch() && forceUseTool;
+  if (useTools) {
+    final resp = await OpenAI.instance.chat.create(
+      model: config.model,
+      messages: [...historyCarried().reversed, questionForApi.toOpenAI],
+      tools: OpenAIFuncCalls.tools,
+      toolChoice: 'auto',
+    );
+
+    final toolCalls = resp.choices.firstOrNull?.message.toolCalls;
+    if (toolCalls != null && toolCalls.isNotEmpty) {
+      final reply = ChatHistoryItem.gen(role: ChatRole.tool, content: []);
+      workingChat.items.add(reply);
+      _loadingToolReplies.add(reply.id);
+      _chatRN.build();
+      final contents = <ChatContent>[];
+      for (final toolCall in toolCalls) {
+        final msg = await OpenAIFuncCalls.handle(toolCall);
+        contents.addAll(msg);
+      }
+      if (contents.isNotEmpty) {
+        reply.content.addAll(contents);
+        _chatItemRNMap[reply.id]?.build();
+        _storeChat(chatId);
+      }
+      _loadingToolReplies.remove(reply.id);
+    }
+  }
+
   final chatStream = OpenAI.instance.chat.createStream(
     model: config.model,
-    messages: [...historyCarried.reversed, questionForApi.toOpenAI],
+    messages: historyCarried().reversed.toList(),
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
@@ -112,8 +147,9 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
   try {
     _chatFabAutoHideKey.currentState?.autoHideEnabled = false;
     final sub = chatStream.listen(
-      (eve) {
-        final delta = eve.choices.firstOrNull?.delta.content?.firstOrNull?.text;
+      (eve) async {
+        final first = eve.choices.firstOrNull;
+        final delta = first?.delta.content?.firstOrNull?.text;
         if (delta == null) return;
         assistReply.content.first.raw += delta;
         _chatItemRNMap[assistReply.id]?.build();
