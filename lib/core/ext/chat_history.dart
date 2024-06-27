@@ -12,6 +12,20 @@ extension ChatHistoryShare on ChatHistory {
   Widget gen4Share(BuildContext context) {
     final children = <Widget>[];
     for (final item in items) {
+      final md = switch (item.role) {
+        ChatRole.tool => Text(l10n.toolFinishTip),
+        _ => MarkdownBody(
+            data: item.toMarkdown,
+            extensionSet: MarkdownUtils.extensionSet,
+            builders: {
+              'code': CodeElementBuilder(isForCapture: true),
+              'latex': LatexElementBuilder(),
+            },
+            fitContent: false,
+            selectable: false,
+            shrinkWrap: false,
+          ),
+      };
       children.add(Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(13),
@@ -24,17 +38,7 @@ extension ChatHistoryShare on ChatHistory {
         ),
       ));
       children.add(UIs.height13);
-      children.add(MarkdownBody(
-        data: item.toMarkdown,
-        extensionSet: MarkdownUtils.extensionSet,
-        builders: {
-          'code': CodeElementBuilder(isForCapture: true),
-          'latex': LatexElementBuilder(),
-        },
-        fitContent: false,
-        selectable: false,
-        shrinkWrap: false,
-      ));
+      children.add(md);
       children.add(UIs.height13);
     }
     final widget = InheritedTheme.captureAll(

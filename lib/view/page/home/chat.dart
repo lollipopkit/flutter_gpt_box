@@ -144,6 +144,11 @@ class _ChatPageState extends State<_ChatPage>
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
     return InkWell(
       borderRadius: BorderRadius.circular(13),
+      onTap: chatItem.role == ChatRole.tool
+          ? () {
+              _MarkdownCopyPage.go(context, chatItem);
+            }
+          : null,
       onLongPress: () {
         final funcs = _buildChatItemFuncs(chatItems, chatItem);
         context.showRoundDialog(
@@ -165,28 +170,39 @@ class _ChatPageState extends State<_ChatPage>
             UIs.height13,
             ListenBuilder(
               listenable: node,
-              builder: () {
-                if (_loadingToolReplies.contains(chatItem.id)) {
-                  return UIs.centerSizedLoadingSmall;
-                }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: chatItem.content
-                      .map((e) => switch (e.type) {
-                            ChatContentType.audio => _buildAudio(e),
-                            ChatContentType.image => _buildImage(e),
-                            _ => _buildText(e),
-                          })
-                      .toList()
-                      .joinWith(UIs.height13),
-                );
-              },
+              builder: () => _buildChatItemContent(chatItem),
             ).paddingSymmetric(horizontal: 2),
             UIs.height13,
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildChatItemContent(ChatHistoryItem chatItem) {
+    if (_loadingToolReplies.contains(chatItem.id)) {
+      return UIs.centerSizedLoadingSmall;
+    }
+    if (chatItem.role == ChatRole.tool) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(l10n.toolFinishTip),
+          const Icon(Icons.keyboard_arrow_right, size: 17),
+        ],
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: chatItem.content
+          .map((e) => switch (e.type) {
+                ChatContentType.audio => _buildAudio(e),
+                ChatContentType.image => _buildImage(e),
+                _ => _buildText(e),
+              })
+          .toList()
+          .joinWith(UIs.height13),
     );
   }
 
@@ -281,11 +297,7 @@ class _ChatPageState extends State<_ChatPage>
 
     return [
       buildCircleBtn(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => _MarkdownCopyPage(text: chatItem.toMarkdown),
-          ),
-        ),
+        onTap: () => _MarkdownCopyPage.go(context, chatItem),
         text: l10n.freeCopy,
         icon: BoxIcons.bxs_crop,
       ),

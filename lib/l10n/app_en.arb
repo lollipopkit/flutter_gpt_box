@@ -122,6 +122,7 @@
   "themeMode": "Theme mode",
   "thirdParty": "Third Party",
   "tool": "Tool",
+  "toolFinishTip": "Tools invocation completed.",
   "tts": "TTS",
   "untitled": "Untitled",
   "update": "Update",
