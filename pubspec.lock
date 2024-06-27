@@ -398,8 +398,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: "v1.0.25"
-      resolved-ref: e99ef7991bc877c57ee080d66523943ecddfb2b1
+      ref: "v1.0.29"
+      resolved-ref: "2b53f17befdf4fa2672cb3f3fbe218f8d078a171"
       url: "https://github.com/lppcg/fl_build.git"
     source: git
     version: "1.0.0"
@@ -407,8 +407,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.44"
-      resolved-ref: "34a8ec3c66594feaa417043cf2173fa7a1cf9b81"
+      ref: "v1.0.50"
+      resolved-ref: fc4e847cc0513157b6ac77e9e82ab57edbdc9482
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"

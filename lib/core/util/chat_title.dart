@@ -9,18 +9,18 @@ abstract final class ChatTitleUtil {
 Generate a title for the user content behind `$userCotentLocator` with requirements: 
 0. you are generating a title, not a content.
 1. the language of the generated title should be the same as the user content
-2. <= 10 characters if Chinese, Japanese, Korean, etc.
-3. <= $_maxLen letters if English, German, French, etc.
+2. title length <= 10 characters if Chinese, Japanese, Korean, etc.
+3. title lengt <= $_maxLen letters if English, German, French, etc.
 4. the title should be meaningful, concise, no additional punctuation and only title itself.
 $userCotentLocator''';
 
   /// TODO: Implement this method
-  static String getTitlePromptByModel(String model) {
-    return switch (model) {
-      _ when model.startsWith('claude') => '',
-      _ => titlePrompt,
-    };
-  }
+  // static String getTitlePromptByModel(String model) {
+  //   return switch (model) {
+  //     _ when model.startsWith('claude') => '',
+  //     _ => titlePrompt,
+  //   };
+  // }
 
   static final _punctionsRm = RegExp('[“”]');
 

@@ -11,7 +11,7 @@ Widget _buildFile(BuildContext context) {
           trailing: const Icon(Icons.save),
           onTap: () async {
             await Backup.backupToFile();
-            await Pfs.sharePath(Paths.bak);
+            await Pfs.share(path: Paths.bak);
           },
         ),
         ListTile(
@@ -32,9 +32,7 @@ void _onTapFileRestore(BuildContext context) async {
     final backup = await context.showLoadingDialog(
       fn: () async => await compute(Backup.fromJsonString, text.trim()),
     );
-    if (backup == null) {
-      return;
-    }
+    if (backup == null) return;
 
     if (Backup.validVer != backup.version) {
       context.showSnackBar('Backup version not match');

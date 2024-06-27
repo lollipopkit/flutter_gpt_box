@@ -166,6 +166,9 @@ class _ChatPageState extends State<_ChatPage>
             ListenBuilder(
               listenable: node,
               builder: () {
+                if (_loadingToolReplies.contains(chatItem.id)) {
+                  return UIs.centerSizedLoadingSmall;
+                }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,

@@ -70,4 +70,10 @@ class SettingStore extends PersistentStore {
   late final saveErrChat = property('saveErrChat', false);
 
   late final scrollSwitchChat = property('scrollSwitchChat', true);
+
+  /// {width}x{height}
+  late final windowSize = property('windowSize', '');
+
+  /// Use tools in gpt4 and more
+  late final useTools = property('useTools', true);
 }

@@ -12,6 +12,7 @@ import 'package:gpt_box/core/ext/chat_history.dart';
 import 'package:gpt_box/core/ext/file.dart';
 import 'package:gpt_box/core/route/page.dart';
 import 'package:gpt_box/core/util/chat_title.dart';
+import 'package:gpt_box/core/util/tool.dart';
 import 'package:gpt_box/core/util/image.dart';
 import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:gpt_box/data/model/chat/config.dart';

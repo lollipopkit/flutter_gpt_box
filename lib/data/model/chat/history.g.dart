@@ -22,13 +22,14 @@ class ChatHistoryAdapter extends TypeAdapter<ChatHistory> {
       name: fields[2] as String?,
       type: fields[3] as ChatType?,
       model: fields[4] as String?,
+      profileId: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatHistory obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class ChatHistoryAdapter extends TypeAdapter<ChatHistory> {
       ..writeByte(3)
       ..write(obj.type)
       ..writeByte(4)
-      ..write(obj.model);
+      ..write(obj.model)
+      ..writeByte(5)
+      ..write(obj.profileId);
   }
 
   @override
@@ -192,6 +195,8 @@ class ChatRoleAdapter extends TypeAdapter<ChatRole> {
         return ChatRole.assist;
       case 2:
         return ChatRole.system;
+      case 3:
+        return ChatRole.tool;
       default:
         return ChatRole.user;
     }
@@ -208,6 +213,9 @@ class ChatRoleAdapter extends TypeAdapter<ChatRole> {
         break;
       case ChatRole.system:
         writer.writeByte(2);
+        break;
+      case ChatRole.tool:
+        writer.writeByte(3);
         break;
     }
   }
