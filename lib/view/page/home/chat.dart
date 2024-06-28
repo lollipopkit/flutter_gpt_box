@@ -181,7 +181,7 @@ class _ChatPageState extends State<_ChatPage>
 
   Widget _buildChatItemContent(ChatHistoryItem chatItem) {
     if (_loadingToolReplies.contains(chatItem.id)) {
-      return UIs.centerSizedLoadingSmall;
+      return const LinearProgressIndicator();
     }
     if (chatItem.role == ChatRole.tool) {
       return Row(

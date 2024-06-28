@@ -105,6 +105,7 @@ Future<void> _onCreateText(
   );
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
+  _autoScroll(chatId);
 
   final useTools = Stores.setting.useTools.fetch() && forceUseTool;
   if (useTools) {
@@ -112,7 +113,6 @@ Future<void> _onCreateText(
       model: config.model,
       messages: [...historyCarried().reversed, questionForApi.toOpenAI],
       tools: OpenAIFuncCalls.tools,
-      toolChoice: 'auto',
     );
 
     final toolCalls = resp.choices.firstOrNull?.message.toolCalls;

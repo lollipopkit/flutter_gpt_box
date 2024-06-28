@@ -122,6 +122,7 @@
   "themeMode": "主题模式",
   "thirdParty": "第三方",
   "tool": "工具",
+  "toolAvailability": "仅 gpt-4o、gpt-4t 等支持",
   "toolFinishTip": "工具调用完成",
   "tts": "文字转语音",
   "untitled": "未命名",
