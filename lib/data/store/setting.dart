@@ -74,5 +74,5 @@ class SettingStore extends PersistentStore {
   /// {width}x{height}
   late final windowSize = property('windowSize', '');
 
-  late final avatar = property('avatar', '阿巴');
+  late final avatar = property('avatar', '🧐');
 }
