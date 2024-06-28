@@ -266,11 +266,11 @@ enum ChatRole {
   bool get isTool => this == tool;
 
   OpenAIChatMessageRole get toOpenAI => switch (this) {
-    assist => OpenAIChatMessageRole.assistant,
-    system => OpenAIChatMessageRole.system,
-    user => OpenAIChatMessageRole.user,
-    tool => OpenAIChatMessageRole.system,
-  };
+        assist => OpenAIChatMessageRole.assistant,
+        system => OpenAIChatMessageRole.system,
+        user => OpenAIChatMessageRole.user,
+        tool => OpenAIChatMessageRole.system,
+      };
 
   String get localized => switch (this) {
         user => Stores.setting.avatar.fetch(),
@@ -279,12 +279,15 @@ enum ChatRole {
         tool => '🛠️',
       };
 
-  Color get color => switch (this) {
-        user => UIs.primaryColor,
-        assist => UIs.primaryColor.withBlue(233),
-        system => UIs.primaryColor.withRed(233),
-        tool => UIs.primaryColor.withBlue(33),
-      }.withOpacity(0.5);
+  Color get color {
+    final c = switch (this) {
+      user => UIs.primaryColor,
+      assist => UIs.primaryColor.withBlue(233),
+      system => UIs.primaryColor.withRed(233),
+      tool => UIs.primaryColor.withBlue(33),
+    };
+    return c.withOpacity(0.5);
+  }
 
   static ChatRole? fromString(String? val) => switch (val) {
         'assistant' => assist,
