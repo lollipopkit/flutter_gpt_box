@@ -93,6 +93,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildMore() {
     final children = [
+      _buildUseTool(),
       _buildScrollSwitchChat(),
       _buildSaveErrChat(),
       _buildCompressImg(),
@@ -775,6 +776,15 @@ class _SettingPageState extends State<SettingPage> {
       title: Text(l10n.scrollSwitchChat),
       subtitle: Text(l10n.needRestart, style: UIs.textGrey),
       trailing: StoreSwitch(prop: _store.scrollSwitchChat),
+    );
+  }
+
+  Widget _buildUseTool() {
+    return ListTile(
+      leading: const Icon(Icons.functions),
+      title: Text(l10n.tool),
+      subtitle: Text(l10n.toolAvailability, style: UIs.textGrey),
+      trailing: StoreSwitch(prop: _store.useTools),
     );
   }
 }

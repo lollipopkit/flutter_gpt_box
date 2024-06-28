@@ -31,6 +31,7 @@ abstract final class GPTNextConvertor {
         'user' => ChatRole.user,
         'assistant' => ChatRole.assist,
         'system' => ChatRole.system,
+        'tool' => ChatRole.tool,
         final role => throw ArgumentError('role: $role'),
       };
       final contentEnum = ChatContent.text(content);

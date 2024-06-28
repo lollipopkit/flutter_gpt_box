@@ -96,7 +96,7 @@ final class ChatHistory {
   bool get isInitHelp =>
       name == l10n.help &&
       items.length == 1 &&
-      items.first.role == ChatRole.system &&
+      items.first.role.isSystem &&
       items.first.content.length == 1 &&
       items.first.content.first.raw.contains(Urls.repoIssue);
 }
@@ -258,6 +258,11 @@ enum ChatRole {
   @HiveField(3)
   tool,
   ;
+
+  bool get isUser => this == user;
+  bool get isAssist => this == assist;
+  bool get isSystem => this == system;
+  bool get isTool => this == tool;
 
   OpenAIChatMessageRole get toOpenAI => switch (this) {
     assist => OpenAIChatMessageRole.assistant,

@@ -302,7 +302,7 @@ Set<String> findAllDuplicateIds(Map<String, ChatHistory> allHistories) {
       if (history == null) continue;
       for (final item in history.items) {
         /// Only compare assist's reply which is variety
-        if (item.role != ChatRole.assist) continue;
+        if (!item.role.isAssist) continue;
         final content = item.toMarkdown;
         contentMap.putIfAbsent(content, () => []).add(id);
         final time = timeMap[id];
@@ -416,7 +416,7 @@ void _onTapReplay(
   String chatId,
   ChatHistoryItem item,
 ) async {
-  if (item.role != ChatRole.user) return;
+  if (!item.role.isUser) return;
   final sure = await context.showRoundDialog<bool>(
     title: l10n.attention,
     child: Text('${l10n.replay} ?'),
