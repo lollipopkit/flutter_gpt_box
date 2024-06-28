@@ -588,3 +588,23 @@ Future<void> _switchPage(HomePageEnum page) {
     curve: Curves.fastEaseInToSlowEaseOut,
   );
 }
+
+Future<bool> _askToolConfirm(
+  BuildContext context,
+  ToolFunc func,
+  String help,
+) async {
+  final permittedTools = Stores.tool.permittedTools.fetch();
+  if (permittedTools.contains(func.name)) return true;
+
+  final permitted = await context.showRoundDialog(
+    title: l10n.attention,
+    child: Text('${l10n.toolConfirmFmt(func.name)}\n\n$help'),
+    actions: Btns.oks(onTap: () => context.pop(true), red: true),
+  );
+  if (permitted == true) {
+    permittedTools.add(func.name);
+    Stores.tool.permittedTools.put(permittedTools);
+  }
+  return permitted == true;
+}

@@ -181,15 +181,9 @@ class _ChatPageState extends State<_ChatPage>
     if (_loadingToolReplies.contains(chatItem.id)) {
       return const LinearProgressIndicator();
     }
-    if (chatItem.role.isTool) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(l10n.toolFinishTip),
-          const Icon(Icons.keyboard_arrow_right, size: 17),
-        ],
-      );
-    }
+
+    if (chatItem.role.isTool) return Text(l10n.toolFinishTip);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
