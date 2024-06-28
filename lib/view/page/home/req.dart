@@ -115,7 +115,7 @@ Future<void> _onCreateText(
   _inputCtrl.clear();
   _autoScroll(chatId);
 
-  final useTools = Stores.setting.useTools.fetch() && forceUseTool;
+  final useTools = Stores.tool.enabled.fetch() && forceUseTool;
   if (useTools) {
     final resp = await OpenAI.instance.chat.create(
       model: config.model,

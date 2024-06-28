@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:app_links/app_links.dart';
 import 'package:dart_openai/dart_openai.dart';
@@ -122,11 +123,18 @@ class _HomePageState extends State<HomePage>
     const history = _HistoryPage();
     const chat = _ChatPage();
     if (_isWide.value) {
-      return const Row(
-        children: [
-          Expanded(flex: 1, child: history),
-          Expanded(flex: 3, child: chat),
-        ],
+      return LayoutBuilder(
+        builder: (context, cons) {
+          final width = cons.maxWidth;
+          final height = cons.maxHeight;
+          final historyWidth = math.max(200.0, math.min(400.0, width * 0.3));
+          return Row(
+            children: [
+              SizedBox(width: historyWidth, height: height, child: history),
+              const Expanded(child: chat),
+            ],
+          );
+        },
       );
     }
     return PageView(
@@ -164,6 +172,11 @@ class _HomePageState extends State<HomePage>
               onLongPress: () => _onLongTapSetting(context),
               leading: const Icon(Icons.settings),
               title: Text(l10n.settings),
+            ).cardx,
+            ListTile(
+              leading: const Icon(MingCute.tool_fill),
+              title: Text(l10n.tool),
+              onTap: () => Routes.tool.go(context),
             ).cardx,
             ListTile(
               onTap: () async {

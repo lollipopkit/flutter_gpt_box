@@ -1,9 +1,10 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/url.dart';
+import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shortid/shortid.dart';
 
@@ -272,11 +273,18 @@ enum ChatRole {
   };
 
   String get localized => switch (this) {
-        user => l10n.user,
-        assist => l10n.assistant,
-        system => l10n.system,
-        tool => l10n.tool,
+        user => Stores.setting.avatar.fetch(),
+        assist => '🤖',
+        system => '⚙️',
+        tool => '🛠️',
       };
+
+  Color get color => switch (this) {
+        user => UIs.primaryColor,
+        assist => UIs.primaryColor.withBlue(233),
+        system => UIs.primaryColor.withRed(233),
+        tool => UIs.primaryColor.withBlue(33),
+      }.withOpacity(0.5);
 
   static ChatRole? fromString(String? val) => switch (val) {
         'assistant' => assist,
