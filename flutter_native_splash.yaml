@@ -1,5 +1,5 @@
 flutter_native_splash:
-  image: assets/app_icon_padding.png
+  image: assets/app_icon.png
 
   android: false
 
