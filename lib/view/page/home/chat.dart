@@ -144,11 +144,9 @@ class _ChatPageState extends State<_ChatPage>
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
     return InkWell(
       borderRadius: BorderRadius.circular(13),
-      onTap: chatItem.role == ChatRole.tool
-          ? () {
-              _MarkdownCopyPage.go(context, chatItem);
-            }
-          : null,
+      onTap: () {
+        if (chatItem.role.isTool) _MarkdownCopyPage.go(context, chatItem);
+      },
       onLongPress: () {
         final funcs = _buildChatItemFuncs(chatItems, chatItem);
         context.showRoundDialog(
@@ -183,7 +181,7 @@ class _ChatPageState extends State<_ChatPage>
     if (_loadingToolReplies.contains(chatItem.id)) {
       return const LinearProgressIndicator();
     }
-    if (chatItem.role == ChatRole.tool) {
+    if (chatItem.role.isTool) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -271,8 +269,7 @@ class _ChatPageState extends State<_ChatPage>
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
-    final replayEnabled =
-        chatItem.role == ChatRole.user && Stores.setting.replay.fetch();
+    final replayEnabled = chatItem.role.isUser && Stores.setting.replay.fetch();
 
     Widget buildCircleBtn({
       required VoidCallback onTap,

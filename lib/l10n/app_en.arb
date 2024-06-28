@@ -123,7 +123,7 @@
   "thirdParty": "Third Party",
   "tool": "Tool",
   "toolAvailability": "Only on gpt-4o, gpt-4t & etc.",
-  "toolFinishTip": "Tools invocation completed.",
+  "toolFinishTip": "🪄 Tools invocation completed.",
   "tts": "TTS",
   "untitled": "Untitled",
   "update": "Update",

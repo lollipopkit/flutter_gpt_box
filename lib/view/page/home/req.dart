@@ -505,7 +505,7 @@ void _onReplay({
 
   // remove exist reply
   if (itemIdx + 1 < chatHistory.items.length &&
-      chatHistory.items[itemIdx + 1].role == ChatRole.assist) {
+      chatHistory.items[itemIdx + 1].role.isAssist) {
     chatHistory.items.removeAt(itemIdx + 1);
   }
 
@@ -533,8 +533,7 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   // If previous msg is assistant reply and it's empty, remove it
   if (workingChat.items.isNotEmpty) {
     final last = workingChat.items.last;
-    if (last.role == ChatRole.assist &&
-        last.content.every((e) => e.raw.isEmpty)) {
+    if (last.role.isAssist && last.content.every((e) => e.raw.isEmpty)) {
       workingChat.items.removeLast();
     }
   }
