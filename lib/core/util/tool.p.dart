@@ -3,6 +3,7 @@ part of 'tool.dart';
 typedef _Ret = List<ChatContent>;
 typedef _CallResp = OpenAIResponseToolCall;
 typedef _Map = Map<String, dynamic>;
+typedef ToolConfirm = Future<bool> Function(ToolFunc func, String help);
 
 Future<Map<String, dynamic>> _parseMap(dynamic value) async {
   Future<_Map> tryDecodeJson(dynamic value) {

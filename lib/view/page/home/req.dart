@@ -13,6 +13,18 @@ bool _validChatCfg(BuildContext context) {
   return true;
 }
 
+Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
+  ChatHistory workingChat,
+) {
+  final config = OpenAICfg.current;
+  return workingChat.items.reversed
+      .takeWhile((e) => !e.role.isSystem)
+      .take(config.historyLen)
+      .map((e) => e.toOpenAI)
+      .toList()
+      .reversed;
+}
+
 /// Auto select model and send the request
 void _onCreateRequest(BuildContext context, String chatId) async {
   if (!_validChatCfg(context)) return;
@@ -83,11 +95,7 @@ Future<void> _onCreateText(
     final p when p.startsWith('/') => (await File(p).base64, p),
     _ => (null, null),
   };
-  List<OpenAIChatCompletionChoiceMessageModel> historyCarried() =>
-      workingChat.items.reversed
-          .take(config.historyLen)
-          .map((e) => e.toOpenAI)
-          .toList();
+
   final question = ChatHistoryItem.gen(
     content: [
       ChatContent.text(questionContent),
@@ -111,7 +119,7 @@ Future<void> _onCreateText(
   if (useTools) {
     final resp = await OpenAI.instance.chat.create(
       model: config.model,
-      messages: [...historyCarried().reversed, questionForApi.toOpenAI],
+      messages: [..._historyCarried(workingChat), questionForApi.toOpenAI],
       tools: OpenAIFuncCalls.tools,
     );
 
@@ -123,8 +131,15 @@ Future<void> _onCreateText(
       _chatRN.build();
       final contents = <ChatContent>[];
       for (final toolCall in toolCalls) {
-        final msg = await OpenAIFuncCalls.handle(toolCall);
-        contents.addAll(msg);
+        try {
+          final msg = await OpenAIFuncCalls.handle(
+            toolCall,
+            (e, s) => _askToolConfirm(context, e, s),
+          );
+          if (msg != null) contents.addAll(msg);
+        } catch (e, s) {
+          _onErr(e, s, chatId, 'Tool call');
+        }
       }
       if (contents.isNotEmpty) {
         reply.content.addAll(contents);
@@ -137,7 +152,7 @@ Future<void> _onCreateText(
 
   final chatStream = OpenAI.instance.chat.createStream(
     model: config.model,
-    messages: historyCarried().reversed.toList(),
+    messages: _historyCarried(workingChat).toList(),
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
