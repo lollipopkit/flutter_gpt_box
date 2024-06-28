@@ -13,7 +13,11 @@ extension ChatHistoryShare on ChatHistory {
     final children = <Widget>[];
     for (final item in items) {
       final md = switch (item.role) {
-        ChatRole.tool => Text(l10n.toolFinishTip),
+        ChatRole.tool => Text(
+            item.toMarkdown,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         _ => MarkdownBody(
             data: item.toMarkdown,
             extensionSet: MarkdownUtils.extensionSet,

@@ -6,6 +6,7 @@ import 'package:gpt_box/view/page/backup/view.dart';
 import 'package:gpt_box/view/page/image.dart';
 import 'package:gpt_box/view/page/res.dart';
 import 'package:gpt_box/view/page/setting.dart';
+import 'package:gpt_box/view/page/tool.dart';
 
 sealed class Routes {
   static const setting = AppRoute<Never, Never>(
@@ -41,5 +42,10 @@ sealed class Routes {
   static const res = AppRoute<Never, Never>(
     page: ResPage.new,
     path: '/res',
+  );
+
+  static const tool = AppRoute<Never, Never>(
+    page: ToolPage.new,
+    path: '/tool',
   );
 }

@@ -142,10 +142,13 @@ class _ChatPageState extends State<_ChatPage>
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
+    final isTool = chatItem.role.isTool;
+    final title = _buildChatItemTitle(chatItems, chatItem);
+
     return InkWell(
       borderRadius: BorderRadius.circular(13),
       onTap: () {
-        if (chatItem.role.isTool) _MarkdownCopyPage.go(context, chatItem);
+        if (isTool) _MarkdownCopyPage.go(context, chatItem);
       },
       onLongPress: () {
         final funcs = _buildChatItemFuncs(chatItems, chatItem);
@@ -164,7 +167,7 @@ class _ChatPageState extends State<_ChatPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildChatItemTitle(chatItems, chatItem),
+            title,
             UIs.height13,
             ListenBuilder(
               listenable: node,
@@ -177,17 +180,23 @@ class _ChatPageState extends State<_ChatPage>
     );
   }
 
-  Widget _buildChatItemContent(ChatHistoryItem chatItem) {
-    if (_loadingToolReplies.contains(chatItem.id)) {
+  Widget _buildChatItemContent(ChatHistoryItem chat) {
+    if (_loadingToolReplies.contains(chat.id)) {
       return const LinearProgressIndicator();
     }
 
-    if (chatItem.role.isTool) return Text(l10n.toolFinishTip);
+    if (chat.role.isTool) {
+      return Text(
+        chat.toMarkdown,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: chatItem.content
+      children: chat.content
           .map((e) => switch (e.type) {
                 ChatContentType.audio => _buildAudio(e),
                 ChatContentType.image => _buildImage(e),
@@ -238,24 +247,31 @@ class _ChatPageState extends State<_ChatPage>
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
-    final isBright = UIs.primaryColor.isBrightColor;
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(13),
-            color: UIs.primaryColor,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
-          child: Text(
-            chatItem.role.localized,
-            style: TextStyle(
-              fontSize: 12,
-              color: isBright ? Colors.black : Colors.white,
+    final text = Text(
+      chatItem.role.localized,
+      style: const TextStyle(fontSize: 15),
+    );
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(13),
+        color: const Color.fromARGB(29, 84, 84, 84),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(13),
+              color: chatItem.role.color,
             ),
+            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
           ),
-        ),
-      ],
+          const SizedBox(width: 5),
+          Transform.translate(offset: const Offset(0, -0.8), child: text),
+        ],
+      ),
     );
   }
 
@@ -265,7 +281,7 @@ class _ChatPageState extends State<_ChatPage>
   ) {
     final replayEnabled = chatItem.role.isUser && Stores.setting.replay.fetch();
 
-    Widget buildCircleBtn({
+    Widget buildFuncItem({
       required VoidCallback onTap,
       required String text,
       required IconData icon,
@@ -287,7 +303,7 @@ class _ChatPageState extends State<_ChatPage>
     }
 
     return [
-      buildCircleBtn(
+      buildFuncItem(
         onTap: () => _MarkdownCopyPage.go(context, chatItem),
         text: l10n.freeCopy,
         icon: BoxIcons.bxs_crop,
@@ -298,7 +314,7 @@ class _ChatPageState extends State<_ChatPage>
           builder: () {
             final isWorking = _chatStreamSubs.containsKey(_curChatId);
             if (isWorking) return UIs.placeholder;
-            return buildCircleBtn(
+            return buildFuncItem(
               onTap: () => _onTapReplay(context, _curChatId, chatItem),
               text: l10n.replay,
               icon: Icons.refresh,
@@ -306,17 +322,17 @@ class _ChatPageState extends State<_ChatPage>
           },
         ),
       if (replayEnabled)
-        buildCircleBtn(
+        buildFuncItem(
           onTap: () => _onTapEditMsg(context, chatItem),
           text: l10n.edit,
           icon: Icons.edit,
         ),
-      buildCircleBtn(
+      buildFuncItem(
         onTap: () => _onTapDelChatItem(context, chatItems, chatItem),
         text: l10n.delete,
         icon: Icons.delete,
       ),
-      buildCircleBtn(
+      buildFuncItem(
         onTap: () => Pfs.copy(chatItem.toMarkdown),
         text: l10n.copy,
         icon: MingCute.copy_2_fill,

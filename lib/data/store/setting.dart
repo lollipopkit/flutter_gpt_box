@@ -74,6 +74,5 @@ class SettingStore extends PersistentStore {
   /// {width}x{height}
   late final windowSize = property('windowSize', '');
 
-  /// Use tools in gpt4 and more
-  late final useTools = property('useTools', true);
+  late final avatar = property('avatar', '阿巴');
 }
