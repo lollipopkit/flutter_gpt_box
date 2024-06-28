@@ -93,6 +93,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildMore() {
     final children = [
+      _buildUserName(),
       _buildScrollSwitchChat(),
       _buildSaveErrChat(),
       _buildCompressImg(),
@@ -775,6 +776,36 @@ class _SettingPageState extends State<SettingPage> {
       title: Text(l10n.scrollSwitchChat),
       subtitle: Text(l10n.needRestart, style: UIs.textGrey),
       trailing: StoreSwitch(prop: _store.scrollSwitchChat),
+    );
+  }
+
+  Widget _buildUserName() {
+    final property = _store.avatar;
+    return ListTile(
+      leading: const Icon(Bootstrap.person_vcard_fill, size: 22),
+      title: Text(l10n.name),
+      trailing: ValBuilder(
+        listenable: _store.avatar.listenable(),
+        builder: (val) => Text(val, style: const TextStyle(fontSize: 18)),
+      ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: property.fetch());
+        void onSave(String s) {
+          property.put(s);
+          context.pop();
+        }
+
+        await context.showRoundDialog(
+          title: l10n.name,
+          child: Input(
+            controller: ctrl,
+            type: TextInputType.name,
+            maxLength: 7,
+            onSubmitted: (s) => onSave(s),
+          ),
+          actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+        );
+      },
     );
   }
 }
