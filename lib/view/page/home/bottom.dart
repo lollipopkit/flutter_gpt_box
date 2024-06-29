@@ -1,7 +1,9 @@
 part of 'home.dart';
 
 class _HomeBottom extends StatelessWidget {
-  const _HomeBottom();
+  final bool isHome;
+
+  const _HomeBottom({required this.isHome});
 
   @override
   Widget build(BuildContext context) {
@@ -73,8 +75,8 @@ class _HomeBottom extends StatelessWidget {
     return ValBuilder(
       listenable: _isWide,
       builder: (isWide) {
-        if (isWide) return UIs.placeholder;
-        return child;
+        if (isWide != isHome) return child;
+        return UIs.placeholder;
       },
     );
   }

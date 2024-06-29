@@ -54,7 +54,7 @@ enum HomePageEnum {
                 ? TextButton(
                     onPressed: () {
                       context.pop();
-                      Routes.setting.go(context);
+                      Routes.profile.go(context);
                     },
                     child: Text(l10n.add),
                   ).asList

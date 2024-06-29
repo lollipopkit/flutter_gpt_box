@@ -14,6 +14,7 @@ final class ChatRoleTitle extends StatelessWidget {
 
   static final _cache = <ChatRole, ChatRoleTitle>{};
 
+  /// 
   factory ChatRoleTitle({required ChatRole role, Key? key}) {
     return _cache.putIfAbsent(
       role,
@@ -59,26 +60,11 @@ final class ChatHistoryContentView extends StatelessWidget {
   final ChatHistoryItem chatItem;
   final List<String> loadingToolReplies;
 
-  const ChatHistoryContentView._({
+  const ChatHistoryContentView({
     required this.chatItem,
     required this.loadingToolReplies,
     super.key,
   });
-
-  static final _cache = <ChatHistoryItem, ChatHistoryContentView>{};
-
-  factory ChatHistoryContentView({
-    required ChatHistoryItem chatItem,
-    required List<String> loadingToolReplies,
-    Key? key,
-  }) =>
-      _cache.putIfAbsent(
-          chatItem,
-          () => ChatHistoryContentView._(
-                key: key,
-                chatItem: chatItem,
-                loadingToolReplies: loadingToolReplies,
-              ));
 
   @override
   Widget build(BuildContext context) {

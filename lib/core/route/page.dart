@@ -4,6 +4,7 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/view/page/about.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
 import 'package:gpt_box/view/page/image.dart';
+import 'package:gpt_box/view/page/profile.dart';
 import 'package:gpt_box/view/page/res.dart';
 import 'package:gpt_box/view/page/setting.dart';
 import 'package:gpt_box/view/page/tool.dart';
@@ -47,5 +48,10 @@ sealed class Routes {
   static const tool = AppRoute<Never, Never>(
     page: ToolPage.new,
     path: '/tool',
+  );
+
+  static const profile = AppRoute<Never, Never>(
+    page: ProfilePage.new,
+    path: '/profile',
   );
 }
