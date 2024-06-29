@@ -142,14 +142,9 @@ class _ChatPageState extends State<_ChatPage>
   Widget _buildChatItem(List<ChatHistoryItem> chatItems, int idx) {
     final chatItem = chatItems[idx];
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
-    final isTool = chatItem.role.isTool;
-    final title = _buildChatItemTitle(chatItems, chatItem);
 
     return InkWell(
       borderRadius: BorderRadius.circular(13),
-      onTap: () {
-        if (isTool) _MarkdownCopyPage.go(context, chatItem);
-      },
       onLongPress: () {
         final funcs = _buildChatItemFuncs(chatItems, chatItem);
         context.showRoundDialog(
@@ -167,110 +162,18 @@ class _ChatPageState extends State<_ChatPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            title,
+            ChatRoleTitle(chatItem.role),
             UIs.height13,
             ListenBuilder(
               listenable: node,
-              builder: () => _buildChatItemContent(chatItem),
+              builder: () => ChatHistoryContentView(
+                chatItem,
+                _loadingToolReplies,
+              ),
             ).paddingSymmetric(horizontal: 2),
             UIs.height13,
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildChatItemContent(ChatHistoryItem chat) {
-    if (_loadingToolReplies.contains(chat.id)) {
-      return const LinearProgressIndicator();
-    }
-
-    if (chat.role.isTool) {
-      return Text(
-        chat.toMarkdown,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: chat.content
-          .map((e) => switch (e.type) {
-                ChatContentType.audio => _buildAudio(e),
-                ChatContentType.image => _buildImage(e),
-                _ => _buildText(e),
-              })
-          .toList()
-          .joinWith(UIs.height13),
-    );
-  }
-
-  Widget _buildText(ChatContent content) {
-    return MarkdownBody(
-      data: content.raw,
-      builders: {
-        'code': CodeElementBuilder(onCopy: Pfs.copy),
-        'latex': LatexElementBuilder(),
-      },
-      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-        codeblockDecoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(7),
-        ),
-      ),
-      extensionSet: MarkdownUtils.extensionSet,
-      onTapLink: MarkdownUtils.onLinkTap,
-      shrinkWrap: false,
-
-      /// Keep it false, or the ScrollView's height calculation will be wrong.
-      fitContent: false,
-
-      /// User experience is better when this is false.
-      selectable: false,
-    );
-  }
-
-  Widget _buildImage(ChatContent content) {
-    return ImageCard(
-      imageUrl: content.raw,
-      heroTag: content.hashCode.toString(),
-    );
-  }
-
-  Widget _buildAudio(ChatContent content) {
-    return AudioCard(id: content.id, path: content.raw);
-  }
-
-  Widget _buildChatItemTitle(
-    List<ChatHistoryItem> chatItems,
-    ChatHistoryItem chatItem,
-  ) {
-    final text = Text(
-      chatItem.role.localized,
-      style: const TextStyle(fontSize: 15),
-    );
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 3),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(13),
-        color: const Color.fromARGB(29, 84, 84, 84),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(13),
-              color: chatItem.role.color,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
-          ),
-          const SizedBox(width: 5),
-          Transform.translate(offset: const Offset(0, -0.8), child: text),
-        ],
       ),
     );
   }

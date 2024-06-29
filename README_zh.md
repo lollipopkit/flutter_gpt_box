@@ -32,10 +32,10 @@
 ## 🏙️ 截屏
 <table>
   <tr>
-    <td><img width="277px" src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/1.jpg"></td>
-    <td><img width="277px" src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/2.jpg"></td>
-    <td><img width="277px" src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/3.jpg"></td>
-    <td><img width="277px" src="fastlane/metadata/android/zh-CN/images/phoneScreenshots/4.jpg"></td>
+    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/1.jpg"></td>
+    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/2.jpg"></td>
+    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/3.jpg"></td>
+    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/4.jpg"></td>
   </tr>
 </table>
 
