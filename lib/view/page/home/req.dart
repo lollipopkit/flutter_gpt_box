@@ -113,6 +113,7 @@ Future<void> _onCreateText(
   );
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
+  _chatRN.build();
   _autoScroll(chatId);
 
   final useTools = Stores.tool.enabled.fetch() && forceUseTool;
@@ -125,16 +126,23 @@ Future<void> _onCreateText(
 
     final toolCalls = resp.choices.firstOrNull?.message.toolCalls;
     if (toolCalls != null && toolCalls.isNotEmpty) {
-      final reply = ChatHistoryItem.gen(role: ChatRole.tool, content: []);
+      final reply = ChatHistoryItem.single(role: ChatRole.tool, raw: '...');
       workingChat.items.add(reply);
       _loadingToolReplies.add(reply.id);
       _chatRN.build();
+
+      void onToolLog(String log) {
+        reply.content.first.raw = log;
+        _chatItemRNMap[reply.id]?.build();
+      }
+
       final contents = <ChatContent>[];
       for (final toolCall in toolCalls) {
         try {
           final msg = await OpenAIFuncCalls.handle(
             toolCall,
             (e, s) => _askToolConfirm(context, e, s),
+            onToolLog,
           );
           if (msg != null) contents.addAll(msg);
         } catch (e, s) {
@@ -142,6 +150,7 @@ Future<void> _onCreateText(
         }
       }
       if (contents.isNotEmpty) {
+        reply.content.clear();
         reply.content.addAll(contents);
         _chatItemRNMap[reply.id]?.build();
         _storeChat(chatId);
@@ -453,6 +462,7 @@ Future<void> _genChatTitle(
         ).toOpenAI,
       ],
     );
+    entity.name = null;
 
     stream.listen(
       (eve) {
@@ -541,7 +551,7 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   Loggers.app.warning('$action: $e');
   _onStopStreamSub(chatId);
 
-  final msg = 'Error: $e\n\nTrace:\n$s';
+  final msg = 'Error: $e\n\nTrace:\n```$s```';
   final workingChat = _allHistories[chatId];
   if (workingChat == null) return;
 
