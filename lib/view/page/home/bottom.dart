@@ -5,7 +5,7 @@ class _HomeBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenBuilder(
+    final child = ListenBuilder(
       listenable: _homeBottomRN,
       builder: () {
         final isDark = RNodes.dark.value;
@@ -69,6 +69,14 @@ class _HomeBottom extends StatelessWidget {
         );
       },
     );
+
+    return ValBuilder(
+      listenable: _isWide,
+      builder: (isWide) {
+        if (isWide) return UIs.placeholder;
+        return child;
+      },
+    );
   }
 
   Widget _buildFileBtn(BuildContext context) {
@@ -103,7 +111,7 @@ class _HomeBottom extends StatelessWidget {
       controller: _inputCtrl,
       label: l10n.message,
       node: _imeFocus,
-      action: TextInputAction.send,
+      action: TextInputAction.newline,
       maxLines: 5,
       minLines: 1,
 
@@ -111,9 +119,9 @@ class _HomeBottom extends StatelessWidget {
       type: TextInputType.multiline,
       autoCorrect: true,
       suggestion: true,
-      onSubmitted: (p0) {
-        _onCreateRequest(context, _curChatId);
-      },
+      // onSubmitted: (p0) {
+      //   _onCreateRequest(context, _curChatId);
+      // },
       onTap: () async {
         if (_curPage.value != HomePageEnum.chat) {
           _dontCloseIme = true;
@@ -133,12 +141,12 @@ class _HomeBottom extends StatelessWidget {
             },
           ));
         }
-        buttonItems.add(ContextMenuButtonItem(
-          label: l10n.wrap,
-          onPressed: () {
-            _inputCtrl.text += '\n';
-          },
-        ));
+        // buttonItems.add(ContextMenuButtonItem(
+        //   label: l10n.wrap,
+        //   onPressed: () {
+        //     _inputCtrl.text += '\n';
+        //   },
+        // ));
         return AdaptiveTextSelectionToolbar.buttonItems(
           anchors: editableTextState.contextMenuAnchors,
           buttonItems: buttonItems,

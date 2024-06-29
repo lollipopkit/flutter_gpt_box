@@ -10,12 +10,15 @@ import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 final class ChatRoleTitle extends StatelessWidget {
   final ChatRole role;
 
-  const ChatRoleTitle._({required this.role});
+  const ChatRoleTitle._({required this.role, super.key});
 
   static final _cache = <ChatRole, ChatRoleTitle>{};
 
-  factory ChatRoleTitle(ChatRole role) {
-    return _cache.putIfAbsent(role, () => ChatRoleTitle._(role: role));
+  factory ChatRoleTitle({required ChatRole role, Key? key}) {
+    return _cache.putIfAbsent(
+      role,
+      () => ChatRoleTitle._(role: role, key: key),
+    );
   }
 
   @override
@@ -56,18 +59,23 @@ final class ChatHistoryContentView extends StatelessWidget {
   final ChatHistoryItem chatItem;
   final List<String> loadingToolReplies;
 
-  const ChatHistoryContentView._(
-      {required this.chatItem, required this.loadingToolReplies});
+  const ChatHistoryContentView._({
+    required this.chatItem,
+    required this.loadingToolReplies,
+    super.key,
+  });
 
   static final _cache = <ChatHistoryItem, ChatHistoryContentView>{};
 
-  factory ChatHistoryContentView(
-    ChatHistoryItem chatItem,
-    List<String> loadingToolReplies,
-  ) =>
+  factory ChatHistoryContentView({
+    required ChatHistoryItem chatItem,
+    required List<String> loadingToolReplies,
+    Key? key,
+  }) =>
       _cache.putIfAbsent(
           chatItem,
           () => ChatHistoryContentView._(
+                key: key,
                 chatItem: chatItem,
                 loadingToolReplies: loadingToolReplies,
               ));

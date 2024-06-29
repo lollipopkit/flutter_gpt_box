@@ -11,6 +11,11 @@ import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shortid/shortid.dart';
 
+final class SettingsPageRet {
+  final bool rebuild;
+  const SettingsPageRet({this.rebuild = false});
+}
+
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key, Never? args});
 
@@ -125,6 +130,7 @@ class _SettingPageState extends State<SettingPage> {
           );
           if (result != null) {
             _store.themeMode.put(result.index);
+            context.pop(const SettingsPageRet(rebuild: true));
 
             /// Set delay to true to wait for db update.
             RNodes.app.build(delay: true);

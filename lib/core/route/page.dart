@@ -9,7 +9,7 @@ import 'package:gpt_box/view/page/setting.dart';
 import 'package:gpt_box/view/page/tool.dart';
 
 sealed class Routes {
-  static const setting = AppRoute<Never, Never>(
+  static const setting = AppRoute<SettingsPageRet, Never>(
     page: SettingPage.new,
     path: '/setting',
   );

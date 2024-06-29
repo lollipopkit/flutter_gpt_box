@@ -43,6 +43,8 @@ class MyApp extends StatelessWidget {
               final l10n_ = AppLocalizations.of(context);
               if (l10n_ != null) l10n = l10n_;
               context.setLibL10n();
+              UIs.primaryColor = Theme.of(context).colorScheme.primary;
+
               return const HomePage();
             },
           ),

@@ -162,13 +162,14 @@ class _ChatPageState extends State<_ChatPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ChatRoleTitle(chatItem.role),
+            ChatRoleTitle(role: chatItem.role),
             UIs.height13,
             ListenBuilder(
               listenable: node,
               builder: () => ChatHistoryContentView(
-                chatItem,
-                _loadingToolReplies,
+                key: UniqueKey(),
+                chatItem: chatItem,
+                loadingToolReplies: _loadingToolReplies,
               ),
             ).paddingSymmetric(horizontal: 2),
             UIs.height13,

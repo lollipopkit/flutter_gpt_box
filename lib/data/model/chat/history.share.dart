@@ -1,7 +1,7 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
-import 'package:gpt_box/data/model/chat/history.ext.dart';
+import 'package:gpt_box/data/model/chat/history.view.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/rnode.dart';
@@ -31,7 +31,7 @@ extension ChatHistoryShare on ChatHistory {
             shrinkWrap: false,
           ),
       };
-      children.add(ChatRoleTitle(item.role));
+      children.add(ChatRoleTitle(role: item.role));
       children.add(UIs.height13);
       children.add(md);
       children.add(UIs.height13);
