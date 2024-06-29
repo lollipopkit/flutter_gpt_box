@@ -14,7 +14,7 @@ final class ChatRoleTitle extends StatelessWidget {
 
   static final _cache = <ChatRole, ChatRoleTitle>{};
 
-  /// 
+  ///
   factory ChatRoleTitle({required ChatRole role, Key? key}) {
     return _cache.putIfAbsent(
       role,
@@ -68,15 +68,21 @@ final class ChatHistoryContentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (loadingToolReplies.contains(chatItem.id)) {
-      return const LinearProgressIndicator();
-    }
-
     if (chatItem.role.isTool) {
-      return Text(
+      final text = Text(
         chatItem.toMarkdown,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
+        style: UIs.textGrey,
+      );
+      final loading = loadingToolReplies.contains(chatItem.id);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          text,
+          if (loading) UIs.height7,
+          if (loading) const LinearProgressIndicator(),
+        ],
       );
     }
 

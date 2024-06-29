@@ -23,6 +23,10 @@ void _switchChat([String? id]) {
   final type = chat.type;
   final profileId = chat.profileId;
   if (model != null && type != null && profileId != null) {
+    final current = OpenAICfg.current;
+    final needSwitch = current.model != model || current.id != profileId;
+    if (!needSwitch) return;
+
     final followModel = Stores.setting.followModel.fetch();
     if (followModel) {
       final cfg = Stores.config.fetch(profileId);

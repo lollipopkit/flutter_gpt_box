@@ -215,7 +215,7 @@ class _ChatPageState extends State<_ChatPage>
             return buildFuncItem(
               onTap: () => _onTapReplay(context, _curChatId, chatItem),
               text: l10n.replay,
-              icon: Icons.refresh,
+              icon: MingCute.refresh_4_line,
             );
           },
         ),
