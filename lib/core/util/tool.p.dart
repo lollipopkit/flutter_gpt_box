@@ -46,7 +46,7 @@ String _filterHtml(String html) {
   }
   final sb = StringBuffer();
   for (final entry in map.entries) {
-    sb.writeln('${entry.key}\n${entry.value}');
+    sb.writeln('${entry.key}: ${entry.value}');
   }
   return sb.toString();
 }
