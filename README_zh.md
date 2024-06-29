@@ -18,7 +18,7 @@
 
 
 ## 🪄 特性
-- (🥳 新) Api 支持查看 Http 链接的内容、(开发中)本地运行 JS 脚本
+- (🥳 新) Api 支持查看 Http 链接的内容、(开发中)本地运行 JS 脚本。[视频](https://cdn.lolli.tech/gptbox/screenshot/tools.mp4)
 - 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
 - 文本 / 图片 / 音频聊天
 - 本地化（简体中文 / English）
