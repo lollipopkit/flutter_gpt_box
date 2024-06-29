@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage>
       drawer: _Drawer(),
       appBar: _CustomAppBar(),
       body: _Body(),
-      bottomNavigationBar: _HomeBottom(),
+      bottomNavigationBar: _HomeBottom(isHome: true),
     );
   }
 
@@ -158,26 +158,33 @@ final class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     const history = _HistoryPage();
     const chat = _ChatPage();
-    if (_isWide.value) {
-      return LayoutBuilder(
-        builder: (context, cons) {
-          final width = cons.maxWidth;
-          final height = cons.maxHeight;
-          final historyWidth = math.max(200.0, math.min(400.0, width * 0.3));
-          return Row(
-            children: [
-              SizedBox(width: historyWidth, height: height, child: history),
-              const Expanded(child: chat),
-            ],
+
+    return _isWide.widget(
+      (isWide) {
+        if (isWide) {
+          return LayoutBuilder(
+            builder: (context, cons) {
+              final width = cons.maxWidth;
+              final height = cons.maxHeight;
+              final historyWidth =
+                  math.max(200.0, math.min(400.0, width * 0.3));
+              return Row(
+                children: [
+                  SizedBox(width: historyWidth, height: height, child: history),
+                  const Expanded(child: chat),
+                ],
+              );
+            },
           );
-        },
-      );
-    }
-    return PageView(
-      controller: _pageCtrl,
-      children: const [history, chat],
-      onPageChanged: (value) {
-        _curPage.value = HomePageEnum.fromIdx(value);
+        }
+
+        return PageView(
+          controller: _pageCtrl,
+          children: const [history, chat],
+          onPageChanged: (value) {
+            _curPage.value = HomePageEnum.fromIdx(value);
+          },
+        );
       },
     );
   }

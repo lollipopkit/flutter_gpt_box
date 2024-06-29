@@ -13,15 +13,10 @@ class _ChatPageState extends State<_ChatPage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return ValueListenableBuilder(
-      valueListenable: _isWide,
-      builder: (_, isWide, __) {
-        return Scaffold(
-          body: _buildChat(),
-          bottomNavigationBar: isWide ? const _HomeBottom() : null,
-          floatingActionButton: _buildFAB(),
-        );
-      },
+    return Scaffold(
+      body: _buildChat(),
+      bottomNavigationBar: const _HomeBottom(isHome: false),
+      floatingActionButton: _buildFAB(),
     );
   }
 
@@ -167,7 +162,6 @@ class _ChatPageState extends State<_ChatPage>
             ListenBuilder(
               listenable: node,
               builder: () => ChatHistoryContentView(
-                key: UniqueKey(),
                 chatItem: chatItem,
                 loadingToolReplies: _loadingToolReplies,
               ),
