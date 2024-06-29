@@ -18,7 +18,7 @@
 
 
 ## 🪄 特性
-- (🥳 新) Api 支持查看 Http 链接的内容、(开发中)本地运行 JS 脚本
+- (🥳 新) Api 支持查看 Http 链接的内容、(开发中)本地运行 JS 脚本。[视频](https://cdn.lolli.tech/gptbox/screenshot/tools.mp4)
 - 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
 - 文本 / 图片 / 音频聊天
 - 本地化（简体中文 / English）
@@ -45,7 +45,7 @@
 
 [iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
 
-- 所有已弃用的包 (< `v1.0.183`) 可以在[这里](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid)找到。
+- 所有自建的安装包都可以在 [这里](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid) 找到。
 - 由于中国政策原因，且**目前**无法完成备案。请移步 AppStore 其他区下载。
 - 为了防止注入攻击等因素，请勿从不可信来源下载。
 

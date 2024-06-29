@@ -528,10 +528,19 @@ void _onReplay({
     return;
   }
 
-  // remove exist reply
-  if (itemIdx + 1 < chatHistory.items.length &&
-      chatHistory.items[itemIdx + 1].role.isAssist) {
-    chatHistory.items.removeAt(itemIdx + 1);
+  // tool
+  if (itemIdx + 1 < chatHistory.items.length) {
+    final item = chatHistory.items.elementAt(itemIdx + 1);
+    if (item.role.isAssist || item.role.isTool) {
+      chatHistory.items.removeAt(itemIdx + 1);
+    }
+  }
+  // assist
+  if (itemIdx + 1 < chatHistory.items.length) {
+    final item = chatHistory.items.elementAt(itemIdx + 1);
+    if (item.role.isAssist || item.role.isTool) {
+      chatHistory.items.removeAt(itemIdx + 1);
+    }
   }
 
   chatHistory.items.removeAt(itemIdx);

@@ -18,7 +18,7 @@ Please refrain from using it in production environments or for critical data.
 
 
 ## 🪄 Features
-- (🥳 New) Api supports viewing the content of Http links, (developing) running JS scripts locally.
+- (🥳 New) Api supports viewing the content of Http links, (developing) running JS scripts locally. [Video](https://cdn.lolli.tech/gptbox/screenshot/tools.mp4)
 - Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
 - Text / Image / Audio chat.
 - Localization. (简体中文 / English)
@@ -45,7 +45,7 @@ Please refrain from using it in production environments or for critical data.
 
 [iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
 
-- All deprecated pkgs (< `v1.0.183`) can be found in [here](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid).
+- All self-built pkgs can be found in [here](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid).
 - Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
 - To prevent injection attacks and etc., please don't download from untrusted sources.
 
