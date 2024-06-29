@@ -32,10 +32,10 @@ Please refrain from using it in production environments or for critical data.
 ## 🏙️ Screenshots
 <table>
   <tr>
-    <td><img width="277px" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg"></td>
-    <td><img width="277px" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg"></td>
-    <td><img width="277px" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg"></td>
-    <td><img width="277px" src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg"></td>
+    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/1.jpg"></td>
+    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/2.jpg"></td>
+    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/3.jpg"></td>
+    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/4.jpg"></td>
   </tr>
 </table>
 
