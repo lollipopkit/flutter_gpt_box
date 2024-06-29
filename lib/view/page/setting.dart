@@ -223,8 +223,6 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  
-
   // Widget _buildFontSize() {
   //   return ValueListenableBuilder(
   //     valueListenable: _store.fontSize.listenable(),
