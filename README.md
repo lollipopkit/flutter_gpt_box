@@ -27,6 +27,7 @@ Please refrain from using it in production environments or for critical data.
 - Sync with WebDAV / iCloud.
 - Mobile & Desktop supports.
 - Render code block / latex formula.
+- Performance far exceeds traditional Web.
 
 
 ## 🏙️ Screenshots

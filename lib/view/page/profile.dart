@@ -75,6 +75,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         final children = [
           _buildPrompt(cfg.prompt),
           _buildHistoryLength(cfg.historyLen),
+          //_buildFollowChatModel(),
         ];
         return Column(children: children.map((e) => e.cardx).toList());
       },
@@ -446,4 +447,12 @@ final class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
+  // Widget _buildFollowChatModel() {
+  //   return ListTile(
+  //     leading: const Icon(OctIcons.arrow_switch, size: 21),
+  //     title: Text(l10n.followChatModel),
+  //     trailing: StoreSwitch(prop: Stores.config.followModel),
+  //   );
+  // }
 }

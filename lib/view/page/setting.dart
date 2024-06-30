@@ -326,14 +326,6 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildFollowChatModel() {
-    return ListTile(
-      leading: const Icon(OctIcons.arrow_switch, size: 21),
-      title: Text(l10n.followChatModel),
-      trailing: StoreSwitch(prop: _store.followModel),
-    );
-  }
-
   Widget _buildDeleteConfrim() {
     return ListTile(
       leading: const Icon(MingCute.check_circle_fill),
@@ -426,7 +418,6 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(MingCute.more_3_fill),
       title: Text(l10n.more),
       children: [
-        _buildFollowChatModel(),
         _buildSaveErrChat(),
         _buildAutoRmDupChat(),
         _buildDeleteConfrim(),

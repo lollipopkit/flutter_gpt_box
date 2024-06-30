@@ -1,5 +1,4 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:gpt_box/data/model/chat/config.dart';
 
 class SettingStore extends PersistentStore {
   SettingStore() : super('setting');
@@ -50,12 +49,6 @@ class SettingStore extends PersistentStore {
 
   late final hideTitleBar = property('hideTitleBar', false);
 
-  late final profileId = property('profileId', ChatConfig.defaultId);
-
-  /// If [ChatHistory.model] is not null, and the saved model ([followModel])
-  /// exists in current models list, then set current model to it.
-  late final followModel = property('followModel', true);
-
   /// If it is false, delete without asking.
   late final confrimDel = property('confrimDel', true);
 
@@ -63,8 +56,6 @@ class SettingStore extends PersistentStore {
 
   /// For chat and share
   late final compressImg = property('compressImg', true);
-
-  late final titlePrompt = property('titlePrompt', '');
 
   /// Save the chat after each message sent or received even if it has error.
   late final saveErrChat = property('saveErrChat', false);
