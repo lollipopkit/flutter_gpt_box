@@ -19,35 +19,35 @@ void _switchChat([String? id]) {
     return;
   }
 
-  final model = chat.model;
-  final type = chat.type;
-  final profileId = chat.profileId;
-  if (model != null && type != null && profileId != null) {
-    final current = OpenAICfg.current;
-    final needSwitch = current.model != model || current.id != profileId;
-    if (!needSwitch) return;
+  // final model = chat.model;
+  // final type = chat.type;
+  // final profileId = chat.profileId;
+  // if (model != null && type != null && profileId != null) {
+  //   final current = OpenAICfg.current;
+  //   final needSwitch = current.model != model || current.id != profileId;
+  //   if (!needSwitch) return;
 
-    final followModel = Stores.setting.followModel.fetch();
-    if (followModel) {
-      final cfg = Stores.config.fetch(profileId);
-      if (cfg == null) {
-        final msg = 'Switch Chat($id) profile($profileId) not found';
-        Loggers.app.warning(msg);
-        return;
-      }
+  //   final followModel = Stores.config.followModel.fetch();
+  //   if (followModel) {
+  //     final cfg = Stores.config.fetch(profileId);
+  //     if (cfg == null) {
+  //       final msg = 'Switch Chat($id) profile($profileId) not found';
+  //       Loggers.app.warning(msg);
+  //       return;
+  //     }
 
-      final newCfg = switch (type) {
-        ChatType.text => cfg.copyWith(model: model),
-        ChatType.img => cfg.copyWith(imgModel: model),
-        ChatType.audio => cfg.copyWith(speechModel: model),
-      };
-      OpenAICfg.setTo(newCfg);
+  //     final newCfg = switch (type) {
+  //       ChatType.text => cfg.copyWith(model: model),
+  //       ChatType.img => cfg.copyWith(imgModel: model),
+  //       ChatType.audio => cfg.copyWith(speechModel: model),
+  //     };
+  //     OpenAICfg.setTo(newCfg);
 
-      if (type != _chatType.value) {
-        _chatType.value = type;
-      }
-    }
-  }
+  //     if (type != _chatType.value) {
+  //       _chatType.value = type;
+  //     }
+  //   }
+  // }
 }
 
 void _switchPreviousChat() {
@@ -458,10 +458,17 @@ void _autoScroll(String chatId) {
     // Only scroll to bottom when current chat is the working chat
     final isWorking = chatId == _curChatId;
     final isSubscribed = _chatStreamSubs.containsKey(chatId);
-    final isDisplaying = _chatScrollCtrl.hasClients;
-    if (isWorking && isSubscribed && isDisplaying) {
-      _chatScrollCtrl.jumpTo(_chatScrollCtrl.position.maxScrollExtent);
+    if (isWorking && isSubscribed) {
+      _scrollBottom();
     }
+  }
+}
+
+void _scrollBottom() {
+  final isDisplaying = _chatScrollCtrl.hasClients;
+  if (isDisplaying) {
+    _chatScrollCtrl.animateTo(_chatScrollCtrl.position.maxScrollExtent,
+        duration: _durationShort, curve: Curves.fastEaseInToSlowEaseOut);
   }
 }
 
