@@ -6,6 +6,12 @@ final class ConfigStore extends PersistentStore {
 
   static const _SELECTED_KEY = 'selectedKey';
 
+  late final profileId = property('profileId', ChatConfig.defaultId);
+
+  /// If [ChatHistory.model] is not null, and the saved model ([followModel])
+  /// exists in current models list, then set current model to it.
+  // late final followModel = property('followModel', true);
+
   ChatConfig? fetch(String id) {
     final val = box.get(id) as ChatConfig?;
     if (val == null && id == ChatConfig.defaultId) {

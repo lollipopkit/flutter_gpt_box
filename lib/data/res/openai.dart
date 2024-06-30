@@ -17,7 +17,7 @@ abstract final class OpenAICfg {
     vn.value = config;
     apply();
     config.save();
-    Stores.setting.profileId.put(config.id);
+    Stores.config.profileId.put(config.id);
 
     if (old.id != config.id) {
       updateModels();
@@ -35,7 +35,7 @@ abstract final class OpenAICfg {
 
   static Future<bool> updateModels({bool force = false}) async {
     try {
-      models.value = await ModelsCacher.fetch(vn.value.id, force: force);
+      models.value = await ModelsCacher.fetch(vn.value.id, refresh: force);
       return true;
     } catch (e) {
       Loggers.app.warning('Failed to update models', e);
@@ -62,11 +62,9 @@ abstract final class OpenAICfg {
     Loggers.app.warning('Default config not found');
   }
 
-  // Mark it as deprecated to avoid using it directly
-  // ignore: provide_deprecation_message
-  @deprecated
+  @Deprecated('Mark it as deprecated to avoid using it directly')
   static final _init = () {
-    final selectedKey = Stores.setting.profileId.fetch();
+    final selectedKey = Stores.config.profileId.fetch();
     final selected = Stores.config.fetch(selectedKey);
     return selected ?? ChatConfig.defaultOne;
   }();
@@ -76,11 +74,12 @@ abstract final class ModelsCacher {
   static final models = <String, List<String>>{};
   static final updateTime = <String, DateTime>{};
 
-  static Future<List<String>> fetch(String key, {bool force = false}) async {
+  static Future<List<String>> fetch(String key, {bool refresh = false}) async {
     final now = DateTime.now();
     final last = updateTime[key];
-    if (!force && (last != null && now.difference(last).inMinutes < 5)) {
-      return models[key]!;
+    if (!refresh && (last != null && now.difference(last).inMinutes < 5)) {
+      final models_ = models[key];
+      if (models_ != null) return models_;
     }
 
     final val = await OpenAI.instance.model.list();
