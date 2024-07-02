@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
+import 'package:gpt_box/core/ext/file.dart';
 import 'package:image/image.dart';
 
 abstract final class ImageUtil {
@@ -10,5 +13,16 @@ abstract final class ImageUtil {
     }
 
     return compute(encode, img);
+  }
+
+  static Future<(String? url, String? path)> normalizeUrl(String? path) async {
+    if (path == null) return (null, null);
+    if (path.startsWith('http')) {
+      return (path, path);
+    }
+    if (path.startsWith('/')) {
+      return (await File(path).base64, path);
+    }
+    return (null, null);
   }
 }

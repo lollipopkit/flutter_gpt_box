@@ -177,7 +177,7 @@ class _ChatPageState extends State<_ChatPage>
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
-    final replayEnabled = chatItem.role.isUser && Stores.setting.replay.fetch();
+    final replayEnabled = chatItem.role.isUser;// && Stores.setting.replay.fetch();
 
     Widget buildFuncItem({
       required VoidCallback onTap,

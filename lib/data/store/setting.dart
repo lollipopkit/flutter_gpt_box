@@ -43,7 +43,7 @@ class SettingStore extends PersistentStore {
   /// Calcualte tokens length
   // late final calcTokenLen = property('calcTokenLen', true);
 
-  late final replay = property('replay', true);
+  // late final replay = property('replay', true);
 
   late final cupertinoRoute = property('cupertinoRoute', isIOS || isMacOS);
 
