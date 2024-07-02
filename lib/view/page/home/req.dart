@@ -17,9 +17,16 @@ Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
   ChatHistory workingChat,
 ) {
   final config = OpenAICfg.current;
+  var count = 0;
   return workingChat.items.reversed
-      .takeWhile((e) => !e.role.isSystem)
-      .take(config.historyLen)
+      .takeWhile((e) {
+        // HISTORY_LEN = LEN - 1 (1: user's question)
+        if (!e.role.isSystem && config.historyLen > count) {
+          count++;
+          return true;
+        }
+        return false;
+      })
       .map((e) => e.toOpenAI)
       .toList()
       .reversed;
@@ -62,7 +69,7 @@ void _onCreateRequest(BuildContext context, String chatId) async {
 Future<void> _onCreateText(
   BuildContext context,
   String chatId, {
-  bool forceUseTool = true,
+  bool forceUseTool = false,
 }) async {
   if (_inputCtrl.text.isEmpty) return;
   _imeFocus.unfocus();
@@ -76,26 +83,15 @@ Future<void> _onCreateText(
   final config = OpenAICfg.current;
   final questionContent = switch ((
     config.prompt,
-    config.historyLen,
     workingChat.items.length,
   )) {
-    ('', _, _) => _inputCtrl.text,
-
-    /// If prompt is not empty and historyCount == null || 0,
-    /// append it to the input
-    (final prompt, 0, _) => '$prompt\n${_inputCtrl.text}',
-
-    /// If this the first msg, append it to the input
-    (final prompt, _, 2) => '$prompt\n${_inputCtrl.text}',
+    ('', _) => _inputCtrl.text,
+    (final prompt, 0) => '$prompt\n${_inputCtrl.text}',
     _ => _inputCtrl.text,
   };
-  final (imgUrl, imgPath) = switch (_filePicked.value) {
-    null => (null, null),
-    final imgPath when imgPath.startsWith('http') => (imgPath, imgPath),
-    final p when p.startsWith('/') => (await File(p).base64, p),
-    _ => (null, null),
-  };
 
+  final (imgUrl, imgPath) = await ImageUtil.normalizeUrl(_filePicked.value);
+  final hasImg = imgPath != null || imgUrl != null;
   final question = ChatHistoryItem.gen(
     content: [
       ChatContent.text(questionContent),
@@ -103,7 +99,6 @@ Future<void> _onCreateText(
     ],
     role: ChatRole.user,
   );
-  workingChat.items.add(question);
   final questionForApi = ChatHistoryItem.gen(
     role: ChatRole.user,
     content: [
@@ -111,29 +106,34 @@ Future<void> _onCreateText(
       if (imgUrl != null) ChatContent.image(imgUrl),
     ],
   );
+  final msgs = _historyCarried(workingChat).toList();
+  msgs.add(questionForApi.toOpenAI);
+
+  workingChat.items.add(question);
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
   _chatRN.build();
   _autoScroll(chatId);
 
-  final useTools = Stores.tool.enabled.fetch() && forceUseTool;
-  if (useTools) {
+  final useTools = Stores.tool.enabled.fetch() || forceUseTool;
+  if (useTools && !hasImg) {
+    final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
+    workingChat.items.add(toolReply);
+    _loadingToolReplies.add(toolReply.id);
+    _chatRN.build();
+    _autoScroll(chatId);
+
     final resp = await OpenAI.instance.chat.create(
       model: config.model,
-      messages: [..._historyCarried(workingChat), questionForApi.toOpenAI],
+      messages: msgs,
       tools: OpenAIFuncCalls.tools,
     );
 
     final toolCalls = resp.choices.firstOrNull?.message.toolCalls;
     if (toolCalls != null && toolCalls.isNotEmpty) {
-      final reply = ChatHistoryItem.single(role: ChatRole.tool, raw: '...');
-      workingChat.items.add(reply);
-      _loadingToolReplies.add(reply.id);
-      _chatRN.build();
-
       void onToolLog(String log) {
-        reply.content.first.raw = log;
-        _chatItemRNMap[reply.id]?.build();
+        toolReply.content.first.raw = log;
+        _chatItemRNMap[toolReply.id]?.build();
       }
 
       final contents = <ChatContent>[];
@@ -149,19 +149,23 @@ Future<void> _onCreateText(
           _onErr(e, s, chatId, 'Tool call');
         }
       }
+      toolReply.content.clear();
+      _loadingToolReplies.remove(toolReply.id);
       if (contents.isNotEmpty) {
-        reply.content.clear();
-        reply.content.addAll(contents);
-        _chatItemRNMap[reply.id]?.build();
-        _storeChat(chatId);
+        toolReply.content.addAll(contents);
+        _chatItemRNMap[toolReply.id]?.build();
+        msgs.add(toolReply.toOpenAI);
       }
-      _loadingToolReplies.remove(reply.id);
+    } else {
+      workingChat.items.remove(toolReply);
+      _chatItemRNMap[toolReply.id]?.build();
+      _chatRN.build();
     }
   }
 
   final chatStream = OpenAI.instance.chat.createStream(
     model: config.model,
-    messages: _historyCarried(workingChat).toList(),
+    messages: msgs,
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);

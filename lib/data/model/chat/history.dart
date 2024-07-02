@@ -222,6 +222,10 @@ final class ChatContent {
       : type = ChatContentType.image,
         id = shortid.generate();
 
+  bool get isText => type == ChatContentType.text;
+  bool get isImg => type == ChatContentType.image;
+  bool get isAudio => type == ChatContentType.audio;
+
   OpenAIChatCompletionChoiceMessageContentItemModel get toOpenAI =>
       switch (type) {
         ChatContentType.text =>

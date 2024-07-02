@@ -28,9 +28,7 @@ Future<void> main() async {
 
 void _runInZone(void Function() body) {
   final zoneSpec = ZoneSpecification(
-    print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
-      parent.print(zone, line);
-    },
+    print: (_, parent, zone, line) => parent.print(zone, line),
   );
 
   runZonedGuarded(
