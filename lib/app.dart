@@ -50,7 +50,9 @@ class MyApp extends StatelessWidget {
               UIs.primaryColor = Theme.of(context).colorScheme.primary;
 
               final intros = _IntroPage.builders;
-              if (intros.isNotEmpty) return _IntroPage(intros);
+              if (intros.isNotEmpty) {
+                return _IntroPage(intros);
+              }
               return const HomePage();
             },
           ),
