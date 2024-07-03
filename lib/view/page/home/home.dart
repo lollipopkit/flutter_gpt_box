@@ -85,11 +85,14 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      drawer: _Drawer(),
-      appBar: _CustomAppBar(),
-      body: _Body(),
-      bottomNavigationBar: _HomeBottom(isHome: true),
+    return const ExitConfirm(
+      onPop: ExitConfirm.exitApp,
+      child: Scaffold(
+        drawer: _Drawer(),
+        appBar: _CustomAppBar(),
+        body: _Body(),
+        bottomNavigationBar: _HomeBottom(isHome: true),
+      ),
     );
   }
 
