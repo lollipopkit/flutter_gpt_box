@@ -84,7 +84,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         theme: _theme,
         textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
         tabSize: 4,
-        selectable: true,
+        selectable: false,
         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
       );
     }
@@ -95,17 +95,18 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       theme: _theme,
       textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
       tabSize: 4,
-      selectable: true,
+      selectable: false,
       padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
     );
     return ValBuilder(
       listenable: Stores.setting.softWrap.listenable(),
-      builder: (val) => val
-          ? child
-          : SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: child,
-            ),
+      builder: (val) {
+        if (val) return child;
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: child,
+        );
+      },
     );
   }
 

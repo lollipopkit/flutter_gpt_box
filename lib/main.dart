@@ -11,7 +11,7 @@ import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
-import 'package:gpt_box/data/provider/all.dart';
+import 'package:gpt_box/data/res/provider.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/misc.dart';
 import 'package:gpt_box/data/res/openai.dart';

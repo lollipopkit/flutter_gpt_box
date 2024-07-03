@@ -18,7 +18,7 @@ import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history.dart';
 import 'package:gpt_box/data/model/chat/history.view.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
-import 'package:gpt_box/data/provider/all.dart';
+import 'package:gpt_box/data/res/provider.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';

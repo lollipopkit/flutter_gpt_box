@@ -69,8 +69,9 @@ final class ChatHistoryContentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (chatItem.role.isTool) {
+      final md = chatItem.toMarkdown;
       final text = Text(
-        chatItem.toMarkdown,
+        md,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: UIs.textGrey,
@@ -79,7 +80,7 @@ final class ChatHistoryContentView extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          text,
+          if (md.isNotEmpty) text,
           if (loading) UIs.height7,
           if (loading) const LinearProgressIndicator(),
         ],
