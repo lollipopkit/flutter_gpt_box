@@ -65,6 +65,8 @@
   "invalidLinkFmt": "Invalid link: {uri}",
   "joinBeta": "Join Beta Program",
   "lang": "Language",
+  "language": "Language",
+  "languageName": "English",
   "license": "License",
   "licenseMenuItem": "Open-source licenses",
   "manual": "Manual",

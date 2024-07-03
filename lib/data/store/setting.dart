@@ -37,9 +37,6 @@ class SettingStore extends PersistentStore {
   late final initHelpShown = property('initHelpShown', false);
   //late final imPro = property('imPro', false);
 
-  /// Picture upload config
-  late final picUploadUrl = property('picUploadUrl', '');
-
   /// Calcualte tokens length
   // late final calcTokenLen = property('calcTokenLen', true);
 
@@ -66,4 +63,6 @@ class SettingStore extends PersistentStore {
   late final windowSize = property('windowSize', '');
 
   late final avatar = property('avatar', '🧐');
+
+  late final introVer = property('introVer', 0);
 }

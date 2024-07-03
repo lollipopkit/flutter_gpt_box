@@ -1,11 +1,15 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_lib/l10n/gen_l10n/lib_l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:icons_plus/icons_plus.dart';
+
+part 'intro.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -45,6 +49,8 @@ class MyApp extends StatelessWidget {
               context.setLibL10n();
               UIs.primaryColor = Theme.of(context).colorScheme.primary;
 
+              final intros = _IntroPage.builders;
+              if (intros.isNotEmpty) return _IntroPage(intros);
               return const HomePage();
             },
           ),
