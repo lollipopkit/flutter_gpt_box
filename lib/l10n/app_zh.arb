@@ -65,6 +65,8 @@
   "invalidLinkFmt": "未知链接：{uri}",
   "joinBeta": "参与Beta版测试",
   "lang": "语言",
+  "language": "语言",
+  "languageName": "简体中文",
   "license": "许可证",
   "licenseMenuItem": "开放源代码许可",
   "manual": "手动",
