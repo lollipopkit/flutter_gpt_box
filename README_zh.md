@@ -42,18 +42,19 @@
 
 
 ## ⬇️ 使用
-🎉 **现在 `Android / Linux / Windows` 版本使用 GitHub Actions 构建**。
 
-[iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
+平台 | 下载
+--- | ---
+iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
+Android & Linux & Windows | [Github Actions](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
 
-- 所有自建的安装包都可以在 [这里](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid) 找到。
-- 由于中国政策原因，且**目前**无法完成备案。请移步 AppStore 其他区下载。
-- 为了防止注入攻击等因素，请勿从不可信来源下载。
+由于中国政策原因，且**目前**无法完成备案，请移步 **AppStore 其他区** 下载。  
+为了防止注入攻击等因素，请勿从不可信来源下载。
 
 
 ## 🆘 帮助
 
-- 吹水、参与开发、了解如何使用，QQ群 **762870488**
+- 吹水、参与开发，QQ群 **762870488**
 
 反馈前须知：
 1. 反馈问题请附带 log（点击首页右上角），并以 bug 模版提交。

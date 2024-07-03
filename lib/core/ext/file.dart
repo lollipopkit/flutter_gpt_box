@@ -3,7 +3,7 @@ import 'dart:io';
 
 extension FileX on File? {
   Future<String?> get base64 async {
-    final format = switch (this?.path.split('.').lastOrNull){
+    final format = switch (this?.path.split('.').lastOrNull) {
       null => null,
       'png' => 'png',
       'jpeg' => 'jpeg',

@@ -42,13 +42,14 @@ Please refrain from using it in production environments or for critical data.
 
 
 ## ⬇️ Use
-🎉 **The `Android / Linux / Windows` version are now built via GitHub Actions**
 
-[iOS & macOS](https://apps.apple.com/app/id6476033062) / [Android & Linux & Windows](https://github.com/lollipopkit/flutter_gpt_box/releases)
+Platform | From
+--- | ---
+iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
+Android & Linux & Windows | [Github Actions](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
 
-- All self-built pkgs can be found in [here](https://cdn.lolli.tech/gptbox/?sort=time&order=desc&layout=grid).
-- Due to Chinese government policy and the BEIAN issue. Please download it from other regions of AppStore.
-- To prevent injection attacks and etc., please don't download from untrusted sources.
+Due to Chinese government policy and the BEIAN issue. Please download it from **other regions of AppStore**.  
+To prevent injection attacks and etc., please don't download from untrusted sources.
 
 
 ## 🆘 Help
