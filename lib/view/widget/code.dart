@@ -100,12 +100,15 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     );
     return ValBuilder(
       listenable: Stores.setting.softWrap.listenable(),
-      builder: (val) => val
-          ? child
-          : SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: child,
-            ),
+      builder: (val) {
+        if (val) return child;
+        return Scrollbar(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: child,
+          ),
+        );
+      },
     );
   }
 
