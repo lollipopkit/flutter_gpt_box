@@ -28,9 +28,9 @@ final class _Drawer extends StatelessWidget {
         ListTile(
           onTap: () async {
             final ret = await Routes.backup.go(context);
-            Scaffold.maybeOf(context)?.closeDrawer();
 
             if (ret?.isRestoreSuc == true) {
+              Scaffold.maybeOf(context)?.closeDrawer();
               HomePage.afterRestore();
             }
           },
