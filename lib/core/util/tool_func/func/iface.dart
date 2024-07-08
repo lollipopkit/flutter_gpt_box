@@ -11,6 +11,8 @@ abstract final class ToolFunc {
     required this.parametersSchema,
   });
 
+  String get l10nName;
+
   /// For users to understand what this function does.
   /// Used in permission request dialog.
   String help(_CallResp call, _Map args) {

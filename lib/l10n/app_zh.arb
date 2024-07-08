@@ -128,6 +128,7 @@
   "toolConfirmFmt": "是否同意使用工具 {tool} ？",
   "toolFinishTip": "工具调用完成",
   "toolHttpReqHelp": "将会与从网络获取数据，本次将会联系 {host}",
+  "toolHttpReqName": "Http 请求",
   "tts": "文字转语音",
   "untitled": "未命名",
   "update": "更新",
