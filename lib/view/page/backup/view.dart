@@ -27,7 +27,10 @@ part 'impl/shared.dart';
 
 final _webdavLoading = ValueNotifier(false);
 
-typedef BackupPageRet = ({bool isRestoreSuc});
+final class BackupPageRet {
+  final bool isRestoreSuc;
+  const BackupPageRet({this.isRestoreSuc = false});
+}
 
 final class BackupPage extends StatelessWidget {
   const BackupPage({super.key, Never? args});

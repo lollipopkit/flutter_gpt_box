@@ -128,6 +128,7 @@
   "toolConfirmFmt": "Is it permitted to use the tool {tool} ?",
   "toolFinishTip": "Tools invocation completed",
   "toolHttpReqHelp": "It will fetch data from network. In this time, it will communicate with {host}.",
+  "toolHttpReqName": "Http Request",
   "tts": "TTS",
   "untitled": "Untitled",
   "update": "Update",
