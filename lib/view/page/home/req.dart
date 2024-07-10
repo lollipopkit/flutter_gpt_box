@@ -290,7 +290,7 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
   final cfg = OpenAICfg.current;
   try {
     final resp = await OpenAI.instance.image.create(
-      model: cfg.model,
+      model: cfg.imgModel,
       prompt: prompt,
     );
     final imgs = <String>[];
@@ -564,7 +564,7 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   Loggers.app.warning('$action: $e');
   _onStopStreamSub(chatId);
 
-  final msg = 'Error: $e\n\nTrace:\n```$s```';
+  final msg = '$e\n\n```$s```';
   final workingChat = _allHistories[chatId];
   if (workingChat == null) return;
 
