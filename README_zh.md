@@ -46,10 +46,11 @@
 平台 | 下载
 --- | ---
 iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
-Android & Linux & Windows | [Github Actions](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
+Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
+Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
 
-由于中国政策原因，且**目前**无法完成备案，请移步 **AppStore 其他区** 下载。  
-为了防止注入攻击等因素，请勿从不可信来源下载。
+- 由于无法完成备案，请移步 **AppStore 其他区** 下载。  
+- 为了防止注入攻击等因素，请勿从不可信来源下载，推荐从 Github Releases 下载
 
 
 ## 🆘 帮助
@@ -57,7 +58,7 @@ Android & Linux & Windows | [Github Actions](https://github.com/lollipopkit/flut
 - 吹水、参与开发，QQ群 **762870488**
 
 反馈前须知：
-1. 反馈问题请附带 log（点击首页右上角），并以 bug 模版提交。
+1. 反馈问题请附带 log（长按首页标题），并以 bug 模版提交。
 2. 反馈问题前请检查是否是 本app 的问题。
 3. 欢迎所有有效、正面的反馈，主观（比如你觉得其他UI更好看）的反馈不一定会接受
 
@@ -73,7 +74,6 @@ Android & Linux & Windows | [Github Actions](https://github.com/lollipopkit/flut
 
 ## 💡 我的其它 Apps
 - [Server Box](https://github.com/lollipopkit/flutter_server_box) - 服务器状态和工具。
-- [2FA Box](https://github.com/lollipopkit/flutter_2fa) - 开源的 2FA 应用。
 - [更多](https://github.com/lollipopkit) - 工具 & etc.
 
 

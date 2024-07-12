@@ -53,9 +53,9 @@ class HomePage extends StatefulWidget {
 
   static void afterRestore() {
     _allHistories = Stores.history.fetchAll();
-    _historyRN.build();
-    _chatRN.build();
-    _appbarTitleRN.build();
+    _historyRN.notify();
+    _chatRN.notify();
+    _appbarTitleRN.notify();
     _switchChat();
   }
 }
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage>
     RNodes.dark.value = context.isDark;
     _isWide.value = (_media?.size.width ?? 0) > 639;
     super.didChangeDependencies();
-    _homeBottomRN.build();
+    _homeBottomRN.notify();
   }
 
   @override
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage>
     _refreshTimeTimer = Timer.periodic(
       const Duration(seconds: 10),
       (_) {
-        if (mounted) _timeRN.build();
+        if (mounted) _timeRN.notify();
       },
     );
     _initUrlScheme();
@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage>
     /// - Init help uses [l10n] to gen msg, so [l10n] must be ready
     /// - [l10n] is ready after first layout
     _switchChat();
-    _historyRN.build();
+    _historyRN.notify();
     _removeDuplicateHistory(context);
 
     if (Stores.setting.autoCheckUpdate.fetch()) {
@@ -157,7 +157,7 @@ final class _Body extends StatelessWidget {
     const history = _HistoryPage();
     const chat = _ChatPage();
 
-    return _isWide.widget(
+    return _isWide.listenVal(
       (isWide) {
         if (isWide) {
           return LayoutBuilder(

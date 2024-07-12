@@ -66,7 +66,7 @@ class _SettingPageState extends State<SettingPage> {
       _buildLocale(),
       _buildColorSeed(),
       _buildThemeMode(),
-      if (!isWeb) _buildCheckUpdate(),
+      _buildCheckUpdate(),
       _buildAppMore(),
     ];
     return Column(children: children.map((e) => e.cardx).toList());
@@ -75,7 +75,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildChat() {
     final children = [
       _buildUserName(),
-      _buildScrollSwitchChat(),
+      if (isMobile) _buildScrollSwitchChat(),
       //_buildFontSize(),
       _buildGenTitle(),
       _buildScrollBottom(),
@@ -105,7 +105,7 @@ class _SettingPageState extends State<SettingPage> {
             context.pop(const SettingsPageRet(rebuild: true));
 
             /// Set delay to true to wait for db update.
-            RNodes.app.build(delay: true);
+            RNodes.app.notify(delay: true);
           }
         },
         trailing: Text(
@@ -166,7 +166,7 @@ class _SettingPageState extends State<SettingPage> {
       return;
     }
     _store.themeColorSeed.put(color.value);
-    RNodes.app.build(delay: true);
+    RNodes.app.notify(delay: true);
   }
 
   Widget _buildLocale() {
@@ -189,7 +189,7 @@ class _SettingPageState extends State<SettingPage> {
           if (result != null) {
             final newLocaleStr = result.toLanguageTag();
             _store.locale.put(newLocaleStr);
-            await RNodes.app.build(delay: true);
+            await RNodes.app.notify(delay: true);
             setState(() {
               localeStr = newLocaleStr;
             });

@@ -127,7 +127,7 @@ class Backup {
       Stores.config.put(configs.firstWhere((e) => e.id == id));
     }
 
-    RNodes.app.build();
+    RNodes.app.notify();
     HomePage.afterRestore();
     _logger.info('Merge done');
   }

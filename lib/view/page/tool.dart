@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class ToolPage extends StatefulWidget {
   const ToolPage({super.key, Never? args});
@@ -28,7 +29,8 @@ class _ToolPageState extends State<ToolPage> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
-        _buildUseTool().cardx,
+        _buildUseTool(),
+        _buildModelRegExp(),
         _buildTitle('~'),
         _buildSwicthes(),
         const SizedBox(height: 37),
@@ -50,11 +52,39 @@ class _ToolPageState extends State<ToolPage> {
 
   Widget _buildUseTool() {
     return ListTile(
-      leading: const Icon(Icons.functions),
+      leading: const Icon(MingCute.tool_line),
       title: Text(l10n.tool),
       subtitle: Text(l10n.toolAvailability, style: UIs.textGrey),
       trailing: StoreSwitch(prop: _store.enabled),
-    );
+    ).cardx;
+  }
+
+  Widget _buildModelRegExp() {
+    final prop = Stores.setting.modelsUseTool;
+    final listenable = prop.listenable();
+    return ListTile(
+      leading: const Icon(Bootstrap.regex),
+      title: Text(l10n.regExp),
+      subtitle: Text(l10n.modelRegExpTip, style: UIs.textGrey),
+      trailing: listenable.listenVal((val) => Text(val, style: UIs.textGrey)),
+      onTap: () {
+        final ctrl = TextEditingController(text: listenable.value);
+        void onSave(String v) {
+          prop.put(v);
+          context.pop();
+        }
+
+        context.showRoundDialog(
+          title: l10n.regExp,
+          child: Input(
+            controller: ctrl,
+            maxLines: 3,
+            onSubmitted: onSave,
+          ),
+          actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+        );
+      },
+    ).cardx;
   }
 
   Widget _buildSwicthes() {

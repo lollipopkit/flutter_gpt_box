@@ -100,11 +100,11 @@ final class _ProfilePageState extends State<ProfilePage> {
             actions: Btns.oks(
               onTap: () {
                 Stores.config.delete(value.id);
-                _cfgRN.build();
+                _cfgRN.notify();
                 context.pop();
                 if (cfg.id == value.id) {
                   OpenAICfg.switchToDefault(context);
-                  _cfgRN.build();
+                  _cfgRN.notify();
                 }
               },
               red: true,
@@ -118,14 +118,14 @@ final class _ProfilePageState extends State<ProfilePage> {
           onChanged: (val) {
             if (val != true) return;
             OpenAICfg.setTo(value);
-            _cfgRN.build();
+            _cfgRN.notify();
           },
         ),
         title: Text(value.name.isEmpty ? l10n.defaulT : value.name),
         onTap: () {
           if (cfg.id == value.id) return;
           OpenAICfg.setTo(value);
-          _cfgRN.build();
+          _cfgRN.notify();
         },
         trailing: value.id != ChatConfig.defaultId ? delBtn : null,
       ));
@@ -150,7 +150,7 @@ final class _ProfilePageState extends State<ProfilePage> {
           name: name,
         )..save();
         OpenAICfg.setTo(cfg);
-        _cfgRN.build();
+        _cfgRN.notify();
       },
       title: Text(l10n.add),
       trailing: const Icon(Icons.add),
@@ -198,7 +198,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result));
         OpenAICfg.updateModels(force: true);
-        _cfgRN.build();
+        _cfgRN.notify();
       },
     );
   }
@@ -239,7 +239,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         }
         OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result));
         OpenAICfg.updateModels(force: true);
-        _cfgRN.build();
+        _cfgRN.notify();
       },
     );
   }
@@ -291,7 +291,7 @@ final class _ProfilePageState extends State<ProfilePage> {
             void onSave(String s) {
               context.pop();
               OpenAICfg.setTo(OpenAICfg.current.copyWith(model: s));
-              _cfgRN.build();
+              _cfgRN.notify();
             }
 
             context.pop();
@@ -324,7 +324,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         final model = await _showPickModelDialog(l10n.model, val);
         if (model != null) {
           OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model));
-          _cfgRN.build();
+          _cfgRN.notify();
         }
       },
     );
@@ -342,7 +342,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         final model = await _showPickModelDialog(l10n.model, val);
         if (model != null) {
           OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model));
-          _cfgRN.build();
+          _cfgRN.notify();
         }
       },
     );
@@ -360,7 +360,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         final model = await _showPickModelDialog(l10n.model, val);
         if (model != null) {
           OpenAICfg.setTo(OpenAICfg.current.copyWith(speechModel: model));
-          _cfgRN.build();
+          _cfgRN.notify();
         }
       },
     );
@@ -378,7 +378,7 @@ final class _ProfilePageState extends State<ProfilePage> {
   // final model = await _showPickModelDialog(l10n.model, val);
   //       if (model != null) {
   //         OpenAICfg.setTo(OpenAICfg.current.copyWith(transcribeModel: model));
-  //         _cfgRN.build();
+  //         _cfgRN.notify();
   //       }
   //     },
   //   );
@@ -409,7 +409,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(prompt: result));
-        _cfgRN.build();
+        _cfgRN.notify();
       },
     );
   }
@@ -443,7 +443,7 @@ final class _ProfilePageState extends State<ProfilePage> {
           return;
         }
         OpenAICfg.setTo(OpenAICfg.current.copyWith(historyLen: newVal));
-        _cfgRN.build();
+        _cfgRN.notify();
       },
     );
   }

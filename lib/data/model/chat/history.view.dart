@@ -9,18 +9,13 @@ import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 
 final class ChatRoleTitle extends StatelessWidget {
   final ChatRole role;
+  final bool loading;
 
-  const ChatRoleTitle._({required this.role, super.key});
-
-  static final _cache = <ChatRole, ChatRoleTitle>{};
-
-  ///
-  factory ChatRoleTitle({required ChatRole role, Key? key}) {
-    return _cache.putIfAbsent(
-      role,
-      () => ChatRoleTitle._(role: role, key: key),
-    );
-  }
+  const ChatRoleTitle({
+    required this.role,
+    required this.loading,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +24,7 @@ final class ChatRoleTitle extends StatelessWidget {
       role.localized,
       style: const TextStyle(fontSize: 15),
     );
-    return Container(
+    final label = Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
@@ -53,16 +48,22 @@ final class ChatRoleTitle extends StatelessWidget {
         ],
       ),
     );
+    if (!loading) return label;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        label,
+        const SizedBox(width: 37, child: LinearProgressIndicator()),
+      ],
+    );
   }
 }
 
 final class ChatHistoryContentView extends StatelessWidget {
   final ChatHistoryItem chatItem;
-  final List<String> loadingToolReplies;
 
   const ChatHistoryContentView({
     required this.chatItem,
-    required this.loadingToolReplies,
     super.key,
   });
 
@@ -76,15 +77,7 @@ final class ChatHistoryContentView extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: UIs.textGrey,
       );
-      final loading = loadingToolReplies.contains(chatItem.id);
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (md.isNotEmpty) text,
-          if (loading) UIs.height7,
-          if (loading) const LinearProgressIndicator(),
-        ],
-      );
+      return text;
     }
 
     return Column(

@@ -24,7 +24,7 @@ class _ChatPageState extends State<_ChatPage>
     return AutoHide(
       key: _chatFabAutoHideKey,
       controller: _chatScrollCtrl,
-      direction: AxisDirection.down,
+      direction: AxisDirection.right,
       offset: 75,
       child: ListenBuilder(
         listenable: _chatFabRN,
@@ -71,7 +71,7 @@ class _ChatPageState extends State<_ChatPage>
             curve: Curves.easeInOut,
           );
         }
-        _chatFabRN.build();
+        _chatFabRN.notify();
       },
       child: Icon(icon),
     );
@@ -138,6 +138,17 @@ class _ChatPageState extends State<_ChatPage>
     final chatItem = chatItems[idx];
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
 
+    final title = switch (chatItem.role) {
+      ChatRole.user => ChatRoleTitle(role: chatItem.role, loading: false),
+      _ => ListenBuilder(
+          listenable: _loadingChatIdRN,
+          builder: () {
+            final isWorking = _loadingChatIds.contains(chatItem.id);
+            return ChatRoleTitle(role: chatItem.role, loading: isWorking);
+          },
+        ),
+    };
+
     return InkWell(
       borderRadius: BorderRadius.circular(13),
       onLongPress: () {
@@ -157,14 +168,11 @@ class _ChatPageState extends State<_ChatPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ChatRoleTitle(role: chatItem.role),
+            title,
             UIs.height13,
             ListenBuilder(
               listenable: node,
-              builder: () => ChatHistoryContentView(
-                chatItem: chatItem,
-                loadingToolReplies: _loadingToolReplies,
-              ),
+              builder: () => ChatHistoryContentView(chatItem: chatItem),
             ).paddingSymmetric(horizontal: 2),
             UIs.height13,
           ],
@@ -177,8 +185,8 @@ class _ChatPageState extends State<_ChatPage>
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
-    final replayEnabled =
-        chatItem.role.isUser; // && Stores.setting.replay.fetch();
+    // && Stores.setting.replay.fetch()
+    final replayEnabled = chatItem.role.isUser;
 
     Widget buildFuncItem({
       required VoidCallback onTap,
@@ -211,7 +219,7 @@ class _ChatPageState extends State<_ChatPage>
         ListenBuilder(
           listenable: _sendBtnRN,
           builder: () {
-            final isWorking = _chatStreamSubs.containsKey(_curChatId);
+            final isWorking = _loadingChatIds.contains(_curChatId);
             if (isWorking) return UIs.placeholder;
             return buildFuncItem(
               onTap: () => _onTapReplay(context, _curChatId, chatItem),
