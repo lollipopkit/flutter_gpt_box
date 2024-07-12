@@ -33,6 +33,13 @@ abstract final class OpenAICfg {
     }
   }
 
+  static RegExp? _modelsUseToolReExp;
+  static bool canUseTool(String model) {
+    if (model.isEmpty) return false;
+    return _modelsUseToolReExp?.hasMatch(model) ?? false;
+  }
+  static bool get canUseToolNow => canUseTool(current.model);
+
   static Future<bool> updateModels({bool force = false}) async {
     try {
       models.value = await ModelsCacher.fetch(vn.value.id, refresh: force);
@@ -62,8 +69,21 @@ abstract final class OpenAICfg {
     Loggers.app.warning('Default config not found');
   }
 
+  static void _initToolRegexp() {
+    final prop = Stores.setting.modelsUseTool;
+
+    void setExp() {
+      final val = prop.fetch();
+      _modelsUseToolReExp = RegExp(val);
+    }
+
+    setExp();
+    prop.listenable().addListener(setExp);
+  }
+
   @Deprecated('Mark it as deprecated to avoid using it directly')
   static final _init = () {
+    _initToolRegexp();
     final selectedKey = Stores.config.profileId.fetch();
     final selected = Stores.config.fetch(selectedKey);
     return selected ?? ChatConfig.defaultOne;

@@ -51,7 +51,7 @@ final class _Drawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RNodes.dark.widget(
+    return RNodes.dark.listenVal(
       (isDark) {
         return LayoutBuilder(
           builder: (context, cons) {

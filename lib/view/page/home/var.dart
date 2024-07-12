@@ -3,7 +3,7 @@ part of 'home.dart';
 final _inputCtrl = TextEditingController();
 final _chatScrollCtrl = ScrollController()
   ..addListener(() {
-    Funcs.throttle(_chatFabRN.build, id: 'chat_fab_rn', duration: 30);
+    Funcs.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
   });
 final _historyScrollCtrl = ScrollController()
   ..addListener(_locateHistoryListener);
@@ -15,7 +15,6 @@ final _timeRN = RNode();
 /// Map for [ChatHistoryItem]'s [RNode]
 final _chatItemRNMap = <String, RNode>{};
 final _historyRNMap = <String, RNode>{};
-final _loadingToolReplies = <String>[];
 
 /// Audio / Image / File path
 final _filePicked = nvn<String>();
@@ -34,7 +33,10 @@ final _homeBottomRN = RNode();
 var _allHistories = <String, ChatHistory>{};
 String _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
-final _chatStreamSubs = <String, StreamSubscription>{};
+
+/// [ChatHistory.id] or [ChatHistoryItem.id]
+final _loadingChatIds = <String>{};
+final _loadingChatIdRN = RNode();
 
 var _dontCloseIme = false;
 final _curPage = HomePageEnum.chat.vn

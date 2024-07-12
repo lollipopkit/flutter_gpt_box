@@ -68,9 +68,8 @@ void _onCreateRequest(BuildContext context, String chatId) async {
 
 Future<void> _onCreateText(
   BuildContext context,
-  String chatId, {
-  bool forceUseTool = false,
-}) async {
+  String chatId,
+) async {
   if (_inputCtrl.text.isEmpty) return;
   _imeFocus.unfocus();
   final workingChat = _allHistories[chatId];
@@ -112,28 +111,43 @@ Future<void> _onCreateText(
   workingChat.items.add(question);
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
-  _chatRN.build();
+  _chatRN.notify();
   _autoScroll(chatId);
 
-  final useTools = Stores.tool.enabled.fetch() || forceUseTool;
+  final useTools = OpenAICfg.canUseToolNow;
+
+  /// TODO: after switching to http img url, remove this condition.
+  /// To save tokens, we don't use tools for image prompt
   if (useTools && !hasImg) {
     final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
     workingChat.items.add(toolReply);
-    _loadingToolReplies.add(toolReply.id);
-    _chatRN.build();
+    _loadingChatIds.add(toolReply.id);
+    _loadingChatIdRN.notify();
+    _chatRN.notify();
     _autoScroll(chatId);
 
-    final resp = await OpenAI.instance.chat.create(
-      model: config.model,
-      messages: msgs,
-      tools: OpenAIFuncCalls.tools,
-    );
+    OpenAIChatCompletionModel? resp;
+    try {
+      resp = await OpenAI.instance.chat.create(
+        model: config.model,
+        messages: [
+          ChatHistoryItem.single(
+            role: ChatRole.system,
+            raw: ChatTitleUtil.toolPrompt,
+          ).toOpenAI,
+          ...msgs,
+        ],
+        tools: OpenAIFuncCalls.tools,
+      );
+    } catch (e, s) {
+      _onErr(e, s, chatId, 'Tool');
+    }
 
-    final toolCalls = resp.choices.firstOrNull?.message.toolCalls;
+    final toolCalls = resp?.choices.firstOrNull?.message.toolCalls;
     if (toolCalls != null && toolCalls.isNotEmpty) {
       void onToolLog(String log) {
         toolReply.content.first.raw = log;
-        _chatItemRNMap[toolReply.id]?.build();
+        _chatItemRNMap[toolReply.id]?.notify();
       }
 
       final contents = <ChatContent>[];
@@ -150,17 +164,19 @@ Future<void> _onCreateText(
         }
       }
       toolReply.content.clear();
-      _loadingToolReplies.remove(toolReply.id);
       if (contents.isNotEmpty) {
         toolReply.content.addAll(contents);
-        _chatItemRNMap[toolReply.id]?.build();
+        _chatItemRNMap[toolReply.id]?.notify();
         msgs.add(toolReply.toOpenAI);
       }
     } else {
       workingChat.items.remove(toolReply);
-      _chatItemRNMap[toolReply.id]?.build();
-      _chatRN.build();
+      _chatItemRNMap[toolReply.id]?.notify();
+      _chatRN.notify();
     }
+
+    _loadingChatIds.remove(toolReply.id);
+    _loadingChatIdRN.notify();
   }
 
   final chatStream = OpenAI.instance.chat.createStream(
@@ -169,45 +185,47 @@ Future<void> _onCreateText(
   );
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
-  _chatRN.build();
+  _chatRN.notify();
+  _loadingChatIds.add(assistReply.id);
+  _loadingChatIdRN.notify();
   _filePicked.value = null;
+  _sendBtnRN.notify();
 
+  _chatFabAutoHideKey.currentState?.autoHideEnabled = false;
   try {
-    _chatFabAutoHideKey.currentState?.autoHideEnabled = false;
-    final sub = chatStream.listen(
+    chatStream.listen(
       (eve) async {
         final first = eve.choices.firstOrNull;
         final delta = first?.delta.content?.firstOrNull?.text;
         if (delta == null) return;
         assistReply.content.first.raw += delta;
-        _chatItemRNMap[assistReply.id]?.build();
+        _chatItemRNMap[assistReply.id]?.notify();
 
         _autoScroll(chatId);
       },
       onError: (e, s) {
+        _onStopStreamSub(chatId);
+        _loadingChatIds.remove(assistReply.id);
+        _loadingChatIdRN.notify();
         _onErr(e, s, chatId, 'Listen text stream');
-        _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
       },
       onDone: () async {
-        _onStopStreamSub(chatId);
         _storeChat(
           chatId,
           type: ChatType.text,
           model: config.model,
           profileId: config.id,
         );
-        _sendBtnRN.build();
+        _onStopStreamSub(chatId);
+        _loadingChatIds.remove(assistReply.id);
+        _loadingChatIdRN.notify();
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
         SyncService.sync();
       },
     );
-    _chatStreamSubs[chatId] = sub;
-    _sendBtnRN.build();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Listen text stream');
-  } finally {
-    _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
   }
 }
 
@@ -244,7 +262,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
   final completer = Completer();
   final replyContent = assistReply.content.first;
   AudioCard.loadingMap[replyContent.id] = completer;
-  _chatRN.build();
+  _chatRN.notify();
 
   try {
     final file = await OpenAI.instance.audio.createSpeech(
@@ -257,7 +275,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
     );
     replyContent.raw = file.path;
     completer.complete();
-    _chatItemRNMap[assistReply.id]?.build();
+    _chatItemRNMap[assistReply.id]?.notify();
     _storeChat(
       chatId,
       type: ChatType.audio,
@@ -285,7 +303,7 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
 
   final userQuestion = ChatHistoryItem.single(role: ChatRole.user, raw: prompt);
   workingChat.items.add(userQuestion);
-  _chatRN.build();
+  _chatRN.notify();
 
   final cfg = OpenAICfg.current;
   try {
@@ -316,7 +334,7 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
       model: cfg.model,
       profileId: cfg.id,
     );
-    _chatRN.build();
+    _chatRN.notify();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Create image');
   }
@@ -337,7 +355,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
     content: [ChatContent.text(prompt), ChatContent.image(val)],
   );
   workingChat.items.add(chatItem);
-  _chatRN.build();
+  _chatRN.notify();
   _filePicked.value = null;
 
   final cfg = OpenAICfg.current;
@@ -370,7 +388,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
       model: cfg.imgModel,
       profileId: cfg.id,
     );
-    _chatRN.build();
+    _chatRN.notify();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Edit image');
   }
@@ -393,7 +411,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
     role: ChatRole.user,
   );
   workingChat.items.add(chatItem);
-  _chatRN.build();
+  _chatRN.notify();
   _storeChat(chatId);
   _filePicked.value = null;
 
@@ -422,7 +440,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
       model: cfg.speechModel,
       profileId: cfg.id,
     );
-    _chatRN.build();
+    _chatRN.notify();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Audio to Text');
   }
@@ -446,8 +464,8 @@ Future<void> _genChatTitle(
 
   void onErr(Object e, StackTrace s) {
     Loggers.app.warning('Gen title: $e');
-    _historyRNMap[chatId]?.build();
-    if (chatId == _curChatId) _appbarTitleRN.build();
+    _historyRNMap[chatId]?.notify();
+    if (chatId == _curChatId) _appbarTitleRN.notify();
   }
 
   try {
@@ -475,8 +493,8 @@ Future<void> _genChatTitle(
 
         /// These punctions which not affect the meaning of the title will be removed
         entity.name = (entity.name ?? '') + title;
-        _historyRNMap[chatId]?.build();
-        if (chatId == _curChatId) _appbarTitleRN.build();
+        _historyRNMap[chatId]?.notify();
+        if (chatId == _curChatId) _appbarTitleRN.notify();
       },
       onError: (e, s) => onErr(e, s),
       onDone: () {
@@ -489,8 +507,8 @@ Future<void> _genChatTitle(
           entity.name = title;
         }
 
-        _historyRNMap[chatId]?.build();
-        if (chatId == _curChatId) _appbarTitleRN.build();
+        _historyRNMap[chatId]?.notify();
+        if (chatId == _curChatId) _appbarTitleRN.notify();
         _storeChat(chatId);
       },
     );
@@ -509,7 +527,7 @@ void _onReplay({
   if (!_validChatCfg(context)) return;
 
   // If is receiving the reply, ignore this action
-  if (_chatStreamSubs.containsKey(chatId)) {
+  if (_loadingChatIds.contains(chatId)) {
     final msg = 'Replay Chat($chatId) is receiving reply';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
@@ -583,8 +601,8 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
     role: ChatRole.system,
   ));
 
-  _chatRN.build();
+  _chatRN.notify();
 
   if (Stores.setting.saveErrChat.fetch()) _storeChat(chatId);
-  _sendBtnRN.build();
+  _sendBtnRN.notify();
 }

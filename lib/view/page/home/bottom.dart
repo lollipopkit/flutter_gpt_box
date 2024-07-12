@@ -37,7 +37,7 @@ class _HomeBottom extends StatelessWidget {
                     IconButton(
                       onPressed: () {
                         _switchChat(_newChat().id);
-                        _historyRN.build();
+                        _historyRN.notify();
                         if (_curPage.value == HomePageEnum.history) {
                           _switchPage(HomePageEnum.chat);
                         }
@@ -160,7 +160,7 @@ class _HomeBottom extends StatelessWidget {
       suffix: ListenBuilder(
         listenable: _sendBtnRN,
         builder: () {
-          final isWorking = _chatStreamSubs.containsKey(_curChatId);
+          final isWorking = _loadingChatIds.contains(_curChatId);
           return isWorking
               ? IconButton(
                   onPressed: () => _onStopStreamSub(_curChatId),

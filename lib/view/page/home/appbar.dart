@@ -56,12 +56,12 @@ final class _CustomAppBar extends CustomAppBar {
               ),
               // Use a SizedBox to avoid the title jumping when switching chats.
               child: Text(
-                key: ValueKey(val),
                 switch (type) {
                   ChatType.text => val.model,
                   ChatType.img => val.imgModel,
                   ChatType.audio => val.speechModel,
                 },
+                key: ValueKey(val),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.left,

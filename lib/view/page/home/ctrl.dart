@@ -4,12 +4,12 @@ void _switchChat([String? id]) {
   id ??= _allHistories.keys.firstOrNull ?? _newChat().id;
   _curChatId = id;
   _chatItemRNMap.clear();
-  _chatRN.build();
-  _sendBtnRN.build();
-  _appbarTitleRN.build();
+  _chatRN.notify();
+  _sendBtnRN.notify();
+  _appbarTitleRN.notify();
   Future.delayed(_durationMedium, () {
     // Different chats have different height
-    _chatFabRN.build();
+    _chatFabRN.notify();
   });
 
   final chat = _allHistories[id];
@@ -129,8 +129,8 @@ void _onTapDelChatItem(
   if (result != true) return;
   chatItems.remove(chatItem);
   _storeChat(chatId);
-  _historyRNMap[chatId]?.build();
-  _chatRN.build();
+  _historyRNMap[chatId]?.notify();
+  _chatRN.notify();
 }
 
 void _onTapDeleteChat(String chatId, BuildContext context) {
@@ -167,7 +167,7 @@ void _onDeleteChat(String chatId) {
     _switchPreviousChat();
   }
   _allHistories.remove(chatId);
-  _historyRN.build();
+  _historyRN.notify();
 }
 
 void _onTapRenameChat(String chatId, BuildContext context) async {
@@ -190,14 +190,17 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
   );
   if (title == null || title.isEmpty) return;
   entity.name = title;
-  _historyRNMap[chatId]?.build();
+  _historyRNMap[chatId]?.notify();
   _storeChat(chatId);
-  _appbarTitleRN.build();
+  _appbarTitleRN.notify();
 }
 
-void _onStopStreamSub(String chatId) {
-  _chatStreamSubs.remove(chatId)?.cancel();
-  _sendBtnRN.build();
+/// Used in send btn and [_onCreateText]
+void _onStopStreamSub(String chatId) async {
+  _loadingChatIds.remove(chatId);
+  _loadingChatIdRN.notify();
+  _sendBtnRN.notify();
+  _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
 }
 
 void _onShareChat(BuildContext context) async {
@@ -378,7 +381,7 @@ void _removeDuplicateHistory(BuildContext context) async {
             Stores.history.delete(id);
             _allHistories.remove(id);
           }
-          _historyRN.build();
+          _historyRN.notify();
           if (!_allHistories.keys.contains(_curChatId)) {
             _switchChat();
           }
@@ -446,7 +449,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
         chatItem.content.clear();
         chatItem.content.add(ChatContent.text(p0));
         _storeChat(_curChatId);
-        _chatRN.build();
+        _chatRN.notify();
         context.pop();
       },
     ),
@@ -457,7 +460,7 @@ void _autoScroll(String chatId) {
   if (Stores.setting.scrollBottom.fetch()) {
     // Only scroll to bottom when current chat is the working chat
     final isWorking = chatId == _curChatId;
-    final isSubscribed = _chatStreamSubs.containsKey(chatId);
+    final isSubscribed = _loadingChatIds.contains(chatId);
     if (isWorking && isSubscribed) {
       _scrollBottom();
     }

@@ -46,15 +46,16 @@ Please refrain from using it in production environments or for critical data.
 Platform | From
 --- | ---
 iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
-Android & Linux & Windows | [Github Actions](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
+Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
+Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
 
-Due to Chinese government policy and the BEIAN issue. Please download it from **other regions of AppStore**.  
-To prevent injection attacks and etc., please don't download from untrusted sources.
+- Due to the BEIAN issue. Please download it from **other regions of AppStore**.  
+- Only download from the source **you trust**. Github Releases is recommended.
 
 
 ## 🆘 Help
 Before you open an issue, please read the following:
-1. Paste the **entire log** (click the top right of the home page) in the issue template.
+1. Paste the **entire log** (long press home title) in the issue template.
 2. Make sure whether the issue is caused by this app.
 3. Welcome all valid and positive feedback, subjective feedback (such as you think other UI is better) may not be accepted.
 
@@ -69,7 +70,6 @@ After you read the above, you can:
 
 ## 💡 My other apps
 - [Server Box](https://github.com/lollipopkit/flutter_server_box) - Server status & tools.
-- [2FA Box](https://github.com/lollipopkit/flutter_2fa) - Open source 2FA app for Android, iOS and the web.
 - [More](https://github.com/lollipopkit) - Tools & etc.
 
 ## 📝 License

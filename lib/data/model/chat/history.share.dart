@@ -31,7 +31,7 @@ extension ChatHistoryShare on ChatHistory {
             shrinkWrap: false,
           ),
       };
-      children.add(ChatRoleTitle(role: item.role));
+      children.add(ChatRoleTitle(role: item.role, loading: false));
       children.add(UIs.height13);
       children.add(md);
       children.add(UIs.height13);

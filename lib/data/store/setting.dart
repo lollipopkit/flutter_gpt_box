@@ -57,7 +57,7 @@ class SettingStore extends PersistentStore {
   /// Save the chat after each message sent or received even if it has error.
   late final saveErrChat = property('saveErrChat', false);
 
-  late final scrollSwitchChat = property('scrollSwitchChat', true);
+  late final scrollSwitchChat = property('scrollSwitchChat', isMobile);
 
   /// {width}x{height}
   late final windowSize = property('windowSize', '');
@@ -65,4 +65,10 @@ class SettingStore extends PersistentStore {
   late final avatar = property('avatar', '🧐');
 
   late final introVer = property('introVer', 0);
+
+  /// Models regexp list, split by ','
+  late final modelsUseTool = property(
+    'modelsUseTool',
+    'gpt-4o|gpt-4-turbo|gpt-3.5-turbo',
+  );
 }
