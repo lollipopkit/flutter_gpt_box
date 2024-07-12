@@ -38,6 +38,7 @@ abstract final class OpenAICfg {
     if (model.isEmpty) return false;
     return _modelsUseToolReExp?.hasMatch(model) ?? false;
   }
+
   static bool get canUseToolNow => canUseTool(current.model);
 
   static Future<bool> updateModels({bool force = false}) async {

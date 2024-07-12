@@ -143,10 +143,6 @@ class _HomePageState extends State<HomePage>
       });
     }
   }
-
-  // void _checkInvalidModels() {
-  //   final validModels =
-  // }
 }
 
 final class _Body extends StatelessWidget {
@@ -162,13 +158,10 @@ final class _Body extends StatelessWidget {
         if (isWide) {
           return LayoutBuilder(
             builder: (context, cons) {
-              final width = cons.maxWidth;
-              final height = cons.maxHeight;
-              final historyWidth =
-                  math.max(200.0, math.min(400.0, width * 0.3));
+              final w = math.max(200.0, math.min(400.0, cons.maxWidth * 0.3));
               return Row(
                 children: [
-                  SizedBox(width: historyWidth, height: height, child: history),
+                  SizedBox(width: w, height: cons.maxHeight, child: history),
                   const Expanded(child: chat),
                 ],
               );
