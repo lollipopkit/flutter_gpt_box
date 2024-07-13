@@ -126,13 +126,15 @@ class _HomeBottom extends StatelessWidget {
       // },
       onTap: () async {
         if (_curPage.value != HomePageEnum.chat) {
-          _dontCloseIme = true;
           await _switchPage(HomePageEnum.chat);
-          _dontCloseIme = false;
         }
         // Wait IME popup
         await Future.delayed(Durations.medium4);
         _scrollBottom();
+      },
+      onTapOutside: (p0) {
+        if (_curPage.value == HomePageEnum.chat) return;
+        _imeFocus.unfocus();
       },
       contextMenuBuilder: (context, editableTextState) {
         //final TextEditingValue value = editableTextState.textEditingValue;
