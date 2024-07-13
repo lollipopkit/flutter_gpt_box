@@ -1,7 +1,7 @@
 name: gpt_box
 description: "A third-party GPT Client for OpenAI API."
 publish_to: 'none'
-version: 1.0.245+245
+version: 1.0.246+246
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -46,7 +46,7 @@ dev_dependencies:
   fl_build:
     git:
       url: https://github.com/lppcg/fl_build.git
-      ref: v1.0.32
+      ref: v1.0.33
     # path: ../fl_build
 
 flutter:

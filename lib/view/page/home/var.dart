@@ -38,11 +38,7 @@ ChatHistory? get _curChat => _allHistories[_curChatId];
 final _loadingChatIds = <String>{};
 final _loadingChatIdRN = RNode();
 
-var _dontCloseIme = false;
-final _curPage = HomePageEnum.chat.vn
-  ..addListener(() {
-    if (!_dontCloseIme) _imeFocus.unfocus();
-  });
+final _curPage = HomePageEnum.chat.vn;
 
 final _imeFocus = FocusNode();
 
