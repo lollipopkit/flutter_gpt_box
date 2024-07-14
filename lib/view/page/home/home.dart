@@ -7,6 +7,7 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/core/supa.dart';
 //import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:gpt_box/data/model/chat/history.share.dart';
 import 'package:gpt_box/core/route/page.dart';
@@ -26,11 +27,12 @@ import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/widget/audio.dart';
+import 'package:gpt_box/view/widget/image.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shortid/shortid.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'chat.dart';
 part 'history.dart';
@@ -44,6 +46,7 @@ part 'url_scheme.dart';
 part 'req.dart';
 part 'md_copy.dart';
 part 'drawer.dart';
+part 'img_pick.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

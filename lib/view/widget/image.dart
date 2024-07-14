@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:extended_image/extended_image.dart';
@@ -5,7 +6,9 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gpt_box/core/route/page.dart';
+import 'package:gpt_box/core/supa.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/view/page/image.dart';
 
 final class ImageCard extends StatefulWidget {
@@ -30,19 +33,34 @@ class _ImageCardState extends State<ImageCard> {
   Object? err;
   StackTrace? trace;
 
+  final provider = Completer<ImageProvider>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    final imageUrl = widget.imageUrl;
+    if (imageUrl.startsWith('http')) {
+      final isSupa = imageUrl.startsWith(Urls.supaUrl);
+      final headers = isSupa ? SupaUtils.authHeaders : null;
+      provider.complete(ExtendedNetworkImageProvider(
+        imageUrl,
+        headers: headers,
+        cache: true,
+      ));
+    } else if (imageUrl.startsWith('assets')) {
+      provider.complete(AssetImage(imageUrl));
+    } else {
+      provider.complete(FileImage(File(imageUrl)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final imageUrl = widget.imageUrl;
-    final provider = switch (imageUrl) {
-      _ when imageUrl.startsWith('http') =>
-        ExtendedNetworkImageProvider(imageUrl, cache: true) as ImageProvider,
-      _ when imageUrl.startsWith('assets') => AssetImage(imageUrl),
-      _ => FileImage(File(imageUrl)),
-    };
-
     return CardX(
       child: InkWell(
         onTap: () async {
+          if (!provider.isCompleted) return;
           if (err != null || trace != null) {
             final text = '$err\n\n```sh\n$trace```';
             context.showRoundDialog(
@@ -63,7 +81,7 @@ class _ImageCardState extends State<ImageCard> {
             context,
             args: ImagePageArgs(
               tag: widget.heroTag,
-              image: provider,
+              image: await provider.future,
             ),
           );
           if (ret != null) widget.onRet?.call(ret);
@@ -73,14 +91,26 @@ class _ImageCardState extends State<ImageCard> {
           child: SizedBox(
             width: ImageCard.height,
             height: ImageCard.height,
-            child: _buildImage(provider),
+            child: FutureWidget(
+              future: provider.future,
+              error: (e, s) {
+                err = e;
+                trace = s;
+                return _buildErr();
+              },
+              success: _buildImage,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildImage(ImageProvider provider) {
+  Widget _buildImage(ImageProvider? provider) {
+    if (provider == null) {
+      err = 'provider is null';
+      return _buildErr();
+    }
     return Hero(
       tag: widget.heroTag,
       transitionOnUserGestures: true,
@@ -106,16 +136,20 @@ class _ImageCardState extends State<ImageCard> {
         errorBuilder: (context, error, stackTrace) {
           err = error;
           trace = stackTrace;
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.broken_image, size: 50),
-              UIs.height13,
-              Text('${l10n.error} Log'),
-            ],
-          );
+          return _buildErr();
         },
       ),
+    );
+  }
+
+  Widget _buildErr() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(Icons.broken_image, size: 50),
+        UIs.height13,
+        Text('${l10n.error} Log'),
+      ],
     );
   }
 }

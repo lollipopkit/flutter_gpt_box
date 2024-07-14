@@ -168,6 +168,7 @@ void _onDeleteChat(String chatId) {
   }
   _allHistories.remove(chatId);
   _historyRN.notify();
+  /// TODO: Delete chat / related imgs from supa
 }
 
 void _onTapRenameChat(String chatId, BuildContext context) async {
@@ -243,7 +244,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
   if (val != null) {
     final delete = await context.showRoundDialog(
       title: l10n.file,
-      child: Image.file(File(val), fit: BoxFit.cover),
+      child: ImageCard(imageUrl: val.pubUrl, heroTag: val.id),
       actions: [
         TextButton(
           onPressed: () => context.pop(true),
@@ -268,22 +269,15 @@ Future<void> _onTapImgPick(BuildContext context) async {
     return;
   }
 
-  final imgPath = Paths.img.joinPath(shortid.generate());
-  var isCompressed = Stores.setting.compressImg.fetch();
-  if (isCompressed) {
-    final compressed = await context.showLoadingDialog(
-      fn: () async => ImageUtil.compress(await result.readAsBytes()),
-    );
-    if (compressed == null) {
-      context.showSnackBar('${l10n.failed}: ${l10n.compress}');
-      isCompressed = false;
-    } else {
-      await File(imgPath).writeAsBytes(compressed);
-    }
-  }
-
-  if (!isCompressed) await result.saveTo(imgPath);
-  _filePicked.value = imgPath;
+  await context.showLoadingDialog(
+    fn: () async {
+      final compressed = await ImageUtil.compress(await result.readAsBytes());
+      if (compressed == null) return;
+      final img = await _ImgPicked.fromData(compressed);
+      print(img);
+      _filePicked.value = img;
+    },
+  );
 }
 
 Set<String> findAllDuplicateIds(Map<String, ChatHistory> allHistories) {

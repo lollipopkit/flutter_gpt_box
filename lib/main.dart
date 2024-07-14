@@ -6,6 +6,7 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
+import 'package:gpt_box/core/supa.dart';
 import 'package:gpt_box/core/util/datetime.dart';
 import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
@@ -15,6 +16,7 @@ import 'package:gpt_box/data/res/provider.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/misc.dart';
 import 'package:gpt_box/data/res/openai.dart';
+import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
@@ -91,4 +93,6 @@ Future<void> _initAppComponents() async {
   SyncService.sync(force: true);
 
   if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
+
+  SupaUtils.init(Urls.supaUrl, Miscs.annoKey);
 }
