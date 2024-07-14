@@ -30,16 +30,22 @@ class _ImageCardState extends State<ImageCard> {
   Object? err;
   StackTrace? trace;
 
+  late final ImageProvider provider;
+
+  @override
+  void initState() {
+    super.initState();
+    final imageUrl = widget.imageUrl;
+    provider = (switch (imageUrl) {
+      _ when imageUrl.startsWith('http') =>
+        ExtendedNetworkImageProvider(imageUrl, cache: true),
+      _ when imageUrl.startsWith('assets') => ExtendedAssetImageProvider(imageUrl),
+      _ => ExtendedFileImageProvider(File(imageUrl)),
+    })as ImageProvider;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final imageUrl = widget.imageUrl;
-    final provider = switch (imageUrl) {
-      _ when imageUrl.startsWith('http') =>
-        ExtendedNetworkImageProvider(imageUrl, cache: true) as ImageProvider,
-      _ when imageUrl.startsWith('assets') => AssetImage(imageUrl),
-      _ => FileImage(File(imageUrl)),
-    };
-
     return CardX(
       child: InkWell(
         onTap: () async {
@@ -59,11 +65,13 @@ class _ImageCardState extends State<ImageCard> {
             );
             return;
           }
+          
           final ret = await Routes.image.go(
             context,
             args: ImagePageArgs(
               tag: widget.heroTag,
               image: provider,
+              url: widget.imageUrl,
             ),
           );
           if (ret != null) widget.onRet?.call(ret);
