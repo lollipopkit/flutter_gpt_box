@@ -1,5 +1,6 @@
 abstract final class GithubId {
   static const participants = {
+    'luoxiashen',
     'SeaHI-Robot',
     'Http-200',
     'bxoooooo',
