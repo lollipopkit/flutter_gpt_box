@@ -1,5 +1,6 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
@@ -17,6 +18,12 @@ final class _ProfilePageState extends State<ProfilePage> {
   final _cfgRN = RNode();
 
   @override
+  void initState() {
+    super.initState();
+    ApiBalance.refresh();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
@@ -30,6 +37,7 @@ final class _ProfilePageState extends State<ProfilePage> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
+        _buildBalance(),
         _buildTitle(l10n.chat),
         _buildChat(),
         _buildTitle(l10n.more),
@@ -48,6 +56,22 @@ final class _ProfilePageState extends State<ProfilePage> {
           style: UIs.textGrey,
         ),
       ),
+    );
+  }
+
+  Widget _buildBalance() {
+    return ValBuilder(
+      listenable: ApiBalance.balance,
+      builder: (val) {
+        return ListTile(
+          leading: const Icon(Icons.account_balance_wallet),
+          title: Text(l10n.balance),
+          trailing: Text(
+            val,
+            style: UIs.text13Grey,
+          ),
+        ).cardx;
+      },
     );
   }
 
