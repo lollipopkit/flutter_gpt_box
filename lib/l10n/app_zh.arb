@@ -17,6 +17,7 @@
   "backupRestorationSuccessful": "成功恢复备份",
   "backupSuccessful": "备份成功",
   "backupTip": "请保证备份文件私密且安全！",
+  "balance": "余额",
   "calcTokenLen": "计算 Tokens 长度",
   "cancel": "取消",
   "changeModelTip": "不同密钥可能能访问的模型列表不同，如果不了解机制并且出现错误，建议重新设置模型。",
