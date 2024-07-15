@@ -1,6 +1,6 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/data/model/chat/history.dart';
+import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/view/widget/audio.dart';
 import 'package:gpt_box/view/widget/code.dart';
 import 'package:gpt_box/view/widget/image.dart';

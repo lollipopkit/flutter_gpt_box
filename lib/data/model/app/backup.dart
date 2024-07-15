@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/core/util/json.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
-import 'package:gpt_box/data/model/chat/history.dart';
+import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';

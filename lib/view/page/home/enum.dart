@@ -10,11 +10,6 @@ enum HomePageEnum {
   HomePageEnum get next =>
       HomePageEnum.values[(index + 1) % HomePageEnum.values.length];
 
-  IconData get icon => switch (this) {
-        history => Icons.history,
-        chat => Icons.chat,
-      };
-
   Widget get fab {
     return switch ((this, _isWide.value)) {
       /// Find current chat in history list
