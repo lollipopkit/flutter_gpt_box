@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/data/model/chat/history.dart';
+import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:html/parser.dart' as html_parser;

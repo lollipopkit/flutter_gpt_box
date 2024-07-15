@@ -204,14 +204,30 @@ void _onStopStreamSub(String chatId) async {
 }
 
 void _onShareChat(BuildContext context) async {
-  final result = _curChat?.gen4Share(context);
-  if (result == null) {
+  final curChat = _curChat;
+  if (curChat == null) {
     final msg = 'Share Chat($_curChatId): null';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
     return;
   }
 
+  final type = await context.showPickSingleDialog(
+    title: l10n.share,
+    items: ['img', 'txt'],
+    name: (p0) => switch (p0) {
+      'txt' => l10n.text,
+      _ => l10n.image,
+    },
+  );
+  if (type == 'txt') {
+    final md = curChat.toMarkdown;
+    Pfs.copy(md);
+    context.showSnackBar(l10n.copied);
+    return;
+  }
+
+  final result = curChat.gen4Share(context);
   var isCompressed = false;
   final pic = await context.showLoadingDialog(fn: () async {
     final raw = await _screenshotCtrl.captureFromLongWidget(
@@ -232,10 +248,7 @@ void _onShareChat(BuildContext context) async {
   final title = _curChat?.name ?? l10n.untitled;
   final ext = isCompressed ? 'jpg' : 'png';
   final mime = isCompressed ? 'image/jpeg' : 'image/png';
-  await Share.shareXFiles(
-    [XFile.fromData(pic, name: '$title.$ext', mimeType: mime)],
-    subject: '$title - GPT Box',
-  );
+  await Pfs.share(bytes: pic, name: '$title.$ext', mime: mime);
 }
 
 Future<void> _onTapImgPick(BuildContext context) async {

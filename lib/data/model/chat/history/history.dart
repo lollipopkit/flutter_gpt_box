@@ -8,7 +8,7 @@ import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shortid/shortid.dart';
 
-part 'history.g.dart';
+part 'hive.dart';
 
 @HiveType(typeId: 5)
 final class ChatHistory {
@@ -50,6 +50,15 @@ final class ChatHistory {
   }) : id = shortid.generate();
 
   static ChatHistory get empty => ChatHistory.noid(items: []);
+
+  String get toMarkdown {
+    final sb = StringBuffer();
+    for (final item in items) {
+      sb.writeln(item.role.localized);
+      sb.writeln(item.toMarkdown);
+    }
+    return sb.toString();
+  }
 
   Map<String, dynamic> toJson() {
     final map = {

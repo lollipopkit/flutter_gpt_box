@@ -9,7 +9,7 @@ import 'package:gpt_box/app.dart';
 import 'package:gpt_box/core/util/datetime.dart';
 import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
-import 'package:gpt_box/data/model/chat/history.dart';
+import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/res/provider.dart';
 import 'package:gpt_box/data/res/build.dart';
