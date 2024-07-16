@@ -1,3 +1,4 @@
+import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shortid/shortid.dart';
@@ -65,6 +66,11 @@ final class ChatConfig {
     speechModel: _kSpeechModel,
     transcribeModel: _kTranscribeModel,
   );
+
+  String get displayName => switch (id) {
+        defaultId when name.isEmpty => l10n.defaulT,
+        _  => name,
+      };
 
   void save() => Stores.config.put(this);
 
