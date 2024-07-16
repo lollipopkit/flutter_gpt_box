@@ -85,18 +85,6 @@ class _HomePageState extends State<HomePage>
   }
 
   @override
-  void initState() {
-    super.initState();
-    _keyboardSendListener = KeyboardCtrlListener(
-      key: PhysicalKeyboardKey.enter,
-      callback: () {
-        if (_inputCtrl.text.isEmpty) return;
-        _onCreateRequest(context, _curChatId);
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return const ExitConfirm(
       onPop: ExitConfirm.exitApp,
@@ -127,6 +115,7 @@ class _HomePageState extends State<HomePage>
     /// - Init help uses [l10n] to gen msg, so [l10n] must be ready
     /// - [l10n] is ready after first layout
     _switchChat();
+    _listenKeyboard();
     _historyRN.notify();
     _removeDuplicateHistory(context);
 
@@ -137,6 +126,20 @@ class _HomePageState extends State<HomePage>
         context: context,
       );
     }
+  }
+
+  void _listenKeyboard() {
+    _keyboardSendListener = KeyboardCtrlListener(
+      key: PhysicalKeyboardKey.enter,
+      callback: () {
+        // If the current page is not chat, do nothing
+        if (ModalRoute.of(context)?.isCurrent != true) return false;
+
+        if (_inputCtrl.text.isEmpty) return false;
+        _onCreateRequest(context, _curChatId);
+        return true;
+      },
+    );
   }
 
   Future<void> _initUrlScheme() async {
