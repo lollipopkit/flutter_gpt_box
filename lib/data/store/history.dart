@@ -1,5 +1,5 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:gpt_box/data/model/chat/history.dart';
+import 'package:gpt_box/data/model/chat/history/history.dart';
 
 class HistoryStore extends PersistentStore {
   HistoryStore() : super('history');

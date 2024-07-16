@@ -74,3 +74,5 @@ const _durationShort = Durations.short4;
 const _durationMedium = Durations.medium1;
 
 final _chatFabAutoHideKey = GlobalKey<AutoHideState>();
+
+KeyboardCtrlListener? _keyboardSendListener;

@@ -8,16 +8,17 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/supa.dart';
+import 'package:flutter/services.dart';
 //import 'package:flutter_tiktoken/flutter_tiktoken.dart';
-import 'package:gpt_box/data/model/chat/history.share.dart';
+import 'package:gpt_box/data/model/chat/history/share.dart';
 import 'package:gpt_box/core/route/page.dart';
 import 'package:gpt_box/core/util/chat_title.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/core/util/image.dart';
 import 'package:gpt_box/core/util/sync/base.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
-import 'package:gpt_box/data/model/chat/history.dart';
-import 'package:gpt_box/data/model/chat/history.view.dart';
+import 'package:gpt_box/data/model/chat/history/history.dart';
+import 'package:gpt_box/data/model/chat/history/view.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/res/provider.dart';
 import 'package:gpt_box/data/res/build.dart';
@@ -31,7 +32,6 @@ import 'package:gpt_box/view/widget/image.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'chat.dart';
@@ -74,6 +74,7 @@ class _HomePageState extends State<HomePage>
     _refreshTimeTimer?.cancel();
     _chatScrollCtrl.dispose();
     _historyScrollCtrl.dispose();
+    _keyboardSendListener?.dispose();
     super.dispose();
   }
 
@@ -117,6 +118,7 @@ class _HomePageState extends State<HomePage>
     /// - Init help uses [l10n] to gen msg, so [l10n] must be ready
     /// - [l10n] is ready after first layout
     _switchChat();
+    _listenKeyboard();
     _historyRN.notify();
     _removeDuplicateHistory(context);
 
@@ -127,6 +129,20 @@ class _HomePageState extends State<HomePage>
         context: context,
       );
     }
+  }
+
+  void _listenKeyboard() {
+    _keyboardSendListener = KeyboardCtrlListener(
+      key: PhysicalKeyboardKey.enter,
+      callback: () {
+        // If the current page is not chat, do nothing
+        if (ModalRoute.of(context)?.isCurrent != true) return false;
+
+        if (_inputCtrl.text.isEmpty) return false;
+        _onCreateRequest(context, _curChatId);
+        return true;
+      },
+    );
   }
 
   Future<void> _initUrlScheme() async {

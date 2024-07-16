@@ -8,7 +8,7 @@ import 'package:gpt_box/core/util/sync/icloud.dart';
 import 'package:gpt_box/core/util/sync/webdav.dart';
 import 'package:gpt_box/data/model/app/backup.dart';
 import 'package:gpt_box/data/model/chat/gpt_next.dart';
-import 'package:gpt_box/data/model/chat/history.dart';
+import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/openai.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/misc.dart';

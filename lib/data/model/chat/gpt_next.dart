@@ -1,7 +1,7 @@
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:shortid/shortid.dart';
 
-import 'history.dart';
+import 'history/history.dart';
 
 abstract final class GPTNextConvertor {
   static ChatHistory toChatHistory(Map session) {

@@ -1,6 +1,7 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/store/all.dart';
 
@@ -19,8 +20,9 @@ abstract final class OpenAICfg {
     config.save();
     Stores.config.profileId.put(config.id);
 
-    if (old.id != config.id) {
+    if (config.shouldUpdateRelavance(old)) {
       updateModels();
+      ApiBalance.refresh();
     }
   }
 

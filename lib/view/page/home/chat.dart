@@ -188,29 +188,9 @@ class _ChatPageState extends State<_ChatPage>
     // && Stores.setting.replay.fetch()
     final replayEnabled = chatItem.role.isUser;
 
-    Widget buildFuncItem({
-      required VoidCallback onTap,
-      required String text,
-      required IconData icon,
-    }) {
-      return InkWell(
-        borderRadius: BorderRadius.circular(13),
-        onTap: () {
-          context.pop();
-          onTap();
-        },
-        child: Row(
-          children: [
-            Icon(icon, size: 20),
-            const SizedBox(width: 27),
-            Text(text, style: const TextStyle(fontSize: 16.5)),
-          ],
-        ).paddingSymmetric(horizontal: 23, vertical: 15),
-      );
-    }
 
     return [
-      buildFuncItem(
+      Btn(
         onTap: () => _MarkdownCopyPage.go(context, chatItem),
         text: l10n.freeCopy,
         icon: BoxIcons.bxs_crop,
@@ -221,7 +201,7 @@ class _ChatPageState extends State<_ChatPage>
           builder: () {
             final isWorking = _loadingChatIds.contains(_curChatId);
             if (isWorking) return UIs.placeholder;
-            return buildFuncItem(
+            return Btn(
               onTap: () => _onTapReplay(context, _curChatId, chatItem),
               text: l10n.replay,
               icon: MingCute.refresh_4_line,
@@ -229,17 +209,17 @@ class _ChatPageState extends State<_ChatPage>
           },
         ),
       if (replayEnabled)
-        buildFuncItem(
+        Btn(
           onTap: () => _onTapEditMsg(context, chatItem),
           text: l10n.edit,
           icon: Icons.edit,
         ),
-      buildFuncItem(
+      Btn(
         onTap: () => _onTapDelChatItem(context, chatItems, chatItem),
         text: l10n.delete,
         icon: Icons.delete,
       ),
-      buildFuncItem(
+      Btn(
         onTap: () => Pfs.copy(chatItem.toMarkdown),
         text: l10n.copy,
         icon: MingCute.copy_2_fill,

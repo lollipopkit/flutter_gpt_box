@@ -1,10 +1,10 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:shortid/shortid.dart';
 
 final class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, Never? args});
@@ -15,6 +15,12 @@ final class ProfilePage extends StatefulWidget {
 
 final class _ProfilePageState extends State<ProfilePage> {
   final _cfgRN = RNode();
+
+  @override
+  void initState() {
+    super.initState();
+    ApiBalance.refresh();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +36,7 @@ final class _ProfilePageState extends State<ProfilePage> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
+        _buildBalance(),
         _buildTitle(l10n.chat),
         _buildChat(),
         _buildTitle(l10n.more),
@@ -48,6 +55,26 @@ final class _ProfilePageState extends State<ProfilePage> {
           style: UIs.textGrey,
         ),
       ),
+    );
+  }
+
+  Widget _buildBalance() {
+    return ValBuilder(
+      listenable: ApiBalance.balance,
+      builder: (val) {
+        return ListTile(
+          leading: const Icon(Icons.account_balance_wallet),
+          title: Text(l10n.balance),
+          subtitle: Text(val.state, style: UIs.text13Grey),
+          trailing: val.loading
+              ? UIs.centerSizedLoadingSmall
+              : IconButton(
+                  onPressed: () {
+                    ApiBalance.refresh();
+                  },
+                  icon: const Icon(Icons.refresh)),
+        ).cardx;
+      },
     );
   }
 
@@ -83,89 +110,80 @@ final class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildSwitchCfg(ChatConfig cfg) {
-    final vals = Stores.config.box
-        .toJson<ChatConfig>(includeInternal: false)
-        .values
-        .toList();
-    final children = <Widget>[];
-    for (int idx = 0; idx < vals.length; idx++) {
-      final value = vals[idx];
-      final delBtn = IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () {
-          if (value.id == ChatConfig.defaultId) return;
-          context.showRoundDialog(
-            title: l10n.attention,
-            child: Text(l10n.delFmt(value.name, l10n.profile)),
-            actions: Btns.oks(
-              onTap: () {
-                Stores.config.delete(value.id);
-                _cfgRN.notify();
-                context.pop();
-                if (cfg.id == value.id) {
-                  OpenAICfg.switchToDefault(context);
-                  _cfgRN.notify();
-                }
-              },
-              red: true,
-            ),
-          );
-        },
-      );
-      children.add(ListTile(
-        leading: Checkbox(
-          value: cfg.id == value.id,
-          onChanged: (val) {
-            if (val != true) return;
-            OpenAICfg.setTo(value);
-            _cfgRN.notify();
-          },
-        ),
-        title: Text(value.name.isEmpty ? l10n.defaulT : value.name),
-        onTap: () {
-          if (cfg.id == value.id) return;
-          OpenAICfg.setTo(value);
-          _cfgRN.notify();
-        },
-        trailing: value.id != ChatConfig.defaultId ? delBtn : null,
-      ));
-    }
-    children.add(ListTile(
-      onTap: () async {
-        final ctrl = TextEditingController();
-        final name = await context.showRoundDialog(
-          title: l10n.add,
-          child: Input(
-            controller: ctrl,
-            hint: l10n.name,
-            icon: Icons.text_fields,
-          ),
-          actions: Btns.oks(
-            onTap: () => context.pop(ctrl.text),
-          ),
-        );
-        if (name == null) return;
-        final cfg = ChatConfig.defaultOne.copyWith(
-          id: shortid.generate(),
-          name: name,
-        )..save();
-        OpenAICfg.setTo(cfg);
-        _cfgRN.notify();
-      },
-      title: Text(l10n.add),
-      trailing: const Icon(Icons.add),
-    ));
-    return ExpandTile(
+    return ListTile(
       leading: const Icon(Icons.switch_account),
       title: Text(l10n.profile),
       subtitle: Text(
-        '${l10n.current}: ${switch ((cfg.id, cfg.name)) {
-          (ChatConfig.defaultId, _) => l10n.defaulT,
-          (_, final String name) => name,
-        }}',
-        style: UIs.text13Grey,
+        '${cfg.displayName}, ${l10n.clickSwitch}',
+        style: UIs.textGrey,
       ),
-      children: children,
+      onTap: () async {
+        final vals = Stores.config.box
+            .toJson<ChatConfig>(includeInternal: false)
+            .values
+            .toList();
+        final newCfg = await context.showPickSingleDialog(
+          items: vals,
+          initial: cfg,
+          title: l10n.profile,
+          name: (p0) => p0.displayName,
+        );
+
+        if (newCfg == null) return;
+        OpenAICfg.setTo(newCfg);
+        _cfgRN.notify();
+      },
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Delete
+          if (cfg.id != ChatConfig.defaultId)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                if (cfg.id == ChatConfig.defaultId) return;
+                context.showRoundDialog(
+                  title: l10n.attention,
+                  child: Text(l10n.delFmt(cfg.name, l10n.profile)),
+                  actions: Btns.oks(
+                    onTap: () {
+                      Stores.config.delete(cfg.id);
+                      _cfgRN.notify();
+                      context.pop();
+                      if (cfg.id == cfg.id) {
+                        OpenAICfg.switchToDefault(context);
+                        _cfgRN.notify();
+                      }
+                    },
+                    red: true,
+                  ),
+                );
+              },
+            ),
+          // Rename
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              final ctrl = TextEditingController(text: cfg.name);
+              context.showRoundDialog(
+                title: l10n.edit,
+                child: Input(controller: ctrl, label: l10n.name),
+                actions: Btns.oks(
+                  onTap: () {
+                    final name = ctrl.text;
+                    if (name.isEmpty) return;
+                    final newCfg = cfg.copyWith(name: name);
+                    newCfg.save();
+                    OpenAICfg.setTo(newCfg);
+                    _cfgRN.notify();
+                    context.pop();
+                  },
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 

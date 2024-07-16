@@ -77,11 +77,13 @@ class _ImageCardState extends State<ImageCard> {
             );
             return;
           }
+          
           final ret = await Routes.image.go(
             context,
             args: ImagePageArgs(
               tag: widget.heroTag,
               image: await provider.future,
+              url: widget.imageUrl,
             ),
           );
           if (ret != null) widget.onRet?.call(ret);

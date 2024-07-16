@@ -132,6 +132,6 @@ If blob, encode it into base64 String.''',
     log('Http $method -> ${l10n.success}');
     await Future.delayed(Durations.medium1);
 
-    return ChatContent.text(respBody).asList;
+    return [ChatContent.text(respBody)];
   }
 }
