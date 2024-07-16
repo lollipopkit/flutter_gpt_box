@@ -7,6 +7,7 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 //import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:gpt_box/data/model/chat/history/share.dart';
 import 'package:gpt_box/core/route/page.dart';
@@ -70,6 +71,7 @@ class _HomePageState extends State<HomePage>
     _refreshTimeTimer?.cancel();
     _chatScrollCtrl.dispose();
     _historyScrollCtrl.dispose();
+    _keyboardSendListener?.dispose();
     super.dispose();
   }
 
@@ -80,6 +82,18 @@ class _HomePageState extends State<HomePage>
     _isWide.value = (_media?.size.width ?? 0) > 639;
     super.didChangeDependencies();
     _homeBottomRN.notify();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _keyboardSendListener = KeyboardCtrlListener(
+      key: PhysicalKeyboardKey.enter,
+      callback: () {
+        if (_inputCtrl.text.isEmpty) return;
+        _onCreateRequest(context, _curChatId);
+      },
+    );
   }
 
   @override
