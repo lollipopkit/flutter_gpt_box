@@ -7,6 +7,7 @@ import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 //import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:gpt_box/data/model/chat/history/share.dart';
 import 'package:gpt_box/core/route/page.dart';
@@ -70,6 +71,7 @@ class _HomePageState extends State<HomePage>
     _refreshTimeTimer?.cancel();
     _chatScrollCtrl.dispose();
     _historyScrollCtrl.dispose();
+    _keyboardSendListener?.dispose();
     super.dispose();
   }
 
@@ -113,6 +115,7 @@ class _HomePageState extends State<HomePage>
     /// - Init help uses [l10n] to gen msg, so [l10n] must be ready
     /// - [l10n] is ready after first layout
     _switchChat();
+    _listenKeyboard();
     _historyRN.notify();
     _removeDuplicateHistory(context);
 
@@ -123,6 +126,20 @@ class _HomePageState extends State<HomePage>
         context: context,
       );
     }
+  }
+
+  void _listenKeyboard() {
+    _keyboardSendListener = KeyboardCtrlListener(
+      key: PhysicalKeyboardKey.enter,
+      callback: () {
+        // If the current page is not chat, do nothing
+        if (ModalRoute.of(context)?.isCurrent != true) return false;
+
+        if (_inputCtrl.text.isEmpty) return false;
+        _onCreateRequest(context, _curChatId);
+        return true;
+      },
+    );
   }
 
   Future<void> _initUrlScheme() async {
