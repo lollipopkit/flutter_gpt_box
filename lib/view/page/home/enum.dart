@@ -39,21 +39,20 @@ enum HomePageEnum {
     final items = <IconButton>[
       IconButton(
         onPressed: () async {
+          final addBtn = TextButton(
+            onPressed: () {
+              context.pop();
+              Routes.profile.go(context);
+            },
+            child: Text(l10n.add),
+          );
           final profiles = Stores.config.fetchAll().values.toList();
           final select = await context.showPickSingleDialog(
             title: l10n.profile,
             items: profiles,
             name: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
             initial: OpenAICfg.current,
-            actions: profiles.length == 1
-                ? TextButton(
-                    onPressed: () {
-                      context.pop();
-                      Routes.profile.go(context);
-                    },
-                    child: Text(l10n.add),
-                  ).asList
-                : null,
+            actions: profiles.length == 1 ? [addBtn] : null,
           );
           if (select == null) return;
           OpenAICfg.setTo(select);

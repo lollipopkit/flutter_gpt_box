@@ -3,15 +3,27 @@ import 'package:dio/dio.dart';
 import 'package:gpt_box/data/res/openai.dart';
 
 abstract final class ApiBalance {
-  static const _balance = '...';
+  static const _balance = ApiBalanceState(loading: true);
   static final balance = _balance.vn;
 
   static Future<void> refresh() async {
     balance.value = _balance;
     final provider = ApiBalanceProvider.fromEndpoint(OpenAICfg.current.url);
     final newBalance = await provider?.refresh();
-    if (newBalance != null) balance.value = newBalance;
+    if (newBalance != null) {
+      balance.value = ApiBalanceState(loading: false, state: newBalance);
+    }
   }
+}
+
+final class ApiBalanceState {
+  final bool loading;
+  final String state;
+
+  const ApiBalanceState({
+    required this.loading,
+    this.state = '...',
+  });
 }
 
 enum ApiBalanceProvider {
@@ -26,6 +38,7 @@ enum ApiBalanceProvider {
       'https://api.openai.com' => null,
       _ when value.startsWith('https://api.deepseek.com') => deepseek,
       _ when value.contains('chatanywhere') => chatanywhere,
+
       /// TODO
       /// Change it to [oneapi] after correctly impl the [_refreshOneapi]
       _ => null,
