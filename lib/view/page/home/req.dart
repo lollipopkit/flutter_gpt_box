@@ -112,6 +112,7 @@ Future<void> _onCreateText(
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
   _chatRN.notify();
+  _loadingChatIds.add(chatId);
   _autoScroll(chatId);
 
   final useTools = OpenAICfg.canUseToolNow;
@@ -217,6 +218,7 @@ Future<void> _onCreateText(
           profileId: config.id,
         );
         _onStopStreamSub(chatId);
+        _loadingChatIds.remove(chatId);
         _loadingChatIds.remove(assistReply.id);
         _loadingChatIdRN.notify();
         // Wait for db to store the chat
@@ -226,6 +228,7 @@ Future<void> _onCreateText(
     );
   } catch (e, s) {
     _onErr(e, s, chatId, 'Listen text stream');
+    _loadingChatIds.remove(chatId);
   }
 }
 

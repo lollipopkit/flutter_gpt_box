@@ -471,12 +471,13 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
 
 void _autoScroll(String chatId) {
   if (Stores.setting.scrollBottom.fetch()) {
-    // Only scroll to bottom when current chat is the working chat
-    final isWorking = chatId == _curChatId;
-    final isSubscribed = _loadingChatIds.contains(chatId);
-    if (isWorking && isSubscribed) {
-      _scrollBottom();
-    }
+    Funcs.throttle(() {
+      // Only scroll to bottom when current chat is the working chat
+      final isCurrentChat = chatId == _curChatId;
+      if (isCurrentChat) {
+        _scrollBottom();
+      }
+    }, id: 'autoScroll', duration: 100);
   }
 }
 
