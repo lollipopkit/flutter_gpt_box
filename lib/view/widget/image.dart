@@ -39,9 +39,10 @@ class _ImageCardState extends State<ImageCard> {
     provider = (switch (imageUrl) {
       _ when imageUrl.startsWith('http') =>
         ExtendedNetworkImageProvider(imageUrl, cache: true),
-      _ when imageUrl.startsWith('assets') => ExtendedAssetImageProvider(imageUrl),
+      _ when imageUrl.startsWith('assets') =>
+        ExtendedAssetImageProvider(imageUrl),
       _ => ExtendedFileImageProvider(File(imageUrl)),
-    })as ImageProvider;
+    }) as ImageProvider;
   }
 
   @override
@@ -65,7 +66,7 @@ class _ImageCardState extends State<ImageCard> {
             );
             return;
           }
-          
+
           final ret = await Routes.image.go(
             context,
             args: ImagePageArgs(

@@ -66,7 +66,15 @@ class _ToolPageState extends State<ToolPage> {
       leading: const Icon(Bootstrap.regex),
       title: Text(l10n.regExp),
       subtitle: Text(l10n.modelRegExpTip, style: UIs.textGrey),
-      trailing: listenable.listenVal((val) => Text(val, style: UIs.textGrey)),
+      trailing: SizedBox(
+        width: 60,
+        child: listenable.listenVal((val) => Text(
+              val,
+              style: UIs.textGrey,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            )),
+      ),
       onTap: () {
         final ctrl = TextEditingController(text: listenable.value);
         void onSave(String v) {

@@ -188,7 +188,6 @@ class _ChatPageState extends State<_ChatPage>
     // && Stores.setting.replay.fetch()
     final replayEnabled = chatItem.role.isUser;
 
-
     return [
       Btn(
         onTap: () => _MarkdownCopyPage.go(context, chatItem),

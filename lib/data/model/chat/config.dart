@@ -69,7 +69,7 @@ final class ChatConfig {
 
   String get displayName => switch (id) {
         defaultId when name.isEmpty => l10n.defaulT,
-        _  => name,
+        _ => name,
       };
 
   void save() => Stores.config.put(this);
