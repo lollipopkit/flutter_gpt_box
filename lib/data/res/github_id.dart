@@ -1,10 +1,13 @@
 abstract final class GithubId {
+  /// Sorted by name
   static const participants = {
-    'luoxiashen',
-    'SeaHI-Robot',
-    'Http-200',
-    'bxoooooo',
     'Annalasu',
+    'bxoooooo',
+    'CHEN1016',
+    'Http-200',
+    'luoxiashen',
+    'Mgrsc',
+    'SeaHI-Robot',
   };
 
   static const contributors = {

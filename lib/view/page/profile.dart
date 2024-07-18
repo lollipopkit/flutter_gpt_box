@@ -5,6 +5,7 @@ import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 final class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, Never? args});
@@ -69,10 +70,9 @@ final class _ProfilePageState extends State<ProfilePage> {
           trailing: val.loading
               ? UIs.centerSizedLoadingSmall
               : IconButton(
-                  onPressed: () {
-                    ApiBalance.refresh();
-                  },
-                  icon: const Icon(Icons.refresh)),
+                  onPressed: () => ApiBalance.refresh(),
+                  icon: const Icon(Icons.refresh),
+                ),
         ).cardx;
       },
     );
@@ -113,34 +113,15 @@ final class _ProfilePageState extends State<ProfilePage> {
     return ListTile(
       leading: const Icon(Icons.switch_account),
       title: Text(l10n.profile),
-      subtitle: Text(
-        '${cfg.displayName}, ${l10n.clickSwitch}',
-        style: UIs.textGrey,
-      ),
-      onTap: () async {
-        final vals = Stores.config.box
-            .toJson<ChatConfig>(includeInternal: false)
-            .values
-            .toList();
-        final newCfg = await context.showPickSingleDialog(
-          items: vals,
-          initial: cfg,
-          title: l10n.profile,
-          name: (p0) => p0.displayName,
-        );
-
-        if (newCfg == null) return;
-        OpenAICfg.setTo(newCfg);
-        _cfgRN.notify();
-      },
+      subtitle: Text(cfg.displayName, style: UIs.textGrey),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Delete
           if (cfg.id != ChatConfig.defaultId)
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
+            IconBtn(
+              icon: Icons.delete,
+              onTap: () {
                 if (cfg.id == ChatConfig.defaultId) return;
                 context.showRoundDialog(
                   title: l10n.attention,
@@ -161,9 +142,9 @@ final class _ProfilePageState extends State<ProfilePage> {
               },
             ),
           // Rename
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
+          IconBtn(
+            icon: Icons.edit,
+            onTap: () {
               final ctrl = TextEditingController(text: cfg.name);
               context.showRoundDialog(
                 title: l10n.edit,
@@ -180,6 +161,26 @@ final class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
               );
+            },
+          ),
+          // Switch
+          IconBtn(
+            icon: OctIcons.arrow_switch,
+            onTap: () async {
+              final vals = Stores.config.box
+                  .toJson<ChatConfig>(includeInternal: false)
+                  .values
+                  .toList();
+              final newCfg = await context.showPickSingleDialog(
+                items: vals,
+                initial: cfg,
+                title: l10n.profile,
+                name: (p0) => p0.displayName,
+              );
+
+              if (newCfg == null) return;
+              OpenAICfg.setTo(newCfg);
+              _cfgRN.notify();
             },
           ),
         ],
