@@ -67,7 +67,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         return ListTile(
           leading: const Icon(Icons.account_balance_wallet),
           title: Text(l10n.balance),
-          subtitle: Text(val.state, style: UIs.text13Grey),
+          subtitle: Text(val.state ?? l10n.unsupported, style: UIs.text13Grey),
           trailing: val.loading
               ? UIs.centerSizedLoadingSmall
               : IconButton(
