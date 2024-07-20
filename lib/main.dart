@@ -41,12 +41,11 @@ void _runInZone(void Function() body) {
 }
 
 Future<void> _initApp() async {
+  await Paths.init(Build.name, bakName: Miscs.bakFileName);
+  await _initDb();
   WidgetsFlutterBinding.ensureInitialized();
 
   _setupLogger();
-  await Paths.init(Build.name, bakName: Miscs.bakFileName);
-
-  await _initDb();
   _initAppComponents();
 }
 
