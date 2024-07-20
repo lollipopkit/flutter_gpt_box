@@ -44,8 +44,12 @@ abstract final class OpenAICfg {
   static bool get canUseToolNow => canUseTool(current.model);
 
   static Future<bool> updateModels({bool force = false}) async {
+    if (current.url.startsWith('https://api.openai.com') &&
+        current.key.isEmpty) {
+      return false;
+    }
     try {
-      models.value = await ModelsCacher.fetch(vn.value.id, refresh: force);
+      models.value = await ModelsCacher.fetch(current.id, refresh: force);
       return true;
     } catch (e) {
       Loggers.app.warning('Failed to update models', e);
