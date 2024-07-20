@@ -6,6 +6,7 @@ import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:shortid/shortid.dart';
 
 final class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, Never? args});
@@ -179,6 +180,25 @@ final class _ProfilePageState extends State<ProfilePage> {
               );
 
               if (newCfg == null) return;
+              OpenAICfg.setTo(newCfg);
+              _cfgRN.notify();
+            },
+          ),
+          IconBtn(
+            icon: Icons.add,
+            onTap: () async {
+              final ctrl = TextEditingController();
+              final ok = await context.showRoundDialog(
+                title: l10n.add,
+                child: Input(controller: ctrl, label: l10n.name),
+                actions: Btns.oks(onTap: () => context.pop(true)),
+              );
+              if (ok != true) return;
+              final newCfg = OpenAICfg.current.copyWith(
+                id: shortid.generate(),
+                name: ctrl.text,
+              );
+              newCfg.save();
               OpenAICfg.setTo(newCfg);
               _cfgRN.notify();
             },

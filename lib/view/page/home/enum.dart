@@ -52,7 +52,7 @@ enum HomePageEnum {
             items: profiles,
             name: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
             initial: OpenAICfg.current,
-            actions: profiles.length == 1 ? [addBtn] : null,
+            actions: [addBtn],
           );
           if (select == null) return;
           OpenAICfg.setTo(select);
