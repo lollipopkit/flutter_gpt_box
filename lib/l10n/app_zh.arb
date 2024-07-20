@@ -134,6 +134,7 @@
   "toolHttpReqHelp": "将会与从网络获取数据，本次将会联系 {host}",
   "toolHttpReqName": "Http 请求",
   "tts": "文字转语音",
+  "unsupported": "不支持",
   "untitled": "未命名",
   "update": "更新",
   "usage": "用法",

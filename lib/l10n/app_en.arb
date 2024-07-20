@@ -134,6 +134,7 @@
   "toolHttpReqHelp": "It will fetch data from network. In this time, it will communicate with {host}.",
   "toolHttpReqName": "Http Request",
   "tts": "TTS",
+  "unsupported": "Unsupported",
   "untitled": "Untitled",
   "update": "Update",
   "usage": "Usage",
