@@ -10,19 +10,17 @@ abstract final class ApiBalance {
     balance.value = _balance;
     final provider = ApiBalanceProvider.fromEndpoint(OpenAICfg.current.url);
     final newBalance = await provider?.refresh();
-    if (newBalance != null) {
-      balance.value = ApiBalanceState(loading: false, state: newBalance);
-    }
+    balance.value = ApiBalanceState(loading: false, state: newBalance);
   }
 }
 
 final class ApiBalanceState {
   final bool loading;
-  final String state;
+  final String? state;
 
   const ApiBalanceState({
     required this.loading,
-    this.state = '...',
+    this.state,
   });
 }
 
@@ -32,12 +30,14 @@ enum ApiBalanceProvider {
   oneapi,
   ;
 
+  static const chatanywhereDomains = ['https://'];
+
   static ApiBalanceProvider? fromEndpoint(String value) {
     return switch (value) {
       // No balance api for openai
       'https://api.openai.com' => null,
       _ when value.startsWith('https://api.deepseek.com') => deepseek,
-      _ when value.contains('chatanywhere') => chatanywhere,
+      _ when chatanywhereDomains.contains(value) => chatanywhere,
 
       /// TODO
       /// Change it to [oneapi] after correctly impl the [_refreshOneapi]
