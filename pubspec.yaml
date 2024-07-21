@@ -33,12 +33,16 @@ dependencies:
       ref: master
       url: https://github.com/lollipopkit/highlight.dart
       path: flutter_highlight
-    # path: ../highlight.dart/flutter_highlight
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.73
-    # path: ../fl_lib
+      ref: v1.0.76
+
+dependency_overrides:
+  # fl_lib:
+  #   path: ../fl_lib
+  # flutter_highlight:
+  #   path: ../highlight.dart/flutter_highlight
 
 dev_dependencies:
   flutter_test:
