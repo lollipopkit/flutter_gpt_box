@@ -37,11 +37,11 @@ class MyApp extends StatelessWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           localeListResolutionCallback: LocaleUtil.resolve,
           themeMode: themeMode,
-          theme: ThemeData(colorSchemeSeed: UIs.colorSeed),
+          theme: ThemeData(colorSchemeSeed: UIs.colorSeed).fixWindowsFont,
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             colorSchemeSeed: UIs.colorSeed,
-          ).toAmoled,
+          ).toAmoled.fixWindowsFont,
           home: Builder(
             builder: (context) {
               final l10n_ = AppLocalizations.of(context);

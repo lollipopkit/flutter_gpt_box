@@ -17,19 +17,33 @@ Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
   ChatHistory workingChat,
 ) {
   final config = OpenAICfg.current;
+  final prompt = config.prompt.isNotEmpty
+      ? ChatHistoryItem.single(
+          role: ChatRole.system,
+          raw: config.prompt,
+        ).toOpenAI
+      : null;
+  if (workingChat.settings?.headTailMode == true) {
+    final first = workingChat.items.firstOrNull?.toOpenAI;
+    return [
+      if (prompt != null) prompt,
+      if (first != null) first,
+    ];
+  }
+
   var count = 0;
-  return workingChat.items.reversed
+  final msgs = workingChat.items.reversed
       .takeWhile((e) {
         // HISTORY_LEN = LEN - 1 (1: user's question)
-        if (!e.role.isSystem && config.historyLen > count) {
-          count++;
-          return true;
-        }
-        return false;
+        if (config.historyLen > count) return false;
+        if (!e.role.isSystem) return false;
+        count++;
+        return true;
       })
       .map((e) => e.toOpenAI)
-      .toList()
-      .reversed;
+      .toList();
+    if (prompt != null) msgs.add(prompt);
+    return msgs.reversed;
 }
 
 /// Auto select model and send the request
@@ -80,14 +94,7 @@ Future<void> _onCreateText(
     return;
   }
   final config = OpenAICfg.current;
-  final questionContent = switch ((
-    config.prompt,
-    workingChat.items.length,
-  )) {
-    ('', _) => _inputCtrl.text,
-    (final prompt, 0) => '$prompt\n${_inputCtrl.text}',
-    _ => _inputCtrl.text,
-  };
+  final questionContent = _inputCtrl.text;
 
   final (imgUrl, imgPath) = await ImageUtil.normalizeUrl(_filePicked.value);
   final hasImg = imgPath != null || imgUrl != null;
@@ -211,12 +218,7 @@ Future<void> _onCreateText(
         _onErr(e, s, chatId, 'Listen text stream');
       },
       onDone: () async {
-        _storeChat(
-          chatId,
-          type: ChatType.text,
-          model: config.model,
-          profileId: config.id,
-        );
+        _storeChat(chatId);
         _onStopStreamSub(chatId);
         _loadingChatIds.remove(chatId);
         _loadingChatIds.remove(assistReply.id);
@@ -279,12 +281,7 @@ Future<void> _onCreateTTS(BuildContext context, String chatId) async {
     replyContent.raw = file.path;
     completer.complete();
     _chatItemRNMap[assistReply.id]?.notify();
-    _storeChat(
-      chatId,
-      type: ChatType.audio,
-      model: config.speechModel,
-      profileId: config.id,
-    );
+    _storeChat(chatId);
   } catch (e, s) {
     _onErr(e, s, chatId, 'Audio create speech');
   }
@@ -331,12 +328,7 @@ Future<void> _onCreateImg(BuildContext context, String chatId) async {
       role: ChatRole.assist,
       content: imgs.map((e) => ChatContent.image(e)).toList(),
     ));
-    _storeChat(
-      chatId,
-      type: ChatType.img,
-      model: cfg.model,
-      profileId: cfg.id,
-    );
+    _storeChat(chatId);
     _chatRN.notify();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Create image');
@@ -385,12 +377,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
       role: ChatRole.assist,
       content: imgs.map((e) => ChatContent.image(e)).toList(),
     ));
-    _storeChat(
-      chatId,
-      type: ChatType.img,
-      model: cfg.imgModel,
-      profileId: cfg.id,
-    );
+    _storeChat(chatId);
     _chatRN.notify();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Edit image');
@@ -437,12 +424,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
       type: ChatContentType.text,
       raw: text,
     ));
-    _storeChat(
-      chatId,
-      type: ChatType.audio,
-      model: cfg.speechModel,
-      profileId: cfg.id,
-    );
+    _storeChat(chatId);
     _chatRN.notify();
   } catch (e, s) {
     _onErr(e, s, chatId, 'Audio to Text');
@@ -487,32 +469,28 @@ Future<void> _genChatTitle(
         ).toOpenAI,
       ],
     );
-    entity.name = null;
 
+    String title = '';
     stream.listen(
       (eve) {
-        final title = eve.choices.firstOrNull?.delta.content?.firstOrNull?.text;
-        if (title == null) return;
+        final t = eve.choices.firstOrNull?.delta.content?.firstOrNull?.text;
+        if (t == null) return;
 
         /// These punctions which not affect the meaning of the title will be removed
-        entity.name = (entity.name ?? '') + title;
+        title += t;
         _historyRNMap[chatId]?.notify();
         if (chatId == _curChatId) _appbarTitleRN.notify();
       },
       onError: (e, s) => onErr(e, s),
       onDone: () {
-        var title = entity.name;
-        if (title == null) return;
-
         title = ChatTitleUtil.prettify(title);
 
         if (title.isNotEmpty) {
-          entity.name = title;
+          final ne = entity.copyWith(name: title)..save();
+          _allHistories[chatId] = ne;
+          _historyRNMap[chatId]?.notify();
+          if (chatId == _curChatId) _appbarTitleRN.notify();
         }
-
-        _historyRNMap[chatId]?.notify();
-        if (chatId == _curChatId) _appbarTitleRN.notify();
-        _storeChat(chatId);
       },
     );
   } catch (e, s) {
