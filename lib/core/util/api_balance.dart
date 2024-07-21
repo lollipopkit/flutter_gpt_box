@@ -30,14 +30,18 @@ enum ApiBalanceProvider {
   oneapi,
   ;
 
-  static const chatanywhereDomains = ['https://'];
+  /// ChatAnyWhere domains
+  static const cawDomains = [
+    'https://api.chatanywhere.tech, https://api.chatanywhere.com',
+    'https://api.chatanywhere.com.cn',
+  ];
 
   static ApiBalanceProvider? fromEndpoint(String value) {
     return switch (value) {
       // No balance api for openai
       'https://api.openai.com' => null,
       _ when value.startsWith('https://api.deepseek.com') => deepseek,
-      _ when chatanywhereDomains.contains(value) => chatanywhere,
+      _ when value.startsWith('https://api.chatanywhere.') => chatanywhere,
 
       /// TODO
       /// Change it to [oneapi] after correctly impl the [_refreshOneapi]
@@ -118,7 +122,7 @@ enum ApiBalanceProvider {
     final resp = await myDio.get(
       '${OpenAICfg.current.url}/api/user/self',
       options: Options(headers: {
-        'Authorization': 'Bearer ${OpenAICfg.current.key}',
+        'Authorization': 'Bearer ${OpenAICfg.current.key}'
       }),
     );
     final data = resp.data as Map<String, dynamic>;
@@ -136,18 +140,15 @@ enum ApiBalanceProvider {
   // }
   Future<String> _refreshChatanywhere() async {
     final endpoint = '${OpenAICfg.current.url}/v1/query/balance';
-    final resp = await myDio.get(
+    final resp = await myDio.post(
       endpoint,
-      options: Options(headers: {
-        'Authorization': OpenAICfg.current.key,
-      }),
+      options: Options(headers: {'Authorization': OpenAICfg.current.key}),
     );
     final data = resp.data as Map<String, dynamic>;
     final total = data['balanceTotal'] as num? ?? 0;
     final used = data['balanceUsed'] as num? ?? 0;
     final usedFixed = used.toStringAsFixed(2);
     if (total == 0) return '$usedFixed of 0';
-    final totalFixed = total.toStringAsFixed(2);
-    return '$usedFixed of $totalFixed';
+    return '$usedFixed / $total';
   }
 }
