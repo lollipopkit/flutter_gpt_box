@@ -83,12 +83,14 @@ final class _ResPageState extends State<ResPage> with AfterLayoutMixin {
     final entity = _filesList[idx];
     final child = switch (_resType.value) {
       _ResType.audio => AudioCard(
+          key: ValueKey(entity.path),
           id: entity.path.split('/').last,
           path: entity.path,
           buildSlider: false,
           onDelete: () => _onAudioDelete(idx),
         ),
       _ResType.image => ImageCard(
+          key: ValueKey(entity.path),
           imageUrl: entity.path,
           heroTag: entity.path,
           onRet: (p0) => _onImageRet(p0, entity, idx),
@@ -143,12 +145,14 @@ final class _ResPageState extends State<ResPage> with AfterLayoutMixin {
       // Wait for hero anime
       await Future.delayed(_dur + Durations.medium1);
       _listKey.currentState?.removeItem(
-        _filesList.indexOf(entity),
-        (_, anime) => _buildTile(idx, anime),
+        idx,
+        (_, anime) {
+          return _buildTile(idx, anime);
+        },
         duration: _dur,
       );
       await Future.delayed(_dur);
-      _filesList.remove(entity);
+      _filesList.removeAt(idx);
     }
   }
 
