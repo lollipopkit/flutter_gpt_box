@@ -1,24 +1,27 @@
 part of 'home.dart';
 
-class _HomeBottom extends StatelessWidget {
+class _HomeBottom extends StatefulWidget {
   final bool isHome;
 
   const _HomeBottom({required this.isHome});
 
   @override
+  State<_HomeBottom> createState() => _HomeBottomState();
+}
+
+final class _HomeBottomState extends State<_HomeBottom> {
+  @override
   Widget build(BuildContext context) {
     final child = ListenBuilder(
       listenable: _homeBottomRN,
       builder: () {
-        final isDark = RNodes.dark.value;
         return Container(
           padding: isDesktop
               ? const EdgeInsets.only(left: 11, right: 11, top: 5, bottom: 17)
               : const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
-            color: UIs.bgColor.fromBool(isDark),
-            boxShadow: isDark ? _boxShadowDark : _boxShadow,
+            boxShadow: RNodes.dark.value ? _boxShadow : _boxShadowDark,
           ),
           child: AnimatedPadding(
             padding: EdgeInsets.only(bottom: _media?.viewInsets.bottom ?? 0),
@@ -55,7 +58,8 @@ class _HomeBottom extends StatelessWidget {
                       icon: const Icon(Icons.delete, size: 19),
                       tooltip: l10n.delete,
                     ),
-                    _buildFileBtn(context),
+                    _buildFileBtn(),
+                    _buildSettingsBtn(),
                     const Spacer(),
                     // _buildTokenCount(),
                     UIs.width7,
@@ -63,7 +67,7 @@ class _HomeBottom extends StatelessWidget {
                     UIs.width7,
                   ],
                 ),
-                _buildTextField(context),
+                _buildTextField(),
                 SizedBox(height: _media?.padding.bottom),
               ],
             ),
@@ -75,13 +79,21 @@ class _HomeBottom extends StatelessWidget {
     return ValBuilder(
       listenable: _isWide,
       builder: (isWide) {
-        if (isWide != isHome) return child;
+        if (isWide != widget.isHome) return child;
         return UIs.placeholder;
       },
     );
   }
 
-  Widget _buildFileBtn(BuildContext context) {
+  Widget _buildSettingsBtn() {
+    return IconButton(
+      onPressed: _onTapSetting,
+      icon: const Icon(Icons.settings, size: 19),
+      tooltip: l10n.settings,
+    );
+  }
+
+  Widget _buildFileBtn() {
     return ListenBuilder(
       listenable: _filePicked,
       builder: () {
@@ -108,7 +120,7 @@ class _HomeBottom extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(BuildContext context) {
+  Widget _buildTextField() {
     return Input(
       controller: _inputCtrl,
       label: l10n.message,
@@ -226,6 +238,86 @@ class _HomeBottom extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       child: child,
+    );
+  }
+
+  void _onTapSetting() async {
+    final chat = _curChat;
+    if (chat == null) {
+      context.showSnackBar(l10n.noChat);
+      return;
+    }
+    context.showRoundDialog(
+      title: l10n.settings,
+      child: _ChatSettings(chat),
+      actions: Btns.oks(onTap: () => context.pop()),
+    );
+  }
+}
+
+final class _ChatSettings extends StatefulWidget {
+  final ChatHistory chat;
+
+  const _ChatSettings(this.chat);
+
+  @override
+  State<_ChatSettings> createState() => _ChatSettingsState();
+}
+
+final class _ChatSettingsState extends State<_ChatSettings> {
+  late final settings = (widget.chat.settings ?? const ChatSettings()).vn;
+
+  @override
+  void initState() {
+    super.initState();
+    // After creating a new chat in UI, the chat is not saved to DB yet
+    widget.chat.save();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildHeadTailMode(),
+      ].map((e) => e.cardx).toList(),
+    );
+  }
+
+  void _save() {
+    final newOne = widget.chat.copyWith(
+      settings: settings.value,
+    );
+    newOne.save();
+    _allHistories[_curChatId] = newOne;
+  }
+
+  Widget _buildHeadTailMode() {
+    return ListTile(
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(l10n.headTailMode),
+          IconBtn(
+            onTap: () => context.showRoundDialog(
+              title: l10n.help,
+              child: SimpleMarkdown(data: l10n.headTailModeTip),
+              actions: Btns.oks(onTap: () => context.pop()),
+            ),
+            icon: Icons.help,
+          )
+        ],
+      ),
+      trailing: settings.listenVal((val) {
+        return Switch(
+          value: val.headTailMode,
+          onChanged: (_) {
+            settings.value =
+                settings.value.copyWith(headTailMode: !val.headTailMode);
+            _save();
+          },
+        );
+      }),
     );
   }
 }

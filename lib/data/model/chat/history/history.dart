@@ -1,14 +1,13 @@
 import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shortid/shortid.dart';
 
-part 'hive.dart';
+part 'history.g.dart';
 
 @HiveType(typeId: 5)
 final class ChatHistory {
@@ -17,36 +16,22 @@ final class ChatHistory {
   @HiveField(1)
   final List<ChatHistoryItem> items;
   @HiveField(2)
-  String? name;
-
-  /// The type of this chat history.
-  @HiveField(3)
-  ChatType? type;
-
-  /// The model used for this chat history.
-  /// If this is not null, skip setting this field again.
-  @HiveField(4)
-  String? model;
-
-  /// Use `pfId` as json key to decrease backup size.
-  @HiveField(5)
-  String? profileId;
+  final String? name;
+  // Fields with id 3/4/5 are deleted
+  @HiveField(6)
+  final ChatSettings? settings;
 
   ChatHistory({
     required this.items,
     required this.id,
     this.name,
-    this.type,
-    this.model,
-    this.profileId,
+    this.settings,
   });
 
   ChatHistory.noid({
     required this.items,
     this.name,
-    this.type,
-    this.model,
-    this.profileId,
+    this.settings,
   }) : id = shortid.generate();
 
   static ChatHistory get empty => ChatHistory.noid(items: []);
@@ -66,15 +51,8 @@ final class ChatHistory {
       'name': name,
       'items': items.map((e) => e.toJson()).toList(),
     };
-    final type = this.type?.index;
-    if (type != null) {
-      map['type'] = type;
-    }
-    if (model != null) {
-      map['model'] = model;
-    }
-    if (profileId != null) {
-      map['pfId'] = profileId;
+    if (settings != null) {
+      map['settings'] = settings;
     }
     return map;
   }
@@ -86,9 +64,8 @@ final class ChatHistory {
       items: (json['items'] as List)
           .map((e) => ChatHistoryItem.fromJson(e.cast<String, dynamic>()))
           .toList(),
-      type: ChatType.fromIdx(json['type'] as int?),
-      model: json['model'] as String?,
-      profileId: json['pfId'] as String?,
+      settings:
+          ChatSettings.fromJson(json['settings']?.cast<String, dynamic>()),
     );
   }
 
@@ -109,6 +86,23 @@ final class ChatHistory {
       items.first.role.isSystem &&
       items.first.content.length == 1 &&
       items.first.content.first.raw.contains(Urls.repoIssue);
+
+  ChatHistory copyWith({
+    List<ChatHistoryItem>? items,
+    String? name,
+    ChatSettings? settings,
+  }) {
+    return ChatHistory(
+      id: id,
+      items: items ?? this.items,
+      name: name ?? this.name,
+      settings: settings ?? this.settings,
+    );
+  }
+
+  void save() {
+    Stores.history.put(this);
+  }
 }
 
 @HiveType(typeId: 0)
@@ -306,4 +300,37 @@ enum ChatRole {
         'assistant' => assist,
         _ => values.firstWhereOrNull((p0) => p0.name == val),
       };
+}
+
+@HiveType(typeId: 8)
+final class ChatSettings {
+  @HiveField(0)
+  final bool headTailMode;
+
+  const ChatSettings({
+    this.headTailMode = false,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'headTailMode': headTailMode,
+    };
+  }
+
+  static ChatSettings fromJson(Map<String, dynamic> json) {
+    return ChatSettings(
+      headTailMode: json['headTailMode'] as bool,
+    );
+  }
+
+  ChatSettings copyWith({
+    bool? headTailMode,
+  }) {
+    return ChatSettings(
+      headTailMode: headTailMode ?? this.headTailMode,
+    );
+  }
+
+  @override
+  String toString() => 'ChatSettings${toJson()}';
 }

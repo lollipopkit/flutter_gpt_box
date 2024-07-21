@@ -60,6 +60,7 @@ Future<void> _initDb() async {
   Hive.registerAdapter(ChatHistoryAdapter()); // 5
   Hive.registerAdapter(ChatConfigAdapter()); // 6
   Hive.registerAdapter(ChatTypeAdapter()); // 7
+  Hive.registerAdapter(ChatSettingsAdapter()); // 8
 
   await PrefStore.init();
   await Stores.init();

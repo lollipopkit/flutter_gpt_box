@@ -140,8 +140,6 @@ enum ApiBalanceProvider {
     final data = resp.data as Map<String, dynamic>;
     final total = data['balanceTotal'] as num? ?? 0;
     final used = data['balanceUsed'] as num? ?? 0;
-    final usedFixed = used.toStringAsFixed(2);
-    if (total == 0) return '$usedFixed of 0';
-    return '$usedFixed / $total';
+    return (total - used).toStringAsFixed(2);
   }
 }

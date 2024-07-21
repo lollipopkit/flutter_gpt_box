@@ -76,12 +76,7 @@ void _switchNextChat() {
   }
 }
 
-void _storeChat(
-  String chatId, {
-  ChatType? type,
-  String? model,
-  String? profileId,
-}) {
+void _storeChat(String chatId) {
   final chat = _allHistories[chatId];
   if (chat == null) {
     final msg = 'Store Chat($chatId) not found';
@@ -89,12 +84,7 @@ void _storeChat(
     return;
   }
 
-  /// Only set type and model when it is null
-  chat.type ??= type;
-  chat.model ??= model;
-  chat.profileId ??= profileId;
-
-  Stores.history.put(chat);
+  chat.save();
 }
 
 ChatHistory _newChat() {
@@ -189,7 +179,8 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
     actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
   );
   if (title == null || title.isEmpty) return;
-  entity.name = title;
+  final ne = entity.copyWith(name: title)..save();
+  _allHistories[chatId] = ne;
   _historyRNMap[chatId]?.notify();
   _storeChat(chatId);
   _appbarTitleRN.notify();
