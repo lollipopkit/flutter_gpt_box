@@ -30,12 +30,6 @@ enum ApiBalanceProvider {
   oneapi,
   ;
 
-  /// ChatAnyWhere domains
-  static const cawDomains = [
-    'https://api.chatanywhere.tech, https://api.chatanywhere.com',
-    'https://api.chatanywhere.com.cn',
-  ];
-
   static ApiBalanceProvider? fromEndpoint(String value) {
     return switch (value) {
       // No balance api for openai
@@ -121,9 +115,8 @@ enum ApiBalanceProvider {
   Future<String> _refreshOneapi() async {
     final resp = await myDio.get(
       '${OpenAICfg.current.url}/api/user/self',
-      options: Options(headers: {
-        'Authorization': 'Bearer ${OpenAICfg.current.key}'
-      }),
+      options: Options(
+          headers: {'Authorization': 'Bearer ${OpenAICfg.current.key}'}),
     );
     final data = resp.data as Map<String, dynamic>;
     final quota = data['data']['quota'] as int? ?? 0;
