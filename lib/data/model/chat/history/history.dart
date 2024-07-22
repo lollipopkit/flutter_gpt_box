@@ -304,30 +304,37 @@ enum ChatRole {
 
 @HiveType(typeId: 8)
 final class ChatSettings {
-  @HiveField(0)
+  @HiveField(0, defaultValue: false)
   final bool headTailMode;
+  @HiveField(1, defaultValue: true)
+  final bool useTools;
 
   const ChatSettings({
     this.headTailMode = false,
+    this.useTools = true,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'headTailMode': headTailMode,
+      'useTools': useTools,
     };
   }
 
   static ChatSettings fromJson(Map<String, dynamic> json) {
     return ChatSettings(
       headTailMode: json['headTailMode'] as bool,
+      useTools: json['useTools'] as bool,
     );
   }
 
   ChatSettings copyWith({
     bool? headTailMode,
+    bool? useTools,
   }) {
     return ChatSettings(
       headTailMode: headTailMode ?? this.headTailMode,
+      useTools: useTools ?? this.useTools,
     );
   }
 

@@ -143,16 +143,19 @@ class ChatSettingsAdapter extends TypeAdapter<ChatSettings> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ChatSettings(
-      headTailMode: fields[0] as bool,
+      headTailMode: fields[0] == null ? false : fields[0] as bool,
+      useTools: fields[1] == null ? true : fields[1] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatSettings obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.headTailMode);
+      ..write(obj.headTailMode)
+      ..writeByte(1)
+      ..write(obj.useTools);
   }
 
   @override
