@@ -139,8 +139,12 @@ class _ChatPageState extends State<_ChatPage>
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
 
     final title = switch (chatItem.role) {
-      ChatRole.user => ChatRoleTitle(role: chatItem.role, loading: false),
-      _ => ListenBuilder(
+      // User & System msgs have no loading status
+      ChatRole.user || ChatRole.system => ChatRoleTitle(
+          role: chatItem.role,
+          loading: false,
+        ),
+      ChatRole.tool || ChatRole.assist => ListenBuilder(
           listenable: _loadingChatIdRN,
           builder: () {
             final isWorking = _loadingChatIds.contains(chatItem.id);
