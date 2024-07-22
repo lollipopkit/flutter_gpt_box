@@ -149,7 +149,11 @@ final class _ProfilePageState extends State<ProfilePage> {
               final ctrl = TextEditingController(text: cfg.name);
               context.showRoundDialog(
                 title: l10n.edit,
-                child: Input(controller: ctrl, label: l10n.name),
+                child: Input(
+                  controller: ctrl,
+                  label: l10n.name,
+                  autoFocus: true,
+                ),
                 actions: Btns.oks(
                   onTap: () {
                     final name = ctrl.text;
@@ -190,7 +194,11 @@ final class _ProfilePageState extends State<ProfilePage> {
               final ctrl = TextEditingController();
               final ok = await context.showRoundDialog(
                 title: l10n.add,
-                child: Input(controller: ctrl, label: l10n.name),
+                child: Input(
+                  controller: ctrl,
+                  label: l10n.name,
+                  autoFocus: true,
+                ),
                 actions: Btns.oks(onTap: () => context.pop(true)),
               );
               if (ok != true) return;
@@ -240,6 +248,7 @@ final class _ProfilePageState extends State<ProfilePage> {
             controller: ctrl,
             hint: 'sk-xxx',
             maxLines: 3,
+            autoFocus: true,
           ),
           actions: Btns.oks(
             onTap: () => context.pop(ctrl.text),
@@ -270,6 +279,7 @@ final class _ProfilePageState extends State<ProfilePage> {
             controller: ctrl,
             hint: 'https://api.openai.com',
             maxLines: 3,
+            autoFocus: true,
           ),
           actions: Btns.oks(
             onTap: () => context.pop(ctrl.text),
@@ -351,6 +361,7 @@ final class _ProfilePageState extends State<ProfilePage> {
               child: Input(
                 controller: ctrl,
                 hint: kChatModel,
+                autoFocus: true,
                 onSubmitted: (s) => onSave(s),
               ),
               actions: Btns.oks(onTap: () => onSave(ctrl.text)),
@@ -454,6 +465,7 @@ final class _ProfilePageState extends State<ProfilePage> {
           child: Input(
             controller: ctrl,
             maxLines: 3,
+            autoFocus: true,
           ),
           actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
         );
@@ -480,6 +492,7 @@ final class _ProfilePageState extends State<ProfilePage> {
           child: Input(
             controller: ctrl,
             hint: '7',
+            autoFocus: true,
             type: TextInputType.number,
           ),
           actions: Btns.oks(

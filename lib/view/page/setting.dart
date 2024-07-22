@@ -139,6 +139,7 @@ class _SettingPageState extends State<SettingPage> {
                     controller: ctrl,
                     hint: '#8b2252',
                     icon: Icons.colorize,
+                    autoFocus: true,
                   ),
                   ColorPicker(
                     color: primaryColor,
@@ -405,6 +406,7 @@ class _SettingPageState extends State<SettingPage> {
             controller: ctrl,
             type: TextInputType.name,
             maxLength: 7,
+            autoFocus: true,
             onSubmitted: (s) => onSave(s),
           ),
           actions: Btns.oks(onTap: () => onSave(ctrl.text)),

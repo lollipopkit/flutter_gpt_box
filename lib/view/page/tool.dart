@@ -87,6 +87,7 @@ class _ToolPageState extends State<ToolPage> {
           child: Input(
             controller: ctrl,
             maxLines: 3,
+            autoFocus: true,
             onSubmitted: onSave,
           ),
           actions: Btns.oks(onTap: () => onSave(ctrl.text)),

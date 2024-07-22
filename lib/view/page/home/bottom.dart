@@ -296,6 +296,10 @@ final class _ChatSettingsState extends State<_ChatSettings> {
             settings.value = settings.value.copyWith(
               ignoreContextConstraint: !val.ignoreContextConstraint,
             );
+            if (settings.value.headTailMode &&
+                settings.value.ignoreContextConstraint) {
+              settings.value = settings.value.copyWith(headTailMode: false);
+            }
             _save();
           },
         );
@@ -340,6 +344,11 @@ final class _ChatSettingsState extends State<_ChatSettings> {
           onChanged: (_) {
             settings.value =
                 settings.value.copyWith(headTailMode: !val.headTailMode);
+            if (settings.value.headTailMode &&
+                settings.value.ignoreContextConstraint) {
+              settings.value =
+                  settings.value.copyWith(ignoreContextConstraint: false);
+            }
             _save();
           },
         );

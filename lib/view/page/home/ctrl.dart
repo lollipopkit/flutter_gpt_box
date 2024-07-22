@@ -417,7 +417,6 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
       minLines: 1,
       autoCorrect: true,
       autoFocus: true,
-      suggestion: true,
       action: TextInputAction.send,
       onSubmitted: (p0) {
         chatItem.content.clear();
