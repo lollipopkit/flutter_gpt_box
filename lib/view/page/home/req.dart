@@ -33,7 +33,7 @@ Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
           raw: config.prompt,
         ).toOpenAI
       : null;
-  
+
   // #101
   if (workingChat.settings?.headTailMode == true) {
     final first = workingChat.items.firstOrNull?.toOpenAI;

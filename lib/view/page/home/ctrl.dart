@@ -18,36 +18,6 @@ void _switchChat([String? id]) {
     Loggers.app.warning(msg);
     return;
   }
-
-  // final model = chat.model;
-  // final type = chat.type;
-  // final profileId = chat.profileId;
-  // if (model != null && type != null && profileId != null) {
-  //   final current = OpenAICfg.current;
-  //   final needSwitch = current.model != model || current.id != profileId;
-  //   if (!needSwitch) return;
-
-  //   final followModel = Stores.config.followModel.fetch();
-  //   if (followModel) {
-  //     final cfg = Stores.config.fetch(profileId);
-  //     if (cfg == null) {
-  //       final msg = 'Switch Chat($id) profile($profileId) not found';
-  //       Loggers.app.warning(msg);
-  //       return;
-  //     }
-
-  //     final newCfg = switch (type) {
-  //       ChatType.text => cfg.copyWith(model: model),
-  //       ChatType.img => cfg.copyWith(imgModel: model),
-  //       ChatType.audio => cfg.copyWith(speechModel: model),
-  //     };
-  //     OpenAICfg.setTo(newCfg);
-
-  //     if (type != _chatType.value) {
-  //       _chatType.value = type;
-  //     }
-  //   }
-  // }
 }
 
 void _switchPreviousChat() {

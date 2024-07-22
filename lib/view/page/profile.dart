@@ -194,9 +194,20 @@ final class _ProfilePageState extends State<ProfilePage> {
                 actions: Btns.oks(onTap: () => context.pop(true)),
               );
               if (ok != true) return;
+              final clipboardData = await Pfs.paste();
+              var (key, url) = ('', '');
+              if (clipboardData != null) {
+                if (clipboardData.startsWith('https://')) {
+                  url = clipboardData;
+                } else if (clipboardData.startsWith('sk-')) {
+                  key = clipboardData;
+                }
+              }
               final newCfg = OpenAICfg.current.copyWith(
                 id: shortid.generate(),
                 name: ctrl.text,
+                key: key,
+                url: url,
               );
               newCfg.save();
               OpenAICfg.setTo(newCfg);
