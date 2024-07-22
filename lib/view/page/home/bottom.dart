@@ -281,7 +281,25 @@ final class _ChatSettingsState extends State<_ChatSettings> {
       children: [
         _buildHeadTailMode(),
         _buildUseTools(),
+        _buildIgnoreCtxConstraint(),
       ].map((e) => e.cardx).toList(),
+    );
+  }
+
+  Widget _buildIgnoreCtxConstraint() {
+    return ListTile(
+      title: Text(l10n.ignoreContextConstraint),
+      trailing: settings.listenVal((val) {
+        return Switch(
+          value: val.ignoreContextConstraint,
+          onChanged: (_) {
+            settings.value = settings.value.copyWith(
+              ignoreContextConstraint: !val.ignoreContextConstraint,
+            );
+            _save();
+          },
+        );
+      }),
     );
   }
 
@@ -292,8 +310,7 @@ final class _ChatSettingsState extends State<_ChatSettings> {
         return Switch(
           value: val.useTools,
           onChanged: (_) {
-            settings.value =
-                settings.value.copyWith(useTools: !val.useTools);
+            settings.value = settings.value.copyWith(useTools: !val.useTools);
             _save();
           },
         );
