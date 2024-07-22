@@ -13,16 +13,28 @@ bool _validChatCfg(BuildContext context) {
   return true;
 }
 
+/// Assumption that context len = 3:
+/// - History len = 0 => [prompt]
+/// - History len = 1 => [prompt, idx0]
+/// - 2 => [prompt, idx0, idx1]
+/// - n >= 3 => [prompt, idxn-2, idxn-1]
 Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
   ChatHistory workingChat,
 ) {
   final config = OpenAICfg.current;
+
+  // #106
+  final ignoreCtxCons = workingChat.settings?.ignoreContextConstraint == true;
+  if (ignoreCtxCons) return workingChat.items.map((e) => e.toOpenAI);
+
   final prompt = config.prompt.isNotEmpty
       ? ChatHistoryItem.single(
           role: ChatRole.system,
           raw: config.prompt,
         ).toOpenAI
       : null;
+  
+  // #101
   if (workingChat.settings?.headTailMode == true) {
     final first = workingChat.items.firstOrNull?.toOpenAI;
     return [
@@ -42,8 +54,8 @@ Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
       })
       .map((e) => e.toOpenAI)
       .toList();
-    if (prompt != null) msgs.add(prompt);
-    return msgs.reversed;
+  if (prompt != null) msgs.add(prompt);
+  return msgs.reversed;
 }
 
 /// Auto select model and send the request
@@ -124,9 +136,12 @@ Future<void> _onCreateText(
 
   final useTools = OpenAICfg.canUseToolNow;
 
+  // #104
+  final singleChatScopeUseTools = workingChat.settings?.useTools != false;
+
   /// TODO: after switching to http img url, remove this condition.
   /// To save tokens, we don't use tools for image prompt
-  if (useTools && !hasImg && workingChat.settings?.useTools != false) {
+  if (useTools && !hasImg && singleChatScopeUseTools) {
     final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
     workingChat.items.add(toolReply);
     _loadingChatIds.add(toolReply.id);

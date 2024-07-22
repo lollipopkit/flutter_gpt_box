@@ -304,37 +304,49 @@ enum ChatRole {
 
 @HiveType(typeId: 8)
 final class ChatSettings {
-  @HiveField(0, defaultValue: false)
+  @HiveField(0)
   final bool headTailMode;
-  @HiveField(1, defaultValue: true)
+  @HiveField(1)
   final bool useTools;
+  @HiveField(2)
+  final bool ignoreContextConstraint;
 
+  /// Use this constrctor pattern to avoid null value as the [ChatSettings]'s
+  /// properties are changing frequently.
   const ChatSettings({
-    this.headTailMode = false,
-    this.useTools = true,
-  });
+    bool? headTailMode,
+    bool? useTools,
+    bool? ignoreContextConstraint,
+  })  : headTailMode = headTailMode ?? false,
+        useTools = useTools ?? true,
+        ignoreContextConstraint = ignoreContextConstraint ?? false;
 
   Map<String, dynamic> toJson() {
     return {
-      'headTailMode': headTailMode,
-      'useTools': useTools,
+      'htm': headTailMode,
+      'ut': useTools,
+      'icc': ignoreContextConstraint,
     };
   }
 
   static ChatSettings fromJson(Map<String, dynamic> json) {
     return ChatSettings(
-      headTailMode: json['headTailMode'] as bool,
-      useTools: json['useTools'] as bool,
+      headTailMode: json['htm'] as bool?,
+      useTools: json['ut'] as bool?,
+      ignoreContextConstraint: json['icc'] as bool?,
     );
   }
 
   ChatSettings copyWith({
     bool? headTailMode,
     bool? useTools,
+    bool? ignoreContextConstraint,
   }) {
     return ChatSettings(
       headTailMode: headTailMode ?? this.headTailMode,
       useTools: useTools ?? this.useTools,
+      ignoreContextConstraint:
+          ignoreContextConstraint ?? this.ignoreContextConstraint,
     );
   }
 
