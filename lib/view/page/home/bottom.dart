@@ -248,7 +248,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
       return;
     }
     context.showRoundDialog(
-      title: l10n.settings,
+      title: '${l10n.current}: ${chat.name ?? l10n.untitled}',
       child: _ChatSettings(chat),
       actions: Btns.oks(onTap: () => context.pop()),
     );
@@ -280,16 +280,25 @@ final class _ChatSettingsState extends State<_ChatSettings> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildHeadTailMode(),
+        _buildUseTools(),
       ].map((e) => e.cardx).toList(),
     );
   }
 
-  void _save() {
-    final newOne = widget.chat.copyWith(
-      settings: settings.value,
+  Widget _buildUseTools() {
+    return ListTile(
+      title: Text(l10n.tool),
+      trailing: settings.listenVal((val) {
+        return Switch(
+          value: val.useTools,
+          onChanged: (_) {
+            settings.value =
+                settings.value.copyWith(useTools: !val.useTools);
+            _save();
+          },
+        );
+      }),
     );
-    newOne.save();
-    _allHistories[_curChatId] = newOne;
   }
 
   Widget _buildHeadTailMode() {
@@ -319,5 +328,13 @@ final class _ChatSettingsState extends State<_ChatSettings> {
         );
       }),
     );
+  }
+
+  void _save() {
+    final newOne = widget.chat.copyWith(
+      settings: settings.value,
+    );
+    newOne.save();
+    _allHistories[_curChatId] = newOne;
   }
 }

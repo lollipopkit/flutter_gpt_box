@@ -126,7 +126,7 @@ Future<void> _onCreateText(
 
   /// TODO: after switching to http img url, remove this condition.
   /// To save tokens, we don't use tools for image prompt
-  if (useTools && !hasImg) {
+  if (useTools && !hasImg && workingChat.settings?.useTools != false) {
     final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
     workingChat.items.add(toolReply);
     _loadingChatIds.add(toolReply.id);

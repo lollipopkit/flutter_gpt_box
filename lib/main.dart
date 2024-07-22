@@ -33,9 +33,7 @@ void _runInZone(void Function() body) {
 
   runZonedGuarded(
     body,
-    (obj, trace) {
-      Loggers.root.warning(obj, null, trace);
-    },
+    (e, s) => print('[ZONE] $e\n$s'),
     zoneSpecification: zoneSpec,
   );
 }
