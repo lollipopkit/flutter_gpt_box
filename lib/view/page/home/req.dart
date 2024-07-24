@@ -134,14 +134,18 @@ Future<void> _onCreateText(
   _loadingChatIds.add(chatId);
   _autoScroll(chatId);
 
-  final useTools = OpenAICfg.canUseToolNow;
+  final useTools = Stores.tool.enabled.fetch() && OpenAICfg.canUseToolNow;
 
   // #104
   final singleChatScopeUseTools = workingChat.settings?.useTools != false;
 
+  // #111
+  final availableTools = OpenAIFuncCalls.tools;
+  final isToolsEmpty = availableTools.isEmpty;
+
   /// TODO: after switching to http img url, remove this condition.
   /// To save tokens, we don't use tools for image prompt
-  if (useTools && !hasImg && singleChatScopeUseTools) {
+  if (useTools && !hasImg && singleChatScopeUseTools && !isToolsEmpty) {
     final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
     workingChat.items.add(toolReply);
     _loadingChatIds.add(toolReply.id);
@@ -160,7 +164,7 @@ Future<void> _onCreateText(
           ).toOpenAI,
           ...msgs,
         ],
-        tools: OpenAIFuncCalls.tools,
+        tools: availableTools,
       );
     } catch (e, s) {
       _onErr(e, s, chatId, 'Tool');
