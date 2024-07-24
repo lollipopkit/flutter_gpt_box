@@ -134,7 +134,7 @@ Future<void> _onCreateText(
   _loadingChatIds.add(chatId);
   _autoScroll(chatId);
 
-  final useTools = OpenAICfg.canUseToolNow;
+  final useTools = Stores.tool.enabled.fetch() && OpenAICfg.canUseToolNow;
 
   // #104
   final singleChatScopeUseTools = workingChat.settings?.useTools != false;
