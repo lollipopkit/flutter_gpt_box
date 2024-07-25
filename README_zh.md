@@ -8,8 +8,9 @@
 
 <!-- Badges-->
 <p align="center">
-  <img alt="lang" src="https://img.shields.io/badge/lang-dart-pink">
-  <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
+  <a href="https://ko-fi.com/lollipopkit"><img alt="捐赠" width="130" src="https://storage.ko-fi.com/cdn/brandasset/kofi_button_red.png"></a>
+  <img alt="语言" src="https://img.shields.io/badge/lang-dart-pink">
+  <img alt="证书" src="https://img.shields.io/badge/license-GPLv3-pink">
 </p>
 
 ## 😣 注意
@@ -18,6 +19,7 @@
 
 
 ## 🪄 特性
+- (🥳 新) 让 GPT 记住某些事 
 - (🥳 新) Api 支持查看 Http 链接的内容、(开发中)本地运行 JS 脚本。[视频](https://cdn.lolli.tech/gptbox/screenshot/tools.mp4)
 - 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
 - 文本 / 图片 / 音频聊天
@@ -75,6 +77,11 @@ Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releas
 ## 💡 我的其它 Apps
 - [Server Box](https://github.com/lollipopkit/flutter_server_box) - 服务器状态和工具。
 - [更多](https://github.com/lollipopkit) - 工具 & etc.
+
+
+## 🎉 捐赠
+- 应用将保持免费，但是如果你认为我的工作对你有帮助，欢迎[捐赠](https://ko-fi.com/lollipopkit)。
+- 感谢所有捐赠者，你们的支持是我的动力。
 
 
 ## 📝 协议

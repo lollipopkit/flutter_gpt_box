@@ -8,6 +8,7 @@ A third-party GPT Client for OpenAI API.
 
 <!-- Badges-->
 <p align="center">
+  <a href="https://ko-fi.com/lollipopkit"><img alt="donation" width="130" src="https://storage.ko-fi.com/cdn/brandasset/kofi_button_red.png"></a>
   <img alt="lang" src="https://img.shields.io/badge/lang-dart-pink">
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
 </p>
@@ -18,6 +19,7 @@ Please refrain from using it in production environments or for critical data.
 
 
 ## 🪄 Features
+- (🥳 New) Ask GPT to add Memories.
 - (🥳 New) Api supports viewing the content of Http links, (developing) running JS scripts locally. [Video](https://cdn.lolli.tech/gptbox/screenshot/tools.mp4)
 - Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
 - Text / Image / Audio chat.
@@ -68,9 +70,16 @@ After you read the above, you can:
 - Any positive contribution is welcome.
 - [l10n guide](https://blog.lolli.tech/faq/) can be found in my blog.
 
+
 ## 💡 My other apps
 - [Server Box](https://github.com/lollipopkit/flutter_server_box) - Server status & tools.
 - [More](https://github.com/lollipopkit) - Tools & etc.
+
+
+## 🎉 Donation
+- App will keep free, but if you think my work is helpful, you can [donate](https://ko-fi.com/lollipopkit) me a cup of coffee.
+- Thanks to all the donators, your support is my motivation.
+
 
 ## 📝 License
 `GPL v3 lollipopkit`

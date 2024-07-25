@@ -37,5 +37,10 @@ void _onTapRestoreGPTNext(BuildContext context) async {
     );
   });
 
+  if (chats == null) {
+    context.showSnackBar('null');
+    return;
+  }
+
   _askConfirm(context, chats);
 }

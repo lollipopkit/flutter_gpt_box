@@ -31,11 +31,40 @@ class _ToolPageState extends State<ToolPage> {
       children: [
         _buildUseTool(),
         _buildModelRegExp(),
-        _buildTitle('~'),
-        _buildSwicthes(),
+        _buildTitle(l10n.list),
+        _buildSwitchTile(TfHttpReq.instance).cardx,
+        _buildMemory(),
         const SizedBox(height: 37),
       ],
     );
+  }
+
+  Widget _buildMemory() {
+    return ExpandTile(
+      title: Text(l10n.memory),
+      children: [
+        _buildSwitchTile(TfMemory.instance, title: l10n.switcher),
+        ListTile(
+          title: Text(l10n.edit),
+          onTap: () async {
+            final data = _store.memories.fetch();
+            final dataMap = <String, String>{};
+            for (var idx = 0; idx < data.length; idx++) {
+              dataMap['$idx'] = data[idx];
+            }
+            final res = await KvEditor.route.go(
+              context,
+              args: KvEditorArgs(data: dataMap),
+            );
+            if (res != null) {
+              _store.memories.put(res.values.toList());
+              context.showSnackBar(l10n.success);
+            }
+          },
+          trailing: const Icon(Icons.keyboard_arrow_right),
+        ),
+      ],
+    ).cardx;
   }
 
   Widget _buildTitle(String text) {
@@ -53,8 +82,7 @@ class _ToolPageState extends State<ToolPage> {
   Widget _buildUseTool() {
     return ListTile(
       leading: const Icon(MingCute.tool_line),
-      title: Text(l10n.tool),
-      subtitle: Text(l10n.toolAvailability, style: UIs.textGrey),
+      title: Text(l10n.switcher),
       trailing: StoreSwitch(prop: _store.enabled),
     ).cardx;
   }
@@ -96,27 +124,23 @@ class _ToolPageState extends State<ToolPage> {
     ).cardx;
   }
 
-  Widget _buildSwicthes() {
+  Widget _buildSwitchTile(ToolFunc e, {String? title}) {
     final prop = _store.enabledTools;
     return ValBuilder(
       listenable: prop.listenable(),
       builder: (vals) {
-        return Column(
-          children: OpenAIFuncCalls.internalTools.map((e) {
-            return ListTile(
-              title: Text(e.name),
-              subtitle: Text(e.l10nName),
-              trailing: Switch(
-                value: vals.contains(e.name),
-                onChanged: (val) {
-                  final _ = switch (val) {
-                    true => prop.put(vals..add(e.name)),
-                    false => prop.put(vals..remove(e.name)),
-                  };
-                },
-              ),
-            );
-          }).toList(),
+        final name = e.name;
+        return ListTile(
+          title: Text(title ?? e.l10nName),
+          trailing: Switch(
+            value: vals.contains(name),
+            onChanged: (val) {
+              final _ = switch (val) {
+                true => prop.put(vals..add(name)),
+                false => prop.put(vals..remove(name)),
+              };
+            },
+          ),
         );
       },
     );
