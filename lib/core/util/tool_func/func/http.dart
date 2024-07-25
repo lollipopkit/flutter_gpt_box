@@ -9,7 +9,7 @@ final class TfHttpReq extends ToolFunc {
           description: '''
 Send an HTTP request. It can be used for searching, downloading, etc.
 
-If for searching: use Bing.
+If user wants to search, use `bing.com` as the search engine and set `forSearch` to true.
 
 Both request/response body is String. If json, encode it into String.
 If blob, encode it into base64 String.''',
@@ -60,18 +60,13 @@ If blob, encode it into base64 String.''',
 
   @override
   Future<_Ret> run(_CallResp call, _Map args, OnToolLog log) async {
-    final method = args['method'] ?? 'GET';
+    final method = args['method'] as String? ?? 'GET';
     final url = args['url'] as String;
-    final headers = args['headers'];
-    final body = args['body'];
+    final headers = (args['headers'] as Map?)?.cast<String, dynamic>();
+    final body = args['body'] as String?;
     final forSearch = args['forSearch'] as bool? ?? false;
     final truncateSize = args['truncateSize'] as int?;
-    int? followRedirects;
-    try {
-      followRedirects = args['followRedirects'] as int?;
-    } catch (e, s) {
-      Loggers.app.warning('Failed to parse followRedirects', e, s);
-    }
+    final followRedirects = args['followRedirects'] as int?;
 
     log('Http $method -> $url');
     final resp = await myDio.request(
@@ -100,7 +95,7 @@ If blob, encode it into base64 String.''',
       'application/x-www-form-urlencoded',
     ];
 
-    final contentType = resp.headers['content-type']?.firstOrNull;
+    final contentType = resp.headers['content-type']?.join(';');
 
     String tryConvertStr(raw) {
       try {
@@ -123,16 +118,42 @@ If blob, encode it into base64 String.''',
     };
 
     if (forSearch) {
-      respBody = await compute(_filterHtml, respBody);
+      final urlMap = await compute(_filterHtmlUrls, respBody);
+      if (urlMap.isNotEmpty) {
+        respBody = '';
+
+        var count = 0;
+        for (final entry in urlMap.entries) {
+          if (count++ > 5) break;
+          final url = entry.value;
+          log('Http $method -> $url');
+          final resp = await myDio.request(
+            entry.value,
+            options: Options(
+              method: 'GET',
+              maxRedirects: followRedirects,
+              validateStatus: (_) => true,
+              responseType: ResponseType.plain,
+            ),
+          );
+
+          final data = resp.data;
+          if (data is! String) continue;
+          final html = await compute(_filterHtmlBody, data);
+          if (html != null) {
+            respBody += html;
+          }
+        }
+      }
     }
 
     if (truncateSize != null && respBody.length > truncateSize) {
       respBody = respBody.substring(0, truncateSize);
     }
 
-    await Future.delayed(Durations.medium1);
+    await Future.delayed(Durations.short3);
     log('Http $method -> ${l10n.success}');
-    await Future.delayed(Durations.medium1);
+    await Future.delayed(Durations.short3);
 
     return [ChatContent.text(respBody)];
   }
