@@ -27,10 +27,11 @@ Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
   final ignoreCtxCons = workingChat.settings?.ignoreContextConstraint == true;
   if (ignoreCtxCons) return workingChat.items.map((e) => e.toOpenAI);
 
-  final prompt = config.prompt.isNotEmpty
+  final promptStr = config.prompt + Stores.tool.memories.fetch().join('\n');
+  final prompt = promptStr.isNotEmpty
       ? ChatHistoryItem.single(
           role: ChatRole.system,
-          raw: config.prompt,
+          raw: promptStr,
         ).toOpenAI
       : null;
 
@@ -134,7 +135,7 @@ Future<void> _onCreateText(
   _loadingChatIds.add(chatId);
   _autoScroll(chatId);
 
-  final useTools = Stores.tool.enabled.fetch() && OpenAICfg.canUseToolNow;
+  final toolCompatible = OpenAICfg.isToolCompatible();
 
   // #104
   final singleChatScopeUseTools = workingChat.settings?.useTools != false;
@@ -145,7 +146,7 @@ Future<void> _onCreateText(
 
   /// TODO: after switching to http img url, remove this condition.
   /// To save tokens, we don't use tools for image prompt
-  if (useTools && !hasImg && singleChatScopeUseTools && !isToolsEmpty) {
+  if (toolCompatible && !hasImg && singleChatScopeUseTools && !isToolsEmpty) {
     final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
     workingChat.items.add(toolReply);
     _loadingChatIds.add(toolReply.id);

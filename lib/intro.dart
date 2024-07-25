@@ -18,13 +18,15 @@ final class _IntroPage extends StatelessWidget {
         final padTop = cons.maxHeight * .12;
         final pages_ = pages.map((e) => e(context, padTop)).toList();
         return IntroPage(
-          pages: pages_,
-          onDone: (ctx) {
-            Stores.setting.introVer.put(Build.build);
-            Navigator.of(ctx).pushReplacement(
-              MaterialPageRoute(builder: (_) => const HomePage()),
-            );
-          },
+          args: IntroPageArgs(
+            pages: pages_,
+            onDone: (ctx) {
+              Stores.setting.introVer.put(Build.build);
+              Navigator.of(ctx).pushReplacement(
+                MaterialPageRoute(builder: (_) => const HomePage()),
+              );
+            },
+          ),
         );
       },
     );

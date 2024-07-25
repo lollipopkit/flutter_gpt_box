@@ -36,12 +36,11 @@ abstract final class OpenAICfg {
   }
 
   static RegExp? _modelsUseToolReExp;
-  static bool canUseTool(String model) {
+  static bool isToolCompatible({String? model}) {
+    model ??= current.model;
     if (model.isEmpty) return false;
     return _modelsUseToolReExp?.hasMatch(model) ?? false;
   }
-
-  static bool get canUseToolNow => canUseTool(current.model);
 
   static Future<bool> updateModels({bool force = false}) async {
     if (current.url.startsWith('https://api.openai.com') &&

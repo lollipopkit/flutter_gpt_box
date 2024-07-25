@@ -17,4 +17,9 @@ final class ToolStore extends PersistentStore {
   /// Tools that are permitted to be used by the user.
   /// A dialog will be shown if the tool has not been permitted.
   late final permittedTools = property('permittedTools', <String>[]);
+
+  /// Memories that are saved by the user.
+  /// It will be added to prompt when sending a chat req.
+  /// {id: memory}
+  late final memories = property('memories', <String>[]);
 }

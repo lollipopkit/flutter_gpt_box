@@ -38,5 +38,10 @@ void _onTapRestoreOpenAI(BuildContext context) async {
     );
   });
 
+  if (chats == null) {
+    context.showSnackBar('null');
+    return;
+  }
+
   _askConfirm(context, chats);
 }

@@ -1,7 +1,9 @@
 part of '../tool.dart';
 
-final class _HttpReq extends ToolFunc {
-  const _HttpReq()
+final class TfHttpReq extends ToolFunc {
+  static const instance = TfHttpReq._();
+
+  const TfHttpReq._()
       : super(
           name: 'httpReq',
           description: '''

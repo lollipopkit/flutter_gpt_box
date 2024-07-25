@@ -14,15 +14,18 @@ part 'type.dart';
 part 'func/iface.dart';
 part 'func/http.dart';
 part 'func/js.dart';
+part 'func/memory.dart';
 
 abstract final class OpenAIFuncCalls {
   static const internalTools = [
-    _HttpReq(),
+    TfHttpReq.instance,
+    TfMemory.instance,
     //_RunJS(),
   ];
 
   static List<OpenAIToolModel> get tools {
     final tools = <OpenAIToolModel>[];
+    if (!Stores.tool.enabled.fetch()) return tools;
     final enabledTools = Stores.tool.enabledTools.fetch();
     for (final tool in internalTools) {
       if (enabledTools.contains(tool.name)) {
@@ -37,17 +40,17 @@ abstract final class OpenAIFuncCalls {
     ToolConfirm askConfirm,
     OnToolLog onToolLog,
   ) async {
-    final tool = tools.firstWhere((t) => t.type == resp.type);
-    switch (tool.type) {
+    switch (resp.type) {
       case 'function':
-        final fn = tool.function;
+        final targetName = resp.function.name;
+        final func =
+            internalTools.firstWhereOrNull((e) => e.name == targetName);
+        if (func == null) throw 'Unknown function $targetName';
         final args = await _parseMap(resp.function.arguments);
-        final func = internalTools.firstWhereOrNull((e) => e.name == fn.name);
-        if (func == null) throw 'Unknown function ${fn.name}';
         if (!await askConfirm(func, func.help(resp, args))) return null;
         return await func.run(resp, args, onToolLog);
       default:
-        throw 'Unknown tool type ${tool.type}';
+        throw 'Unknown tool type ${resp.type}';
     }
   }
 }

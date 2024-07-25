@@ -86,9 +86,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    return const ExitConfirm(
-      onPop: ExitConfirm.exitApp,
-      child: Scaffold(
+    return ExitConfirm(
+      onPop: (_) => ExitConfirm.exitApp(),
+      child: const Scaffold(
         drawer: _Drawer(),
         appBar: _CustomAppBar(),
         body: _Body(),

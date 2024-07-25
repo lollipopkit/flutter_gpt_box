@@ -89,7 +89,7 @@ class _HistoryPageState extends State<_HistoryPage>
         children: [
           IconBtn(
             onTap: () => _onTapRenameChat(chatId, context),
-            icon: Icons.abc,
+            icon: BoxIcons.bx_rename,
           ),
           IconBtn(
             onTap: () => _onTapDeleteChat(chatId, context),
