@@ -26,8 +26,10 @@ ${json.encode(args)}
 ''';
   }
 
+  String? get l10nTip => null;
+
   Future<_Ret> run(_CallResp call, _Map args, OnToolLog log) async =>
-      throw 'Not implemented';
+      throw UnimplementedError();
 
   OpenAIToolModel get into => OpenAIToolModel(
         type: 'function',

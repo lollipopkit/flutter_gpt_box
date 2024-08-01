@@ -28,9 +28,9 @@ abstract final class OpenAIFuncCalls {
   static List<OpenAIToolModel> get tools {
     final tools = <OpenAIToolModel>[];
     if (!Stores.tool.enabled.fetch()) return tools;
-    final enabledTools = Stores.tool.enabledTools.fetch();
+    final disabledTools = Stores.tool.disabledTools.fetch();
     for (final tool in internalTools) {
-      if (enabledTools.contains(tool.name)) {
+      if (!disabledTools.contains(tool.name)) {
         tools.add(tool.into);
       }
     }

@@ -54,6 +54,9 @@ If blob, encode it into base64 String.''',
   String get l10nName => l10n.toolHttpReqName;
 
   @override
+  String? get l10nTip => l10n.httpToolTip;
+
+  @override
   String help(_CallResp call, _Map args) {
     return l10n.toolHttpReqHelp(args['url'] as String? ?? '<?>');
   }

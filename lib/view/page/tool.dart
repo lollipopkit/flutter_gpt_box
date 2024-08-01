@@ -32,6 +32,7 @@ class _ToolPageState extends State<ToolPage> {
         _buildUseTool(),
         _buildModelRegExp(),
         _buildTitle(l10n.list),
+        _buildSwitchTile(TfHistory.instance).cardx,
         _buildSwitchTile(TfHttpReq.instance).cardx,
         _buildMemory(),
         const SizedBox(height: 37),
@@ -124,19 +125,23 @@ class _ToolPageState extends State<ToolPage> {
   }
 
   Widget _buildSwitchTile(ToolFunc e, {String? title}) {
-    final prop = _store.enabledTools;
+    final prop = _store.disabledTools;
     return ValBuilder(
       listenable: prop.listenable(),
       builder: (vals) {
         final name = e.name;
+        final tip = e.l10nTip;
+        final titleW = tip != null
+            ? TipText(text: title ?? e.l10nName, tip: tip)
+            : Text(title ?? e.l10nName);
         return ListTile(
-          title: Text(title ?? e.l10nName),
+          title: titleW,
           trailing: Switch(
-            value: vals.contains(name),
+            value: !vals.contains(name),
             onChanged: (val) {
               final _ = switch (val) {
-                true => prop.put(vals..add(name)),
-                false => prop.put(vals..remove(name)),
+                true => prop.put(vals..remove(name)),
+                false => prop.put(vals..add(name)),
               };
             },
           ),

@@ -40,12 +40,15 @@ If users want to load all chats, set it to -1.''',
   String get l10nName => l10n.history;
 
   @override
+  String? get l10nTip => l10n.historyToolTip;
+
+  @override
   bool get defaultEnabled => false;
 
   @override
   String help(_CallResp call, _Map args) {
     final keywords = args['keywords'] as List? ?? [];
-    return l10n.historyToolTip(keywords);
+    return l10n.historyToolHelp(keywords);
   }
 
   @override
