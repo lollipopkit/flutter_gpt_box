@@ -45,8 +45,10 @@ final class ImagePage extends StatelessWidget {
           // Share
           IconButton(
             onPressed: () async {
-              final path = await context.showLoadingDialog(
-                  fn: () async => await _getImgData(args!.url));
+              final (path, err) = await context.showLoadingDialog(
+                fn: () => _getImgData(args!.url),
+              );
+              if (err != null || path == null) return;
               await Pfs.share(
                 path: path,
                 name: 'gptbox_img.jpg',
@@ -63,7 +65,7 @@ final class ImagePage extends StatelessWidget {
                 child: Text(
                   l10n.delFmt(args?.title ?? l10n.untitled, l10n.image),
                 ),
-                actions: Btns.oks(onTap: () => context.pop(true)),
+                actions: Btn.ok(onTap: (c) => c.pop(true)).toList,
               );
               if (sure != true) return;
               context.pop(const ImagePageRet(isDeleted: true));

@@ -12,18 +12,20 @@ import 'package:logging/logging.dart';
 
 final _logger = Logger('Backup');
 
-class Backup {
+class Backup implements Mergeable {
   static const validVer = 2;
 
   final int version;
   final List<ChatHistory> history;
   final List<ChatConfig> configs;
+  final Map<String, dynamic> tools;
   final int lastModTime;
 
   const Backup({
     required this.version,
     required this.history,
     required this.configs,
+    required this.tools,
     required this.lastModTime,
   });
 
@@ -44,11 +46,16 @@ class Backup {
     }();
     final configs = fromJsonList(json['configs'], ChatConfig.fromJson);
     final history = fromJsonList(json['history'], ChatHistory.fromJson);
+    final tools = switch (json['tools']) {
+      final Map map => map.cast<String, dynamic>(),
+      _ => <String, dynamic>{},
+    };
     return Backup(
       version: version,
       lastModTime: lastModTime,
       configs: configs,
       history: history,
+      tools: tools,
     );
   }
 
@@ -59,13 +66,8 @@ class Backup {
         'lastModTime': lastModTime,
       };
 
-  static Backup? fromJsonString(String raw) {
-    try {
-      return Backup.fromJson(json.decode(raw));
-    } catch (e, s) {
-      Logger('Backup').warning('Parse backup failed', e, s);
-    }
-    return null;
+  static Backup fromJsonString(String raw) {
+    return Backup.fromJson(json.decode(raw));
   }
 
   static Backup loadFromStore() {
@@ -74,6 +76,7 @@ class Backup {
       lastModTime: Stores.lastModTime,
       history: Stores.history.fetchAll().values.toList(),
       configs: Stores.config.fetchAll().values.toList(),
+      tools: Stores.tool.box.toJson(),
     );
   }
 
@@ -86,6 +89,7 @@ class Backup {
     await File(Paths.bak).writeAsString(await backup());
   }
 
+  @override
   Future<void> merge({bool force = false}) async {
     final curTime = Stores.lastModTime;
     final bakTime = lastModTime;
@@ -125,6 +129,22 @@ class Backup {
     }
     for (final id in configUpdate) {
       Stores.config.put(configs.firstWhere((e) => e.id == id));
+    }
+
+    // Tool
+    final nowToolKeys = Stores.tool.box.keys.toSet();
+    final bakToolKeys = tools.keys.toSet();
+    final toolNew = bakToolKeys.difference(nowToolKeys);
+    for (final key in toolNew) {
+      Stores.tool.box.put(key, tools[key]);
+    }
+    final toolDelete = nowToolKeys.difference(bakToolKeys);
+    final toolUpdate = nowToolKeys.intersection(bakToolKeys);
+    for (final key in toolDelete) {
+      Stores.tool.box.delete(key);
+    }
+    for (final key in toolUpdate) {
+      Stores.tool.box.put(key, tools[key]);
     }
 
     RNodes.app.notify();

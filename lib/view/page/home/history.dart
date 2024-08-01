@@ -87,13 +87,13 @@ class _HistoryPageState extends State<_HistoryPage>
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconBtn(
-            onTap: () => _onTapRenameChat(chatId, context),
-            icon: BoxIcons.bx_rename,
+          Btn.icon(
+            onTap: (_) => _onTapRenameChat(chatId, context),
+            icon: const Icon(BoxIcons.bx_rename, size: 19),
           ),
-          IconBtn(
-            onTap: () => _onTapDeleteChat(chatId, context),
-            icon: Icons.delete,
+          Btn.icon(
+            onTap: (_) => _onTapDeleteChat(chatId, context),
+            icon: const Icon(Icons.delete, size: 19),
           ),
         ],
       ),

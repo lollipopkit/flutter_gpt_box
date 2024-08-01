@@ -29,10 +29,10 @@ void _onTapFileRestore(BuildContext context) async {
   if (text == null) return;
 
   try {
-    final backup = await context.showLoadingDialog(
+    final (backup, err) = await context.showLoadingDialog(
       fn: () async => await compute(Backup.fromJsonString, text.trim()),
     );
-    if (backup == null) return;
+    if (err != null || backup == null) return;
 
     if (Backup.validVer != backup.version) {
       context.showSnackBar('Backup version not match');

@@ -7,11 +7,10 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
 import 'package:gpt_box/core/util/datetime.dart';
-import 'package:gpt_box/core/util/sync/base.dart';
+import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
-import 'package:gpt_box/data/res/provider.dart';
 import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/misc.dart';
 import 'package:gpt_box/data/res/openai.dart';
@@ -67,7 +66,7 @@ Future<void> _initDb() async {
 void _setupLogger() {
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
-    Pros.debug.addLog(record);
+    DebugProvider.addLog(record);
     print(record);
     if (record.error != null) print(record.error);
     if (record.stackTrace != null) print(record.stackTrace);
@@ -87,7 +86,8 @@ Future<void> _initAppComponents() async {
   OpenAICfg.apply();
   OpenAICfg.updateModels();
 
-  SyncService.sync(force: true);
+  sync.sync();
 
   if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
 }
+

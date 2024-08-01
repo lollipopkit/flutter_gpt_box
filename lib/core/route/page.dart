@@ -10,22 +10,17 @@ import 'package:gpt_box/view/page/setting.dart';
 import 'package:gpt_box/view/page/tool.dart';
 
 sealed class Routes {
-  static const setting = AppRoute<SettingsPageRet, Never>(
+  static const setting = AppRouteNoArg<SettingsPageRet>(
     page: SettingPage.new,
     path: '/setting',
   );
 
-  static const debug = AppRoute<Never, DebugPageArgs>(
-    page: DebugPage.new,
-    path: '/debug',
-  );
-
-  static const about = AppRoute<Never, Never>(
+  static const about = AppRouteNoArg<void>(
     page: AboutPage.new,
     path: '/about',
   );
 
-  static const backup = AppRoute<BackupPageRet, Never>(
+  static const backup = AppRouteNoArg<BackupPageRet>(
     page: BackupPage.new,
     path: '/backup',
   );
@@ -40,17 +35,17 @@ sealed class Routes {
     path: '/image',
   );
 
-  static const res = AppRoute<Never, Never>(
+  static const res = AppRouteNoArg<void>(
     page: ResPage.new,
     path: '/res',
   );
 
-  static const tool = AppRoute<Never, Never>(
+  static const tool = AppRouteNoArg<void>(
     page: ToolPage.new,
     path: '/tool',
   );
 
-  static const profile = AppRoute<Never, Never>(
+  static const profile = AppRouteNoArg<void>(
     page: ProfilePage.new,
     path: '/profile',
   );

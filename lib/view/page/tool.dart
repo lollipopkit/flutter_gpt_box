@@ -88,12 +88,11 @@ class _ToolPageState extends State<ToolPage> {
   }
 
   Widget _buildModelRegExp() {
-    final prop = Stores.setting.modelsUseTool;
+    final prop = _store.toolsRegExp;
     final listenable = prop.listenable();
     return ListTile(
       leading: const Icon(Bootstrap.regex),
-      title: Text(l10n.regExp),
-      subtitle: Text(l10n.modelRegExpTip, style: UIs.textGrey),
+      title: TipText(text: l10n.regExp, tip: l10n.modelRegExpTip),
       trailing: SizedBox(
         width: 60,
         child: listenable.listenVal((val) => Text(
@@ -118,7 +117,7 @@ class _ToolPageState extends State<ToolPage> {
             autoFocus: true,
             onSubmitted: onSave,
           ),
-          actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+          actions: Btn.ok(onTap: (_) => onSave(ctrl.text)).toList,
         );
       },
     ).cardx;

@@ -147,12 +147,12 @@ class _SettingPageState extends State<SettingPage> {
                   )
                 ],
               ),
-              actions: Btns.oks(
-                onTap: () {
+              actions: Btn.ok(
+                onTap: (c) {
                   _onSaveColor(ctrl.text);
-                  context.pop();
+                  c.pop();
                 },
-              ),
+              ).toList,
             );
           },
         );
@@ -278,8 +278,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildSoftWrap() {
     return ListTile(
       leading: const Icon(Icons.wrap_text),
-      title: Text(l10n.softWrap),
-      subtitle: Text(l10n.codeBlock, style: UIs.textGrey),
+      title: TipText(text: l10n.softWrap, tip: l10n.codeBlock),
       trailing: StoreSwitch(prop: _store.softWrap),
     );
   }
@@ -360,8 +359,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildCompressImg() {
     return ListTile(
       leading: const Icon(Icons.compress),
-      title: Text(l10n.compress),
-      subtitle: Text(l10n.compressImgTip, style: UIs.textGrey),
+      title: TipText(text: l10n.compress, tip: l10n.compressImgTip),
       trailing: StoreSwitch(prop: _store.compressImg),
     );
   }
@@ -369,8 +367,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildSaveErrChat() {
     return ListTile(
       leading: const Icon(Icons.save),
-      title: Text(l10n.saveErrChat),
-      subtitle: Text(l10n.saveErrChatTip, style: UIs.textGrey),
+      title: TipText(text: l10n.saveErrChat, tip: l10n.saveErrChatTip),
       trailing: StoreSwitch(prop: _store.saveErrChat),
     );
   }
@@ -378,8 +375,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildScrollSwitchChat() {
     return ListTile(
       leading: const Icon(Icons.swap_vert),
-      title: Text(l10n.scrollSwitchChat),
-      subtitle: Text(l10n.needRestart, style: UIs.textGrey),
+      title: TipText(text: l10n.scrollSwitchChat, tip: l10n.needRestart),
       trailing: StoreSwitch(prop: _store.scrollSwitchChat),
     );
   }
@@ -409,7 +405,7 @@ class _SettingPageState extends State<SettingPage> {
             autoFocus: true,
             onSubmitted: (s) => onSave(s),
           ),
-          actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+          actions: Btn.ok(onTap: (_) => onSave(ctrl.text)).toList,
         );
       },
     );

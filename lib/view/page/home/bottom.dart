@@ -250,7 +250,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
     context.showRoundDialog(
       title: '${l10n.current}: ${chat.name ?? l10n.untitled}',
       child: _ChatSettings(chat),
-      actions: Btns.oks(onTap: () => context.pop()),
+      actions: [Btn.ok()],
     );
   }
 }
@@ -324,20 +324,7 @@ final class _ChatSettingsState extends State<_ChatSettings> {
 
   Widget _buildHeadTailMode() {
     return ListTile(
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(l10n.headTailMode),
-          IconBtn(
-            onTap: () => context.showRoundDialog(
-              title: l10n.help,
-              child: SimpleMarkdown(data: l10n.headTailModeTip),
-              actions: Btns.oks(onTap: () => context.pop()),
-            ),
-            icon: Icons.help,
-          )
-        ],
-      ),
+      title: TipText(text: l10n.headTailMode, tip: l10n.headTailModeTip),
       trailing: settings.listenVal((val) {
         return Switch(
           value: val.headTailMode,

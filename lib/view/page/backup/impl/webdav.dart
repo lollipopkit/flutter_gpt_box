@@ -28,7 +28,7 @@ Widget _buildWebdav(BuildContext context) {
                   return false;
                 }
               }
-              Webdav.sync();
+              sync.sync(rs: webdav);
               return true;
             },
           ),
@@ -43,14 +43,14 @@ Widget _buildWebdav(BuildContext context) {
               return Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextButton(
-                    onPressed: () async => _onTapWebdavDl(context),
-                    child: Text(l10n.restore),
+                  Btn.text(
+                    onTap: (_) => _onTapWebdavDl(context),
+                    text: l10n.restore,
                   ),
                   UIs.width7,
-                  TextButton(
-                    onPressed: () async => _onTapWebdavUp(context),
-                    child: Text(l10n.backup),
+                  Btn.text(
+                    onTap: (_) => _onTapWebdavUp(context),
+                    text: l10n.backup,
                   ),
                 ],
               );
@@ -65,7 +65,7 @@ Widget _buildWebdav(BuildContext context) {
 Future<void> _onTapWebdavDl(BuildContext context) async {
   _webdavLoading.value = true;
   try {
-    final files = await Webdav.list();
+    final files = await webdav.list();
     if (files.isEmpty) return context.showSnackBar(l10n.empty);
 
     final fileName = await context.showPickSingleDialog(
@@ -74,16 +74,13 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     );
     if (fileName == null) return;
 
-    final result = await Webdav.download(relativePath: fileName);
-    if (result != null) {
-      return Loggers.app.warning('Download webdav backup failed: $result');
-    }
+    await webdav.download(relativePath: fileName);
     final dlFile = await File('${Paths.doc}/$fileName').readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
-    await dlBak?.merge(force: true);
-  } catch (e) {
-    context.showSnackBar(e.toString());
-    rethrow;
+    await dlBak.merge(force: true);
+    context.showSnackBar(l10n.success);
+  } catch (e, s) {
+    context.showErrDialog(e: e, s: s, operation: 'Download webdav backup');
   } finally {
     _webdavLoading.value = false;
   }
@@ -91,17 +88,16 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
 
 Future<void> _onTapWebdavUp(BuildContext context) async {
   _webdavLoading.value = true;
-  final content = await Backup.backup();
-  await File(Paths.bak).writeAsString(content);
-  final uploadResult = await Webdav.upload(relativePath: Miscs.bakFileName);
-  if (uploadResult != null) {
-    Loggers.app.warning('Upload webdav backup failed: $uploadResult');
-    context.showSnackBar(l10n.backupFailed(uploadResult.toString()));
-  } else {
-    Loggers.app.info('Upload webdav backup success');
+  try {
+    final content = await Backup.backup();
+    await File(Paths.bak).writeAsString(content);
+    await webdav.upload(relativePath: Miscs.bakFileName);
     context.showSnackBar(l10n.backupSuccessful);
+  } catch (e, s) {
+    context.showErrDialog(e: e, s: s, operation: 'Upload webdav backup');
+  } finally {
+    _webdavLoading.value = false;
   }
-  _webdavLoading.value = false;
 }
 
 Future<void> _onTapWebdavSetting(BuildContext context) async {
@@ -116,20 +112,20 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
   );
 
   void onSubmit() async {
-    final err = await context.showLoadingDialog(fn: () async {
-      return await Webdav.test(urlCtrl.text, userCtrl.text, pwdCtrl.text);
+    final (_, err) = await context.showLoadingDialog(fn: () async {
+      await webdav.init(WebdavInitArgs(
+        url: urlCtrl.text,
+        user: userCtrl.text,
+        pwd: pwdCtrl.text,
+        prefix: 'gptbox/',
+      ));
     });
-    if (err == null) {
-      context.pop();
-      context.showSnackBar(l10n.success);
-      Webdav.changeClient(urlCtrl.text, userCtrl.text, pwdCtrl.text);
-      return;
-    }
-    context.showRoundDialog(
-      title: l10n.error,
-      child: Text(err),
-      actions: Btns.oks(onTap: context.pop),
-    );
+    if (err != null) return;
+    Stores.setting.webdavUrl.put(urlCtrl.text);
+    Stores.setting.webdavUser.put(userCtrl.text);
+    Stores.setting.webdavPwd.put(pwdCtrl.text);
+    context.pop();
+    context.showSnackBar(l10n.success);
   }
 
   final userNode = FocusNode();
@@ -161,6 +157,6 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
         ),
       ],
     ),
-    actions: Btns.oks(onTap: onSubmit),
+    actions: Btn.ok(onTap: (_) => onSubmit()).toList,
   );
 }

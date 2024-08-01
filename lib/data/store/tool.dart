@@ -22,4 +22,10 @@ final class ToolStore extends PersistentStore {
   /// It will be added to prompt when sending a chat req.
   /// {id: memory}
   late final memories = property('memories', <String>[]);
+
+  /// Models regexp list, split by ','
+  late final toolsRegExp = property(
+    'toolsRegExp',
+    'gpt-4o|gpt-4-turbo|gpt-3.5-turbo|deepseek',
+  );
 }

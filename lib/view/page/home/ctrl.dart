@@ -84,7 +84,7 @@ void _onTapDelChatItem(
     child: Text(
       l10n.delFmt('${chatItem.role.localized}#$idx', l10n.chat),
     ),
-    actions: Btns.oks(onTap: () => context.pop(true), red: true),
+    actions: Btn.ok(onTap: (c) => c.pop(true), red: true).toList,
   );
   if (result != true) return;
   chatItems.remove(chatItem);
@@ -111,13 +111,13 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
   context.showRoundDialog(
     title: l10n.attention,
     child: Text(l10n.delFmt(name, l10n.chat)),
-    actions: Btns.oks(
-      onTap: () {
+    actions: Btn.ok(
+      onTap: (c) {
         _onDeleteChat(chatId);
-        context.pop();
+        c.pop();
       },
       red: true,
-    ),
+    ).toList,
   );
 }
 
@@ -146,7 +146,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
       autoFocus: true,
       onSubmitted: (p0) => context.pop(p0),
     ),
-    actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+    actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
   );
   if (title == null || title.isEmpty) return;
   final ne = entity.copyWith(name: title)..save();
@@ -181,6 +181,8 @@ void _onShareChat(BuildContext context) async {
       _ => l10n.image,
     },
   );
+  if (type == null) return;
+
   if (type == 'txt') {
     final md = curChat.toMarkdown;
     Pfs.copy(md);
@@ -189,8 +191,8 @@ void _onShareChat(BuildContext context) async {
   }
 
   final result = curChat.gen4Share(context);
-  var isCompressed = false;
-  final pic = await context.showLoadingDialog(fn: () async {
+  var compressImg = false;
+  final (pic, err) = await context.showLoadingDialog(fn: () async {
     final raw = await _screenshotCtrl.captureFromLongWidget(
       result,
       context: context,
@@ -198,17 +200,17 @@ void _onShareChat(BuildContext context) async {
       pixelRatio: _media?.devicePixelRatio ?? 1,
       delay: Durations.short4,
     );
-    isCompressed = Stores.setting.compressImg.fetch();
-    if (isCompressed) {
-      final compressed = await ImageUtil.compress(raw);
-      if (compressed != null) return compressed;
+    compressImg = Stores.setting.compressImg.fetch();
+    if (compressImg) {
+      return await ImageUtil.compress(raw);
     }
     return raw;
   });
+  if (err != null || pic == null) return;
 
   final title = _curChat?.name ?? l10n.untitled;
-  final ext = isCompressed ? 'jpg' : 'png';
-  final mime = isCompressed ? 'image/jpeg' : 'image/png';
+  final ext = compressImg ? 'jpg' : 'png';
+  final mime = compressImg ? 'image/jpeg' : 'image/png';
   await Pfs.share(bytes: pic, name: '$title.$ext', mime: mime);
 }
 
@@ -245,10 +247,10 @@ Future<void> _onTapImgPick(BuildContext context) async {
   final imgPath = Paths.img.joinPath(shortid.generate());
   var isCompressed = Stores.setting.compressImg.fetch();
   if (isCompressed) {
-    final compressed = await context.showLoadingDialog(
+    final (compressed, err) = await context.showLoadingDialog(
       fn: () async => ImageUtil.compress(await result.readAsBytes()),
     );
-    if (compressed == null) {
+    if (err != null || compressed == null) {
       context.showSnackBar('${l10n.failed}: ${l10n.compress}');
       isCompressed = false;
     } else {
@@ -401,7 +403,7 @@ void _onTapReplay(
   final sure = await context.showRoundDialog<bool>(
     title: l10n.attention,
     child: Text('${l10n.replay} ?'),
-    actions: Btns.oks(onTap: () => context.pop(true), red: true),
+    actions: Btn.ok(onTap: (c) => c.pop(true), red: true).toList,
   );
   if (sure != true) return;
   _onReplay(context: context, chatId: chatId, item: item);
@@ -456,7 +458,7 @@ void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
       context.showRoundDialog(
         title: l10n.attention,
         child: Text(l10n.needOpenAIKey),
-        actions: Btns.oks(onTap: context.pop),
+        actions: Btnx.oks,
       );
     }
     return;
@@ -588,7 +590,7 @@ Future<bool> _askToolConfirm(
   final permitted = await context.showRoundDialog(
     title: l10n.attention,
     child: Text('${l10n.toolConfirmFmt(func.name)}\n\n$help'),
-    actions: Btns.oks(onTap: () => context.pop(true), red: true),
+    actions: Btn.ok(onTap: (c) => c.pop(true), red: true).toList,
   );
   if (permitted == true) {
     permittedTools.add(func.name);

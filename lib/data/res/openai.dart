@@ -76,7 +76,7 @@ abstract final class OpenAICfg {
   }
 
   static void _initToolRegexp() {
-    final prop = Stores.setting.modelsUseTool;
+    final prop = Stores.tool.toolsRegExp;
 
     void setExp() {
       final val = prop.fetch();

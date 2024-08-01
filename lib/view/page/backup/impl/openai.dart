@@ -19,7 +19,7 @@ void _onTapRestoreOpenAI(BuildContext context) async {
   final picked = await Pfs.pickFileString();
   if (picked == null) return;
 
-  final chats = await context.showLoadingDialog(fn: () async {
+  final (chats, err) = await context.showLoadingDialog(fn: () async {
     return await compute(
       (params) async {
         final obj = json.decode(params) as List;
@@ -38,10 +38,7 @@ void _onTapRestoreOpenAI(BuildContext context) async {
     );
   });
 
-  if (chats == null) {
-    context.showSnackBar('null');
-    return;
-  }
+  if (err != null || chats == null) return;
 
   _askConfirm(context, chats);
 }

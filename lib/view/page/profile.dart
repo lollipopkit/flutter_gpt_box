@@ -120,32 +120,32 @@ final class _ProfilePageState extends State<ProfilePage> {
         children: [
           // Delete
           if (cfg.id != ChatConfig.defaultId)
-            IconBtn(
-              icon: Icons.delete,
-              onTap: () {
+            Btn.icon(
+              icon: const Icon(Icons.delete, size: 19),
+              onTap: (_) {
                 if (cfg.id == ChatConfig.defaultId) return;
                 context.showRoundDialog(
                   title: l10n.attention,
                   child: Text(l10n.delFmt(cfg.name, l10n.profile)),
-                  actions: Btns.oks(
-                    onTap: () {
+                  actions: Btn.ok(
+                    onTap: (c) {
                       Stores.config.delete(cfg.id);
                       _cfgRN.notify();
-                      context.pop();
+                      c.pop();
                       if (cfg.id == cfg.id) {
                         OpenAICfg.switchToDefault(context);
                         _cfgRN.notify();
                       }
                     },
                     red: true,
-                  ),
+                  ).toList,
                 );
               },
             ),
           // Rename
-          IconBtn(
-            icon: Icons.edit,
-            onTap: () {
+          Btn.icon(
+            icon: const Icon(Icons.edit, size: 19),
+            onTap: (_) {
               final ctrl = TextEditingController(text: cfg.name);
               context.showRoundDialog(
                 title: l10n.edit,
@@ -154,24 +154,24 @@ final class _ProfilePageState extends State<ProfilePage> {
                   label: l10n.name,
                   autoFocus: true,
                 ),
-                actions: Btns.oks(
-                  onTap: () {
+                actions: Btn.ok(
+                  onTap: (c) {
                     final name = ctrl.text;
                     if (name.isEmpty) return;
                     final newCfg = cfg.copyWith(name: name);
                     newCfg.save();
                     OpenAICfg.setTo(newCfg);
                     _cfgRN.notify();
-                    context.pop();
+                    c.pop();
                   },
-                ),
+                ).toList,
               );
             },
           ),
           // Switch
-          IconBtn(
-            icon: OctIcons.arrow_switch,
-            onTap: () async {
+          Btn.icon(
+            icon: const Icon(OctIcons.arrow_switch, size: 19),
+            onTap: (_) async {
               final vals = Stores.config.box
                   .toJson<ChatConfig>(includeInternal: false)
                   .values
@@ -188,9 +188,9 @@ final class _ProfilePageState extends State<ProfilePage> {
               _cfgRN.notify();
             },
           ),
-          IconBtn(
-            icon: Icons.add,
-            onTap: () async {
+          Btn.icon(
+            icon: const Icon(Icons.add, size: 19),
+            onTap: (_) async {
               final ctrl = TextEditingController();
               final ok = await context.showRoundDialog(
                 title: l10n.add,
@@ -199,7 +199,7 @@ final class _ProfilePageState extends State<ProfilePage> {
                   label: l10n.name,
                   autoFocus: true,
                 ),
-                actions: Btns.oks(onTap: () => context.pop(true)),
+                actions: Btn.ok(onTap: (c) => c.pop(true)).toList,
               );
               if (ok != true) return;
               final clipboardData = await Pfs.paste();
@@ -250,9 +250,7 @@ final class _ProfilePageState extends State<ProfilePage> {
             maxLines: 3,
             autoFocus: true,
           ),
-          actions: Btns.oks(
-            onTap: () => context.pop(ctrl.text),
-          ),
+          actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result));
@@ -266,9 +264,8 @@ final class _ProfilePageState extends State<ProfilePage> {
     return ListTile(
       leading: const Icon(Icons.link),
       title: Text(l10n.apiUrl),
-      trailing: const Icon(Icons.keyboard_arrow_right),
-      subtitle: Text(
-        val.isEmpty ? l10n.empty : val,
+      trailing: Text(
+        val.isEmpty ? l10n.empty : val.replaceFirst(RegExp('https?://'), ''),
         style: UIs.text13Grey,
       ),
       onTap: () async {
@@ -281,19 +278,14 @@ final class _ProfilePageState extends State<ProfilePage> {
             maxLines: 3,
             autoFocus: true,
           ),
-          actions: Btns.oks(
-            onTap: () => context.pop(ctrl.text),
-          ),
+          actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
         );
         if (result == null) return;
         if (result.contains('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
           final sure = await context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.apiUrlTip),
-            actions: Btns.oks(
-              onTap: () => context.pop(true),
-              red: true,
-            ),
+            actions: Btn.ok(onTap: (c) => c.pop(true), red: true).toList,
           );
           if (sure != true) return;
         }
@@ -327,7 +319,7 @@ final class _ProfilePageState extends State<ProfilePage> {
       context.showRoundDialog(
         title: l10n.attention,
         child: Text(l10n.needOpenAIKey),
-        actions: Btns.oks(onTap: context.pop),
+        actions: Btnx.oks,
       );
       return null;
     }
@@ -364,7 +356,7 @@ final class _ProfilePageState extends State<ProfilePage> {
                 autoFocus: true,
                 onSubmitted: (s) => onSave(s),
               ),
-              actions: Btns.oks(onTap: () => onSave(ctrl.text)),
+              actions: Btn.ok(onTap: (_) => onSave(ctrl.text)).toList,
             );
           },
           child: Text(l10n.custom),
@@ -464,10 +456,10 @@ final class _ProfilePageState extends State<ProfilePage> {
           title: l10n.edit,
           child: Input(
             controller: ctrl,
-            maxLines: 3,
+            maxLines: 11,
             autoFocus: true,
           ),
-          actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
+          actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(prompt: result));
@@ -479,12 +471,8 @@ final class _ProfilePageState extends State<ProfilePage> {
   Widget _buildHistoryLength(int val) {
     return ListTile(
       leading: const Icon(Icons.history),
-      title: Text(l10n.chatHistoryLength),
-      trailing: Text(
-        val.toString(),
-        style: UIs.text13Grey,
-      ),
-      subtitle: Text(l10n.chatHistoryTip, style: UIs.textGrey),
+      title: TipText(text: l10n.chatHistoryLength, tip: l10n.chatHistoryTip),
+      trailing: Text(val.toString(), style: UIs.text13Grey),
       onTap: () async {
         final ctrl = TextEditingController(text: val.toString());
         final result = await context.showRoundDialog<String>(
@@ -495,9 +483,7 @@ final class _ProfilePageState extends State<ProfilePage> {
             autoFocus: true,
             type: TextInputType.number,
           ),
-          actions: Btns.oks(
-            onTap: () => context.pop(ctrl.text),
-          ),
+          actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
         );
         if (result == null) return;
         final newVal = int.tryParse(result);

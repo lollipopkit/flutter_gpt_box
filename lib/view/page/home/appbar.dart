@@ -76,13 +76,9 @@ final class _CustomAppBar extends CustomAppBar {
     return CustomAppBar(
       centerTitle: false,
       title: GestureDetector(
-        onLongPress: () => Routes.debug.go(
+        onLongPress: () => DebugPage.route.go(
           context,
-          args: DebugPageArgs(
-            notifier: Pros.debug.widgets,
-            onClear: Pros.debug.clear,
-            title: 'Logs(${Build.build})',
-          ),
+          args: const DebugPageArgs(title: 'Logs(${Build.build})'),
         ),
         onTap: () => _onSwitchModel(context, notifyKey: true),
         child: Column(

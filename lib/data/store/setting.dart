@@ -65,10 +65,4 @@ class SettingStore extends PersistentStore {
   late final avatar = property('avatar', '🧐');
 
   late final introVer = property('introVer', 0);
-
-  /// Models regexp list, split by ','
-  late final modelsUseTool = property(
-    'modelsUseTool',
-    'gpt-4o|gpt-4-turbo|gpt-3.5-turbo',
-  );
 }

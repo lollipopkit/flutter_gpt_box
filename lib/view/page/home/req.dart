@@ -245,7 +245,7 @@ Future<void> _onCreateText(
         _loadingChatIdRN.notify();
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
-        SyncService.sync();
+        sync.sync();
       },
     );
   } catch (e, s) {
