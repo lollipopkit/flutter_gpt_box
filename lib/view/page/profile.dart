@@ -254,7 +254,6 @@ final class _ProfilePageState extends State<ProfilePage> {
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result));
-        OpenAICfg.updateModels(force: true);
         _cfgRN.notify();
       },
     );
@@ -290,7 +289,6 @@ final class _ProfilePageState extends State<ProfilePage> {
           if (sure != true) return;
         }
         OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result));
-        OpenAICfg.updateModels(force: true);
         _cfgRN.notify();
       },
     );
