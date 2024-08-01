@@ -74,9 +74,10 @@ void _setupLogger() {
 }
 
 Future<void> _initAppComponents() async {
-  final size = Stores.setting.windowSize.fetch().toSize();
+  final sets = Stores.setting;
+  final size = sets.windowSize.fetch().toSize();
   SystemUIs.initDesktopWindow(
-    hideTitleBar: Stores.setting.hideTitleBar.fetch(),
+    hideTitleBar: sets.hideTitleBar.fetch(),
     size: size,
     listener: WindowSizeListener(Stores.setting.windowSize),
   );
@@ -90,4 +91,3 @@ Future<void> _initAppComponents() async {
 
   if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
 }
-

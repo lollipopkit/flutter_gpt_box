@@ -61,6 +61,8 @@ final class _Drawer extends StatelessWidget {
               color: UIs.bgColor.fromBool(isDark),
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 17),
+                // Disable overscroll glow on iOS
+                physics: const ClampingScrollPhysics(),
                 children: [
                   SizedBox(height: verticalPad),
                   SizedBox(
