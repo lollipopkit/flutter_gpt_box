@@ -103,6 +103,14 @@ final class ChatHistory {
   void save() {
     Stores.history.put(this);
   }
+
+  bool containsKeywords(List<String> keywords) {
+    return items.any(
+      (e) => e.content.any(
+        (e) => keywords.any((e) => e.contains(e)),
+      ),
+    );
+  }
 }
 
 @HiveType(typeId: 0)

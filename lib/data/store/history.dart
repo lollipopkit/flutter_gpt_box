@@ -34,6 +34,33 @@ class HistoryStore extends PersistentStore {
     return Map.fromEntries(sorted);
   }
 
+  /// Returns the chats containing the keywords with maximum number of [n].
+  /// - [n] is the maximum number of items to take. If there are not enough items,
+  /// the number of returned items will be less than [n]. If [n] <= 0, all items
+  /// will be returned.
+  /// - [keywords] is a list of keywords to filter the history items. If [keywords]
+  /// is not empty, only items that contain at least one keyword will be returned.
+  /// If [keywords] is empty, all items will be returned.
+  /// - [skipCurrent] is a flag to skip the most recent item. If [skipCurrent] is
+  /// true, the most recent item will be skipped.
+  List<ChatHistory> take(
+    int n,
+    List<String> keywords, {
+    bool skipCurrent = true,
+  }) {
+    final vals = fetchAll().values.toList();
+    if (n <= 0) return vals;
+
+    final list = <ChatHistory>[];
+    for (final item in vals.skip(skipCurrent ? 1 : 0)) {
+      if (keywords.isEmpty || item.containsKeywords(keywords)) {
+        list.add(item);
+        if (list.length >= n) break;
+      }
+    }
+    return list;
+  }
+
   void put(ChatHistory history, [bool update = true]) {
     box.put(history.id, history);
     if (update) box.updateLastModified();

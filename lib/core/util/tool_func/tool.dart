@@ -15,11 +15,13 @@ part 'func/iface.dart';
 part 'func/http.dart';
 part 'func/js.dart';
 part 'func/memory.dart';
+part 'func/history.dart';
 
 abstract final class OpenAIFuncCalls {
   static const internalTools = [
     TfHttpReq.instance,
     TfMemory.instance,
+    TfHistory.instance,
     //_RunJS(),
   ];
 

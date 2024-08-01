@@ -20,6 +20,7 @@ Please refrain from using it in production environments or for critical data.
 
 ## 🪄 Features
 - (🥳 New) Tools
+  - Load history chats as context.
   - Ask GPT to add Memories.
   - Api supports viewing the content of Http links. [Video](https://cdn.lolli.tech/gptbox/screenshot/tools.mp4)
   -  (developing) running JS scripts locally.
