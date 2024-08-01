@@ -7,8 +7,8 @@ final class TfMemory extends ToolFunc {
       : super(
           name: 'memory',
           description: '''
-Memorise the input and add what memorised to the prompt.
-If users want to memorise something, you(AI models) should call this function.''',
+If users want to memorise something, you(AI models) should call this function.
+Only call this func if users explicitly ask to memorise something.''',
           parametersSchema: const {
             'type': 'object',
             'properties': {

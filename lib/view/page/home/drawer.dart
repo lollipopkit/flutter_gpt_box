@@ -18,7 +18,7 @@ final class _Drawer extends StatelessWidget {
         ListTile(
           onTap: () => Routes.profile.go(context),
           leading: const Icon(Icons.person),
-          title: Text(l10n.profile),
+          title: Text('API ${l10n.profile}'),
         ).cardx,
         ListTile(
           leading: const Icon(MingCute.tool_fill),

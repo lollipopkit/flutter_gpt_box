@@ -262,7 +262,7 @@ final class _ProfilePageState extends State<ProfilePage> {
   Widget _buildOpenAIUrl(String val) {
     return ListTile(
       leading: const Icon(Icons.link),
-      title: Text(l10n.apiUrl),
+      title: const Text('URL'),
       trailing: Text(
         val.isEmpty ? l10n.empty : val.replaceFirst(RegExp('https?://'), ''),
         style: UIs.text13Grey,
