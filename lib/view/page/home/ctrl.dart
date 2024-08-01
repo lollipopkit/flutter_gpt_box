@@ -425,6 +425,14 @@ void _onTapReplay(
 
 void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
   final ctrl = TextEditingController(text: chatItem.toMarkdown);
+  void onSubmit() {
+    chatItem.content.clear();
+    chatItem.content.add(ChatContent.text(ctrl.text));
+    _storeChat(_curChatId);
+    _chatRN.notify();
+    context.pop();
+  }
+
   await context.showRoundDialog(
     title: l10n.edit,
     child: Input(
@@ -434,14 +442,9 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
       autoCorrect: true,
       autoFocus: true,
       action: TextInputAction.send,
-      onSubmitted: (p0) {
-        chatItem.content.clear();
-        chatItem.content.add(ChatContent.text(p0));
-        _storeChat(_curChatId);
-        _chatRN.notify();
-        context.pop();
-      },
+      onSubmitted: (_) => onSubmit(),
     ),
+    actions: Btn.ok(onTap: (_) => onSubmit()).toList,
   );
 }
 

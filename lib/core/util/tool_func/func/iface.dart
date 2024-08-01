@@ -13,6 +13,8 @@ abstract final class ToolFunc {
 
   String get l10nName;
 
+  bool get defaultEnabled => true;
+
   /// For users to understand what this function does.
   /// Used in permission request dialog.
   String help(_CallResp call, _Map args) {

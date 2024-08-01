@@ -61,6 +61,7 @@
   "help": "Help",
   "helpTip": "Before you open an issue, please read the following:\n1. Paste the **entire log** (long press the title of home page) in the issue template.\n2. Make sure the issue is caused by this app.\n3. All valid and positive feedbacks are welcome. Subjective feedbacks (for example, you think another UI is better) may not be accepted.\n\nAfter you read the above, you can:\n- If you have **any questions or feature requests**, please open a [discussion]({discussion}).  \n- If you have found **any bugs**, please open an [issue]({issue}).\n",
   "history": "History",
+  "historyToolTip": "Load chats containing keywords {keywords} as context?",
   "hour": "hour",
   "ignoreContextConstraint": "Ignore context constraint",
   "ignoreTip": "Ignore tips",

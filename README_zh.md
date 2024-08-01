@@ -20,6 +20,7 @@
 
 ## 🪄 特性
 - (🥳 New) Tools
+  - 加载历史聊天作为上下文
   - 请求 GPT 添加记忆
   - 查看 Http 链接的内容。[视频](https://cdn.lolli.tech/gptbox/screenshot/tools.mp4)
   - （开发中）本地运行 JS 脚本

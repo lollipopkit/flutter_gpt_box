@@ -193,8 +193,11 @@ class _ChatPageState extends State<_ChatPage>
     final replayEnabled = chatItem.role.isUser;
 
     return [
-      Btn.row(
-        onTap: (_) => _MarkdownCopyPage.go(context, chatItem),
+      Btn.tile(
+        onTap: (c) {
+          c.pop();
+          _MarkdownCopyPage.go(context, chatItem);
+        },
         text: l10n.freeCopy,
         icon: const Icon(BoxIcons.bxs_crop),
       ),
@@ -204,26 +207,38 @@ class _ChatPageState extends State<_ChatPage>
           builder: () {
             final isWorking = _loadingChatIds.contains(_curChatId);
             if (isWorking) return UIs.placeholder;
-            return Btn.row(
-              onTap: (_) => _onTapReplay(context, _curChatId, chatItem),
+            return Btn.tile(
+              onTap: (c) {
+                c.pop();
+                _onTapReplay(context, _curChatId, chatItem);
+              },
               text: l10n.replay,
               icon: const Icon(MingCute.refresh_4_line),
             );
           },
         ),
       if (replayEnabled)
-        Btn.row(
-          onTap: (_) => _onTapEditMsg(context, chatItem),
+        Btn.tile(
+          onTap: (c) {
+            c.pop();
+            _onTapEditMsg(context, chatItem);
+          },
           text: l10n.edit,
           icon: const Icon(Icons.edit),
         ),
-      Btn.row(
-        onTap: (_) => _onTapDelChatItem(context, chatItems, chatItem),
+      Btn.tile(
+        onTap: (c) {
+          c.pop();
+          _onTapDelChatItem(context, chatItems, chatItem);
+        },
         text: l10n.delete,
         icon: const Icon(Icons.delete),
       ),
-      Btn.row(
-        onTap: (_) => Pfs.copy(chatItem.toMarkdown),
+      Btn.tile(
+        onTap: (c) {
+          c.pop();
+          Pfs.copy(chatItem.toMarkdown);
+        },
         text: l10n.copy,
         icon: const Icon(MingCute.copy_2_fill),
       ),
