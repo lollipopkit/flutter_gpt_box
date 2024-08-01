@@ -105,19 +105,33 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
   /// If items is empty, delete it directly
   if (entity.items.isEmpty) return _onDeleteChat(chatId);
 
+  /// #119
+  final diffTS = DateTime.now().millisecondsSinceEpoch - _noChatDeleteConfirmTS;
+  if (diffTS < 30 * 1000) {
+    return _onDeleteChat(chatId);
+  }
+
   if (!Stores.setting.confrimDel.fetch()) return _onDeleteChat(chatId);
 
   final name = entity.name ?? 'Untitled';
+  void onTap(BuildContext c) {
+    _onDeleteChat(chatId);
+    c.pop();
+  }
+
   context.showRoundDialog(
     title: l10n.attention,
     child: Text(l10n.delFmt(name, l10n.chat)),
-    actions: Btn.ok(
-      onTap: (c) {
-        _onDeleteChat(chatId);
-        c.pop();
-      },
-      red: true,
-    ).toList,
+    actions: [
+      Btn.text(
+        text: l10n.remember30s,
+        onTap: (c) {
+          _noChatDeleteConfirmTS = DateTime.now().millisecondsSinceEpoch;
+          onTap(c);
+        },
+      ),
+      Btn.ok(onTap: onTap),
+    ],
   );
 }
 
