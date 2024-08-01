@@ -22,21 +22,20 @@ final class Sync extends SyncCfg {
 
   @override
   Future<RemoteStorage?> get remoteStorage async {
-    final icloudEnabled = _set.icloudSync.fetch() && (isMacOS || isIOS);
-    if (icloudEnabled) {
-      await icloud.init('iCloud.tech.lolli.gptbox');
-      return icloud;
-    }
+    if (isMacOS || isIOS) await icloud.init('iCloud.tech.lolli.gptbox');
+    await webdav.init(WebdavInitArgs(
+      url: _set.webdavUrl.fetch(),
+      user: _set.webdavUser.fetch(),
+      pwd: _set.webdavPwd.fetch(),
+      prefix: 'gptbox/',
+    ));
+
+    final icloudEnabled = _set.icloudSync.fetch();
+    if (icloudEnabled) return icloud;
 
     final webdavEnabled = _set.webdavSync.fetch();
-    if (webdavEnabled) {
-      await webdav.init(WebdavInitArgs(
-          url: _set.webdavUrl.fetch(),
-          user: _set.webdavUser.fetch(),
-          pwd: _set.webdavPwd.fetch(),
-          prefix: 'gptbox/'));
-      return webdav;
-    }
+    if (webdavEnabled) return webdav;
+
     return null;
   }
 }
