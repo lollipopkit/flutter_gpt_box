@@ -18,14 +18,6 @@ Generate a title for the user content behind `$userCotentLocator` with requireme
 4. the title should be meaningful, concise, no additional punctuation and only title itself.
 $userCotentLocator''';
 
-  /// TODO: Implement this method
-  // static String getTitlePromptByModel(String model) {
-  //   return switch (model) {
-  //     _ when model.startsWith('claude') => '',
-  //     _ => titlePrompt,
-  //   };
-  // }
-
   static final _punctionsRm = RegExp('[“”]');
 
   static String prettify(String title) {

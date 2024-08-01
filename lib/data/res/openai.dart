@@ -21,7 +21,7 @@ abstract final class OpenAICfg {
     Stores.config.profileId.put(config.id);
 
     if (config.shouldUpdateRelavance(old)) {
-      updateModels();
+      updateModels(diffUrl: old.url != config.url);
       ApiBalance.refresh();
     }
   }
@@ -42,17 +42,23 @@ abstract final class OpenAICfg {
     return _modelsUseToolReExp?.hasMatch(model) ?? false;
   }
 
-  static Future<bool> updateModels({bool force = false}) async {
+  /// Update models list
+  /// - [force] force update, ignore cache
+  /// - [diffUrl] if true, not set [models.value] to empty list if failed
+  static Future<bool> updateModels({
+    bool force = false,
+    bool diffUrl = false,
+  }) async {
     if (current.url.startsWith('https://api.openai.com') &&
         current.key.isEmpty) {
       return false;
     }
     try {
-      models.value = await ModelsCacher.fetch(current.id, refresh: force);
+      models.value = await _ModelsCacher.fetch(current.id, refresh: force);
       return true;
     } catch (e) {
       Loggers.app.warning('Failed to update models', e);
-      models.value = [];
+      if (diffUrl) models.value = [];
       return false;
     }
   }
@@ -96,7 +102,7 @@ abstract final class OpenAICfg {
   }();
 }
 
-abstract final class ModelsCacher {
+abstract final class _ModelsCacher {
   static final models = <String, List<String>>{};
   static final updateTime = <String, DateTime>{};
 

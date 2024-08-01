@@ -9,8 +9,13 @@ abstract final class ApiBalance {
   static Future<void> refresh() async {
     balance.value = _balance;
     final provider = ApiBalanceProvider.fromEndpoint(OpenAICfg.current.url);
-    final newBalance = await provider?.refresh();
-    balance.value = ApiBalanceState(loading: false, state: newBalance);
+    try {
+      final newBalance = await provider?.refresh();
+      balance.value = ApiBalanceState(loading: false, state: newBalance);
+    } catch (e, s) {
+      balance.value = const ApiBalanceState(loading: false);
+      Loggers.app.warning('Refresh balance', e, s);
+    }
   }
 }
 
