@@ -13,12 +13,14 @@ abstract final class OpenAICfg {
 
   static ChatConfig get current => vn.value;
 
+  static final _store = Stores.config;
+
   static void setTo(ChatConfig config) {
     final old = vn.value;
     vn.value = config;
     apply();
     config.save();
-    Stores.config.profileId.put(config.id);
+    _store.profileId.put(config.id);
 
     if (config.shouldUpdateRelavance(old)) {
       updateModels(diffUrl: old.url != config.url);
@@ -26,8 +28,8 @@ abstract final class OpenAICfg {
     }
   }
 
-  static void setToId(String id) {
-    final cfg = Stores.config.fetch(id);
+  static void setToId([String? id]) {
+    final cfg = _store.fetch(id ?? _store.profileId.fetch());
     if (cfg != null) {
       setTo(cfg);
     } else {
@@ -74,7 +76,7 @@ abstract final class OpenAICfg {
   }
 
   static void switchToDefault(BuildContext context) {
-    final cfg = Stores.config.fetch(ChatConfig.defaultId);
+    final cfg = _store.fetch(ChatConfig.defaultId);
     if (cfg != null) return setTo(cfg);
 
     setTo(ChatConfig.defaultOne);
@@ -96,8 +98,8 @@ abstract final class OpenAICfg {
   @Deprecated('Mark it as deprecated to avoid using it directly')
   static final _init = () {
     _initToolRegexp();
-    final selectedKey = Stores.config.profileId.fetch();
-    final selected = Stores.config.fetch(selectedKey);
+    final selectedKey = _store.profileId.fetch();
+    final selected = _store.fetch(selectedKey);
     return selected ?? ChatConfig.defaultOne;
   }();
 }
