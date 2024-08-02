@@ -520,9 +520,6 @@ void _onReplay({
 
   // If is receiving the reply, ignore this action
   if (_loadingChatIds.contains(chatId)) {
-    final msg = 'Replay Chat($chatId) is receiving reply';
-    Loggers.app.warning(msg);
-    context.showSnackBar(msg);
     return;
   }
 
@@ -534,30 +531,57 @@ void _onReplay({
     return;
   }
 
-  final itemIdx = chatHistory.items.indexOf(item);
-  if (itemIdx == -1) {
+  // final itemIdx = chatHistory.items.indexOf(item);
+  // if (itemIdx == -1) {
+  //   final msg = 'Replay Chat($chatId) item($item) not found';
+  //   Loggers.app.warning(msg);
+  //   context.showSnackBar(msg);
+  //   return;
+  // }
+
+  // // tool
+  // if (itemIdx + 1 < chatHistory.items.length) {
+  //   final item = chatHistory.items.elementAt(itemIdx + 1);
+  //   if (item.role.isAssist || item.role.isTool) {
+  //     chatHistory.items.removeAt(itemIdx + 1);
+  //   }
+  // }
+  // // assist
+  // if (itemIdx + 1 < chatHistory.items.length) {
+  //   final item = chatHistory.items.elementAt(itemIdx + 1);
+  //   if (item.role.isAssist || item.role.isTool) {
+  //     chatHistory.items.removeAt(itemIdx + 1);
+  //   }
+  // }
+
+  // chatHistory.items.removeAt(itemIdx);
+
+  // Find the item, then delete all items between the item and next user msg
+  var replayMsgIdx = -1;
+  var nextUserMsgIdx = -1;
+  for (var idx = 0; idx < chatHistory.items.length; idx++) {
+    final i = chatHistory.items[idx];
+    if (i.id == item.id && i.role == item.role) {
+      replayMsgIdx = idx;
+      continue;
+    }
+    if (replayMsgIdx == -1) {
+      continue;
+    }
+    if (replayMsgIdx != -1 && i.role.isUser) {
+      nextUserMsgIdx = idx;
+      break;
+    }
+  }
+
+  if (replayMsgIdx != -1 && nextUserMsgIdx != -1) {
+    chatHistory.items.removeRange(replayMsgIdx, nextUserMsgIdx);
+  } else {
     final msg = 'Replay Chat($chatId) item($item) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    context.showSnackBar('${l10n.failed}: $msg');
     return;
   }
-
-  // tool
-  if (itemIdx + 1 < chatHistory.items.length) {
-    final item = chatHistory.items.elementAt(itemIdx + 1);
-    if (item.role.isAssist || item.role.isTool) {
-      chatHistory.items.removeAt(itemIdx + 1);
-    }
-  }
-  // assist
-  if (itemIdx + 1 < chatHistory.items.length) {
-    final item = chatHistory.items.elementAt(itemIdx + 1);
-    if (item.role.isAssist || item.role.isTool) {
-      chatHistory.items.removeAt(itemIdx + 1);
-    }
-  }
-
-  chatHistory.items.removeAt(itemIdx);
 
   final text =
       item.content.firstWhereOrNull((e) => e.type == ChatContentType.text)?.raw;
