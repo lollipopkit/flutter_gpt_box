@@ -5,9 +5,9 @@ abstract final class ChatTitleUtil {
 
   static final claudeEndReg = RegExp(r'\[\]\(ID:\d+\|UUID:\S+');
 
-  static const toolPrompt = '''
-Only returns the toolCall part.
-If there is no toolCall section returned, return the message as empty.''';
+//   static const toolPrompt = '''
+// Only returns the toolCall part.
+// If there is no toolCall section returned, return the message as empty.''';
 
   static const titlePrompt = '''
 Generate a title for the user content behind `$userCotentLocator` with requirements: 

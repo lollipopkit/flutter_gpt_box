@@ -155,13 +155,7 @@ Future<void> _onCreateText(
     try {
       resp = await OpenAI.instance.chat.create(
         model: config.model,
-        messages: [
-          ChatHistoryItem.single(
-            role: ChatRole.system,
-            raw: ChatTitleUtil.toolPrompt,
-          ).toOpenAI,
-          ...msgs,
-        ],
+        messages: msgs,
         tools: availableTools,
       );
     } catch (e, s) {
