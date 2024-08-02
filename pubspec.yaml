@@ -20,6 +20,7 @@ dependencies:
   image: ^4.2.0
   image_picker: ^1.0.7
   screenshot: ^3.0.0
+  supabase_flutter: ^2.5.8
   dart_openai: #^5.1.0
     git:
       url: https://github.com/lollipopkit/dart_openai

@@ -17,7 +17,7 @@ final _chatItemRNMap = <String, RNode>{};
 final _historyRNMap = <String, RNode>{};
 
 /// Audio / Image / File path
-final _filePicked = nvn<String>();
+final _filePicked = nvn<_ImgPicked>();
 
 final _chatType = ChatType.text.vn;
 
