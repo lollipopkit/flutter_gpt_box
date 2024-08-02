@@ -45,16 +45,13 @@ Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
   }
 
   var count = 0;
-  final msgs = workingChat.items.reversed
-      .takeWhile((e) {
-        // HISTORY_LEN = LEN - 1 (1: user's question)
-        if (config.historyLen > count) return false;
-        if (!e.role.isSystem) return false;
-        count++;
-        return true;
-      })
-      .map((e) => e.toOpenAI)
-      .toList();
+  final msgs = <OpenAIChatCompletionChoiceMessageModel>[];
+  for (final item in workingChat.items.reversed) {
+    if (count > config.historyLen) break;
+    if (item.role.isSystem) continue;
+    msgs.add(item.toOpenAI);
+    count++;
+  }
   if (prompt != null) msgs.add(prompt);
   return msgs.reversed;
 }
