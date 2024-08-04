@@ -398,8 +398,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: "v1.0.35"
-      resolved-ref: "7964acfe55e3e3f5d5232a0c2371cff5fa7edc4c"
+      ref: "v1.0.39"
+      resolved-ref: cd6c97ab4e154009c79a5f5c3aefa073415379f0
       url: "https://github.com/lppcg/fl_build.git"
     source: git
     version: "1.0.0"
@@ -1182,14 +1182,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
-  sprintf:
-    dependency: transitive
-    description:
-      name: sprintf
-      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.0"
   stack_trace:
     dependency: transitive
     description:
@@ -1346,10 +1338,10 @@ packages:
     dependency: transitive
     description:
       name: uuid
-      sha256: "814e9e88f21a176ae1359149021870e87f7cddaf633ab678a5d2b0bff7fd1ba8"
+      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.0"
+    version: "3.0.7"
   vector_graphics:
     dependency: transitive
     description:
