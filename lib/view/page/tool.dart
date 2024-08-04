@@ -31,7 +31,7 @@ class _ToolPageState extends State<ToolPage> {
       children: [
         _buildUseTool(),
         _buildModelRegExp(),
-        _buildTitle(l10n.list),
+        CenterGreyTitle(l10n.list),
         _buildSwitchTile(TfHistory.instance).cardx,
         _buildSwitchTile(TfHttpReq.instance).cardx,
         _buildMemory(),
@@ -46,7 +46,7 @@ class _ToolPageState extends State<ToolPage> {
       children: [
         _buildSwitchTile(TfMemory.instance, title: l10n.switcher),
         ListTile(
-          title: Text(l10n.edit),
+          title: Text(libL10n.edit),
           onTap: () async {
             final data = _store.memories.fetch();
             final dataMap = <String, String>{};
@@ -59,7 +59,7 @@ class _ToolPageState extends State<ToolPage> {
             );
             if (res != null) {
               _store.memories.put(res.values.toList());
-              context.showSnackBar(l10n.success);
+              context.showSnackBar(libL10n.success);
             }
           },
           trailing: const Icon(Icons.keyboard_arrow_right),
@@ -93,7 +93,7 @@ class _ToolPageState extends State<ToolPage> {
     final listenable = prop.listenable();
     return ListTile(
       leading: const Icon(Bootstrap.regex),
-      title: TipText(text: l10n.regExp, tip: l10n.modelRegExpTip),
+      title: TipText(l10n.regExp, l10n.modelRegExpTip),
       trailing: SizedBox(
         width: 60,
         child: listenable.listenVal((val) => Text(
@@ -118,7 +118,7 @@ class _ToolPageState extends State<ToolPage> {
             autoFocus: true,
             onSubmitted: onSave,
           ),
-          actions: Btn.ok(onTap: (_) => onSave(ctrl.text)).toList,
+          actions: Btn.ok(onTap: () => onSave(ctrl.text)).toList,
         );
       },
     ).cardx;
@@ -132,7 +132,7 @@ class _ToolPageState extends State<ToolPage> {
         final name = e.name;
         final tip = e.l10nTip;
         final titleW = tip != null
-            ? TipText(text: title ?? e.l10nName, tip: tip)
+            ? TipText(title ?? e.l10nName, tip)
             : Text(title ?? e.l10nName);
         return ListTile(
           title: titleW,

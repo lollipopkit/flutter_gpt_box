@@ -89,7 +89,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
     return IconButton(
       onPressed: _onTapSetting,
       icon: const Icon(Icons.settings, size: 19),
-      tooltip: l10n.settings,
+      tooltip: libL10n.setting,
     );
   }
 
@@ -154,7 +154,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
             editableTextState.contextMenuButtonItems;
         if (_inputCtrl.text.isNotEmpty) {
           buttonItems.add(ContextMenuButtonItem(
-            label: l10n.clear,
+            label: libL10n.clear,
             onPressed: () {
               _inputCtrl.clear();
             },
@@ -199,7 +199,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
             items: ChatType.btns,
             onSelected: (val) => _chatType.value = val,
             initialValue: _chatType.value,
-            tooltip: l10n.choose,
+            tooltip: libL10n.select,
             child: _buildRoundRect(Row(
               children: [
                 Icon(_chatType.value.icon, size: 15),
@@ -244,7 +244,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
   void _onTapSetting() async {
     final chat = _curChat;
     if (chat == null) {
-      context.showSnackBar(l10n.noChat);
+      context.showSnackBar(libL10n.empty);
       return;
     }
     context.showRoundDialog(
@@ -324,7 +324,7 @@ final class _ChatSettingsState extends State<_ChatSettings> {
 
   Widget _buildHeadTailMode() {
     return ListTile(
-      title: TipText(text: l10n.headTailMode, tip: l10n.headTailModeTip),
+      title: TipText(l10n.headTailMode, l10n.headTailModeTip),
       trailing: settings.listenVal((val) {
         return Switch(
           value: val.headTailMode,

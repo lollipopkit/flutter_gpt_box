@@ -42,10 +42,10 @@ final class _IntroPage extends StatelessWidget {
         _buildTitle(text: 'App'),
         ListTile(
           leading: const Icon(IonIcons.language),
-          title: Text(l10n.language),
+          title: Text(libL10n.language),
           onTap: () async {
             final selected = await ctx.showPickSingleDialog(
-              title: l10n.language,
+              title: libL10n.language,
               items: AppLocalizations.supportedLocales,
               name: (p0) => p0.code,
               initial: _setting.locale.fetch().toLocale,

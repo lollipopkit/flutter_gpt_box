@@ -26,7 +26,7 @@
   - （开发中）本地运行 JS 脚本
 - 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
 - 文本 / 图片 / 音频聊天
-- 本地化（简体中文 / English）
+- 本地化 (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)
 - 以图片形式分享聊天
 - Url Scheme，例如：`lk-gptbox://chat/new?msg=你好`
 - 与 WebDAV / iCloud 同步
@@ -60,7 +60,7 @@ Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releas
 
 ## 🆘 帮助
 
-- 吹水、参与开发，QQ群 **762870488**
+- 吹水、参与开发，Telegram `@lpktg`
 
 反馈前须知：
 1. 反馈问题请附带 log（长按首页标题），并以 bug 模版提交。

@@ -32,7 +32,7 @@ Only call this func if users explicitly ask to memorise something.''',
   Future<_Ret> run(_CallResp call, _Map args, OnToolLog log) async {
     final memory = args['memory'] as String?;
     if (memory == null) {
-      return [ChatContent.text(l10n.empty)];
+      return [ChatContent.text(libL10n.empty)];
     }
     final prop = Stores.tool.memories;
     final memories = prop.fetch();

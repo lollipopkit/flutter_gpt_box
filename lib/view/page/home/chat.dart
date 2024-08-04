@@ -194,8 +194,8 @@ class _ChatPageState extends State<_ChatPage>
 
     return [
       Btn.tile(
-        onTap: (c) {
-          c.pop();
+        onTap: () {
+          context.pop();
           _MarkdownCopyPage.go(context, chatItem);
         },
         text: l10n.freeCopy,
@@ -208,8 +208,8 @@ class _ChatPageState extends State<_ChatPage>
             final isWorking = _loadingChatIds.contains(_curChatId);
             if (isWorking) return UIs.placeholder;
             return Btn.tile(
-              onTap: (c) {
-                c.pop();
+              onTap: () {
+                context.pop();
                 _onTapReplay(context, _curChatId, chatItem);
               },
               text: l10n.replay,
@@ -219,27 +219,27 @@ class _ChatPageState extends State<_ChatPage>
         ),
       if (replayEnabled)
         Btn.tile(
-          onTap: (c) {
-            c.pop();
+          onTap: () {
+            context.pop();
             _onTapEditMsg(context, chatItem);
           },
-          text: l10n.edit,
+          text: libL10n.edit,
           icon: const Icon(Icons.edit),
         ),
       Btn.tile(
-        onTap: (c) {
-          c.pop();
+        onTap: () {
+          context.pop();
           _onTapDelChatItem(context, chatItems, chatItem);
         },
         text: l10n.delete,
         icon: const Icon(Icons.delete),
       ),
       Btn.tile(
-        onTap: (c) {
-          c.pop();
+        onTap: () {
+          context.pop();
           Pfs.copy(chatItem.toMarkdown);
         },
-        text: l10n.copy,
+        text: libL10n.copy,
         icon: const Icon(MingCute.copy_2_fill),
       ),
     ];

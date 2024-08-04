@@ -579,7 +579,7 @@ void _onReplay({
   } else {
     final msg = 'Replay Chat($chatId) item($item) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar('${l10n.failed}: $msg');
+    context.showSnackBar('${libL10n.fail}: $msg');
     return;
   }
 

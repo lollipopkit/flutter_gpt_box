@@ -9,7 +9,7 @@ final class _CustomAppBar extends CustomAppBar {
       listenable: _appbarTitleRN,
       builder: () {
         final entity = _curChat;
-        if (entity == null) return Text(l10n.empty);
+        if (entity == null) return Text(libL10n.empty);
         return AnimatedSwitcher(
           duration: _durationMedium,
           switchInCurve: Easing.standardDecelerate,

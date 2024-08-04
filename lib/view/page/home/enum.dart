@@ -44,7 +44,7 @@ enum HomePageEnum {
               context.pop();
               Routes.profile.go(context);
             },
-            child: Text(l10n.add),
+            child: Text(libL10n.add),
           );
           final profiles = Stores.config.fetchAll().values.toList();
           final select = await context.showPickSingleDialog(

@@ -165,7 +165,7 @@ If blob, encode it into base64 String.''',
               respBody += html;
             }
           } catch (e) {
-            log('Http $method -> ${l10n.error}: $e');
+            log('Http $method -> ${libL10n.error}: $e');
           }
         }
       }
@@ -176,7 +176,7 @@ If blob, encode it into base64 String.''',
     }
 
     await Future.delayed(Durations.short3);
-    log('Http $method -> ${l10n.success}');
+    log('Http $method -> ${libL10n.success}');
     await Future.delayed(Durations.short3);
 
     return [ChatContent.text(respBody)];
