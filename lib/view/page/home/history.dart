@@ -88,11 +88,11 @@ class _HistoryPageState extends State<_HistoryPage>
         mainAxisSize: MainAxisSize.min,
         children: [
           Btn.icon(
-            onTap: (_) => _onTapRenameChat(chatId, context),
+            onTap: () => _onTapRenameChat(chatId, context),
             icon: const Icon(BoxIcons.bx_rename, size: 19),
           ),
           Btn.icon(
-            onTap: (_) => _onTapDeleteChat(chatId, context),
+            onTap: () => _onTapDeleteChat(chatId, context),
             icon: const Icon(Icons.delete, size: 19),
           ),
         ],

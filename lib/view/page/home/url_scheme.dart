@@ -96,7 +96,7 @@ abstract final class AppLink {
               return true;
           }
         }
-        final msg = l10n.invalidLinkFmt('${l10n.empty} page');
+        final msg = l10n.invalidLinkFmt('${libL10n.empty} page');
         context.showSnackBar(msg);
         Loggers.app.warning(msg);
         return true;
@@ -105,7 +105,7 @@ abstract final class AppLink {
         final openAiKey = params['openAiKey'];
         final openAiModel = params['openAiModel'];
         if (openAiKey == null && openAiUrl == null && openAiModel == null) {
-          final msg = l10n.invalidLinkFmt('${l10n.empty} config');
+          final msg = l10n.invalidLinkFmt('${libL10n.empty} config');
           context.showSnackBar(msg);
           Loggers.app.warning(msg);
           return true;

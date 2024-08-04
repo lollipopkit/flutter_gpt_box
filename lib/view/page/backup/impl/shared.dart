@@ -34,7 +34,7 @@ void _askConfirm(BuildContext context, List<ChatHistory> chats) {
           context.pop();
           HomePage.afterRestore();
         },
-        child: Text(l10n.restore),
+        child: Text(libL10n.restore),
       ),
     ],
   );

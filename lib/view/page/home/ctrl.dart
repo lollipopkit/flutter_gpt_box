@@ -84,7 +84,7 @@ void _onTapDelChatItem(
     child: Text(
       l10n.delFmt('${chatItem.role.localized}#$idx', l10n.chat),
     ),
-    actions: Btn.ok(onTap: (c) => c.pop(true), red: true).toList,
+    actions: Btnx.okReds,
   );
   if (result != true) return;
   chatItems.remove(chatItem);
@@ -114,9 +114,9 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
   if (!Stores.setting.confrimDel.fetch()) return _onDeleteChat(chatId);
 
   final name = entity.name ?? 'Untitled';
-  void onTap(BuildContext c) {
+  void onTap() {
     _onDeleteChat(chatId);
-    c.pop();
+    context.pop();
   }
 
   context.showRoundDialog(
@@ -125,9 +125,9 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
     actions: [
       Btn.text(
         text: l10n.remember30s,
-        onTap: (c) {
+        onTap: () {
           _noChatDeleteConfirmTS = DateTime.now().millisecondsSinceEpoch;
-          onTap(c);
+          onTap();
         },
       ),
       Btn.ok(onTap: onTap),
@@ -160,7 +160,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
       autoFocus: true,
       onSubmitted: (p0) => context.pop(p0),
     ),
-    actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
+    actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
   );
   if (title == null || title.isEmpty) return;
   final ne = entity.copyWith(name: title)..save();
@@ -232,12 +232,12 @@ Future<void> _onTapImgPick(BuildContext context) async {
   final val = _filePicked.value;
   if (val != null) {
     final delete = await context.showRoundDialog(
-      title: l10n.file,
+      title: libL10n.file,
       child: Image.file(File(val), fit: BoxFit.cover),
       actions: [
         TextButton(
           onPressed: () => context.pop(true),
-          child: Text(l10n.clear, style: UIs.textRed),
+          child: Text(libL10n.clear, style: UIs.textRed),
         ),
       ],
     );
@@ -265,7 +265,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
       fn: () async => ImageUtil.compress(await result.readAsBytes()),
     );
     if (err != null || compressed == null) {
-      context.showSnackBar('${l10n.failed}: ${l10n.compress}');
+      context.showSnackBar('${libL10n.fail}: ${l10n.compress}');
       isCompressed = false;
     } else {
       await File(imgPath).writeAsBytes(compressed);
@@ -350,7 +350,7 @@ void _removeDuplicateHistory(BuildContext context) async {
     final item = _allHistories[id];
     if (item == null) continue;
     children.add(Text(
-      '${idx + 1}. ${item.items.firstOrNull?.toMarkdown ?? l10n.empty}',
+      '${idx + 1}. ${item.items.firstOrNull?.toMarkdown ?? libL10n.empty}',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: UIs.text12Grey,
@@ -417,7 +417,7 @@ void _onTapReplay(
   final sure = await context.showRoundDialog<bool>(
     title: l10n.attention,
     child: Text('${l10n.replay} ?'),
-    actions: Btn.ok(onTap: (c) => c.pop(true), red: true).toList,
+    actions: Btnx.okReds,
   );
   if (sure != true) return;
   _onReplay(context: context, chatId: chatId, item: item);
@@ -434,7 +434,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
   }
 
   await context.showRoundDialog(
-    title: l10n.edit,
+    title: libL10n.edit,
     child: Input(
       controller: ctrl,
       maxLines: 7,
@@ -444,7 +444,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
       action: TextInputAction.send,
       onSubmitted: (_) => onSubmit(),
     ),
-    actions: Btn.ok(onTap: (_) => onSubmit()).toList,
+    actions: Btn.ok(onTap: onSubmit).toList,
   );
 }
 
@@ -607,7 +607,7 @@ Future<bool> _askToolConfirm(
   final permitted = await context.showRoundDialog(
     title: l10n.attention,
     child: Text('${l10n.toolConfirmFmt(func.name)}\n\n$help'),
-    actions: Btn.ok(onTap: (c) => c.pop(true), red: true).toList,
+    actions: Btnx.okReds,
   );
   if (permitted == true) {
     permittedTools.add(func.name);

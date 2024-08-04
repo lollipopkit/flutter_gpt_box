@@ -65,7 +65,7 @@ final class ImagePage extends StatelessWidget {
                 child: Text(
                   l10n.delFmt(args?.title ?? l10n.untitled, l10n.image),
                 ),
-                actions: Btn.ok(onTap: (c) => c.pop(true)).toList,
+                actions: Btnx.oks,
               );
               if (sure != true) return;
               context.pop(const ImagePageRet(isDeleted: true));

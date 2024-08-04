@@ -13,12 +13,12 @@ final class _Drawer extends StatelessWidget {
           },
           onLongPress: () => _onLongTapSetting(context),
           leading: const Icon(Icons.settings),
-          title: Text(l10n.settings),
+          title: Text(libL10n.setting),
         ).cardx,
         ListTile(
           onTap: () => Routes.profile.go(context),
           leading: const Icon(Icons.person),
-          title: Text('API ${l10n.profile}'),
+          title: Text(l10n.profile),
         ).cardx,
         ListTile(
           leading: const Icon(MingCute.tool_fill),
@@ -35,7 +35,7 @@ final class _Drawer extends StatelessWidget {
             }
           },
           leading: const Icon(Icons.backup),
-          title: Text('${l10n.backup} & ${l10n.restore}'),
+          title: Text(libL10n.backup),
         ).cardx,
         ListTile(
           leading: const Icon(BoxIcons.bxs_videos),
@@ -45,7 +45,7 @@ final class _Drawer extends StatelessWidget {
         ListTile(
           onTap: () => Routes.about.go(context),
           leading: const Icon(Icons.info),
-          title: Text(l10n.about),
+          title: Text(libL10n.about),
         ).cardx,
       ];
 

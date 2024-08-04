@@ -7,7 +7,7 @@ Widget _buildWebdav(BuildContext context) {
       title: const Text('WebDAV'),
       children: [
         ListTile(
-          title: Text(l10n.settings),
+          title: Text(libL10n.setting),
           trailing: const Icon(Icons.settings),
           onTap: () async => _onTapWebdavSetting(context),
         ),
@@ -24,7 +24,7 @@ Widget _buildWebdav(BuildContext context) {
                 if (Stores.setting.webdavUrl.fetch().isEmpty ||
                     Stores.setting.webdavUser.fetch().isEmpty ||
                     Stores.setting.webdavPwd.fetch().isEmpty) {
-                  context.showSnackBar(l10n.emptyFields(l10n.settings));
+                  context.showSnackBar(l10n.emptyFields(libL10n.setting));
                   return false;
                 }
               }
@@ -44,13 +44,13 @@ Widget _buildWebdav(BuildContext context) {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Btn.text(
-                    onTap: (_) => _onTapWebdavDl(context),
-                    text: l10n.restore,
+                    onTap: () => _onTapWebdavDl(context),
+                    text: libL10n.restore,
                   ),
                   UIs.width7,
                   Btn.text(
-                    onTap: (_) => _onTapWebdavUp(context),
-                    text: l10n.backup,
+                    onTap: () => _onTapWebdavUp(context),
+                    text: libL10n.backup,
                   ),
                 ],
               );
@@ -66,10 +66,10 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
   _webdavLoading.value = true;
   try {
     final files = await webdav.list();
-    if (files.isEmpty) return context.showSnackBar(l10n.empty);
+    if (files.isEmpty) return context.showSnackBar(libL10n.empty);
 
     final fileName = await context.showPickSingleDialog(
-      title: l10n.choose,
+      title: libL10n.select,
       items: files,
     );
     if (fileName == null) return;
@@ -78,7 +78,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     final dlFile = await File('${Paths.doc}/$fileName').readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak.merge(force: true);
-    context.showSnackBar(l10n.success);
+    context.showSnackBar(libL10n.success);
   } catch (e, s) {
     context.showErrDialog(e: e, s: s, operation: 'Download webdav backup');
   } finally {
@@ -92,7 +92,7 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
     final content = await Backup.backup();
     await File(Paths.bak).writeAsString(content);
     await webdav.upload(relativePath: Miscs.bakFileName);
-    context.showSnackBar(l10n.backupSuccessful);
+    context.showSnackBar(libL10n.success);
   } catch (e, s) {
     context.showErrDialog(e: e, s: s, operation: 'Upload webdav backup');
   } finally {
@@ -125,7 +125,7 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
     Stores.setting.webdavUser.put(userCtrl.text);
     Stores.setting.webdavPwd.put(pwdCtrl.text);
     context.pop();
-    context.showSnackBar(l10n.success);
+    context.showSnackBar(libL10n.success);
   }
 
   final userNode = FocusNode();
@@ -157,6 +157,6 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
         ),
       ],
     ),
-    actions: Btn.ok(onTap: (_) => onSubmit()).toList,
+    actions: Btn.ok(onTap: onSubmit).toList,
   );
 }

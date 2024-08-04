@@ -39,24 +39,12 @@ final class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
         _buildBalance(),
-        _buildTitle(l10n.chat),
+        CenterGreyTitle(l10n.chat),
         _buildChat(),
-        _buildTitle(l10n.more),
+        CenterGreyTitle(l10n.more),
         _buildMore(),
         const SizedBox(height: 37),
       ],
-    );
-  }
-
-  Widget _buildTitle(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 23, bottom: 17),
-      child: Center(
-        child: Text(
-          text,
-          style: UIs.textGrey,
-        ),
-      ),
     );
   }
 
@@ -122,16 +110,16 @@ final class _ProfilePageState extends State<ProfilePage> {
           if (cfg.id != ChatConfig.defaultId)
             Btn.icon(
               icon: const Icon(Icons.delete, size: 19),
-              onTap: (_) {
+              onTap: () {
                 if (cfg.id == ChatConfig.defaultId) return;
                 context.showRoundDialog(
                   title: l10n.attention,
                   child: Text(l10n.delFmt(cfg.name, l10n.profile)),
                   actions: Btn.ok(
-                    onTap: (c) {
+                    onTap: () {
                       Stores.config.delete(cfg.id);
                       _cfgRN.notify();
-                      c.pop();
+                      context.pop();
                       if (cfg.id == cfg.id) {
                         OpenAICfg.switchToDefault(context);
                         _cfgRN.notify();
@@ -145,24 +133,24 @@ final class _ProfilePageState extends State<ProfilePage> {
           // Rename
           Btn.icon(
             icon: const Icon(Icons.edit, size: 19),
-            onTap: (_) {
+            onTap: () {
               final ctrl = TextEditingController(text: cfg.name);
               context.showRoundDialog(
-                title: l10n.edit,
+                title: libL10n.edit,
                 child: Input(
                   controller: ctrl,
-                  label: l10n.name,
+                  label: libL10n.name,
                   autoFocus: true,
                 ),
                 actions: Btn.ok(
-                  onTap: (c) {
+                  onTap: () {
                     final name = ctrl.text;
                     if (name.isEmpty) return;
                     final newCfg = cfg.copyWith(name: name);
                     newCfg.save();
                     OpenAICfg.setTo(newCfg);
                     _cfgRN.notify();
-                    c.pop();
+                    context.pop();
                   },
                 ).toList,
               );
@@ -171,7 +159,7 @@ final class _ProfilePageState extends State<ProfilePage> {
           // Switch
           Btn.icon(
             icon: const Icon(OctIcons.arrow_switch, size: 19),
-            onTap: (_) async {
+            onTap: () async {
               final vals = Stores.config.box
                   .toJson<ChatConfig>(includeInternal: false)
                   .values
@@ -190,16 +178,16 @@ final class _ProfilePageState extends State<ProfilePage> {
           ),
           Btn.icon(
             icon: const Icon(Icons.add, size: 19),
-            onTap: (_) async {
+            onTap: () async {
               final ctrl = TextEditingController();
               final ok = await context.showRoundDialog(
-                title: l10n.add,
+                title: libL10n.add,
                 child: Input(
                   controller: ctrl,
-                  label: l10n.name,
+                  label: libL10n.name,
                   autoFocus: true,
                 ),
-                actions: Btn.ok(onTap: (c) => c.pop(true)).toList,
+                actions: Btnx.oks,
               );
               if (ok != true) return;
               final clipboardData = await Pfs.paste();
@@ -234,7 +222,7 @@ final class _ProfilePageState extends State<ProfilePage> {
       trailing: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 60),
         child: Text(
-          val.isEmpty ? l10n.empty : val,
+          val.isEmpty ? libL10n.empty : val,
           style: UIs.textGrey,
           textAlign: TextAlign.end,
           overflow: TextOverflow.ellipsis,
@@ -243,14 +231,14 @@ final class _ProfilePageState extends State<ProfilePage> {
       onTap: () async {
         final ctrl = TextEditingController(text: val);
         final result = await context.showRoundDialog<String>(
-          title: l10n.edit,
+          title: libL10n.edit,
           child: Input(
             controller: ctrl,
             hint: 'sk-xxx',
             maxLines: 3,
             autoFocus: true,
           ),
-          actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
+          actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result));
@@ -264,27 +252,27 @@ final class _ProfilePageState extends State<ProfilePage> {
       leading: const Icon(Icons.link),
       title: const Text('URL'),
       trailing: Text(
-        val.isEmpty ? l10n.empty : val.replaceFirst(RegExp('https?://'), ''),
+        val.isEmpty ? libL10n.empty : val.replaceFirst(RegExp('https?://'), ''),
         style: UIs.text13Grey,
       ),
       onTap: () async {
         final ctrl = TextEditingController(text: val);
         final result = await context.showRoundDialog<String>(
-          title: l10n.edit,
+          title: libL10n.edit,
           child: Input(
             controller: ctrl,
             hint: 'https://api.openai.com',
             maxLines: 3,
             autoFocus: true,
           ),
-          actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
+          actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
         if (result.contains('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
           final sure = await context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.apiUrlTip),
-            actions: Btn.ok(onTap: (c) => c.pop(true), red: true).toList,
+            actions: Btnx.okReds,
           );
           if (sure != true) return;
         }
@@ -354,7 +342,7 @@ final class _ProfilePageState extends State<ProfilePage> {
                 autoFocus: true,
                 onSubmitted: (s) => onSave(s),
               ),
-              actions: Btn.ok(onTap: (_) => onSave(ctrl.text)).toList,
+              actions: Btn.ok(onTap: () => onSave(ctrl.text)).toList,
             );
           },
           child: Text(l10n.custom),
@@ -442,7 +430,7 @@ final class _ProfilePageState extends State<ProfilePage> {
       trailing: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 60),
         child: Text(
-          val.isEmpty ? l10n.empty : val,
+          val.isEmpty ? libL10n.empty : val,
           style: UIs.textGrey,
           textAlign: TextAlign.end,
           overflow: TextOverflow.ellipsis,
@@ -451,13 +439,13 @@ final class _ProfilePageState extends State<ProfilePage> {
       onTap: () async {
         final ctrl = TextEditingController(text: val);
         final result = await context.showRoundDialog<String>(
-          title: l10n.edit,
+          title: libL10n.edit,
           child: Input(
             controller: ctrl,
             maxLines: 11,
             autoFocus: true,
           ),
-          actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
+          actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
         OpenAICfg.setTo(OpenAICfg.current.copyWith(prompt: result));
@@ -469,19 +457,19 @@ final class _ProfilePageState extends State<ProfilePage> {
   Widget _buildHistoryLength(int val) {
     return ListTile(
       leading: const Icon(Icons.history),
-      title: TipText(text: l10n.chatHistoryLength, tip: l10n.chatHistoryTip),
+      title: TipText(l10n.chatHistoryLength, l10n.chatHistoryTip),
       trailing: Text(val.toString(), style: UIs.text13Grey),
       onTap: () async {
         final ctrl = TextEditingController(text: val.toString());
         final result = await context.showRoundDialog<String>(
-          title: l10n.edit,
+          title: libL10n.edit,
           child: Input(
             controller: ctrl,
             hint: '7',
             autoFocus: true,
             type: TextInputType.number,
           ),
-          actions: Btn.ok(onTap: (c) => c.pop(ctrl.text)).toList,
+          actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
         final newVal = int.tryParse(result);

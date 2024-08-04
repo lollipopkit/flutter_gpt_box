@@ -29,9 +29,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: Key(localeStr),
-      appBar: CustomAppBar(
-        title: Text(l10n.settings),
-      ),
+      appBar: CustomAppBar(title: Text(libL10n.setting)),
       body: _buildBody(),
     );
   }
@@ -40,24 +38,12 @@ class _SettingPageState extends State<SettingPage> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
-        _buildTitle('App'),
+        const CenterGreyTitle('App'),
         _buildApp(),
-        _buildTitle(l10n.chat),
+        CenterGreyTitle(l10n.chat),
         _buildChat(),
         const SizedBox(height: 37),
       ],
-    );
-  }
-
-  Widget _buildTitle(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 23, bottom: 17),
-      child: Center(
-        child: Text(
-          text,
-          style: UIs.textGrey,
-        ),
-      ),
     );
   }
 
@@ -130,7 +116,7 @@ class _SettingPageState extends State<SettingPage> {
           onTap: () async {
             final ctrl = TextEditingController(text: primaryColor.toHex);
             await context.showRoundDialog(
-              title: l10n.select,
+              title: libL10n.select,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -147,12 +133,10 @@ class _SettingPageState extends State<SettingPage> {
                   )
                 ],
               ),
-              actions: Btn.ok(
-                onTap: (c) {
-                  _onSaveColor(ctrl.text);
-                  c.pop();
-                },
-              ).toList,
+              actions: Btn.ok(onTap: () {
+                _onSaveColor(ctrl.text);
+                context.pop();
+              }).toList,
             );
           },
         );
@@ -175,16 +159,16 @@ class _SettingPageState extends State<SettingPage> {
       valueListenable: _store.locale.listenable(),
       builder: (_, val, __) => ListTile(
         leading: const Icon(MingCute.translate_2_line),
-        title: Text(l10n.lang),
+        title: Text(libL10n.language),
         trailing: Text(
-          val.isEmpty ? l10n.localeName : val,
+          val.isEmpty ? context.localeNativeName : val,
           style: UIs.text13Grey,
         ),
         onTap: () async {
           final result = await context.showPickSingleDialog<Locale>(
-            title: l10n.lang,
+            title: libL10n.language,
             items: AppLocalizations.supportedLocales,
-            name: (e) => e.toLanguageTag(),
+            name: (e) => e.nativeName,
             initial: val.toLocale ?? l10n.localeName.toLocale,
           );
           if (result != null) {
@@ -209,8 +193,8 @@ class _SettingPageState extends State<SettingPage> {
         builder: (_, val, __) {
           final text = switch (val) {
             null => '${l10n.current} v1.0.${Build.build}, ${l10n.clickToCheck}',
-            > Build.build => l10n.versionHaveUpdate(val),
-            _ => l10n.versionUpdated(Build.build),
+            > Build.build => libL10n.versionHasUpdate(val),
+            _ => libL10n.versionUpdated(Build.build),
           };
           return Text(text, style: UIs.textGrey);
         },
@@ -278,7 +262,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildSoftWrap() {
     return ListTile(
       leading: const Icon(Icons.wrap_text),
-      title: TipText(text: l10n.softWrap, tip: l10n.codeBlock),
+      title: TipText(l10n.softWrap, l10n.codeBlock),
       trailing: StoreSwitch(prop: _store.softWrap),
     );
   }
@@ -359,7 +343,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildCompressImg() {
     return ListTile(
       leading: const Icon(Icons.compress),
-      title: TipText(text: l10n.compress, tip: l10n.compressImgTip),
+      title: TipText(l10n.compress, l10n.compressImgTip),
       trailing: StoreSwitch(prop: _store.compressImg),
     );
   }
@@ -367,7 +351,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildSaveErrChat() {
     return ListTile(
       leading: const Icon(Icons.save),
-      title: TipText(text: l10n.saveErrChat, tip: l10n.saveErrChatTip),
+      title: TipText(l10n.saveErrChat, l10n.saveErrChatTip),
       trailing: StoreSwitch(prop: _store.saveErrChat),
     );
   }
@@ -375,7 +359,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildScrollSwitchChat() {
     return ListTile(
       leading: const Icon(Icons.swap_vert),
-      title: TipText(text: l10n.scrollSwitchChat, tip: l10n.needRestart),
+      title: TipText(l10n.scrollSwitchChat, l10n.needRestart),
       trailing: StoreSwitch(prop: _store.scrollSwitchChat),
     );
   }
@@ -384,7 +368,7 @@ class _SettingPageState extends State<SettingPage> {
     final property = _store.avatar;
     return ListTile(
       leading: const Icon(Bootstrap.person_vcard_fill, size: 22),
-      title: Text(l10n.name),
+      title: Text(libL10n.name),
       trailing: ValBuilder(
         listenable: _store.avatar.listenable(),
         builder: (val) => Text(val, style: const TextStyle(fontSize: 18)),
@@ -397,7 +381,7 @@ class _SettingPageState extends State<SettingPage> {
         }
 
         await context.showRoundDialog(
-          title: l10n.name,
+          title: libL10n.name,
           child: Input(
             controller: ctrl,
             type: TextInputType.name,
@@ -405,7 +389,7 @@ class _SettingPageState extends State<SettingPage> {
             autoFocus: true,
             onSubmitted: (s) => onSave(s),
           ),
-          actions: Btn.ok(onTap: (_) => onSave(ctrl.text)).toList,
+          actions: Btn.ok(onTap: () => onSave(ctrl.text)).toList,
         );
       },
     );

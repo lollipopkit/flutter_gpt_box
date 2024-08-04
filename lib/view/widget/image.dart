@@ -5,7 +5,6 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gpt_box/core/route/page.dart';
-import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/view/page/image.dart';
 
 final class ImageCard extends StatefulWidget {
@@ -53,14 +52,14 @@ class _ImageCardState extends State<ImageCard> {
           if (err != null || trace != null) {
             final text = '$err\n\n```sh\n$trace```';
             context.showRoundDialog(
-              title: l10n.error,
+              title: libL10n.error,
               child: SimpleMarkdown(data: text),
               actions: [
                 TextButton(
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: text));
                   },
-                  child: Text(l10n.copy),
+                  child: Text(libL10n.copy),
                 )
               ],
             );
@@ -120,7 +119,7 @@ class _ImageCardState extends State<ImageCard> {
             children: [
               const Icon(Icons.broken_image, size: 50),
               UIs.height13,
-              Text('${l10n.error} Log'),
+              Text(libL10n.log),
             ],
           );
         },

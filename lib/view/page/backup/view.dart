@@ -37,9 +37,7 @@ final class BackupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: Text(l10n.backup),
-      ),
+      appBar: CustomAppBar(title: Text(libL10n.backup)),
       body: _buildBody(context),
     );
   }
@@ -50,27 +48,14 @@ final class BackupPage extends StatelessWidget {
       children: [
         _buildTip(),
         //_buildTitle(l10n.settings),
-        _buildTitle('App'),
+        const CenterGreyTitle('App'),
         if (isMacOS || isIOS) _buildIcloud(context),
         if (!isWeb) _buildWebdav(context),
         _buildFile(context),
-        _buildTitle(l10n.thirdParty),
+        CenterGreyTitle(l10n.thirdParty),
         _buildGPTNext(context),
         _buildOpenAI(context),
       ],
-    );
-  }
-
-  Widget _buildTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 17),
-      child: Align(
-        alignment: Alignment.center,
-        child: Text(
-          title,
-          style: UIs.textGrey,
-        ),
-      ),
     );
   }
 

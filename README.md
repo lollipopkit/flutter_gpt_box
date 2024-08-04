@@ -26,7 +26,7 @@ Please refrain from using it in production environments or for critical data.
   -  (developing) running JS scripts locally.
 - Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
 - Text / Image / Audio chat.
-- Localization. (简体中文 / English)
+- Localization. (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)
 - Share chat as image.
 - Url Scheme, eg: `lk-gptbox://chat/new?msg=hello`
 - Sync with WebDAV / iCloud.
@@ -59,6 +59,8 @@ Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releas
 
 
 ## 🆘 Help
+Telegram group `@lpktg`.
+
 Before you open an issue, please read the following:
 1. Paste the **entire log** (long press home title) in the issue template.
 2. Make sure whether the issue is caused by this app.

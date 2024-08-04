@@ -4,10 +4,10 @@ Widget _buildFile(BuildContext context) {
   return CardX(
     child: ExpandTile(
       leading: const Icon(MingCute.file_fill),
-      title: Text(l10n.file),
+      title: Text(libL10n.file),
       children: [
         ListTile(
-          title: Text(l10n.backup),
+          title: Text(libL10n.backup),
           trailing: const Icon(Icons.save),
           onTap: () async {
             await Backup.backupToFile();
@@ -16,7 +16,7 @@ Widget _buildFile(BuildContext context) {
         ),
         ListTile(
           trailing: const Icon(Icons.restore),
-          title: Text(l10n.restore),
+          title: Text(libL10n.restore),
           onTap: () async => _onTapFileRestore(context),
         ),
       ],
@@ -49,7 +49,7 @@ void _onTapFileRestore(BuildContext context) async {
             context.pop(true);
             await backup.merge(force: true);
           },
-          child: Text(l10n.restore),
+          child: Text(libL10n.restore),
         ),
       ],
     );

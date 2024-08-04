@@ -11,9 +11,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: Text(l10n.about, style: UIs.text18),
-      ),
+      appBar: CustomAppBar(title: Text(libL10n.about)),
       body: Center(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 17),
@@ -44,20 +42,15 @@ class AboutPage extends StatelessWidget {
         padding: const EdgeInsets.all(17),
         child: SimpleMarkdown(
           data: '''
-### 👋🏻 ${l10n.myOtherApps}
-- [Server Box](${Urls.serverBoxRepo}): View status & control your server
-
-
-### 🥳 ${l10n.contributor} & ${l10n.participant}
 ${GithubId.markdownStr}
+
+
+### 💡 ${l10n.myOtherApps}
+[Server Box](${Urls.serverBoxRepo}): View status & control your server
 
 
 ### 🗂️ ${l10n.privacy}
 ${l10n.privacyTip}
-
-
-### 😣 ${l10n.help}
-${l10n.helpTip(Urls.repoDiscussion, Urls.repoIssue)}
 
 
 ### 📝 ${l10n.license}
