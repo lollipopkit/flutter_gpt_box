@@ -68,18 +68,6 @@ class _ToolPageState extends State<ToolPage> {
     ).cardx;
   }
 
-  Widget _buildTitle(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 23, bottom: 17),
-      child: Center(
-        child: Text(
-          text,
-          style: UIs.textGrey,
-        ),
-      ),
-    );
-  }
-
   Widget _buildUseTool() {
     return ListTile(
       leading: const Icon(MingCute.tool_line),
