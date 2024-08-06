@@ -1,4 +1,6 @@
 PODS:
+  - app_links (1.0.0):
+    - FlutterMacOS
   - audioplayers_darwin (0.0.1):
     - FlutterMacOS
   - file_selector_macos (0.0.1):
@@ -13,7 +15,8 @@ PODS:
     - FlutterMacOS
   - share_plus (0.0.1):
     - FlutterMacOS
-  - uni_links_desktop (0.0.1):
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
     - FlutterMacOS
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
@@ -21,6 +24,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - app_links (from `Flutter/ephemeral/.symlinks/plugins/app_links/macos`)
   - audioplayers_darwin (from `Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
@@ -28,11 +32,13 @@ DEPENDENCIES:
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - screen_retriever (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos`)
   - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
-  - uni_links_desktop (from `Flutter/ephemeral/.symlinks/plugins/uni_links_desktop/macos`)
+  - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
   - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
 EXTERNAL SOURCES:
+  app_links:
+    :path: Flutter/ephemeral/.symlinks/plugins/app_links/macos
   audioplayers_darwin:
     :path: Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/macos
   file_selector_macos:
@@ -47,23 +53,24 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos
   share_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/share_plus/macos
-  uni_links_desktop:
-    :path: Flutter/ephemeral/.symlinks/plugins/uni_links_desktop/macos
+  shared_preferences_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
   url_launcher_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
   window_manager:
     :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
 SPEC CHECKSUMS:
+  app_links: 10e0a0ab602ffaf34d142cd4862f29d34b303b2a
   audioplayers_darwin: dcad41de4fbd0099cb3749f7ab3b0cb8f70b810c
-  file_selector_macos: 468fb6b81fac7c0e88d71317f3eec34c3b008ff9
+  file_selector_macos: 54fdab7caa3ac3fc43c9fac4d7d8d231277f8cf2
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   icloud_storage: 33b05299e26d1391d724da8d62860e702380a1cd
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
   share_plus: 36537c04ce0c3e3f5bd297ce4318b6d5ee5fd6cf
-  uni_links_desktop: 45900fb319df48fcdea2df0756e9c2626696b026
-  url_launcher_macos: d2691c7dd33ed713bf3544850a623080ec693d95
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  url_launcher_macos: 5f437abeda8c85500ceb03f5c1938a8c5a705399
   window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
 
 PODFILE CHECKSUM: eec3430f260cde219af51c43f1bcfccf35ab54d0

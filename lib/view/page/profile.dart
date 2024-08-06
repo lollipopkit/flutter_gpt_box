@@ -35,15 +35,11 @@ final class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildBody() {
-    return ListView(
+    return MultiList(
       padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
-        _buildBalance(),
-        CenterGreyTitle(l10n.chat),
-        _buildChat(),
-        CenterGreyTitle(l10n.more),
-        _buildMore(),
-        const SizedBox(height: 37),
+        [CenterGreyTitle(l10n.chat), _buildChat()],
+        [CenterGreyTitle(l10n.more), _buildMore()],
       ],
     );
   }
@@ -74,6 +70,7 @@ final class _ProfilePageState extends State<ProfilePage> {
         final cfg = OpenAICfg.current;
         final children = [
           _buildSwitchCfg(cfg),
+          _buildBalance(),
           _buildOpenAIKey(cfg.key),
           _buildOpenAIUrl(cfg.url),
           _buildOpenAIModels(cfg),

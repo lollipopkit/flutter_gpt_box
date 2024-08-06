@@ -22,27 +22,29 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   final _store = Stores.setting;
-
-  var localeStr = '';
+  var _localeStr = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Key(localeStr),
+      key: Key(_localeStr),
       appBar: CustomAppBar(title: Text(libL10n.setting)),
       body: _buildBody(),
     );
   }
 
   Widget _buildBody() {
-    return ListView(
+    return MultiList(
       padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
-        const CenterGreyTitle('App'),
-        _buildApp(),
-        CenterGreyTitle(l10n.chat),
-        _buildChat(),
-        const SizedBox(height: 37),
+        [
+          const CenterGreyTitle('App'),
+          _buildApp(),
+        ],
+        [
+          CenterGreyTitle(l10n.chat),
+          _buildChat(),
+        ]
       ],
     );
   }
@@ -176,7 +178,7 @@ class _SettingPageState extends State<SettingPage> {
             _store.locale.put(newLocaleStr);
             await RNodes.app.notify(delay: true);
             setState(() {
-              localeStr = newLocaleStr;
+              _localeStr = newLocaleStr;
             });
           }
         },
@@ -298,6 +300,7 @@ class _SettingPageState extends State<SettingPage> {
       children: [
         _buildJoinBeta(),
         _buildCupertinoRoute(),
+        if (isDesktop) _buildHideTitleBar(),
       ],
     );
   }
@@ -405,6 +408,14 @@ class _SettingPageState extends State<SettingPage> {
         _buildDeleteConfrim(),
         _buildCompressImg(),
       ],
+    );
+  }
+
+  Widget _buildHideTitleBar() {
+    return ListTile(
+      leading: const Icon(Bootstrap.window_sidebar, size: 20),
+      title: Text(libL10n.hideTitleBar),
+      trailing: StoreSwitch(prop: _store.hideTitleBar),
     );
   }
 }

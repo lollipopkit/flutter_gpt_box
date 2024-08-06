@@ -26,16 +26,20 @@ class _ToolPageState extends State<ToolPage> {
   }
 
   Widget _buildBody() {
-    return ListView(
+    return MultiList(
       padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
-        _buildUseTool(),
-        _buildModelRegExp(),
-        CenterGreyTitle(l10n.list),
-        _buildSwitchTile(TfHistory.instance).cardx,
-        _buildSwitchTile(TfHttpReq.instance).cardx,
-        _buildMemory(),
-        const SizedBox(height: 37),
+        [
+          CenterGreyTitle(l10n.tool),
+          _buildUseTool(),
+          _buildModelRegExp(),
+        ],
+        [
+          CenterGreyTitle(l10n.list),
+          _buildSwitchTile(TfHistory.instance).cardx,
+          _buildSwitchTile(TfHttpReq.instance).cardx,
+          _buildMemory(),
+        ],
       ],
     );
   }
