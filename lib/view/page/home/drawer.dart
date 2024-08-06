@@ -55,7 +55,7 @@ final class _Drawer extends StatelessWidget {
       (isDark) {
         return LayoutBuilder(
           builder: (context, cons) {
-            final verticalPad = ((cons.maxHeight - 600) / 2).abs();
+            final verticalPad = ((cons.maxHeight - 530) / 2).abs();
             return Container(
               width: _isWide.value ? 270 : (_media?.size.width ?? 300) * 0.7,
               color: UIs.bgColor.fromBool(isDark),

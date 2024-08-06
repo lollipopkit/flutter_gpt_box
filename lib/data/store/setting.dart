@@ -43,7 +43,7 @@ class SettingStore extends PersistentStore {
 
   late final cupertinoRoute = property('cupertinoRoute', isIOS || isMacOS);
 
-  late final hideTitleBar = property('hideTitleBar', false);
+  late final hideTitleBar = property('hideTitleBar', isDesktop);
 
   /// If it is false, delete without asking.
   late final confrimDel = property('confrimDel', true);
