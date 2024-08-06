@@ -89,6 +89,7 @@
   "remember30s": "30秒間記憶",
   "rename": "名前変更",
   "replay": "リプレイ",
+  "replayTip": "再生されたメッセージとそれ以降のすべてのメッセージがクリアされます",
   "res": "リソース",
   "restoreOpenaiTip": "ドキュメントは[こちら]({url})で見つけられます",
   "rmDuplication": "重複を削除",

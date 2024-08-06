@@ -89,6 +89,7 @@
   "remember30s": "Ingat selama 30 detik",
   "rename": "Ubah nama",
   "replay": "Putar ulang",
+  "replayTip": "Pesan yang diputar ulang dan semua pesan selanjutnya akan dihapus.",
   "res": "Sumber daya",
   "restoreOpenaiTip": "Dokumentasi dapat ditemukan [di sini]({url})",
   "rmDuplication": "Hapus duplikasi",

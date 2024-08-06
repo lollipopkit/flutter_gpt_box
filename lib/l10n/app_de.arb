@@ -89,6 +89,7 @@
   "remember30s": "30 Sekunden merken",
   "rename": "Umbenennen",
   "replay": "Wiederholen",
+  "replayTip": "Die wiederholten Nachrichten und alle folgenden Nachrichten werden gelöscht.",
   "res": "Ressource",
   "restoreOpenaiTip": "Die Dokumentation finden Sie [hier]({url})",
   "rmDuplication": "Duplikate entfernen",

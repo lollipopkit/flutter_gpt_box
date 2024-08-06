@@ -89,6 +89,7 @@
   "remember30s": "30 saniye hatırla",
   "rename": "Yeniden adlandır",
   "replay": "Tekrar oynat",
+  "replayTip": "Tekrar oynatılan mesajlar ve sonraki tüm mesajlar temizlenecek.",
   "res": "Kaynak",
   "restoreOpenaiTip": "Belgelendirme [burada]({url}) bulunabilir",
   "rmDuplication": "Yinelemeyi kaldır",

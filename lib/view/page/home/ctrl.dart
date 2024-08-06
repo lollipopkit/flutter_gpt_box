@@ -416,7 +416,7 @@ void _onTapReplay(
   if (!item.role.isUser) return;
   final sure = await context.showRoundDialog<bool>(
     title: l10n.attention,
-    child: Text('${l10n.replay} ?'),
+    child: Text('${l10n.replay} ?\n${l10n.replayTip}'),
     actions: Btnx.okReds,
   );
   if (sure != true) return;

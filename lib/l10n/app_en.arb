@@ -89,6 +89,7 @@
   "remember30s": "Remember 30s",
   "rename": "Rename",
   "replay": "Replay",
+  "replayTip": "The replayed messages and all subsequent messages will be cleared.",
   "res": "Resource",
   "restoreOpenaiTip": "Document can be found [here]({url})",
   "rmDuplication": "Remove duplication",

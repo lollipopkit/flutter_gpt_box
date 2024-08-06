@@ -89,6 +89,7 @@
   "remember30s": "30 seconden onthouden",
   "rename": "Hernoemen",
   "replay": "Herhalen",
+  "replayTip": "De herhaalde berichten en alle volgende berichten worden gewist.",
   "res": "Bron",
   "restoreOpenaiTip": "Documentatie kan [hier]({url}) worden gevonden",
   "rmDuplication": "Duplicaten verwijderen",
