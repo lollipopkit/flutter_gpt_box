@@ -191,16 +191,19 @@ class _ChatPageState extends State<_ChatPage>
         if (!wide) return content;
 
         final hovers = _buildChatItemHovers(chatItems, chatItem);
+        const pad = 7.0;
         return Hover(
           builder: (bool isHovered) {
             final hover = AnimatedContainer(
               duration: Durations.medium1,
               curve: Curves.fastEaseInToSlowEaseOut,
-              width: isHovered ? hovers.length * 33.7 : 0,
+              width: isHovered ? (hovers.length * 33 + 2 * pad) : 0,
               height: 30,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(13),
+                borderRadius: BorderRadius.circular(17),
+                color: UIs.halfAlpha,
               ),
+              padding: const EdgeInsets.symmetric(horizontal: pad),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -227,7 +230,8 @@ class _ChatPageState extends State<_ChatPage>
     ChatHistoryItem chatItem,
   ) {
     final replayEnabled = chatItem.role.isUser;
-    const size = 19.0;
+    const size = 18.0;
+    final color = context.theme.iconTheme.color?.withOpacity(0.8);
 
     return [
       Btn.icon(
@@ -236,7 +240,7 @@ class _ChatPageState extends State<_ChatPage>
           _MarkdownCopyPage.go(context, chatItem);
         },
         text: l10n.freeCopy,
-        icon: const Icon(BoxIcons.bxs_crop, size: size),
+        icon: Icon(BoxIcons.bxs_crop, size: size, color: color),
       ),
       if (replayEnabled)
         ListenBuilder(
@@ -250,7 +254,7 @@ class _ChatPageState extends State<_ChatPage>
                 _onTapReplay(context, _curChatId, chatItem);
               },
               text: l10n.replay,
-              icon: const Icon(MingCute.refresh_4_line, size: size),
+              icon: Icon(MingCute.refresh_4_line, size: size, color: color),
             );
           },
         ),
@@ -261,7 +265,7 @@ class _ChatPageState extends State<_ChatPage>
             _onTapEditMsg(context, chatItem);
           },
           text: libL10n.edit,
-          icon: const Icon(Icons.edit, size: size),
+          icon: Icon(Icons.edit, size: size, color: color),
         ),
       Btn.icon(
         onTap: () {
@@ -269,7 +273,7 @@ class _ChatPageState extends State<_ChatPage>
           _onTapDelChatItem(context, chatItems, chatItem);
         },
         text: l10n.delete,
-        icon: const Icon(Icons.delete, size: size),
+        icon: Icon(Icons.delete, size: size, color: color),
       ),
       Btn.icon(
         onTap: () {
@@ -277,7 +281,7 @@ class _ChatPageState extends State<_ChatPage>
           Pfs.copy(chatItem.toMarkdown);
         },
         text: libL10n.copy,
-        icon: const Icon(MingCute.copy_2_fill, size: size),
+        icon: Icon(MingCute.copy_2_fill, size: size, color: color),
       ),
     ];
   }

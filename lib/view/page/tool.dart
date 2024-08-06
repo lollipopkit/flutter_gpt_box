@@ -124,7 +124,8 @@ class _ToolPageState extends State<ToolPage> {
         final name = e.name;
         final tip = e.l10nTip;
         final titleW = tip != null
-            ? TipText(title ?? e.l10nName, tip)
+            // The width of the [Switch] is 50
+            ? TipText(title ?? e.l10nName, tip, reversedWidth: 50)
             : Text(title ?? e.l10nName);
         return ListTile(
           title: titleW,
