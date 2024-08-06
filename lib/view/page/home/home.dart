@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:app_links/app_links.dart';
 import 'package:dart_openai/dart_openai.dart';

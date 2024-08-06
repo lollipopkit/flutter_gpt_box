@@ -50,10 +50,15 @@ final class ChatRoleTitle extends StatelessWidget {
     );
     if (!loading) return label;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         label,
-        const SizedBox(width: 37, child: LinearProgressIndicator()),
+        UIs.width13,
+        const SizedBox(
+          height: 15,
+          width: 15,
+          child: CircularProgressIndicator(),
+        ),
       ],
     );
   }

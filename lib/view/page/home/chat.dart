@@ -118,7 +118,7 @@ class _ChatPageState extends State<_ChatPage>
     if (!scrollSwitchChat) return child;
 
     return SwitchIndicator(
-      onSwitchPage: (direction) {
+      onSwitchPage: (direction) async {
         switchDirection = direction;
         switch (direction) {
           case SwitchDirection.previous:
@@ -128,7 +128,6 @@ class _ChatPageState extends State<_ChatPage>
             _switchNextChat();
             break;
         }
-        return Future.value();
       },
       child: child,
     );
@@ -153,43 +152,140 @@ class _ChatPageState extends State<_ChatPage>
         ),
     };
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(13),
-      onLongPress: () {
-        final funcs = _buildChatItemFuncs(chatItems, chatItem);
-        context.showRoundDialog(
-          contentPadding: const EdgeInsets.all(11),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: funcs,
-            ),
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(top: 11, left: 11, right: 11, bottom: 2),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            title,
-            UIs.height13,
-            ListenBuilder(
-              listenable: node,
-              builder: () => ChatHistoryContentView(chatItem: chatItem),
-            ).paddingSymmetric(horizontal: 2),
-            UIs.height13,
-          ],
-        ),
+    final child = Padding(
+      padding: const EdgeInsets.only(top: 11, left: 11, right: 11, bottom: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          title,
+          UIs.height13,
+          ListenBuilder(
+            listenable: node,
+            builder: () => ChatHistoryContentView(chatItem: chatItem),
+          ).paddingSymmetric(horizontal: 2),
+          UIs.height13,
+        ],
       ),
     );
+
+    return _isWide.listenVal(
+      (wide) {
+        final content = InkWell(
+          borderRadius: BorderRadius.circular(13),
+          onLongPress: wide
+              ? null
+              : () {
+                  final funcs = _buildChatItemFuncs(chatItems, chatItem);
+                  context.showRoundDialog(
+                    contentPadding: const EdgeInsets.all(11),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: funcs,
+                      ),
+                    ),
+                  );
+                },
+          child: child,
+        );
+        if (!wide) return content;
+
+        final hovers = _buildChatItemHovers(chatItems, chatItem);
+        return Hover(
+          builder: (bool isHovered) {
+            final hover = AnimatedContainer(
+              duration: Durations.medium1,
+              curve: Curves.fastEaseInToSlowEaseOut,
+              width: isHovered ? hovers.length * 33.7 : 0,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(13),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: hovers,
+                ),
+              ),
+            );
+            return Stack(
+              children: [
+                content,
+                Align(alignment: Alignment.topRight, child: hover),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildChatItemHovers(
+    List<ChatHistoryItem> chatItems,
+    ChatHistoryItem chatItem,
+  ) {
+    final replayEnabled = chatItem.role.isUser;
+    const size = 19.0;
+
+    return [
+      Btn.icon(
+        onTap: () {
+          context.pop();
+          _MarkdownCopyPage.go(context, chatItem);
+        },
+        text: l10n.freeCopy,
+        icon: const Icon(BoxIcons.bxs_crop, size: size),
+      ),
+      if (replayEnabled)
+        ListenBuilder(
+          listenable: _sendBtnRN,
+          builder: () {
+            final isWorking = _loadingChatIds.contains(_curChatId);
+            if (isWorking) return UIs.placeholder;
+            return Btn.icon(
+              onTap: () {
+                context.pop();
+                _onTapReplay(context, _curChatId, chatItem);
+              },
+              text: l10n.replay,
+              icon: const Icon(MingCute.refresh_4_line, size: size),
+            );
+          },
+        ),
+      if (replayEnabled)
+        Btn.icon(
+          onTap: () {
+            context.pop();
+            _onTapEditMsg(context, chatItem);
+          },
+          text: libL10n.edit,
+          icon: const Icon(Icons.edit, size: size),
+        ),
+      Btn.icon(
+        onTap: () {
+          context.pop();
+          _onTapDelChatItem(context, chatItems, chatItem);
+        },
+        text: l10n.delete,
+        icon: const Icon(Icons.delete, size: size),
+      ),
+      Btn.icon(
+        onTap: () {
+          context.pop();
+          Pfs.copy(chatItem.toMarkdown);
+        },
+        text: libL10n.copy,
+        icon: const Icon(MingCute.copy_2_fill, size: size),
+      ),
+    ];
   }
 
   List<Widget> _buildChatItemFuncs(
     List<ChatHistoryItem> chatItems,
     ChatHistoryItem chatItem,
   ) {
-    // && Stores.setting.replay.fetch()
     final replayEnabled = chatItem.role.isUser;
 
     return [
