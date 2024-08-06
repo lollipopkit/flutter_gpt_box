@@ -89,6 +89,7 @@
   "remember30s": "记住 30 秒",
   "rename": "重命名",
   "replay": "重放",
+  "replayTip": "会清空被重放的消息、后面所有消息",
   "res": "资源",
   "restoreOpenaiTip": "文档可以在 [这里]({url}) 找到",
   "rmDuplication": "删除重复",

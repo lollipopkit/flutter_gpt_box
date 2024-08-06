@@ -89,6 +89,7 @@
   "remember30s": "記住 30 秒",
   "rename": "重新命名",
   "replay": "重播",
+  "replayTip": "重播的訊息和所有後續訊息將被清除",
   "res": "資源",
   "restoreOpenaiTip": "文件可以在 [這裡]({url}) 找到",
   "rmDuplication": "刪除重複",

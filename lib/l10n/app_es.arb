@@ -89,6 +89,7 @@
   "remember30s": "Recordar 30 segundos",
   "rename": "Renombrar",
   "replay": "Repetir",
+  "replayTip": "Los mensajes reproducidos y todos los mensajes posteriores se borrarán.",
   "res": "Recurso",
   "restoreOpenaiTip": "La documentación se puede encontrar [aquí]({url})",
   "rmDuplication": "Eliminar duplicados",

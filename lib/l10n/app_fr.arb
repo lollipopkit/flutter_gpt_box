@@ -89,6 +89,7 @@
   "remember30s": "Se souvenir pendant 30 secondes",
   "rename": "Renommer",
   "replay": "Rejouer",
+  "replayTip": "Les messages rejoués et tous les messages suivants seront effacés.",
   "res": "Ressource",
   "restoreOpenaiTip": "La documentation peut être trouvée [ici]({url})",
   "rmDuplication": "Supprimer les doublons",
