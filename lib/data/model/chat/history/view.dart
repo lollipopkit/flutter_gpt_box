@@ -106,21 +106,14 @@ final class ChatHistoryContentView extends StatelessWidget {
         'code': CodeElementBuilder(onCopy: Pfs.copy),
         'latex': LatexElementBuilder(),
       },
-      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-        codeblockDecoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(7),
-        ),
-      ),
+      styleSheet: MarkdownStyleSheet.fromTheme(context.theme),
       extensionSet: MarkdownUtils.extensionSet,
       onTapLink: MarkdownUtils.onLinkTap,
       shrinkWrap: false,
-
-      /// Keep it false, or the ScrollView's height calculation will be wrong.
+      // Keep it false, or the ScrollView's height calculation will be wrong.
       fitContent: false,
-
-      /// User experience is better when this is false.
-      selectable: false,
+      // User experience is better when this is false.
+      selectable: isDesktop,
     );
   }
 

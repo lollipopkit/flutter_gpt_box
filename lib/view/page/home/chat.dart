@@ -59,17 +59,10 @@ class _ChatPageState extends State<_ChatPage>
       onPressed: () async {
         if (!_chatScrollCtrl.hasClients) return;
         if (up) {
-          await _chatScrollCtrl.animateTo(
-            0,
-            duration: _durationMedium,
-            curve: Curves.easeInOut,
-          );
+          await _chatScrollCtrl.animateTo(0,
+              duration: _durationMedium, curve: Curves.easeInOut);
         } else {
-          await _chatScrollCtrl.animateTo(
-            _chatScrollCtrl.position.maxScrollExtent,
-            duration: _durationMedium,
-            curve: Curves.easeInOut,
-          );
+          _scrollBottom();
         }
         _chatFabRN.notify();
       },
@@ -90,9 +83,7 @@ class _ChatPageState extends State<_ChatPage>
           key: Key(_curChatId),
           controller: _chatScrollCtrl,
           padding: const EdgeInsets.all(7),
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
+          physics: const ClampingScrollPhysics(),
           itemCount: item.length,
           itemBuilder: (_, index) {
             return _buildChatItem(item, index);
@@ -199,10 +190,6 @@ class _ChatPageState extends State<_ChatPage>
               curve: Curves.fastEaseInToSlowEaseOut,
               width: isHovered ? (hovers.length * 33 + 2 * pad) : 0,
               height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(17),
-                color: UIs.halfAlpha,
-              ),
               padding: const EdgeInsets.symmetric(horizontal: pad),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
