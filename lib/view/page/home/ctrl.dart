@@ -460,11 +460,17 @@ void _autoScroll(String chatId) {
   }
 }
 
-void _scrollBottom() {
+void _scrollBottom() async {
   final isDisplaying = _chatScrollCtrl.hasClients;
   if (isDisplaying) {
-    _chatScrollCtrl.animateTo(_chatScrollCtrl.position.maxScrollExtent,
-        duration: _durationShort, curve: Curves.fastEaseInToSlowEaseOut);
+    await _chatScrollCtrl.animateTo(
+      _chatScrollCtrl.position.maxScrollExtent,
+      duration: _durationShort,
+      curve: Curves.fastEaseInToSlowEaseOut,
+    );
+    // Sometimes the scroll is not at the bottom due to the caclulation of
+    // [ListView.builder], so scroll again.
+    _chatScrollCtrl.jumpTo(_chatScrollCtrl.position.maxScrollExtent);
   }
 }
 

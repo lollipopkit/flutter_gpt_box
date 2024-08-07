@@ -75,11 +75,11 @@ void _setupLogger() {
 
 Future<void> _initAppComponents() async {
   final sets = Stores.setting;
-  final size = sets.windowSize.fetch().toSize();
+  final size = sets.windowSize;
   SystemUIs.initDesktopWindow(
     hideTitleBar: sets.hideTitleBar.fetch(),
-    size: size,
-    listener: WindowSizeListener(Stores.setting.windowSize),
+    size: size.fetch().toSize(),
+    listener: WindowSizeListener(size),
   );
 
   OpenAI.showLogs = !BuildMode.isRelease;
