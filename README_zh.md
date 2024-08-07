@@ -8,9 +8,9 @@
 
 <!-- Badges-->
 <p align="center">
-  <a href="https://ko-fi.com/lollipopkit"><img alt="捐赠" width="130" src="https://storage.ko-fi.com/cdn/brandasset/kofi_button_red.png"></a>
-  <img alt="语言" src="https://img.shields.io/badge/lang-dart-pink">
-  <img alt="证书" src="https://img.shields.io/badge/license-GPLv3-pink">
+  <a href="https://cdn.lpkt.cn/donate"><img alt="donate" src="https://img.shields.io/badge/捐赠-我-pink"></a>
+  <img alt="lang" src="https://img.shields.io/badge/语言-dart-cyan">
+  <img alt="license" src="https://img.shields.io/badge/证书-GPLv3-yellow">
 </p>
 
 ## 😣 注意
@@ -59,8 +59,7 @@ Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releas
 
 
 ## 🆘 帮助
-
-- 吹水、参与开发，Telegram `@lpktg`
+吹水、参与开发，Telegram [群](https://t.me/lpktg) / [频道](https://t.me/lpktc)
 
 反馈前须知：
 1. 反馈问题请附带 log（长按首页标题），并以 bug 模版提交。

@@ -8,9 +8,9 @@ A third-party GPT Client for OpenAI API.
 
 <!-- Badges-->
 <p align="center">
-  <a href="https://ko-fi.com/lollipopkit"><img alt="donation" width="130" src="https://storage.ko-fi.com/cdn/brandasset/kofi_button_red.png"></a>
-  <img alt="lang" src="https://img.shields.io/badge/lang-dart-pink">
-  <img alt="license" src="https://img.shields.io/badge/license-GPLv3-pink">
+  <a href="https://cdn.lpkt.cn/donate"><img alt="donate" src="https://img.shields.io/badge/donate-me-pink"></a>
+  <img alt="lang" src="https://img.shields.io/badge/lang-dart-cyan">
+  <img alt="license" src="https://img.shields.io/badge/license-GPLv3-yellow">
 </p>
 
 ## 😣 Attention
@@ -59,7 +59,7 @@ Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releas
 
 
 ## 🆘 Help
-Telegram group `@lpktg`.
+Telegram [group](https://t.me/lpktg) / [channel](https://t.me/lpktc).
 
 Before you open an issue, please read the following:
 1. Paste the **entire log** (long press home title) in the issue template.
