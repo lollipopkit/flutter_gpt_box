@@ -83,7 +83,8 @@ class _ChatPageState extends State<_ChatPage>
           key: Key(_curChatId),
           controller: _chatScrollCtrl,
           padding: const EdgeInsets.all(7),
-          physics: const ClampingScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(
+              parent: ClampingScrollPhysics()),
           itemCount: item.length,
           itemBuilder: (_, index) {
             return _buildChatItem(item, index);
@@ -159,11 +160,13 @@ class _ChatPageState extends State<_ChatPage>
       ),
     );
 
-    return _isWide.listenVal(
-      (wide) {
+    final hovers = _buildChatItemHovers(chatItems, chatItem);
+    const pad = 7.0;
+    return Hover(
+      builder: (bool isHovered) {
         final content = InkWell(
           borderRadius: BorderRadius.circular(13),
-          onLongPress: wide
+          onLongPress: isHovered
               ? null
               : () {
                   final funcs = _buildChatItemFuncs(chatItems, chatItem);
@@ -179,34 +182,32 @@ class _ChatPageState extends State<_ChatPage>
                 },
           child: child,
         );
-        if (!wide) return content;
 
-        final hovers = _buildChatItemHovers(chatItems, chatItem);
-        const pad = 7.0;
-        return Hover(
-          builder: (bool isHovered) {
-            final hover = AnimatedContainer(
-              duration: Durations.medium1,
-              curve: Curves.fastEaseInToSlowEaseOut,
-              width: isHovered ? (hovers.length * 33 + 2 * pad) : 0,
-              height: 30,
-              padding: const EdgeInsets.symmetric(horizontal: pad),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: hovers,
-                ),
-              ),
-            );
-            return Stack(
-              children: [
-                content,
-                Align(alignment: Alignment.topRight, child: hover),
-              ],
-            );
-          },
+        if (!isHovered) return content;
+
+        final hover = AnimatedContainer(
+          duration: Durations.medium1,
+          curve: Curves.fastEaseInToSlowEaseOut,
+          width: isHovered ? (hovers.length * 33 + 2 * pad) : 0,
+          height: 30,
+          padding: const EdgeInsets.symmetric(horizontal: pad),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: hovers,
+            ),
+          ),
+        );
+        return Stack(
+          children: [
+            content,
+            Align(
+              alignment: context.isRTL ? Alignment.topLeft : Alignment.topRight,
+              child: hover,
+            ),
+          ],
         );
       },
     );
