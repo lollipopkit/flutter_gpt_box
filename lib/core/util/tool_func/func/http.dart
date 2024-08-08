@@ -9,24 +9,8 @@ final class TfHttpReq extends ToolFunc {
           description: '''
 Send an HTTP request. It can be used for searching, downloading, etc.
 
-
 If user want to access some content having an json API, use the API directly.
-Such as api.github.com. You can use all the APIs that you(AI model) know.
-
-
-If users wants to search:
-- set `forSearch` to true
-- set `url` to search engine's url
-- set `headers` to search engine's headers, includes cookies, headers and etc.
-
-Example search engines:
-- Google: `https://www.google.com/search?q=`
-- Baidu: `https://www.baidu.com/s?wd=`
-- Bing: `https://www.bing.com/search?q=`
-Default:
-- user's language is Chinese: Baidu
-- Non-Chinese: Google
-
+You can use all the APIs that you(AI model) know. Such as api.github.com, wikipedia, github, stackoverflow and etc.
 
 Both request/response body is String. If json, encode it into String.
 If blob, encode it into base64 String.''',
@@ -53,10 +37,6 @@ If blob, encode it into base64 String.''',
                 'type': 'integer',
                 'description': 'Max redirects to follow',
               },
-              'forSearch': {
-                'type': 'boolean',
-                'description': 'Default false.',
-              },
               'truncateSize': {
                 'type': 'integer',
                 'description':
@@ -82,9 +62,9 @@ If blob, encode it into base64 String.''',
   Future<_Ret> run(_CallResp call, _Map args, OnToolLog log) async {
     final method = args['method'] as String? ?? 'GET';
     final url = args['url'] as String;
-    final headers = (args['headers'] as Map?)?.cast<String, dynamic>();
+    final headers = (args['headers'] as Map? ?? {}).cast<String, dynamic>();
     final body = args['body'] as String?;
-    final forSearch = args['forSearch'] as bool? ?? false;
+    //final forSearch = args['forSearch'] as bool? ?? false;
     final truncateSize = args['truncateSize'] as int?;
     final followRedirects = args['followRedirects'] as int?;
 
@@ -137,39 +117,51 @@ If blob, encode it into base64 String.''',
       _ => tryConvertStr(resp.data),
     };
 
-    if (forSearch) {
-      final urlMap = await compute(_filterHtmlUrls, respBody);
-      if (urlMap.isNotEmpty) {
-        respBody = '';
+    // if (forSearch) {
+    //   final urlMap = await compute(_filterHtmlUrls, respBody);
+    //   if (urlMap.isNotEmpty) {
+    //     respBody = '';
 
-        var count = 0;
-        for (final entry in urlMap.entries) {
-          if (count++ > 5) break;
-          final url = entry.value;
-          log('Http $method -> $url');
-          try {
-            final resp = await myDio.request(
-              entry.value,
-              options: Options(
-                method: 'GET',
-                maxRedirects: followRedirects,
-                validateStatus: (_) => true,
-                responseType: ResponseType.plain,
-              ),
-            );
+    //     final idxes = <int>{};
+    //     for (;idxes.length < 10;) {
+    //       final idx = Random().nextInt(urlMap.length);
+    //       if (idxes.contains(idx)) continue;
+    //       idxes.add(idx);
+    //     }
 
-            final data = resp.data;
-            if (data is! String) continue;
-            final html = await compute(_filterHtmlBody, data);
-            if (html != null) {
-              respBody += html;
-            }
-          } catch (e) {
-            log('Http $method -> ${libL10n.error}: $e');
-          }
-        }
-      }
-    }
+    //     final futures = List.generate(idxes.length, (idx) async {
+    //       final entry = urlMap.entries.elementAt(idx);
+    //       final url = entry.value;
+    //       log('Http $method -> $url');
+    //       try {
+    //         final resp = await myDio.get(
+    //           entry.value,
+    //           options: Options(
+    //             maxRedirects: followRedirects,
+    //             headers: headers,
+    //             validateStatus: (_) => true,
+    //             responseType: ResponseType.plain,
+    //           ),
+    //         );
+
+    //         final data = resp.data;
+    //         if (data is! String) return null;
+    //         final html = await compute(_filterRespBody, data);
+    //         return html;
+    //       } catch (e, s) {
+    //         Loggers.app.warning(e, null, s);
+    //         log('Http $method -> ${libL10n.error}: $e');
+    //       }
+    //     });
+        
+    //     final res = await Future.wait(futures);
+    //     for (final html in res) {
+    //       if (html != null) {
+    //         respBody += html;
+    //       }
+    //     }
+    //   }
+    // }
 
     if (truncateSize != null && respBody.length > truncateSize) {
       respBody = respBody.substring(0, truncateSize);
@@ -184,53 +176,60 @@ If blob, encode it into base64 String.''',
 }
 
 /// Only return the content insides body tag as a <title: url> map.
-Map<String, String> _filterHtmlUrls(String html) {
-  // Remove the first line of <!DOCTYPE html>
-  if (html.startsWith('<!')) {
-    html = html.substring(html.indexOf('>') + 1);
-  }
-  final doc = html_parser.parse(html);
-  final aInBody = doc.querySelectorAll('body a');
-  final map = <String, String>{};
-  // Find all <a> tag with href.
-  for (final a in aInBody) {
-    var href = a.attributes['href'];
-    if (href == null) continue;
-    // If there is no complete url in href, ignore it.
-    // Usually, the uncomplete url is a relative path for the search engine.
-    if (!httpReg.hasMatch(href)) continue;
-    final title = a.text;
-    // `/url?q=` is the query string for google search result.
-    if (href.startsWith('/url?q=')) {
-      final uri = Uri.parse(href);
-      href = uri.queryParameters['q'] ?? href;
-    }
-    map[title] = href;
-  }
-  return map;
-}
+// Map<String, String> _filterHtmlUrls(String html) {
+//   // Remove the first line of <!DOCTYPE html>
+//   if (html.startsWith('<!')) {
+//     html = html.substring(html.indexOf('>') + 1);
+//   }
+//   final doc = html_parser.parse(html);
+//   final aInBody = doc.querySelectorAll('body a');
+//   final map = <String, String>{};
+//   // Find all <a> tag with href.
+//   for (final a in aInBody) {
+//     var href = a.attributes['href'];
+//     if (href == null) continue;
+//     final title = a.text.trim();
+//     if (title.isEmpty) continue;
+//     if (!href.startsWith('http')) {
+//       // `//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.sportingnews.com%2Fus%2Folympics%2Fnews`
+//       if (href.startsWith('//duckduckgo.com')) {
+//         href = Uri.decodeFull(href.replaceFirst('//duckduckgo.com/l/?uddg=', ''));
+//       }
+//       // `/url?q=` is the query string for google search result.
+//       else if (href.startsWith('/url?q=')) {
+//         final uri = Uri.parse(href);
+//         href = uri.queryParameters['q'] ?? href;
+//       }
+//     }
+//     map[title] = href;
+//   }
+//   return map;
+// }
 
-/// Return all text content insides body tag.
-String? _filterHtmlBody(String raw) {
-  final doc = html_parser.parse(raw);
-  final body = doc.querySelector('body');
-  final text = body?.text;
-  if (text == null || text.isEmpty) return null;
+// /// Return all text content insides body tag.
+// String _filterRespBody(String raw) {
+//   try {
+//     final doc = html_parser.parse(raw);
+//     final body = doc.querySelector('body');
+//     final text = body?.text;
+//     if (text == null || text.isEmpty) return raw;
 
-  final lines = text.split('\n');
-  final rmIdxs = <int>[];
-  for (var i = 0; i < lines.length; i++) {
-    final line = lines[i];
-    if (line.trim().isEmpty) {
-      rmIdxs.add(i);
-    }
-  }
+//     final lines = text.split('\n');
+//     final rmIdxs = <int>[];
+//     for (var i = 0; i < lines.length; i++) {
+//       final line = lines[i];
+//       if (line.trim().isEmpty) {
+//         rmIdxs.add(i);
+//       }
+//     }
 
-  for (var i = rmIdxs.length - 1; i >= 0; i--) {
-    lines.removeAt(rmIdxs[i]);
-  }
+//     for (var i = rmIdxs.length - 1; i >= 0; i--) {
+//       lines.removeAt(rmIdxs[i]);
+//     }
 
-  return lines.join('\n');
-}
-
-final httpReg = RegExp(r'https?://');
+//     return lines.join('\n');
+//   } catch (_) {
+//     // May not html?
+//     return raw;
+//   }
+// }
