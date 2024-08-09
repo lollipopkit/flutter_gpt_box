@@ -6,11 +6,6 @@ final class TfHistory extends ToolFunc {
   const TfHistory._()
       : super(
           name: 'history',
-          description: '''
-Find the chats including the keywords in the history.
-Then send the titles of the history chats to the AI to select the chats that need to be loaded as contexts.
-Only call this func if users explicitly ask to load the history chats.
-The user's prompt maybe included.''',
           parametersSchema: const {
             'type': 'object',
             'properties': {
@@ -35,6 +30,13 @@ If users want to load all chats, set it to -1.''',
             },
           },
         );
+
+  @override
+  String get description => '''
+Find the chats including the keywords in the history.
+Then send the titles of the history chats to the AI to select the chats that need to be loaded as contexts.
+Only call this func if users explicitly ask to load the history chats.
+The user's prompt maybe included.''';
 
   @override
   String get l10nName => l10n.history;

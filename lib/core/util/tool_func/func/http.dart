@@ -6,14 +6,6 @@ final class TfHttpReq extends ToolFunc {
   const TfHttpReq._()
       : super(
           name: 'httpReq',
-          description: '''
-Send an HTTP request. It can be used for searching, downloading, etc.
-
-If user want to access some content having an json API, use the API directly.
-You can use all the APIs that you(AI model) know. Such as api.github.com, wikipedia, github, stackoverflow and etc.
-
-Both request/response body is String. If json, encode it into String.
-If blob, encode it into base64 String.''',
           parametersSchema: const {
             'type': 'object',
             'properties': {
@@ -46,6 +38,16 @@ If blob, encode it into base64 String.''',
             'required': ['url'],
           },
         );
+
+  @override
+  String get description => '''
+Send an HTTP request. It can be used for searching, downloading, etc.
+
+If user want to access some content having an json API, use the API directly.
+You can use all the APIs that you(AI model) know. Such as api.github.com, wikipedia, github, stackoverflow and etc.
+
+Both request/response body is String. If json, encode it into String.
+If blob, encode it into base64 String.''';
 
   @override
   String get l10nName => l10n.toolHttpReqName;

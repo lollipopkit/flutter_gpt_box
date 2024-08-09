@@ -30,4 +30,27 @@ final class ToolStore extends PersistentStore {
     'toolsRegExp',
     'gpt-4o|gpt-4-turbo|gpt-3.5-turbo|deepseek',
   );
+
+  static const jsScriptPrefix = '_jsScripts_';
+
+  String? getJsScript(String name) {
+    return box.get('$jsScriptPrefix$name') as String?;
+  }
+
+  void setJsScript(String name, String script) {
+    box.put('$jsScriptPrefix$name', script);
+  }
+
+  Map<String, String> get jsScripts {
+    final scripts = <String, String>{};
+    for (final key in box.keys) {
+      if (key is! String) continue;
+      if (key.startsWith(jsScriptPrefix)) {
+        final script = box.get(key) as String?;
+        if (script == null) continue;
+        scripts[key.substring(jsScriptPrefix.length)] = script;
+      }
+    }
+    return scripts;
+  }
 }

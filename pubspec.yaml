@@ -15,6 +15,7 @@ dependencies:
   audioplayers: ^6.0.0
   extended_image: ^8.2.1
   file_picker: ^8.0.0+1
+  flutter_js: ^0.8.1
   google_fonts: ^6.1.0
   html: ^0.15.4
   image: ^4.2.0
@@ -36,7 +37,7 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.125
+      ref: v1.0.127
 
 dependency_overrides:
   # fl_lib:
