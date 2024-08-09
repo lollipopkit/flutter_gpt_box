@@ -40,6 +40,7 @@
   "fontSizeSettingTip": "Hanya berlaku untuk blok kode",
   "freeCopy": "Salin bebas",
   "genChatTitle": "Buat judul obrolan",
+  "genTitle": "Menghasilkan judul",
   "headTailMode": "Mode kepala-ekor",
   "headTailModeTip": "Hanya mengirim `prompt + pesan pengguna pertama + input saat ini` sebagai konteks.\n\nIni sangat berguna saat menerjemahkan percakapan (menghemat token).",
   "help": "Bantuan",

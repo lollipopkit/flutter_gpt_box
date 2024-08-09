@@ -40,6 +40,7 @@
   "fontSizeSettingTip": "Solo se aplica a bloques de código",
   "freeCopy": "Copia libre",
   "genChatTitle": "Generar título del chat",
+  "genTitle": "Generar título",
   "headTailMode": "Modo cabeza-cola",
   "headTailModeTip": "Solo envía `prompt + primer mensaje del usuario + entrada actual` como contexto.\n\nEsto es especialmente útil para traducir conversaciones (ahorra tokens).",
   "help": "Ayuda",
