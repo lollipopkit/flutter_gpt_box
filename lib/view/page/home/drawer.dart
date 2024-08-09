@@ -3,27 +3,29 @@ part of 'home.dart';
 final class _Drawer extends StatelessWidget {
   const _Drawer();
 
-  static List<Widget> getEntries(BuildContext context) => [
+  List<Widget> getEntries(BuildContext context) => [
         ListTile(
+          leading: const Icon(Icons.settings),
+          title: Text(libL10n.setting),
           onTap: () async {
             final ret = await Routes.setting.go(context);
             if (ret?.rebuild == true) {
               Scaffold.maybeOf(context)?.closeDrawer();
             }
           },
-          onLongPress: () => _onLongTapSetting(context),
-          leading: const Icon(Icons.settings),
-          title: Text(libL10n.setting),
+          onLongPress: () => _onLongTapSetting(context, Stores.setting),
         ).cardx,
         ListTile(
           onTap: () => Routes.profile.go(context),
           leading: const Icon(Icons.person),
           title: Text(l10n.profile),
+          onLongPress: () => _onLongTapSetting(context, Stores.config),
         ).cardx,
         ListTile(
           leading: const Icon(MingCute.tool_fill),
           title: Text(l10n.tool),
           onTap: () => Routes.tool.go(context),
+          onLongPress: () => _onLongTapSetting(context, Stores.tool),
         ).cardx,
         ListTile(
           onTap: () async {
@@ -85,5 +87,36 @@ final class _Drawer extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _onLongTapSetting(
+    BuildContext context,
+    PersistentStore store,
+  ) async {
+    final map = store.box.toJson(includeInternal: false);
+    final keys = map.keys;
+
+    /// Encode [map] to String with indent `\t`
+    final text = const JsonEncoder.withIndent('  ').convert(map);
+    final result = await PlainEditPage.route.go(
+      context,
+      args: PlainEditPageArgs(
+        initialText: text,
+        title: store.box.name,
+      ),
+    );
+    if (result == null) return;
+
+    try {
+      final newSettings = json.decode(result) as Map<String, dynamic>;
+      store.box.putAll(newSettings);
+      final newKeys = newSettings.keys;
+      final removedKeys = keys.where((e) => !newKeys.contains(e));
+      for (final key in removedKeys) {
+        Stores.setting.box.delete(key);
+      }
+    } catch (e, s) {
+      context.showErrDialog(e: e, s: s);
+    }
   }
 }

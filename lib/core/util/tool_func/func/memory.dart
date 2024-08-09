@@ -6,9 +6,6 @@ final class TfMemory extends ToolFunc {
   const TfMemory._()
       : super(
           name: 'memory',
-          description: '''
-If users want to memorise something, you(AI models) should call this function.
-Only call this func if users explicitly ask to memorise something.''',
           parametersSchema: const {
             'type': 'object',
             'properties': {
@@ -19,6 +16,11 @@ Only call this func if users explicitly ask to memorise something.''',
             },
           },
         );
+  
+  @override
+  String get description => '''
+If users want to memorise something, you(AI models) should call this function.
+Only call this func if users explicitly ask to memorise something.''';
 
   @override
   String get l10nName => l10n.memory;

@@ -2,14 +2,14 @@ part of '../tool.dart';
 
 abstract final class ToolFunc {
   final String name;
-  final String description;
   final _Map parametersSchema;
 
   const ToolFunc({
     required this.name,
-    required this.description,
     required this.parametersSchema,
   });
+
+  String get description;
 
   String get l10nName;
 

@@ -444,8 +444,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.125"
-      resolved-ref: "9fdfa73b848d61beaee416441e006c8692851047"
+      ref: "v1.0.127"
+      resolved-ref: fca04fd622922f29866a464c57c60fed3a4a409c
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
@@ -463,6 +463,14 @@ packages:
       url: "https://github.com/lollipopkit/highlight.dart"
     source: git
     version: "0.7.0"
+  flutter_js:
+    dependency: "direct main"
+    description:
+      name: flutter_js
+      sha256: d19cde4bad2f7c301ff5f69d7b3452ff91f2ca89d153569dd03e544579d8610d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -1267,6 +1275,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  sync_http:
+    dependency: transitive
+    description:
+      name: sync_http
+      sha256: "7f0cd72eca000d2e026bcd6f990b81d0ca06022ef4e32fb257b30d3d1014a961"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   synchronized:
     dependency: transitive
     description:
