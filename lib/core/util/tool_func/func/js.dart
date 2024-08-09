@@ -17,19 +17,18 @@ final class TfJs extends ToolFunc {
                 'description': 'The stored js script to run',
               },
             },
-            'required': ['code'],
           },
         );
 
   @override
   String get description {
     final scripts = Stores.tool.jsScripts;
+    final names = scripts.keys.join('\n');
     return '''
 This tool has a quickjs runtime, you can generate some JS code to run, 
 like calculation and etc.
 
-Also, there are some users' scripts that can be run in this tool:
-${scripts.keys.join('\n')}
+${names.isEmpty ? '' : "Also, there are some users' scripts that can be run in this tool:\n$names"}
 
 You need to return the value user wanted at end.
 ''';
