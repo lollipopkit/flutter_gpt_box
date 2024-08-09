@@ -469,7 +469,7 @@ Future<void> _genChatTitle(
       model: cfg.model,
       messages: [
         ChatHistoryItem.single(
-          raw: ChatTitleUtil.titlePrompt,
+          raw: OpenAICfg.current.genTitlePrompt ?? ChatTitleUtil.titlePrompt,
           role: ChatRole.system,
         ).toOpenAI,
         ChatHistoryItem.single(

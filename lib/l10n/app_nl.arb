@@ -40,6 +40,7 @@
   "fontSizeSettingTip": "Alleen van toepassing op codeblokken",
   "freeCopy": "Vrij kopiëren",
   "genChatTitle": "Chattitel genereren",
+  "genTitle": "Titel genereren",
   "headTailMode": "Kop-staart modus",
   "headTailModeTip": "Stuurt alleen `prompt + eerste gebruikersbericht + huidige invoer` als context.\n\nDit is vooral handig voor het vertalen van gesprekken (bespaart tokens).",
   "help": "Help",

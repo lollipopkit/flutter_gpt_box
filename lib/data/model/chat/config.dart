@@ -34,10 +34,8 @@ final class ChatConfig {
   final String speechModel;
   @HiveField(12, defaultValue: _kTranscribeModel)
   final String transcribeModel;
-
-  /// TODO: Delete this comment after add a new field with correct HiveField index [14]
-  // @HiveField(13, defaultValue: _kModel)
-  // final String visionModel;
+  @HiveField(14)
+  final String? genTitlePrompt;
 
   const ChatConfig({
     required this.prompt,
@@ -50,6 +48,7 @@ final class ChatConfig {
     required this.imgModel,
     required this.speechModel,
     required this.transcribeModel,
+    this.genTitlePrompt,
   });
 
   static final apiUrlReg = RegExp(r'^https?://[0-9A-Za-z\.]+(:\d+)?$');
@@ -92,6 +91,7 @@ final class ChatConfig {
     String? imgModel,
     String? speechModel,
     String? transcribeModel,
+    String? genTitlePrompt,
   }) =>
       ChatConfig(
         id: id ?? this.id,

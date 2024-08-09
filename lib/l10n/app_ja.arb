@@ -40,6 +40,7 @@
   "fontSizeSettingTip": "コードブロックにのみ適用されます",
   "freeCopy": "自由にコピー",
   "genChatTitle": "チャットタイトルを生成",
+  "genTitle": "タイトル生成",
   "headTailMode": "ヘッドテールモード",
   "headTailModeTip": "`プロンプト+最初のユーザーメッセージ+現在の入力`のみをコンテキストとして送信します。\n\nこれは会話の翻訳に特に有用です（トークンを節約できます）。",
   "help": "ヘルプ",

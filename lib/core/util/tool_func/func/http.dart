@@ -61,7 +61,7 @@ If blob, encode it into base64 String.''';
   }
 
   @override
-  Future<_Ret> run(_CallResp call, _Map args, OnToolLog log) async {
+  Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log) async {
     final method = args['method'] as String? ?? 'GET';
     final url = args['url'] as String;
     final headers = (args['headers'] as Map? ?? {}).cast<String, dynamic>();
@@ -155,7 +155,7 @@ If blob, encode it into base64 String.''';
     //         log('Http $method -> ${libL10n.error}: $e');
     //       }
     //     });
-        
+
     //     final res = await Future.wait(futures);
     //     for (final html in res) {
     //       if (html != null) {

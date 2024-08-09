@@ -54,8 +54,10 @@ The user's prompt maybe included.''';
   }
 
   @override
-  Future<_Ret> run(_CallResp call, _Map args, OnToolLog log) async {
-    final keywords_ = args['keywords'] as List? ?? [];
+  Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log) async {
+    final keywords_ = args['keywords'] as List?;
+    if (keywords_ == null) return null;
+
     final keywords = <String>[];
     for (final e in keywords_) {
       if (e is String) keywords.add(e);

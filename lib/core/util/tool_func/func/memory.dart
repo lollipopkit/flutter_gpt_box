@@ -16,7 +16,7 @@ final class TfMemory extends ToolFunc {
             },
           },
         );
-  
+
   @override
   String get description => '''
 If users want to memorise something, you(AI models) should call this function.
@@ -31,11 +31,10 @@ Only call this func if users explicitly ask to memorise something.''';
   }
 
   @override
-  Future<_Ret> run(_CallResp call, _Map args, OnToolLog log) async {
+  Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log) async {
     final memory = args['memory'] as String?;
-    if (memory == null) {
-      return [ChatContent.text(libL10n.empty)];
-    }
+    if (memory == null) return null;
+
     final prop = Stores.tool.memories;
     final memories = prop.fetch();
     prop.put(memories..add(memory));

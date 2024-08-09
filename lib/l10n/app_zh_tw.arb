@@ -40,6 +40,7 @@
   "fontSizeSettingTip": "僅對程式碼區塊生效",
   "freeCopy": "自由複製",
   "genChatTitle": "生成聊天標題",
+  "genTitle": "生成標題",
   "headTailMode": "頭尾模式",
   "headTailModeTip": "僅發送 `提示詞+第一條用戶訊息+當前輸入` 作為上下文。\n\n這在用於翻譯對話時特別有用（可以節省 tokens）。",
   "help": "幫助",
