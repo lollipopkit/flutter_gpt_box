@@ -23,7 +23,7 @@ Please refrain from using it in production environments or for critical data.
   - Load history chats as context.
   - Ask GPT to add Memories.
   - Api supports viewing the content of Http links. [Video](https://cdn.lpkt.cn/gptbox/screenshot/tools.mp4)
-  -  (developing) running JS scripts locally.
+  - Run JS locally.
 - Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
 - Text / Image / Audio chat.
 - Localization. (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)

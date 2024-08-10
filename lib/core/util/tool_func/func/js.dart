@@ -23,12 +23,12 @@ final class TfJs extends ToolFunc {
   @override
   String get description {
     final scripts = Stores.tool.jsScripts;
+    final names = scripts.keys.join('\n');
     return '''
 This tool has a quickjs runtime, you can generate some JS code to run, 
-like calculation, web data fetching(includes xhr & fetch), etc.
+like calculation and etc.
 
-Also, there are some users' scripts that can be run in this tool:
-${scripts.keys.join('\n')}
+${names.isEmpty ? '' : "Also, there are some users' scripts that can be run in this tool:\n$names"}
 
 You need to return the value user wanted at end.
 ''';
@@ -49,18 +49,24 @@ $code
   }
 
   @override
-  Future<_Ret> run(_CallResp call, _Map args, OnToolLog log) async {
+  Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log) async {
     final code = args['code'] as String?;
-    if (code == null) {
-      return [ChatContent.text(libL10n.empty)];
-    }
+    if (code == null) return null;
+
     final rt = getJavascriptRuntime();
     await rt.enableFetch();
+    log('${libL10n.execute} JavaScript: $code');
+    await Future.delayed(Durations.short1);
     var result = await rt.evaluateAsync(code);
-    if (result.isPromise) {
-      result = await result.rawResult;
+    final raw = result.rawResult;
+    if (raw is Future) {
+      result = await raw;
     }
     rt.dispose();
-    return [ChatContent.text(result.stringResult)];
+    log(result.stringResult);
+    await Future.delayed(Durations.short1);
+    return [
+      ChatContent.text(result.stringResult),
+    ];
   }
 }

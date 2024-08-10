@@ -40,6 +40,7 @@
   "fontSizeSettingTip": "Sadece kod bloklarına uygulanır",
   "freeCopy": "Serbest kopyalama",
   "genChatTitle": "Sohbet başlığı oluştur",
+  "genTitle": "Başlık oluştur",
   "headTailMode": "Baş-Kuyruk modu",
   "headTailModeTip": "Sadece `prompt + ilk kullanıcı mesajı + mevcut giriş` bağlam olarak gönderilir.\n\nBu özellikle konuşmaları çevirmek için kullanışlıdır (token tasarrufu sağlar).",
   "help": "Yardım",
