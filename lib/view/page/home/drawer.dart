@@ -116,7 +116,7 @@ final class _Drawer extends StatelessWidget {
         Stores.setting.box.delete(key);
       }
     } catch (e, s) {
-      context.showErrDialog(e: e, s: s);
+      context.showErrDialog(e, s);
     }
   }
 }

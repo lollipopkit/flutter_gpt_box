@@ -50,7 +50,7 @@ enum HomePageEnum {
           final select = await context.showPickSingleDialog(
             title: l10n.profile,
             items: profiles,
-            name: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
+            display: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
             initial: OpenAICfg.current,
             actions: [addBtn],
           );

@@ -38,7 +38,7 @@ Widget _buildWebdav(BuildContext context) {
           trailing: ValBuilder(
             listenable: _webdavLoading,
             builder: (val) {
-              if (val) return UIs.centerSizedLoadingSmall;
+              if (val) return SizedLoading.centerSmall;
 
               return Row(
                 mainAxisSize: MainAxisSize.min,
@@ -80,7 +80,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     await dlBak.merge(force: true);
     context.showSnackBar(libL10n.success);
   } catch (e, s) {
-    context.showErrDialog(e: e, s: s, operation: 'Download webdav backup');
+    context.showErrDialog(e, s, 'Download webdav backup');
   } finally {
     _webdavLoading.value = false;
   }
@@ -94,7 +94,7 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
     await webdav.upload(relativePath: Miscs.bakFileName);
     context.showSnackBar(libL10n.success);
   } catch (e, s) {
-    context.showErrDialog(e: e, s: s, operation: 'Upload webdav backup');
+    context.showErrDialog(e, s, 'Upload webdav backup');
   } finally {
     _webdavLoading.value = false;
   }

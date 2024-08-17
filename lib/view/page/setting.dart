@@ -35,16 +35,9 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildBody() {
     return MultiList(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
-        [
-          const CenterGreyTitle('App'),
-          _buildApp(),
-        ],
-        [
-          CenterGreyTitle(l10n.chat),
-          _buildChat(),
-        ]
+        [const CenterGreyTitle('App'), _buildApp()],
+        [CenterGreyTitle(l10n.chat), _buildChat()]
       ],
     );
   }
@@ -85,7 +78,7 @@ class _SettingPageState extends State<SettingPage> {
           final result = await context.showPickSingleDialog(
             title: l10n.themeMode,
             items: ThemeMode.values,
-            name: (e) => e.name,
+            display: (e) => e.name,
             initial: ThemeMode.values[val],
           );
           if (result != null) {
@@ -170,7 +163,7 @@ class _SettingPageState extends State<SettingPage> {
           final result = await context.showPickSingleDialog<Locale>(
             title: libL10n.language,
             items: AppLocalizations.supportedLocales,
-            name: (e) => e.nativeName,
+            display: (e) => e.nativeName,
             initial: val.toLocale ?? l10n.localeName.toLocale,
           );
           if (result != null) {

@@ -92,7 +92,7 @@ class _AudioCardState extends State<AudioCard> {
       error: (error, trace) {
         return Text('$error');
       },
-      loading: UIs.centerSizedLoading,
+      loading: SizedLoading.centerMedium,
       success: (listenable) {
         if (listenable == null) return UIs.placeholder;
         return _buildItem(listenable);

@@ -64,7 +64,7 @@ class _ChatSearchDelegate extends SearchDelegate<ChatHistory> {
       future: _filterChats(query),
       loading: SizedBox(
         width: _media?.size.width ?? 300,
-        child: UIs.centerSizedLoading,
+        child: SizedLoading.centerMedium,
       ),
       error: (error, trace) {
         Loggers.app.warning(error, trace);

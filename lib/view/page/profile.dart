@@ -36,7 +36,6 @@ final class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildBody() {
     return MultiList(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
         [CenterGreyTitle(l10n.chat), _buildChat()],
         [CenterGreyTitle(l10n.more), _buildMore()],
@@ -53,7 +52,7 @@ final class _ProfilePageState extends State<ProfilePage> {
           title: Text(l10n.balance),
           subtitle: Text(val.state ?? l10n.unsupported, style: UIs.text13Grey),
           trailing: val.loading
-              ? UIs.centerSizedLoadingSmall
+              ? SizedLoading.centerSmall
               : IconButton(
                   onPressed: () => ApiBalance.refresh(),
                   icon: const Icon(Icons.refresh),
@@ -166,7 +165,7 @@ final class _ProfilePageState extends State<ProfilePage> {
                 items: vals,
                 initial: cfg,
                 title: l10n.profile,
-                name: (p0) => p0.displayName,
+                display: (p0) => p0.displayName,
               );
 
               if (newCfg == null) return;

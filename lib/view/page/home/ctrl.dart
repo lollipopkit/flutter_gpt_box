@@ -190,7 +190,7 @@ void _onShareChat(BuildContext context) async {
   final type = await context.showPickSingleDialog(
     title: l10n.share,
     items: ['img', 'txt'],
-    name: (p0) => switch (p0) {
+    display: (p0) => switch (p0) {
       'txt' => l10n.text,
       _ => l10n.image,
     },
