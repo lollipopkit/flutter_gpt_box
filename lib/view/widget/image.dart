@@ -105,7 +105,7 @@ class _ImageCardState extends State<ImageCard> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              UIs.centerSizedLoading,
+              SizedLoading.centerMedium,
               UIs.height13,
               Text(progress),
             ],

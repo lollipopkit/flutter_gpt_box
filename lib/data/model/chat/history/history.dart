@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/core/ext/file.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
@@ -113,6 +116,8 @@ final class ChatHistory {
   }
 }
 
+typedef OaiHistoryItem = OpenAIChatCompletionChoiceMessageModel;
+
 @HiveType(typeId: 0)
 final class ChatHistoryItem {
   @HiveField(0)
@@ -145,14 +150,6 @@ final class ChatHistoryItem {
   })  : content = [ChatContent.noid(type: type, raw: raw)],
         createdAt = createdAt ?? DateTime.now(),
         id = shortid.generate();
-
-  OpenAIChatCompletionChoiceMessageModel get toOpenAI {
-    return OpenAIChatCompletionChoiceMessageModel(
-      role: role.toOpenAI,
-      content: content.map((e) => e.toOpenAI).toList(),
-    );
-  }
-
   String get toMarkdown {
     return content
         .map((e) => switch (e.type) {
@@ -196,6 +193,19 @@ final class ChatHistoryItem {
       id: id ?? this.id,
     );
   }
+
+  OaiHistoryItem get toOpenAI {
+    return OaiHistoryItem(
+      role: role.toOpenAI,
+      content: content.map((e) => e.toOpenAI).toList(),
+    );
+  }
+
+  Future<OaiHistoryItem?> get toApi async {
+    final contents = await Future.wait(content.map((e) => e.toApi));
+    if (contents.any((e) => e == null)) return null;
+    return copyWith(content: contents.cast<ChatContent>()).toOpenAI;
+  }
 }
 
 /// Handle [audio] and [image] as url (file:// & https://) or base64
@@ -209,6 +219,8 @@ enum ChatContentType {
   image,
   ;
 }
+
+typedef OaiContent = OpenAIChatCompletionChoiceMessageContentItemModel;
 
 @HiveType(typeId: 2)
 final class ChatContent {
@@ -237,12 +249,9 @@ final class ChatContent {
   bool get isImg => type == ChatContentType.image;
   bool get isAudio => type == ChatContentType.audio;
 
-  OpenAIChatCompletionChoiceMessageContentItemModel get toOpenAI =>
-      switch (type) {
-        ChatContentType.text =>
-          OpenAIChatCompletionChoiceMessageContentItemModel.text(raw),
-        ChatContentType.image =>
-          OpenAIChatCompletionChoiceMessageContentItemModel.imageUrl(raw),
+  OaiContent get toOpenAI => switch (type) {
+        ChatContentType.text => OaiContent.text(raw),
+        ChatContentType.image => OaiContent.imageUrl(raw),
         _ => throw UnimplementedError('$type.toOpenAI'),
       };
 
@@ -260,6 +269,31 @@ final class ChatContent {
       raw: json['raw'] as String,
       id: json['id'] as String? ?? shortid.generate(),
     );
+  }
+
+  ChatContent copyWith({
+    ChatContentType? type,
+    String? raw,
+    String? id,
+  }) {
+    return ChatContent(
+      type: type ?? this.type,
+      raw: raw ?? this.raw,
+      id: id ?? this.id,
+    );
+  }
+
+  Future<ChatContent?> get toApi async {
+    if (!isImg) return this;
+    final String base64;
+    if (raw.startsWith('/')) {
+      final val = await File(raw).base64;
+      if (val == null) return null;
+      base64 = val;
+    } else {
+      base64 = raw;
+    }
+    return copyWith(raw: base64);
   }
 }
 

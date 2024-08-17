@@ -27,7 +27,6 @@ class _ToolPageState extends State<ToolPage> {
 
   Widget _buildBody() {
     return MultiList(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
       children: [
         [
           CenterGreyTitle(l10n.tool),

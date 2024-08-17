@@ -18,9 +18,9 @@ bool _validChatCfg(BuildContext context) {
 /// - History len = 1 => [prompt, idx0]
 /// - 2 => [prompt, idx0, idx1]
 /// - n >= 3 => [prompt, idxn-2, idxn-1]
-Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
+Future<Iterable<OpenAIChatCompletionChoiceMessageModel>> _historyCarried(
   ChatHistory workingChat,
-) {
+) async {
   final config = OpenAICfg.current;
 
   // #106
@@ -37,7 +37,7 @@ Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
 
   // #101
   if (workingChat.settings?.headTailMode == true) {
-    final first = workingChat.items.firstOrNull?.toOpenAI;
+    final first = await workingChat.items.firstOrNull?.toApi;
     return [
       if (prompt != null) prompt,
       if (first != null) first,
@@ -49,7 +49,10 @@ Iterable<OpenAIChatCompletionChoiceMessageModel> _historyCarried(
   for (final item in workingChat.items.reversed) {
     if (count > config.historyLen) break;
     if (item.role.isSystem) continue;
-    msgs.add(item.toOpenAI);
+    final msg = await item.toApi;
+    if (msg != null) {
+      msgs.add(msg);
+    }
     count++;
   }
   if (prompt != null) msgs.add(prompt);
@@ -122,7 +125,7 @@ Future<void> _onCreateText(
       if (imgUrl != null) ChatContent.image(imgUrl),
     ],
   );
-  final msgs = _historyCarried(workingChat).toList();
+  final msgs = (await _historyCarried(workingChat)).toList();
   msgs.add(questionForApi.toOpenAI);
 
   workingChat.items.add(question);

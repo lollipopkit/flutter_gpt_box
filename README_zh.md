@@ -54,12 +54,16 @@ iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
 Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
 Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
 
-- 由于无法完成备案，请移步 **AppStore 其他区** 下载。  
-- 为了防止注入攻击等因素，请勿从不可信来源下载，推荐从 Github Releases 下载
+由于未完成备案，请移步 **AppStore 其他区** 下载。  
+请从你 **信任的** 来源下载。
 
 
 ## 🆘 帮助
-吹水、参与开发，Telegram [群](https://t.me/lpktg) / [频道](https://t.me/lpktc)
+
+<div align="center">
+  <a href="https://t.me/lpktg"><img alt="donate" src="https://img.shields.io/badge/Telegram-lpktg-green"></a>
+  <a href="https://discord.gg/SsVNbRhK7w"><img alt="discord" src="https://img.shields.io/badge/Discord-lpkt-purple"></a>
+</div>
 
 反馈前须知：
 1. 反馈问题请附带 log（长按首页标题），并以 bug 模版提交。

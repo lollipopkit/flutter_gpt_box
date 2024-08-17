@@ -21,6 +21,14 @@ rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+// TODO: delete this, https://github.com/flutter/flutter/issues/153281#issuecomment-2287902896
+subprojects {
+    afterEvaluate {
+        android {
+            compileSdkVersion 34
+        }
+    }
+}
 subprojects {
     project.evaluationDependsOn(':app')
 }

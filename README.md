@@ -54,12 +54,15 @@ iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
 Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
 Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
 
-- Due to the BEIAN issue. Please download it from **other regions of AppStore**.  
-- Only download from the source **you trust**. Github Releases is recommended.
+Only download from the source **you trust**
 
 
 ## 🆘 Help
-Telegram [group](https://t.me/lpktg) / [channel](https://t.me/lpktc).
+
+<div align="center">
+  <a href="https://t.me/lpktg"><img alt="donate" src="https://img.shields.io/badge/Telegram-lpktg-green"></a>
+  <a href="https://discord.gg/SsVNbRhK7w"><img alt="discord" src="https://img.shields.io/badge/Discord-lpkt-purple"></a>
+</div>
 
 Before you open an issue, please read the following:
 1. Paste the **entire log** (long press home title) in the issue template.
