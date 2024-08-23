@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage>
     _switchChat();
     _listenKeyboard();
     _historyRN.notify();
-    _removeDuplicateHistory(context);
+    //_removeDuplicateHistory(context);
 
     if (Stores.setting.autoCheckUpdate.fetch()) {
       AppUpdateIface.doUpdate(
