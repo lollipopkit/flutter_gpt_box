@@ -75,6 +75,8 @@
   "newChat": "Nieuwe chat",
   "noDuplication": "Geen duplicaten",
   "notSupported": "{val} wordt niet ondersteund",
+  "onMsgCome": "Wanneer er nieuwe berichten zijn",
+  "onSwitchChat": "Bij het wisselen van gesprekken",
   "onlyRestoreHistory": "Alleen chatgeschiedenis herstellen (API-URL en geheime sleutel niet herstellen)",
   "onlySyncOnLaunch": "Alleen synchroniseren bij opstarten",
   "other": "Overig",

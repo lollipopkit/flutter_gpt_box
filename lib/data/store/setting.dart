@@ -64,4 +64,7 @@ class SettingStore extends PersistentStore {
   late final avatar = property('avatar', '🧐');
 
   late final introVer = property('introVer', 0);
+
+  /// Auto scroll to the bottom after switching chat.
+  late final scrollAfterSwitch = property('scrollAfterSwitch', false);
 }

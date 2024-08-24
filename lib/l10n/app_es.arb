@@ -75,6 +75,8 @@
   "newChat": "Nuevo chat",
   "noDuplication": "Sin duplicados",
   "notSupported": "{val} no es compatible",
+  "onMsgCome": "Cuando hay nuevos mensajes",
+  "onSwitchChat": "Al cambiar de conversación",
   "onlyRestoreHistory": "Solo restaurar historial de chat (no restaurar URL de API ni clave secreta)",
   "onlySyncOnLaunch": "Sincronizar solo al iniciar",
   "other": "Otro",

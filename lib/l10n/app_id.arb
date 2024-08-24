@@ -75,6 +75,8 @@
   "newChat": "Obrolan baru",
   "noDuplication": "Tidak ada duplikasi",
   "notSupported": "{val} tidak didukung",
+  "onMsgCome": "Ketika ada pesan baru",
+  "onSwitchChat": "Saat beralih percakapan",
   "onlyRestoreHistory": "Hanya pulihkan riwayat obrolan (tidak memulihkan URL API dan Kunci Rahasia)",
   "onlySyncOnLaunch": "Hanya sinkronkan saat peluncuran",
   "other": "Lainnya",
