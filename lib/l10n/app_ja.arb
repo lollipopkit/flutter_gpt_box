@@ -75,6 +75,8 @@
   "newChat": "新しいチャット",
   "noDuplication": "重複はありません",
   "notSupported": "{val}はサポートされていません",
+  "onMsgCome": "新しいメッセージがある時",
+  "onSwitchChat": "会話を切り替える時",
   "onlyRestoreHistory": "チャット履歴のみを復元（API URLと秘密キーは復元しない）",
   "onlySyncOnLaunch": "起動時のみ同期",
   "other": "その他",

@@ -59,7 +59,7 @@ class _SettingPageState extends State<SettingPage> {
       if (isMobile) _buildScrollSwitchChat(),
       //_buildFontSize(),
       _buildGenTitle(),
-      _buildScrollBottom(),
+      _buildAutoScrollBottom(),
       _buildSoftWrap(),
       //_buildCalcTokenLen(),
       //_buildReplay(),
@@ -246,10 +246,20 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildScrollBottom() {
-    return ListTile(
+  Widget _buildAutoScrollBottom() {
+    return ExpandTile(
       leading: const Icon(Icons.keyboard_arrow_down),
       title: Text(l10n.autoScrollBottom),
+      children: [
+        _buildScrollBottomOnMsg(),
+        _buildScrollAfterSwitch(),
+      ],
+    );
+  }
+
+  Widget _buildScrollBottomOnMsg() {
+    return ListTile(
+      title: Text(l10n.onMsgCome),
       trailing: StoreSwitch(prop: _store.scrollBottom),
     );
   }
@@ -409,6 +419,13 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Bootstrap.window_sidebar, size: 20),
       title: Text(libL10n.hideTitleBar),
       trailing: StoreSwitch(prop: _store.hideTitleBar),
+    );
+  }
+
+  Widget _buildScrollAfterSwitch() {
+    return ListTile(
+      title: Text(l10n.onSwitchChat),
+      trailing: StoreSwitch(prop: _store.scrollAfterSwitch),
     );
   }
 }

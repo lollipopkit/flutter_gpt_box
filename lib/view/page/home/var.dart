@@ -1,10 +1,7 @@
 part of 'home.dart';
 
 final _inputCtrl = TextEditingController();
-final _chatScrollCtrl = ScrollController()
-  ..addListener(() {
-    Funcs.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
-  });
+final _chatScrollCtrl = ScrollController()..addListener(_onChatScroll);
 final _historyScrollCtrl = ScrollController()
   ..addListener(_locateHistoryListener);
 final _pageCtrl = PageController(initialPage: _curPage.value.index);
@@ -31,7 +28,7 @@ final _chatFabRN = RNode();
 final _homeBottomRN = RNode();
 
 var _allHistories = <String, ChatHistory>{};
-String _curChatId = 'fake-non-exist-id';
+var _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
 
 /// [ChatHistory.id] or [ChatHistoryItem.id]
@@ -43,10 +40,7 @@ final _curPage = HomePageEnum.chat.vn;
 final _imeFocus = FocusNode();
 
 MediaQueryData? _media;
-final _isWide = false.vn
-  ..addListener(() {
-    _curPage.value = HomePageEnum.chat;
-  });
+final _isWide = false.vn..addListener(_onIsWideChanged);
 
 const _boxShadow = [
   BoxShadow(

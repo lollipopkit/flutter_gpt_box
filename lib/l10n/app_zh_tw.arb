@@ -75,6 +75,8 @@
   "newChat": "新建聊天",
   "noDuplication": "沒有重複項目",
   "notSupported": "{val} 不支援",
+  "onMsgCome": "當有新訊息",
+  "onSwitchChat": "當切換對話時",
   "onlyRestoreHistory": "僅恢復歷史聊天（不恢復 API Url 和 Secret Key）",
   "onlySyncOnLaunch": "僅在啟動時同步",
   "other": "其他",

@@ -75,6 +75,8 @@
   "newChat": "Yeni sohbet",
   "noDuplication": "Yineleme yok",
   "notSupported": "{val} desteklenmiyor",
+  "onMsgCome": "Yeni mesajlar olduğunda",
+  "onSwitchChat": "Konuşmalar arasında geçiş yaparken",
   "onlyRestoreHistory": "Sadece sohbet geçmişini geri yükle (API URL'sini ve gizli anahtarı geri yükleme)",
   "onlySyncOnLaunch": "Sadece başlatırken senkronize et",
   "other": "Diğer",

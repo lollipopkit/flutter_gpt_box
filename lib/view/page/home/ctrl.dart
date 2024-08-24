@@ -2,6 +2,14 @@ part of 'home.dart';
 
 void _switchChat([String? id]) {
   id ??= _allHistories.keys.firstOrNull ?? _newChat().id;
+
+  final chat = _allHistories[id];
+  if (chat == null) {
+    final msg = 'Switch Chat($id) not found';
+    Loggers.app.warning(msg);
+    return;
+  }
+
   _curChatId = id;
   _chatItemRNMap.clear();
   _chatRN.notify();
@@ -10,14 +18,10 @@ void _switchChat([String? id]) {
   Future.delayed(_durationMedium, () {
     // Different chats have different height
     _chatFabRN.notify();
+    if (Stores.setting.scrollAfterSwitch.fetch()) {
+      _scrollBottom();
+    }
   });
-
-  final chat = _allHistories[id];
-  if (chat == null) {
-    final msg = 'Switch Chat($id) not found';
-    Loggers.app.warning(msg);
-    return;
-  }
 }
 
 void _switchPreviousChat() {
@@ -592,4 +596,12 @@ Future<bool> _askToolConfirm(
     Stores.tool.permittedTools.put(permittedTools);
   }
   return permitted == true;
+}
+
+void _onChatScroll() {
+  Funcs.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
+}
+
+void _onIsWideChanged() {
+  _curPage.value = HomePageEnum.chat;
 }
