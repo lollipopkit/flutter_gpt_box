@@ -109,12 +109,12 @@ Future<void> _onCreateText(
   final config = OpenAICfg.current;
   final questionContent = _inputCtrl.text;
 
-  final (imgUrl, imgPath) = await ImageUtil.normalizeUrl(_filePicked.value);
-  final hasImg = imgPath != null || imgUrl != null;
+  final pickedImg = _filePicked.value;
+  final hasImg = pickedImg != null;
   final question = ChatHistoryItem.gen(
     content: [
       ChatContent.text(questionContent),
-      if (imgPath != null) ChatContent.image(imgPath),
+      if (pickedImg != null) ChatContent.image(pickedImg.pubUrl),
     ],
     role: ChatRole.user,
   );
@@ -122,7 +122,7 @@ Future<void> _onCreateText(
     role: ChatRole.user,
     content: [
       ChatContent.text(questionContent),
-      if (imgUrl != null) ChatContent.image(imgUrl),
+      if (pickedImg != null) ChatContent.image(pickedImg.signedUrl),
     ],
   );
   final msgs = (await _historyCarried(workingChat)).toList();
@@ -361,7 +361,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.gen(
     role: ChatRole.user,
-    content: [ChatContent.text(prompt), ChatContent.image(val)],
+    content: [ChatContent.text(prompt), ChatContent.image(val.pubUrl)],
   );
   workingChat.items.add(chatItem);
   _chatRN.notify();
@@ -371,7 +371,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   try {
     final resp = await OpenAI.instance.image.edit(
       model: cfg.imgModel,
-      image: File(val),
+      image: await val.file,
       prompt: prompt,
     );
 
@@ -411,7 +411,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.single(
     type: ChatContentType.audio,
-    raw: val,
+    raw: val.pubUrl,
     role: ChatRole.user,
   );
   workingChat.items.add(chatItem);
@@ -423,7 +423,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   try {
     final resp = await OpenAI.instance.audio.createTranscription(
       model: cfg.speechModel,
-      file: File(val),
+      file: await val.file,
       //prompt: '',
     );
     final text = resp.text;
@@ -550,7 +550,7 @@ void _onReplay({
   final img = item.content
       .firstWhereOrNull((e) => e.type == ChatContentType.image)
       ?.raw;
-  if (img != null) _filePicked.value = img;
+  if (img != null) _filePicked.value = await _ImgPicked.fromPubUrl(img);
 
   _onCreateRequest(context, chatId);
 }

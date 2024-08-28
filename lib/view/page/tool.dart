@@ -58,7 +58,7 @@ class _ToolPageState extends State<ToolPage> {
             }
             final res = await KvEditor.route.go(
               context,
-              args: KvEditorArgs(data: dataMap),
+              KvEditorArgs(data: dataMap),
             );
             if (res != null) {
               _store.memories.put(res.values.toList());
