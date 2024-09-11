@@ -3,7 +3,6 @@ library route;
 import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/view/page/about.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
-import 'package:gpt_box/view/page/image.dart';
 import 'package:gpt_box/view/page/profile.dart';
 import 'package:gpt_box/view/page/res.dart';
 import 'package:gpt_box/view/page/setting.dart';
@@ -29,11 +28,6 @@ sealed class Routes {
   //   page: EditorPage.new,
   //   path: '/editor',
   // );
-
-  static const image = AppRoute<ImagePageRet, ImagePageArgs>(
-    page: ImagePage.new,
-    path: '/image',
-  );
 
   static const res = AppRouteNoArg<void>(
     page: ResPage.new,

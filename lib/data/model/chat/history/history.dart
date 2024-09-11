@@ -201,10 +201,9 @@ final class ChatHistoryItem {
     );
   }
 
-  Future<OaiHistoryItem?> get toApi async {
+  Future<OaiHistoryItem> get toApi async {
     final contents = await Future.wait(content.map((e) => e.toApi));
-    if (contents.any((e) => e == null)) return null;
-    return copyWith(content: contents.cast<ChatContent>()).toOpenAI;
+    return copyWith(content: contents).toOpenAI;
   }
 }
 
@@ -283,17 +282,25 @@ final class ChatContent {
     );
   }
 
-  Future<ChatContent?> get toApi async {
+  /// {@template img_url_to_api}
+  /// Convert local file to base64
+  /// {@endtemplate}
+  Future<ChatContent> get toApi async {
     if (!isImg) return this;
-    final String base64;
-    if (raw.startsWith('/')) {
-      final val = await File(raw).base64;
-      if (val == null) return null;
-      base64 = val;
-    } else {
-      base64 = raw;
+    return copyWith(raw: await ChatContent.contentToApi(raw));
+  }
+
+  /// {@macro img_url_to_api}
+  /// 
+  /// Seperate from [toApi] to decouple the logic
+  static Future<String> contentToApi(String raw) async {
+    final isLocal = raw.isFileUrl(false);
+    if (isLocal) {
+      final file = File(raw);
+      final b64 = await file.base64;
+      if (b64 != null) raw = b64;
     }
-    return copyWith(raw: base64);
+    return raw;
   }
 }
 

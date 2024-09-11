@@ -146,6 +146,7 @@ void _onDeleteChat(String chatId) {
   }
   _allHistories.remove(chatId);
   _historyRN.notify();
+
   /// TODO: Delete chat / related imgs from supa
 }
 
@@ -238,7 +239,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
   if (val != null) {
     final delete = await context.showRoundDialog(
       title: libL10n.file,
-      child: ImageCard(imageUrl: val.pubUrl, heroTag: val.id),
+      child: ImageCard(imageUrl: val.url, heroTag: val.local),
       actions: [
         TextButton(
           onPressed: () => context.pop(true),
@@ -248,6 +249,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
     );
     if (delete == true) {
       _filePicked.value = null;
+      await val.delete();
     }
     return;
   }
@@ -265,9 +267,9 @@ Future<void> _onTapImgPick(BuildContext context) async {
 
   await context.showLoadingDialog(
     fn: () async {
-      final compressed = await ImageUtil.compress(await result.readAsBytes());
-      final img = await _ImgPicked.fromData(compressed);
-      _filePicked.value = img;
+      final bytes = await result.readAsBytes();
+      final picked = await _FilePicked.fromBytes(bytes, mime: result.mimeType);
+      _filePicked.value = picked;
     },
   );
 }

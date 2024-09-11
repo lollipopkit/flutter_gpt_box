@@ -71,7 +71,7 @@ final class _Drawer extends StatelessWidget {
                     height: 47,
                     width: 47,
                     child: UIs.appIcon,
-                  ),
+                  ).tap(onTap: () => UserPage.route.go(context)),
                   UIs.height13,
                   const Text(
                     'GPT Box\nv1.0.${Build.build}',

@@ -90,6 +90,4 @@ Future<void> _initAppComponents() async {
   sync.sync();
 
   if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
-
-  SupaUtils.init();
 }

@@ -38,7 +38,7 @@ Widget _buildWebdav(BuildContext context) {
           trailing: ValBuilder(
             listenable: _webdavLoading,
             builder: (val) {
-              if (val) return SizedLoading.centerSmall;
+              if (val) return SizedLoading.small;
 
               return Row(
                 mainAxisSize: MainAxisSize.min,

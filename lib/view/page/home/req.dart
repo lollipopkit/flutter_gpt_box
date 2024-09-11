@@ -25,7 +25,9 @@ Future<Iterable<OpenAIChatCompletionChoiceMessageModel>> _historyCarried(
 
   // #106
   final ignoreCtxCons = workingChat.settings?.ignoreContextConstraint == true;
-  if (ignoreCtxCons) return workingChat.items.map((e) => e.toOpenAI);
+  if (ignoreCtxCons) {
+    return Future.wait(workingChat.items.map((e) async => await e.toApi));
+  }
 
   final promptStr = config.prompt + Stores.tool.memories.fetch().join('\n');
   final prompt = promptStr.isNotEmpty
@@ -50,9 +52,7 @@ Future<Iterable<OpenAIChatCompletionChoiceMessageModel>> _historyCarried(
     if (count > config.historyLen) break;
     if (item.role.isSystem) continue;
     final msg = await item.toApi;
-    if (msg != null) {
-      msgs.add(msg);
-    }
+    msgs.add(msg);
     count++;
   }
   if (prompt != null) msgs.add(prompt);
@@ -63,8 +63,8 @@ Future<Iterable<OpenAIChatCompletionChoiceMessageModel>> _historyCarried(
 void _onCreateRequest(BuildContext context, String chatId) async {
   if (!_validChatCfg(context)) return;
 
-  // Issues #18.
-  // Prohibit users from starting chatting in the initial chat
+  // #18
+  // Prohibit users from starting chat in the initial chat
   if (_curChat?.isInitHelp ?? false) {
     final newId = _newChat().id;
     _switchChat(newId);
@@ -93,10 +93,7 @@ void _onCreateRequest(BuildContext context, String chatId) async {
   return await func(context, chatId);
 }
 
-Future<void> _onCreateText(
-  BuildContext context,
-  String chatId,
-) async {
+Future<void> _onCreateText(BuildContext context, String chatId) async {
   if (_inputCtrl.text.isEmpty) return;
   _imeFocus.unfocus();
   final workingChat = _allHistories[chatId];
@@ -114,7 +111,7 @@ Future<void> _onCreateText(
   final question = ChatHistoryItem.gen(
     content: [
       ChatContent.text(questionContent),
-      if (pickedImg != null) ChatContent.image(pickedImg.pubUrl),
+      if (hasImg) ChatContent.image(pickedImg.url),
     ],
     role: ChatRole.user,
   );
@@ -122,7 +119,7 @@ Future<void> _onCreateText(
     role: ChatRole.user,
     content: [
       ChatContent.text(questionContent),
-      if (pickedImg != null) ChatContent.image(pickedImg.signedUrl),
+      if (hasImg) await ChatContent.image(pickedImg.url).toApi,
     ],
   );
   final msgs = (await _historyCarried(workingChat)).toList();
@@ -361,7 +358,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.gen(
     role: ChatRole.user,
-    content: [ChatContent.text(prompt), ChatContent.image(val.pubUrl)],
+    content: [ChatContent.text(prompt), ChatContent.image(val.url)],
   );
   workingChat.items.add(chatItem);
   _chatRN.notify();
@@ -371,7 +368,7 @@ Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
   try {
     final resp = await OpenAI.instance.image.edit(
       model: cfg.imgModel,
-      image: await val.file,
+      image: val.file,
       prompt: prompt,
     );
 
@@ -411,7 +408,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   if (workingChat == null) return;
   final chatItem = ChatHistoryItem.single(
     type: ChatContentType.audio,
-    raw: val.pubUrl,
+    raw: val.url,
     role: ChatRole.user,
   );
   workingChat.items.add(chatItem);
@@ -423,7 +420,7 @@ Future<void> _onCreateSTT(BuildContext context, String chatId) async {
   try {
     final resp = await OpenAI.instance.audio.createTranscription(
       model: cfg.speechModel,
-      file: await val.file,
+      file: val.file,
       //prompt: '',
     );
     final text = resp.text;
@@ -550,7 +547,7 @@ void _onReplay({
   final img = item.content
       .firstWhereOrNull((e) => e.type == ChatContentType.image)
       ?.raw;
-  if (img != null) _filePicked.value = await _ImgPicked.fromPubUrl(img);
+  if (img != null) _filePicked.value = await _FilePicked.fromUrl(img);
 
   _onCreateRequest(context, chatId);
 }

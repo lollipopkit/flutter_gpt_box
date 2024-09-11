@@ -52,7 +52,7 @@ final class _ProfilePageState extends State<ProfilePage> {
           title: Text(l10n.balance),
           subtitle: Text(val.state ?? l10n.unsupported, style: UIs.text13Grey),
           trailing: val.loading
-              ? SizedLoading.centerSmall
+              ? SizedLoading.small
               : IconButton(
                   onPressed: () => ApiBalance.refresh(),
                   icon: const Icon(Icons.refresh),
