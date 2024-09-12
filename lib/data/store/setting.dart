@@ -67,4 +67,7 @@ class SettingStore extends PersistentStore {
 
   /// Auto scroll to the bottom after switching chat.
   late final scrollAfterSwitch = property('scrollAfterSwitch', false);
+
+  /// If true, app will uploads the photo to the server.
+  late final usePhotograph = property('usePhotograph', true);
 }

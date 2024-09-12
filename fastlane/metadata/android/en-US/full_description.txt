@@ -2,7 +2,7 @@
 - Text / Image / Audio chat.
 - Localization. (简体中文 / English)
 - Share chat as image.
-- Url Scheme, eg: `lk-gptbox://chat/new?msg=hello`
+- Url Scheme, eg: `lpkt.cn://gptbox/new?msg=hello`
 - Sync with WebDAV / iCloud.
 - Mobile & Desktop supports.
 - Render code block / latex formula.

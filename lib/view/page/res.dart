@@ -4,9 +4,7 @@ import 'dart:io';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/view/page/image.dart';
 import 'package:gpt_box/view/widget/audio.dart';
-import 'package:gpt_box/view/widget/image.dart';
 
 final class ResPage extends StatefulWidget {
   final Never? args;

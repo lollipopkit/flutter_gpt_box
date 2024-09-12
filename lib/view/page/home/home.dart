@@ -15,7 +15,6 @@ import 'package:gpt_box/data/model/chat/history/share.dart';
 import 'package:gpt_box/core/route/page.dart';
 import 'package:gpt_box/core/util/chat_title.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
-import 'package:gpt_box/core/util/image.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/history/view.dart';
@@ -30,7 +29,6 @@ import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:shortid/shortid.dart';
 
 part 'chat.dart';
 part 'history.dart';
@@ -44,6 +42,7 @@ part 'url_scheme.dart';
 part 'req.dart';
 part 'md_copy.dart';
 part 'drawer.dart';
+part 'file_picked.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -134,7 +133,7 @@ class _HomePageState extends State<HomePage>
       key: PhysicalKeyboardKey.enter,
       callback: () {
         // If the current page is not chat, do nothing
-        if (ModalRoute.of(context)?.isCurrent != true) return false;
+        if (context.stillOnPage != true) return false;
 
         if (_inputCtrl.text.isEmpty) return false;
         _onCreateRequest(context, _curChatId);
@@ -144,15 +143,16 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> _initUrlScheme() async {
+    DeepLinks.register(AppLink.handle);
+
     if (isWeb) {
       final uri = await _appLink.getInitialLink();
       if (uri == null) return;
-      AppLink.handle(context, uri);
+      DeepLinks.process(uri, context);
     } else {
-      _appLink.uriLinkStream.listen((Uri? uri) {
-        if (uri == null) return;
-        if (!mounted) return;
-        AppLink.handle(context, uri);
+      _appLink.uriLinkStream.listen((uri) {
+        final ctx = mounted ? context : null;
+        DeepLinks.process(uri, ctx);
       }, onError: (err) {
         final msg = l10n.invalidLinkFmt(err);
         Loggers.app.warning(msg);

@@ -28,7 +28,7 @@
 - 文本 / 图片 / 音频聊天
 - 本地化 (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)
 - 以图片形式分享聊天
-- Url Scheme，例如：`lk-gptbox://chat/new?msg=你好`
+- Url Scheme，例如：`lpkt.cn://gptbox/new?msg=你好`
 - 与 WebDAV / iCloud 同步
 - 移动端 & 桌面端 支持
 - 渲染 代码块 / LaTeX 公式
@@ -38,10 +38,10 @@
 ## 🏙️ 截屏
 <table>
   <tr>
-    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/1.jpg"></td>
-    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/2.jpg"></td>
-    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/3.jpg"></td>
-    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/4.jpg"></td>
+    <td><img width="277px" src="https://cdn.lpkt.cn/gptbox/screenshot/1.jpg"></td>
+    <td><img width="277px" src="https://cdn.lpkt.cn/gptbox/screenshot/2.jpg"></td>
+    <td><img width="277px" src="https://cdn.lpkt.cn/gptbox/screenshot/3.jpg"></td>
+    <td><img width="277px" src="https://cdn.lpkt.cn/gptbox/screenshot/4.jpg"></td>
   </tr>
 </table>
 
@@ -51,8 +51,8 @@
 平台 | 下载
 --- | ---
 iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
-Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
-Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
+Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lpkt.cn/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
+Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lpkt.cn/gptbox/pkg/?order=desc)
 
 由于未完成备案，请移步 **AppStore 其他区** 下载。  
 请从你 **信任的** 来源下载。
@@ -77,17 +77,12 @@ Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releas
 
 ## 🧱 贡献
 - 任何正面的贡献都欢迎。
-- [本地化翻译指南](https://blog.lolli.tech/faq/) 可在我的博客中找到。
+- [本地化翻译指南](https://blog.lpkt.cn/posts/faq/) 可在我的博客中找到。
 
 
 ## 💡 我的其它 Apps
 - [Server Box](https://github.com/lollipopkit/flutter_server_box) - 服务器状态和工具。
 - [更多](https://github.com/lollipopkit) - 工具 & etc.
-
-
-## 🎉 捐赠
-- 应用将保持免费，但是如果你认为我的工作对你有帮助，欢迎[捐赠](https://ko-fi.com/lollipopkit)。
-- 感谢所有捐赠者，你们的支持是我的动力。
 
 
 ## 📝 协议

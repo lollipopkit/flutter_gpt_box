@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/view/widget/audio.dart';
 import 'package:gpt_box/view/widget/code.dart';
-import 'package:gpt_box/view/widget/image.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 
@@ -121,10 +120,17 @@ final class ChatHistoryContentView extends StatelessWidget {
     return ImageCard(
       imageUrl: content.raw,
       heroTag: content.hashCode.toString(),
+      onRet: (ret) => _onImgRet(ret, content.raw),
     );
   }
 
   Widget _buildAudio(ChatContent content) {
     return AudioCard(id: content.id, path: content.raw);
+  }
+
+  void _onImgRet(ImagePageRet ret, String raw) async {
+    if (ret.isDeleted) {
+      FileApi.delete([raw]);
+    }
   }
 }

@@ -28,7 +28,7 @@ Please refrain from using it in production environments or for critical data.
 - Text / Image / Audio chat.
 - Localization. (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)
 - Share chat as image.
-- Url Scheme, eg: `lk-gptbox://chat/new?msg=hello`
+- Url Scheme, eg: `lpkt.cn://gptbox/new?msg=hello`
 - Sync with WebDAV / iCloud.
 - Mobile & Desktop supports.
 - Render code block / latex formula.
@@ -38,10 +38,10 @@ Please refrain from using it in production environments or for critical data.
 ## 🏙️ Screenshots
 <table>
   <tr>
-    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/1.jpg"></td>
-    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/2.jpg"></td>
-    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/3.jpg"></td>
-    <td><img width="277px" src="https://cdn.lolli.tech/gptbox/screenshot/4.jpg"></td>
+    <td><img width="277px" src="https://cdn.lpkt.cn/gptbox/screenshot/1.jpg"></td>
+    <td><img width="277px" src="https://cdn.lpkt.cn/gptbox/screenshot/2.jpg"></td>
+    <td><img width="277px" src="https://cdn.lpkt.cn/gptbox/screenshot/3.jpg"></td>
+    <td><img width="277px" src="https://cdn.lpkt.cn/gptbox/screenshot/4.jpg"></td>
   </tr>
 </table>
 
@@ -51,8 +51,8 @@ Please refrain from using it in production environments or for critical data.
 Platform | From
 --- | ---
 iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
-Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
-Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lolli.tech/gptbox/pkg/?order=desc)
+Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lpkt.cn/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
+Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lpkt.cn/gptbox/pkg/?order=desc)
 
 Only download from the source **you trust**
 
@@ -76,17 +76,12 @@ After you read the above, you can:
 
 ## 🧱 Contribution
 - Any positive contribution is welcome.
-- [l10n guide](https://blog.lolli.tech/faq/) can be found in my blog.
+- [l10n guide](https://blog.lpkt.cn/posts/faq/) can be found in my blog.
 
 
 ## 💡 My other apps
 - [Server Box](https://github.com/lollipopkit/flutter_server_box) - Server status & tools.
 - [More](https://github.com/lollipopkit) - Tools & etc.
-
-
-## 🎉 Donation
-- App will keep free, but if you think my work is helpful, you can [donate](https://ko-fi.com/lollipopkit) me a cup of coffee.
-- Thanks to all the donators, your support is my motivation.
 
 
 ## 📝 License
