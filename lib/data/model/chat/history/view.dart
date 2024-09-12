@@ -130,7 +130,7 @@ final class ChatHistoryContentView extends StatelessWidget {
 
   void _onImgRet(ImagePageRet ret, String raw) async {
     if (ret.isDeleted) {
-      PbFile.delete(raw, local: true);
+      FileApi.delete([raw]);
     }
   }
 }

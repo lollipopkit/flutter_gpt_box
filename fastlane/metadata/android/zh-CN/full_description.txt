@@ -2,7 +2,7 @@
 - 文本 / 图片 / 音频聊天
 - 本地化（简体中文 / English）
 - 以图片形式分享聊天
-- Url Scheme，例如：`lk-gptbox://chat/new?msg=你好`
+- Url Scheme，例如：`lpkt.cn://gptbox/new?msg=你好`
 - 与 WebDAV / iCloud 同步
 - 移动端 & 桌面端 支持
 - 渲染 代码块 / LaTeX 公式

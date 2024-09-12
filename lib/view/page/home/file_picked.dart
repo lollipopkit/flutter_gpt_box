@@ -13,8 +13,8 @@ final class _FilePicked {
   static Future<_FilePicked> fromBytes(Uint8List data, {String? mime}) async {
     final path = await data.save(mime: mime);
     if (canUpload) {
-      final remote = await PbFile.upload(path, pub: true);
-      return _FilePicked(local: path, remote: remote);
+      final remote = await FileApi.upload([path]);
+      return _FilePicked(local: path, remote: remote.first);
     }
     return _FilePicked(local: path);
   }
@@ -23,15 +23,15 @@ final class _FilePicked {
     final file = File(path);
     if (!await file.exists()) return null;
     if (canUpload) {
-      final remote = await PbFile.upload(path, pub: true);
-      return _FilePicked(local: path, remote: remote);
+      final remote = await FileApi.upload([path]);
+      return _FilePicked(local: path, remote: remote.first);
     }
     return _FilePicked(local: path);
   }
 
   static Future<_FilePicked?> fromRemote(String url) async {
     if (url.isEmpty || !url.startsWith('http')) return null;
-    final data = await PbFile.download(url);
+    final data = await FileApi.download(url);
     final path = await data.save();
     return _FilePicked(local: path, remote: url);
   }
@@ -48,10 +48,9 @@ final class _FilePicked {
 
   Future<void> delete() async {
     if (remote != null) {
-      await PbFile.delete(remote!, local: true);
-    } else {
-      await File(local).delete();
+      await FileApi.delete([remote!]);
     }
+    await file.delete();
   }
 
   /// Return the file object of [local].
@@ -61,7 +60,7 @@ final class _FilePicked {
   String get url => remote ?? local;
 
   static bool get canUpload =>
-      Stores.setting.usePhotograph.fetch() && Pbs.loggedIn;
+      Stores.setting.usePhotograph.fetch() && Apis.loggedIn;
 
   @override
   String toString() => '_FilePicked(local: $local, remote: $remote)';

@@ -1,14 +1,10 @@
 part of 'home.dart';
 
 abstract final class AppLink {
-  static const scheme = 'lk-gptbox';
+  static const host = 'gptbox';
 
-  /// example: lk-gptbox://HOST/ACTION?PARAM=PARAM_VALUE
-  static bool? handle(BuildContext context, Uri uri) {
-    if (uri.scheme != scheme && !isWeb) {
-      return false;
-    }
-
+  /// example: lpkt.cn://gptbox/PATH?KEY=VAL
+  static bool? handle(Uri uri, [BuildContext? context]) {
     final path = uri.path;
     final params = uri.queryParameters;
 
@@ -20,7 +16,9 @@ abstract final class AppLink {
         _switchChat(chat.id);
         if (msg != null) {
           _inputCtrl.text = msg;
-          if (send == 'true') _onCreateText(context, chat.id);
+          if (send == 'true' && context != null) {
+            _onCreateText(context, chat.id);
+          }
         }
         return true;
       case '/open':
@@ -44,6 +42,7 @@ abstract final class AppLink {
         }
         return true;
       case '/search':
+        if (context == null) return false;
         final query = params['keyword'];
         showSearch(
           context: context,
@@ -57,6 +56,7 @@ abstract final class AppLink {
           final chat = _allHistories[chatId];
           if (chat != null) {
             _switchChat(chat.id);
+            if (context == null) return false;
             _onShareChat(context);
             return true;
           }
@@ -67,13 +67,16 @@ abstract final class AppLink {
               );
           if (chat != null) {
             _switchChat(chat.id);
+            if (context == null) return false;
             _onShareChat(context);
             return true;
           }
         }
+        if (context == null) return false;
         _onShareChat(context);
         return true;
       case '/go':
+        if (context == null) return false;
         final page = params['page'];
         if (page != null) {
           switch (page) {
@@ -106,7 +109,7 @@ abstract final class AppLink {
         final openAiModel = params['openAiModel'];
         if (openAiKey == null && openAiUrl == null && openAiModel == null) {
           final msg = l10n.invalidLinkFmt('${libL10n.empty} config');
-          context.showSnackBar(msg);
+          context?.showSnackBar(msg);
           Loggers.app.warning(msg);
           return true;
         }
@@ -119,7 +122,7 @@ abstract final class AppLink {
       default:
         if (isWeb && path == '/') return true;
         final msg = l10n.invalidLinkFmt(path);
-        context.showSnackBar(msg);
+        context?.showSnackBar(msg);
         Loggers.app.warning(msg);
         return false;
     }

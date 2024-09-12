@@ -30,16 +30,16 @@
 		<string>NSApplication</string>
 		<key>CFBundleURLTypes</key>
 		<array>
-		  <dict>
-		    <key>CFBundleTypeRole</key>
-		    <string>Editor</string>
-		    <key>CFBundleURLName</key>
-		    <string>tech.lolli.gptbox</string>
-		    <key>CFBundleURLSchemes</key>
-		    <array>
-		      <string>lk-gptbox</string>
-		    </array>
-		  </dict>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>lpkt.cn</string>
+				</array>
+			</dict>
 		</array>
 	</dict>
 </plist>

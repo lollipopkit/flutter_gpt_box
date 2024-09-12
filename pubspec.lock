@@ -507,9 +507,11 @@ packages:
   fl_lib:
     dependency: "direct main"
     description:
-      path: "../fl_lib"
-      relative: true
-    source: path
+      path: "."
+      ref: "v1.0.161"
+      resolved-ref: ebdbffc5f7f705302264407785963013e26efca4
+      url: "https://github.com/lppcg/fl_lib"
+    source: git
     version: "0.0.1"
   flutter:
     dependency: "direct main"
@@ -1100,14 +1102,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  pocketbase:
-    dependency: transitive
-    description:
-      name: pocketbase
-      sha256: "1d2958a3a7cb1e0050f425f179bd6557441fafcf740a79d5b8b80d6954149790"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.18.1"
   pool:
     dependency: transitive
     description:

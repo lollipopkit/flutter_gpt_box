@@ -52,24 +52,13 @@
 		<key>CFBundleURLTypes</key>
 		<array>
 			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
 				<key>CFBundleURLName</key>
 				<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>gptbox</string>
-				</array>
-			</dict>
-		</array>
-		<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLName</key>
-				<string>tech.lolli.gptbox</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>lk-gptbox</string>
+					<string>lpkt.cn</string>
 				</array>
 			</dict>
 		</array>

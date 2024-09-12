@@ -302,6 +302,17 @@ final class ChatContent {
     }
     return raw;
   }
+
+  void deleteFile() async {
+    if (isText) return;
+    final isLocal = raw.isFileUrl(false);
+    if (isLocal) {
+      final file = File(raw);
+      await file.delete();
+    } else {
+      await FileApi.delete([raw]);
+    }
+  }
 }
 
 @HiveType(typeId: 3)

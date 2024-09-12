@@ -15,6 +15,7 @@ import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/misc.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/page/home/home.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
 
@@ -42,6 +43,7 @@ Future<void> _initApp() async {
 
   await Paths.init(Build.name, bakName: Miscs.bakFileName);
   await _initDb();
+  
   _setupLogger();
   _initAppComponents();
 }
@@ -74,6 +76,9 @@ void _setupLogger() {
 }
 
 Future<void> _initAppComponents() async {
+  Apis.init();
+  DeepLinks.appId = AppLink.host;
+
   final sets = Stores.setting;
   final size = sets.windowSize;
   SystemUIs.initDesktopWindow(

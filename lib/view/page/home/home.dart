@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage>
       key: PhysicalKeyboardKey.enter,
       callback: () {
         // If the current page is not chat, do nothing
-        if (ModalRoute.of(context)?.isCurrent != true) return false;
+        if (context.stillOnPage != true) return false;
 
         if (_inputCtrl.text.isEmpty) return false;
         _onCreateRequest(context, _curChatId);
@@ -143,15 +143,16 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> _initUrlScheme() async {
+    DeepLinks.register(AppLink.handle);
+
     if (isWeb) {
       final uri = await _appLink.getInitialLink();
       if (uri == null) return;
-      AppLink.handle(context, uri);
+      DeepLinks.process(uri, context);
     } else {
-      _appLink.uriLinkStream.listen((Uri? uri) {
-        if (uri == null) return;
-        if (!mounted) return;
-        AppLink.handle(context, uri);
+      _appLink.uriLinkStream.listen((uri) {
+        final ctx = mounted ? context : null;
+        DeepLinks.process(uri, ctx);
       }, onError: (err) {
         final msg = l10n.invalidLinkFmt(err);
         Loggers.app.warning(msg);

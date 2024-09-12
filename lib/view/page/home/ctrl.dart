@@ -144,10 +144,20 @@ void _onDeleteChat(String chatId) {
   if (_curChatId == chatId) {
     _switchPreviousChat();
   }
-  _allHistories.remove(chatId);
+  final rm = _allHistories.remove(chatId);
   _historyRN.notify();
 
-  /// TODO: Delete chat / related imgs from supa
+  if (rm != null) {
+    for (final item in rm.items) {
+      for (final content in item.content) {
+        try {
+          content.deleteFile();
+        } catch (e, st) {
+          Loggers.app.warning('Delete file failed', e, st);
+        }
+      }
+    }
+  }
 }
 
 void _onTapRenameChat(String chatId, BuildContext context) async {
@@ -237,9 +247,23 @@ void _onShareChat(BuildContext context) async {
 Future<void> _onTapImgPick(BuildContext context) async {
   final val = _filePicked.value;
   if (val != null) {
+    void onDelete() async {
+      _filePicked.value = null;
+      context.pop();
+      await context.showLoadingDialog(fn: val.delete);
+    }
+
     final delete = await context.showRoundDialog(
       title: libL10n.file,
-      child: ImageCard(imageUrl: val.url, heroTag: val.local),
+      child: ImageCard(
+        imageUrl: val.url,
+        heroTag: val.local,
+        onRet: (p0) {
+          if (p0.isDeleted) {
+            onDelete();
+          }
+        },
+      ),
       actions: [
         TextButton(
           onPressed: () => context.pop(true),
@@ -248,8 +272,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
       ],
     );
     if (delete == true) {
-      _filePicked.value = null;
-      await val.delete();
+      onDelete();
     }
     return;
   }
