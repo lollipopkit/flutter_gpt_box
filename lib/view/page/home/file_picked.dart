@@ -11,7 +11,7 @@ final class _FilePicked {
 
   /// Save the bytes to a file and upload it to the server.
   static Future<_FilePicked> fromBytes(Uint8List data, {String? mime}) async {
-    final path = await data.save(mime: mime);
+    final path = await data.save();
     if (canUpload) {
       final remote = await FileApi.upload([path]);
       return _FilePicked(local: path, remote: remote.first);
