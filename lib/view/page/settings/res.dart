@@ -1,15 +1,7 @@
-import 'dart:async';
-import 'dart:io';
-
-import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/view/widget/audio.dart';
+part of 'setting.dart';
 
 final class ResPage extends StatefulWidget {
-  final Never? args;
-
-  const ResPage({super.key, this.args});
+  const ResPage({super.key});
 
   @override
   State<ResPage> createState() => _ResPageState();
@@ -17,7 +9,11 @@ final class ResPage extends StatefulWidget {
 
 const _dur = Durations.medium1;
 
-final class _ResPageState extends State<ResPage> with AfterLayoutMixin {
+final class _ResPageState extends State<ResPage>
+    with
+        AfterLayoutMixin,
+        AutomaticKeepAliveClientMixin,
+        SingleTickerProviderStateMixin {
   late final _resType = ValueNotifier(_ResType.image)..addListener(_load);
   final _listKey = GlobalKey<AnimatedGridState>();
   final _filesList = <FileSystemEntity>[];
@@ -37,25 +33,20 @@ final class _ResPageState extends State<ResPage> with AfterLayoutMixin {
     _isWide = size.width / size.height > 1.5;
   }
 
+  List<Tab> get _tabs =>
+      _ResType.values.map((e) => Tab(icon: Icon(e.icon))).toList();
+
+  late final _tabCtrl = TabController(length: _tabs.length, vsync: this);
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-      appBar: CustomAppBar(
-        title: Text(l10n.res),
-        actions: [
-          ListenBuilder(
-            listenable: _resType,
-            builder: () {
-              return IconButton(
-                onPressed: () {
-                  if (_loading) return;
-                  _resType.value = _resType.value.next;
-                },
-                icon: Icon(_resType.value.icon),
-              );
-            },
-          )
-        ],
+      appBar: TabBar(
+        tabs: _tabs,
+        controller: _tabCtrl,
+        dividerHeight: 0,
+        onTap: (value) => _resType.value = _ResType.values[value],
       ),
       body: ListenBuilder(
         listenable: _resType,
@@ -110,7 +101,7 @@ final class _ResPageState extends State<ResPage> with AfterLayoutMixin {
         _listKey.currentState?.removeAllItems(
           (_, anime) => FadeTransition(
             opacity: anime,
-            child: SizedBox(height: ImageCard.height, width: ImageCard.height),
+            child: const SizedBox(height: 177, width: 177),
           ),
           duration: _dur,
         );
@@ -158,11 +149,14 @@ final class _ResPageState extends State<ResPage> with AfterLayoutMixin {
   FutureOr<void> afterFirstLayout(BuildContext context) {
     _load();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 enum _ResType {
-  audio,
   image,
+  audio,
   ;
 
   Future<Directory> get dir async => switch (this) {

@@ -1,31 +1,19 @@
-import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
-import 'package:gpt_box/core/util/tool_func/tool.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:icons_plus/icons_plus.dart';
+part of 'setting.dart';
 
 class ToolPage extends StatefulWidget {
-  const ToolPage({super.key, Never? args});
+  const ToolPage({super.key});
 
   @override
   State<ToolPage> createState() => _ToolPageState();
 }
 
-class _ToolPageState extends State<ToolPage> {
-  final _store = Stores.tool;
+final class _ToolPageState extends State<ToolPage>
+    with AutomaticKeepAliveClientMixin {
+  final _toolStore = Stores.tool;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: Text(l10n.tool),
-      ),
-      body: _buildBody(),
-    );
-  }
-
-  Widget _buildBody() {
+    super.build(context);
     return MultiList(
       children: [
         [
@@ -51,7 +39,7 @@ class _ToolPageState extends State<ToolPage> {
         ListTile(
           title: Text(libL10n.edit),
           onTap: () async {
-            final data = _store.memories.fetch();
+            final data = _toolStore.memories.fetch();
             final dataMap = <String, String>{};
             for (var idx = 0; idx < data.length; idx++) {
               dataMap['$idx'] = data[idx];
@@ -61,7 +49,7 @@ class _ToolPageState extends State<ToolPage> {
               KvEditorArgs(data: dataMap),
             );
             if (res != null) {
-              _store.memories.put(res.values.toList());
+              _toolStore.memories.put(res.values.toList());
               context.showSnackBar(libL10n.success);
             }
           },
@@ -75,12 +63,12 @@ class _ToolPageState extends State<ToolPage> {
     return ListTile(
       leading: const Icon(MingCute.tool_line),
       title: Text(l10n.switcher),
-      trailing: StoreSwitch(prop: _store.enabled),
+      trailing: StoreSwitch(prop: _toolStore.enabled),
     ).cardx;
   }
 
   Widget _buildModelRegExp() {
-    final prop = _store.toolsRegExp;
+    final prop = _toolStore.toolsRegExp;
     final listenable = prop.listenable();
     return ListTile(
       leading: const Icon(Bootstrap.regex),
@@ -116,7 +104,7 @@ class _ToolPageState extends State<ToolPage> {
   }
 
   Widget _buildSwitchTile(ToolFunc e, {String? title}) {
-    final prop = _store.disabledTools;
+    final prop = _toolStore.disabledTools;
     return ValBuilder(
       listenable: prop.listenable(),
       builder: (vals) {
@@ -141,4 +129,7 @@ class _ToolPageState extends State<ToolPage> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

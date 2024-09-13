@@ -43,7 +43,7 @@ Future<void> _initApp() async {
 
   await Paths.init(Build.name, bakName: Miscs.bakFileName);
   await _initDb();
-  
+
   _setupLogger();
   _initAppComponents();
 }
