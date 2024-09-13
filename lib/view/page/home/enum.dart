@@ -42,7 +42,10 @@ enum HomePageEnum {
           final addBtn = TextButton(
             onPressed: () {
               context.pop();
-              Routes.profile.go(context);
+              SettingsPage.route.go(
+                context,
+                const SettingsPageArgs(tabIndex: SettingsTab.profile),
+              );
             },
             child: Text(libL10n.add),
           );

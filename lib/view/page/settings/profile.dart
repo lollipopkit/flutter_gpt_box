@@ -1,21 +1,14 @@
-import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
-import 'package:gpt_box/core/util/api_balance.dart';
-import 'package:gpt_box/data/model/chat/config.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/openai.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:icons_plus/icons_plus.dart';
-import 'package:shortid/shortid.dart';
+part of 'setting.dart';
 
 final class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key, Never? args});
+  const ProfilePage({super.key});
 
   @override
   State<StatefulWidget> createState() => _ProfilePageState();
 }
 
-final class _ProfilePageState extends State<ProfilePage> {
+final class _ProfilePageState extends State<ProfilePage>
+    with AutomaticKeepAliveClientMixin {
   final _cfgRN = RNode();
 
   @override
@@ -25,16 +18,14 @@ final class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: Text(l10n.profile),
-      ),
-      body: _buildBody(),
-    );
+  void dispose() {
+    super.dispose();
+    _cfgRN.dispose();
   }
 
-  Widget _buildBody() {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     return MultiList(
       children: [
         [CenterGreyTitle(l10n.chat), _buildChat()],
@@ -43,21 +34,20 @@ final class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  static const refreshIcon = IconButton(
+    onPressed: ApiBalance.refresh,
+    icon: Icon(Icons.refresh),
+  );
+
   Widget _buildBalance() {
-    return ValBuilder(
-      listenable: ApiBalance.balance,
-      builder: (val) {
+    return ApiBalance.balance.listenVal(
+      (val) {
         return ListTile(
           leading: const Icon(Icons.account_balance_wallet),
           title: Text(l10n.balance),
           subtitle: Text(val.state ?? l10n.unsupported, style: UIs.text13Grey),
-          trailing: val.loading
-              ? SizedLoading.small
-              : IconButton(
-                  onPressed: () => ApiBalance.refresh(),
-                  icon: const Icon(Icons.refresh),
-                ),
-        ).cardx;
+          trailing: val.loading ? SizedLoading.small : refreshIcon,
+        );
       },
     );
   }
@@ -502,6 +492,9 @@ final class _ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   // Widget _buildFollowChatModel() {
   //   return ListTile(

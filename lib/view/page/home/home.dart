@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -12,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:gpt_box/core/util/sync.dart';
 //import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:gpt_box/data/model/chat/history/share.dart';
-import 'package:gpt_box/core/route/page.dart';
 import 'package:gpt_box/core/util/chat_title.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
@@ -25,6 +23,7 @@ import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/page/settings/setting.dart';
 import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
@@ -41,7 +40,6 @@ part 'bottom.dart';
 part 'url_scheme.dart';
 part 'req.dart';
 part 'md_copy.dart';
-part 'drawer.dart';
 part 'file_picked.dart';
 
 class HomePage extends StatefulWidget {
@@ -89,7 +87,6 @@ class _HomePageState extends State<HomePage>
     return ExitConfirm(
       onPop: (_) => ExitConfirm.exitApp(),
       child: const Scaffold(
-        drawer: _Drawer(),
         appBar: _CustomAppBar(),
         body: _Body(),
         bottomNavigationBar: _HomeBottom(isHome: true),

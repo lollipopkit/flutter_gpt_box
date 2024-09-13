@@ -1,27 +1,23 @@
-import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
-import 'package:gpt_box/data/res/github_id.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/url.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+part of 'setting.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key, Never? args});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: Text(libL10n.about)),
-      body: Center(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 17),
-          children: [
-            _buildUniLinks(),
-            _buildLicense(context),
-            _buildInfo(),
-          ],
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 17),
+      children: [
+        UIs.height13,
+        const Text(
+          'GPT Box v${Build.build}',
+          textAlign: TextAlign.center,
         ),
-      ),
+        UIs.height13,
+        _buildUniLinks(),
+        _buildLicense(context),
+        _buildInfo(),
+      ],
     );
   }
 

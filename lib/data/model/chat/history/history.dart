@@ -291,7 +291,7 @@ final class ChatContent {
   }
 
   /// {@macro img_url_to_api}
-  /// 
+  ///
   /// Seperate from [toApi] to decouple the logic
   static Future<String> contentToApi(String raw) async {
     final isLocal = raw.isFileUrl(false);

@@ -1,43 +1,125 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/core/util/api_balance.dart';
+import 'package:gpt_box/core/util/tool_func/tool.dart';
+import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/res/build.dart';
+import 'package:gpt_box/data/res/github_id.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:shortid/shortid.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+part 'tool.dart';
+part 'profile.dart';
+part 'res.dart';
+part 'about.dart';
 
 final class SettingsPageRet {
-  final bool rebuild;
-  const SettingsPageRet({this.rebuild = false});
+  final bool restored;
+  const SettingsPageRet({required this.restored});
 }
 
-class SettingPage extends StatefulWidget {
-  const SettingPage({super.key, Never? args});
+final class SettingsPageArgs {
+  final SettingsTab tabIndex;
+  const SettingsPageArgs({this.tabIndex = SettingsTab.app});
+}
+
+class SettingsPage extends StatefulWidget {
+  final SettingsPageArgs args;
+
+  const SettingsPage({super.key, required this.args});
+
+  static const route = AppRouteArg<SettingsPageRet, SettingsPageArgs>(
+    page: SettingsPage.new,
+    path: '/settings',
+  );
 
   @override
-  State<SettingPage> createState() => _SettingPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
-  final _store = Stores.setting;
+enum SettingsTab {
+  app,
+  profile,
+  tool,
+  res,
+  about,
+  ;
+
+  String get l10nName => switch (this) {
+        app => 'App',
+        profile => l10n.profile,
+        tool => l10n.tool,
+        res => l10n.res,
+        about => libL10n.about,
+      };
+
+  static List<Tab> get tabs =>
+      values.map((e) => Tab(text: e.l10nName)).toList();
+}
+
+class _SettingsPageState extends State<SettingsPage>
+    with SingleTickerProviderStateMixin {
+  final _setStore = Stores.setting;
   var _localeStr = '';
+
+  late final _tabCtrl = TabController(
+      length: SettingsTab.values.length,
+      vsync: this,
+      initialIndex: widget.args.tabIndex.index);
+
+  @override
+  void dispose() {
+    _tabCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: Key(_localeStr),
-      appBar: CustomAppBar(title: Text(libL10n.setting)),
-      body: _buildBody(),
+      appBar: CustomAppBar(
+        title: Text(libL10n.setting),
+        bottom: TabBar(
+          controller: _tabCtrl,
+          tabs: SettingsTab.tabs,
+          dividerHeight: 0,
+          tabAlignment: TabAlignment.center,
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabCtrl,
+        children: [
+          _buildAppTab(),
+          const ProfilePage(),
+          const ToolPage(),
+          const ResPage(),
+          const AboutPage(),
+        ],
+      ),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildAppTab() {
     return MultiList(
       children: [
-        [const CenterGreyTitle('App'), _buildApp()],
-        [CenterGreyTitle(l10n.chat), _buildChat()]
+        [
+          const CenterGreyTitle('App'),
+          const UserCard(),
+          UIs.height13,
+          _buildApp()
+        ],
+        [CenterGreyTitle(l10n.chat), _buildAppChat()]
       ],
     );
   }
@@ -53,7 +135,7 @@ class _SettingPageState extends State<SettingPage> {
     return Column(children: children.map((e) => e.cardx).toList());
   }
 
-  Widget _buildChat() {
+  Widget _buildAppChat() {
     final children = [
       _buildUserName(),
       if (isMobile) _buildScrollSwitchChat(),
@@ -70,7 +152,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildThemeMode() {
     return ValueListenableBuilder(
-      valueListenable: _store.themeMode.listenable(),
+      valueListenable: _setStore.themeMode.listenable(),
       builder: (_, val, __) => ListTile(
         leading: const Icon(Icons.sunny),
         title: Text(l10n.themeMode),
@@ -82,8 +164,8 @@ class _SettingPageState extends State<SettingPage> {
             initial: ThemeMode.values[val],
           );
           if (result != null) {
-            _store.themeMode.put(result.index);
-            context.pop(const SettingsPageRet(rebuild: true));
+            _setStore.themeMode.put(result.index);
+            context.pop();
 
             /// Set delay to true to wait for db update.
             RNodes.app.notify(delay: true);
@@ -99,7 +181,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Widget _buildColorSeed() {
     return ValueListenableBuilder(
-      valueListenable: _store.themeColorSeed.listenable(),
+      valueListenable: _setStore.themeColorSeed.listenable(),
       builder: (_, val, __) {
         final primaryColor = Color(val);
         return ListTile(
@@ -145,13 +227,13 @@ class _SettingPageState extends State<SettingPage> {
       context.showSnackBar('Invalid color code: $s');
       return;
     }
-    _store.themeColorSeed.put(color.value);
+    _setStore.themeColorSeed.put(color.value);
     RNodes.app.notify(delay: true);
   }
 
   Widget _buildLocale() {
     return ValueListenableBuilder(
-      valueListenable: _store.locale.listenable(),
+      valueListenable: _setStore.locale.listenable(),
       builder: (_, val, __) => ListTile(
         leading: const Icon(MingCute.translate_2_line),
         title: Text(libL10n.language),
@@ -168,7 +250,7 @@ class _SettingPageState extends State<SettingPage> {
           );
           if (result != null) {
             final newLocaleStr = result.toLanguageTag();
-            _store.locale.put(newLocaleStr);
+            _setStore.locale.put(newLocaleStr);
             await RNodes.app.notify(delay: true);
             setState(() {
               _localeStr = newLocaleStr;
@@ -199,7 +281,7 @@ class _SettingPageState extends State<SettingPage> {
             url: Urls.appUpdateCfg,
             context: context,
           )),
-      trailing: StoreSwitch(prop: _store.autoCheckUpdate),
+      trailing: StoreSwitch(prop: _setStore.autoCheckUpdate),
     );
   }
 
@@ -242,7 +324,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Icons.auto_awesome, size: 21),
       title: Text(l10n.genChatTitle),
-      trailing: StoreSwitch(prop: _store.genTitle),
+      trailing: StoreSwitch(prop: _setStore.genTitle),
     );
   }
 
@@ -260,7 +342,7 @@ class _SettingPageState extends State<SettingPage> {
   Widget _buildScrollBottomOnMsg() {
     return ListTile(
       title: Text(l10n.onMsgCome),
-      trailing: StoreSwitch(prop: _store.scrollBottom),
+      trailing: StoreSwitch(prop: _setStore.scrollBottom),
     );
   }
 
@@ -268,7 +350,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Icons.wrap_text),
       title: TipText(l10n.softWrap, l10n.codeBlock),
-      trailing: StoreSwitch(prop: _store.softWrap),
+      trailing: StoreSwitch(prop: _setStore.softWrap),
     );
   }
 
@@ -276,7 +358,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Icons.delete),
       title: Text(l10n.autoRmDupChat),
-      trailing: StoreSwitch(prop: _store.autoRmDupChat),
+      trailing: StoreSwitch(prop: _setStore.autoRmDupChat),
     );
   }
 
@@ -312,7 +394,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(MingCute.route_fill),
       title: Text('Cupertino ${l10n.route}'),
-      trailing: StoreSwitch(prop: _store.cupertinoRoute),
+      trailing: StoreSwitch(prop: _setStore.cupertinoRoute),
     );
   }
 
@@ -320,7 +402,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(MingCute.check_circle_fill),
       title: Text(l10n.deleteConfirm),
-      trailing: StoreSwitch(prop: _store.confrimDel),
+      trailing: StoreSwitch(prop: _setStore.confrimDel),
     );
   }
 
@@ -329,7 +411,7 @@ class _SettingPageState extends State<SettingPage> {
       leading: const Icon(Clarity.beta_solid),
       title: Text(l10n.joinBeta),
       trailing: StoreSwitch(
-        prop: _store.joinBeta,
+        prop: _setStore.joinBeta,
         callback: (val) async {
           if (val) {
             AppUpdate.chan = AppUpdateChan.beta;
@@ -350,7 +432,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Icons.compress),
       title: TipText(l10n.compress, l10n.compressImgTip),
-      trailing: StoreSwitch(prop: _store.compressImg),
+      trailing: StoreSwitch(prop: _setStore.compressImg),
     );
   }
 
@@ -358,7 +440,7 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Icons.save),
       title: TipText(l10n.saveErrChat, l10n.saveErrChatTip),
-      trailing: StoreSwitch(prop: _store.saveErrChat),
+      trailing: StoreSwitch(prop: _setStore.saveErrChat),
     );
   }
 
@@ -366,17 +448,17 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Icons.swap_vert),
       title: TipText(l10n.scrollSwitchChat, l10n.needRestart),
-      trailing: StoreSwitch(prop: _store.scrollSwitchChat),
+      trailing: StoreSwitch(prop: _setStore.scrollSwitchChat),
     );
   }
 
   Widget _buildUserName() {
-    final property = _store.avatar;
+    final property = _setStore.avatar;
     return ListTile(
       leading: const Icon(Bootstrap.person_vcard_fill, size: 22),
       title: Text(libL10n.name),
       trailing: ValBuilder(
-        listenable: _store.avatar.listenable(),
+        listenable: _setStore.avatar.listenable(),
         builder: (val) => Text(val, style: const TextStyle(fontSize: 18)),
       ),
       onTap: () async {
@@ -418,14 +500,14 @@ class _SettingPageState extends State<SettingPage> {
     return ListTile(
       leading: const Icon(Bootstrap.window_sidebar, size: 20),
       title: Text(libL10n.hideTitleBar),
-      trailing: StoreSwitch(prop: _store.hideTitleBar),
+      trailing: StoreSwitch(prop: _setStore.hideTitleBar),
     );
   }
 
   Widget _buildScrollAfterSwitch() {
     return ListTile(
       title: Text(l10n.onSwitchChat),
-      trailing: StoreSwitch(prop: _store.scrollAfterSwitch),
+      trailing: StoreSwitch(prop: _setStore.scrollAfterSwitch),
     );
   }
 }
