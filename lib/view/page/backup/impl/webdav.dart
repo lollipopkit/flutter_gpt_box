@@ -79,6 +79,8 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak.merge(force: true);
     context.showSnackBar(libL10n.success);
+
+    context.pop(const SettingsPageRet(restored: true));
   } catch (e, s) {
     context.showErrDialog(e, s, 'Download webdav backup');
   } finally {
