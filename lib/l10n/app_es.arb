@@ -1,6 +1,6 @@
 {
   "@@locale": "es",
-  "apiUrlTip": "La URL de la API debería ser similar a `https://api.openai.com` y no necesita el `/v1` al final. ¿Continuar usando esta URL?",
+  "apiUrlV1Tip": "Similar a https://api.openai.com/v1 (requiriendo el /v1 final). ¿Continuar usando esta URL?",
   "assistant": "Asistente",
   "attention": "Atención",
   "audio": "Audio",

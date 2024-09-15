@@ -1,6 +1,6 @@
 {
   "@@locale": "zh_TW",
-  "apiUrlTip": "API URL 應該類似 `https://api.openai.com`，且不需要最後的 `/v1`。繼續使用該 URL 嗎？",
+  "apiUrlV1Tip": "類似 https://api.openai.com/v1（需要最後的 /v1）。繼續使用該 URL 嗎？",
   "assistant": "助手",
   "attention": "注意",
   "audio": "音訊",

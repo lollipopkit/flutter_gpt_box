@@ -1,6 +1,6 @@
 {
   "@@locale": "ja",
-  "apiUrlTip": "API URLは `https://api.openai.com` のような形式で、最後の `/v1` は不要です。このURLを使用しますか？",
+  "apiUrlV1Tip": "https://api.openai.com/v1に似ています（最後の /v1 が必要）。このURLを引き続き使用しますか？",
   "assistant": "アシスタント",
   "attention": "注意",
   "audio": "オーディオ",
