@@ -54,7 +54,6 @@ class _SettingsPageState extends State<SettingsPage>
 
   @override
   Widget build(BuildContext context) {
-    dprint('SettingsPage build');
     return Scaffold(
       key: UniqueKey(),
       appBar: CustomAppBar(
@@ -93,7 +92,6 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    dprint('AppSettingsPage build');
     return MultiList(
       children: [
         [
@@ -232,12 +230,8 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
             initial: val.toLocale ?? l10n.localeName.toLocale,
           );
           if (result != null) {
-            final newLocaleStr = result.toLanguageTag();
-            _setStore.locale.put(newLocaleStr);
+            _setStore.locale.put(result.code);
             await RNodes.app.notify(delay: true);
-            // setState(() {
-            //   _localeStr = newLocaleStr;
-            // });
           }
         },
       ),

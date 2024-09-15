@@ -65,11 +65,13 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
-    _inputCtrl.dispose();
+    // Do NOT dispose these, it's global and will be reused
+    // _inputCtrl.dispose();
+    // _chatScrollCtrl.dispose();
+    // _historyScrollCtrl.dispose();
+    // _keyboardSendListener?.dispose();
+
     _refreshTimeTimer?.cancel();
-    _chatScrollCtrl.dispose();
-    _historyScrollCtrl.dispose();
-    _keyboardSendListener?.dispose();
     super.dispose();
   }
 
