@@ -199,8 +199,9 @@ final class ChatHistoryItem {
   OaiHistoryItem toOpenAI({bool asStr = true}) {
     switch (role) {
       case ChatRole.user:
+        final hasImg = content.any((e) => e.isImg);
         return ChatCompletionMessage.user(
-          content: asStr
+          content: asStr && !hasImg
               ? ChatCompletionUserMessageContent.string(
                   content.map((e) => e.raw).join('\n'))
               : ChatCompletionUserMessageContent.parts(
@@ -228,7 +229,7 @@ final class ChatHistoryItem {
   }
 }
 
-/// Handle [audio] and [image] as url (file:// & https://) or base64
+/// Handle [audio] and [image] as url (/path & https://) or base64
 @HiveType(typeId: 1)
 enum ChatContentType {
   @HiveField(0)
@@ -250,18 +251,20 @@ final class ChatContent {
   String raw;
   @HiveField(2, defaultValue: '')
   final String id;
+  @HiveField(3)
+  final Map<String, dynamic>? extra;
 
-  ChatContent({required this.type, required this.raw, required String id})
+  ChatContent({required this.type, required this.raw, required String id, this.extra,})
       : id = id.isEmpty ? shortid.generate() : id;
-  ChatContent.noid({required this.type, required this.raw})
+  ChatContent.noid({required this.type, required this.raw, this.extra})
       : id = shortid.generate();
-  ChatContent.text(this.raw)
+  ChatContent.text(this.raw, {this.extra})
       : type = ChatContentType.text,
         id = shortid.generate();
-  ChatContent.audio(this.raw)
+  ChatContent.audio(this.raw, {this.extra})
       : type = ChatContentType.audio,
         id = shortid.generate();
-  ChatContent.image(this.raw)
+  ChatContent.image(this.raw, {this.extra})
       : type = ChatContentType.image,
         id = shortid.generate();
 

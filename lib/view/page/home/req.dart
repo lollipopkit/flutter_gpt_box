@@ -71,18 +71,18 @@ void _onCreateRequest(BuildContext context, String chatId) async {
     chatId = newId;
   }
 
-  final chatType = _chatType.value;
-  final notSupport = switch (chatType) {
-    // Dart package `openai` uses [io.File], which is not supported on web
-    ChatType.img || ChatType.audio => isWeb,
-    _ => false,
-  };
-  if (notSupport) {
-    final msg = l10n.notSupported('Web ${chatType.name}');
-    Loggers.app.warning(msg);
-    context.showSnackBar(msg);
-    return;
-  }
+  // final chatType = _chatType.value;
+  // final notSupport = switch (chatType) {
+  //   // Dart package `openai` uses [io.File], which is not supported on web
+  //   ChatType.img || ChatType.audio => isWeb,
+  //   _ => false,
+  // };
+  // if (notSupport) {
+  //   final msg = l10n.notSupported('Web ${chatType.name}');
+  //   Loggers.app.warning(msg);
+  //   context.showSnackBar(msg);
+  //   return;
+  // }
   // final func = switch ((chatType, _filePicked.value)) {
   //   (ChatType.text, _) => _onCreateText,
   //   (ChatType.img, null) => _onCreateImg,
@@ -90,12 +90,19 @@ void _onCreateRequest(BuildContext context, String chatId) async {
   //   (ChatType.audio, null) => _onCreateTTS,
   //   (ChatType.audio, _) => _onCreateSTT,
   // };
-  return await _onCreateText(context, chatId);
-}
 
-Future<void> _onCreateText(BuildContext context, String chatId) async {
   if (_inputCtrl.text.isEmpty) return;
   _imeFocus.unfocus();
+  final input = _inputCtrl.text;
+  return await _onCreateText(context, chatId, input, _filePicked.value?.url);
+}
+
+Future<void> _onCreateText(
+  BuildContext context,
+  String chatId,
+  String input,
+  String? fileUrl,
+) async {
   final workingChat = _allHistories[chatId];
   if (workingChat == null) {
     final msg = 'Chat($chatId) not found';
@@ -104,22 +111,20 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
     return;
   }
   final config = OpenAICfg.current;
-  final questionContent = _inputCtrl.text;
 
-  final pickedImg = _filePicked.value;
-  final hasImg = pickedImg != null;
+  final hasImg = fileUrl != null;
   final question = ChatHistoryItem.gen(
     content: [
-      ChatContent.text(questionContent),
-      if (hasImg) ChatContent.image(pickedImg.url),
+      ChatContent.text(input),
+      if (hasImg) ChatContent.image(fileUrl),
     ],
     role: ChatRole.user,
   );
   final questionForApi = ChatHistoryItem.gen(
     role: ChatRole.user,
     content: [
-      ChatContent.text(questionContent),
-      if (hasImg) await ChatContent.image(pickedImg.url).toApi,
+      ChatContent.text(input),
+      if (hasImg) await ChatContent.image(fileUrl).toApi,
     ],
   );
   final msgs = (await _historyCarried(workingChat)).toList();
@@ -135,15 +140,13 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
   final toolCompatible = OpenAICfg.isToolCompatible();
 
   // #104
-  final singleChatScopeUseTools = workingChat.settings?.useTools != false;
+  final chatScopeUseTools = workingChat.settings?.useTools != false;
 
   // #111
   final availableTools = OpenAIFuncCalls.tools;
   final isToolsEmpty = availableTools.isEmpty;
 
-  /// TODO: after switching to http img url, remove this condition.
-  /// To save tokens, we don't use tools for image prompt
-  if (toolCompatible && !hasImg && singleChatScopeUseTools && !isToolsEmpty) {
+  if (toolCompatible && chatScopeUseTools && !isToolsEmpty) {
     final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
     workingChat.items.add(toolReply);
     _loadingChatIds.add(toolReply.id);
@@ -185,7 +188,7 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
         }
       }
       toolReply.content.clear();
-      if (contents.isNotEmpty) {
+      if (contents.isNotEmpty && contents.every((e) => e.raw.isNotEmpty)) {
         toolReply.content.addAll(contents);
         _chatItemRNMap[toolReply.id]?.notify();
         msgs.add(toolReply.toOpenAI());
@@ -213,8 +216,8 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
   _loadingChatIdRN.notify();
   _filePicked.value = null;
   _sendBtnRN.notify();
-
   _chatFabAutoHideKey.currentState?.autoHideEnabled = false;
+
   try {
     chatStream.listen(
       (eve) async {
@@ -226,26 +229,21 @@ Future<void> _onCreateText(BuildContext context, String chatId) async {
 
         _autoScroll(chatId);
       },
-      onError: (e, s) {
-        _onStopStreamSub(chatId);
-        _loadingChatIds.remove(assistReply.id);
-        _loadingChatIdRN.notify();
-        _onErr(e, s, chatId, 'Listen text stream');
-      },
-      onDone: () async {
-        _storeChat(chatId);
-        _onStopStreamSub(chatId);
-        _loadingChatIds.remove(chatId);
-        _loadingChatIds.remove(assistReply.id);
-        _loadingChatIdRN.notify();
-        // Wait for db to store the chat
-        await Future.delayed(const Duration(milliseconds: 300));
-        sync.sync();
-      },
     );
   } catch (e, s) {
     _onErr(e, s, chatId, 'Listen text stream');
     _loadingChatIds.remove(chatId);
+  } finally {
+    _onStopStreamSub(chatId);
+    _loadingChatIds.remove(chatId);
+    _loadingChatIds.remove(assistReply.id);
+    _loadingChatIdRN.notify();
+    _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
+
+    _storeChat(chatId);
+    // Wait for db to store the chat
+    await Future.delayed(const Duration(milliseconds: 300));
+    sync.sync();
   }
 }
 
@@ -535,13 +533,11 @@ void _onReplay({
 
   final text =
       item.content.firstWhereOrNull((e) => e.type == ChatContentType.text)?.raw;
-  if (text != null) _inputCtrl.text = text;
   final img = item.content
       .firstWhereOrNull((e) => e.type == ChatContentType.image)
       ?.raw;
-  if (img != null) _filePicked.value = await _FilePicked.fromUrl(img);
 
-  _onCreateRequest(context, chatId);
+  _onCreateText(context, chatId, text ?? '', img);
 }
 
 void _onErr(Object e, StackTrace s, String chatId, String action) {

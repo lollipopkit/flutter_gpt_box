@@ -11,8 +11,8 @@ enum ChatType {
   text,
   @HiveField(1)
   img,
-  @HiveField(2)
-  audio,
+  // @HiveField(2)
+  // audio,
   ;
 
   static ChatType? fromString(String? val) {
@@ -30,13 +30,13 @@ enum ChatType {
   IconData get icon => switch (this) {
         text => Icons.text_fields,
         img => Icons.image,
-        audio => Icons.mic,
+        //audio => Icons.mic,
       };
 
   String get name => switch (this) {
         text => l10n.text,
         img => l10n.image,
-        audio => l10n.audio,
+        //audio => l10n.audio,
       };
 
   static List<PopupMenuItem<ChatType>> get btns => ChatType.values

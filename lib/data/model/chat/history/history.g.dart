@@ -106,19 +106,22 @@ class ChatContentAdapter extends TypeAdapter<ChatContent> {
       type: fields[0] as ChatContentType,
       raw: fields[1] as String,
       id: fields[2] == null ? '' : fields[2] as String,
+      extra: (fields[3] as Map?)?.cast<String, dynamic>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatContent obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.type)
       ..writeByte(1)
       ..write(obj.raw)
       ..writeByte(2)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(3)
+      ..write(obj.extra);
   }
 
   @override

@@ -59,7 +59,7 @@ final class _CustomAppBar extends CustomAppBar {
                 switch (type) {
                   ChatType.text => val.model,
                   ChatType.img => val.imgModel,
-                  ChatType.audio => val.speechModel,
+                  //ChatType.audio => val.speechModel,
                 },
                 key: ValueKey(val),
                 maxLines: 1,

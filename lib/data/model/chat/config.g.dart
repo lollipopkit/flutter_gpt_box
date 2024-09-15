@@ -27,13 +27,14 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       imgModel: fields[10] == null ? 'dall-e-3' : fields[10] as String,
       speechModel: fields[11] == null ? 'tts-1' : fields[11] as String,
       transcribeModel: fields[12] == null ? 'whisper-1' : fields[12] as String,
+      genTitlePrompt: fields[14] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatConfig obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.prompt)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       ..writeByte(11)
       ..write(obj.speechModel)
       ..writeByte(12)
-      ..write(obj.transcribeModel);
+      ..write(obj.transcribeModel)
+      ..writeByte(14)
+      ..write(obj.genTitlePrompt);
   }
 
   @override

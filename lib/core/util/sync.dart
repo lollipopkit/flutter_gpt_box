@@ -6,7 +6,7 @@ import 'package:gpt_box/data/store/all.dart';
 
 const sync = Sync._();
 
-final class Sync extends SyncCfg {
+final class Sync extends SyncIface {
   const Sync._() : super();
 
   @override

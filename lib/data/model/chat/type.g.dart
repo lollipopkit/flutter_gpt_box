@@ -17,8 +17,6 @@ class ChatTypeAdapter extends TypeAdapter<ChatType> {
         return ChatType.text;
       case 1:
         return ChatType.img;
-      case 2:
-        return ChatType.audio;
       default:
         return ChatType.text;
     }
@@ -32,9 +30,6 @@ class ChatTypeAdapter extends TypeAdapter<ChatType> {
         break;
       case ChatType.img:
         writer.writeByte(1);
-        break;
-      case ChatType.audio:
-        writer.writeByte(2);
         break;
     }
   }
