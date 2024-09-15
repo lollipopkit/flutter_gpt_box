@@ -56,16 +56,15 @@ enum SettingsTab {
   about,
   ;
 
-  String get l10nName => switch (this) {
-        app => 'App',
+  String get i18n => switch (this) {
+        app => libL10n.app,
         profile => l10n.profile,
         tool => l10n.tool,
         res => l10n.res,
         about => libL10n.about,
       };
 
-  static List<Tab> get tabs =>
-      values.map((e) => Tab(text: e.l10nName)).toList();
+  static List<Tab> get tabs => values.map((e) => Tab(text: e.i18n)).toList();
 }
 
 class _SettingsPageState extends State<SettingsPage>
@@ -95,6 +94,7 @@ class _SettingsPageState extends State<SettingsPage>
           tabs: SettingsTab.tabs,
           dividerHeight: 0,
           tabAlignment: TabAlignment.center,
+          isScrollable: true,
         ),
       ),
       body: TabBarView(

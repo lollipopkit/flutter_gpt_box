@@ -30,12 +30,11 @@ ${json.encode(args)}
 
   Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log);
 
-  OpenAIToolModel get into => OpenAIToolModel(
-        type: 'function',
-        function: OpenAIFunctionModel(
-          name: name,
-          description: description,
-          parametersSchema: parametersSchema,
-        ),
-      );
+  ChatCompletionTool get into => ChatCompletionTool(
+      type: ChatCompletionToolType.function,
+      function: FunctionObject(
+        name: name,
+        description: description,
+        parameters: parametersSchema,
+      ));
 }

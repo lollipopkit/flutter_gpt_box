@@ -22,10 +22,11 @@ dependencies:
   image_picker: ^1.0.7
   screenshot: ^3.0.0
   shortid: ^0.1.2
-  dart_openai: #^5.1.0
-    git:
-      url: https://github.com/lollipopkit/dart_openai
-      ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
+  openai_dart: ^0.4.1
+  # dart_openai: #^5.1.0
+  #   git:
+  #     url: https://github.com/lollipopkit/dart_openai
+  #     ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
   webdav_client:
     git:
       ref: v1.0.66
@@ -38,7 +39,7 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.165
+      ref: v1.0.166
 
 dependency_overrides:
   # fl_lib:

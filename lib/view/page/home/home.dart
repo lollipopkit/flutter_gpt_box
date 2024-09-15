@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:app_links/app_links.dart';
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +26,7 @@ import 'package:gpt_box/view/page/settings/setting.dart';
 import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:openai_dart/openai_dart.dart';
 import 'package:screenshot/screenshot.dart';
 
 part 'chat.dart';

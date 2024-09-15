@@ -1,11 +1,12 @@
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:openai_dart/openai_dart.dart';
 
 abstract final class OpenAICfg {
+  static OpenAIClient? client;
   static final models = <String>[].vn;
 
   // ignore: deprecated_member_use_from_same_package
@@ -71,8 +72,10 @@ abstract final class OpenAICfg {
     } else {
       Loggers.app.info('Profile [${vn.value.name}]');
     }
-    OpenAI.apiKey = vn.value.key;
-    OpenAI.baseUrl = vn.value.url;
+    client = OpenAIClient(
+      apiKey: vn.value.key,
+      baseUrl: vn.value.url,
+    );
   }
 
   static void switchToDefault(BuildContext context) {
@@ -116,8 +119,8 @@ abstract final class _ModelsCacher {
       if (models_ != null) return models_;
     }
 
-    final val = await OpenAI.instance.model.list();
-    final strs = val.map((e) => e.id).toList();
+    final val = await OpenAICfg.client!.listModels();
+    final strs = val.data.map((e) => e.id).toList();
     models[key] = strs;
     updateTime[key] = now;
     return strs;

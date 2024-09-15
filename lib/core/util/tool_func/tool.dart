@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dart_openai/dart_openai.dart';
 import 'package:dio/dio.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_js/flutter_js.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:openai_dart/openai_dart.dart';
 
 part 'type.dart';
 part 'func/iface.dart';
@@ -27,8 +27,8 @@ abstract final class OpenAIFuncCalls {
     //_RunJS(),
   ];
 
-  static List<OpenAIToolModel> get tools {
-    final tools = <OpenAIToolModel>[];
+  static List<ChatCompletionTool> get tools {
+    final tools = <ChatCompletionTool>[];
     if (!Stores.tool.enabled.fetch()) return tools;
     final disabledTools = Stores.tool.disabledTools.fetch();
     for (final tool in internalTools) {
@@ -45,7 +45,7 @@ abstract final class OpenAIFuncCalls {
     OnToolLog onToolLog,
   ) async {
     switch (resp.type) {
-      case 'function':
+      case ChatCompletionMessageToolCallType.function:
         final targetName = resp.function.name;
         final func =
             internalTools.firstWhereOrNull((e) => e.name == targetName);

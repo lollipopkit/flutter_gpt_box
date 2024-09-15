@@ -7,8 +7,6 @@ final class ResPage extends StatefulWidget {
   State<ResPage> createState() => _ResPageState();
 }
 
-const _dur = Durations.medium1;
-
 final class _ResPageState extends State<ResPage>
     with
         AfterLayoutMixin,
@@ -17,20 +15,13 @@ final class _ResPageState extends State<ResPage>
   late final _resType = ValueNotifier(_ResType.image)..addListener(_load);
   final _listKey = GlobalKey<AnimatedGridState>();
   final _filesList = <FileSystemEntity>[];
-  bool _isWide = false;
+  static const _dur = Durations.medium1;
   bool _loading = false;
 
   @override
   void dispose() {
     _resType.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final size = MediaQuery.of(context).size;
-    _isWide = size.width / size.height > 1.5;
   }
 
   List<Tab> get _tabs =>
@@ -48,22 +39,25 @@ final class _ResPageState extends State<ResPage>
         dividerHeight: 0,
         onTap: (value) => _resType.value = _ResType.values[value],
       ),
-      body: ListenBuilder(
-        listenable: _resType,
-        builder: () {
-          return AnimatedGrid(
-            key: _listKey,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: _isWide ? 5 : 2,
-              crossAxisSpacing: 13,
-              mainAxisSpacing: 13,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 17),
-            itemBuilder: (_, idx, anime) {
-              return _buildTile(idx, anime);
-            },
-          );
-        },
+      body: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 840),
+        child: ListenBuilder(
+          listenable: _resType,
+          builder: () {
+            return AnimatedGrid(
+              key: _listKey,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150,
+                crossAxisSpacing: 7,
+                mainAxisSpacing: 7,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 17),
+              itemBuilder: (_, idx, anime) {
+                return _buildTile(idx, anime);
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -94,9 +88,9 @@ final class _ResPageState extends State<ResPage>
   }
 
   void _load() async {
+    if (_loading) return;
+    _loading = true;
     try {
-      if (_loading) return;
-      _loading = true;
       if (_filesList.isNotEmpty) {
         _listKey.currentState?.removeAllItems(
           (_, anime) => FadeTransition(
@@ -108,7 +102,7 @@ final class _ResPageState extends State<ResPage>
         await Future.delayed(_dur);
       }
       _filesList.clear();
-      final items = await _resType.value.all.toList();
+      final items = await _resType.value.all;
       _filesList.addAll(items);
       _listKey.currentState?.insertAllItems(0, items.length, duration: _dur);
     } catch (e) {
@@ -159,15 +153,14 @@ enum _ResType {
   audio,
   ;
 
-  Future<Directory> get dir async => switch (this) {
+  Directory get dir => switch (this) {
         audio => Directory(Paths.audio),
         image => Directory(Paths.img),
       };
 
-  Stream<FileSystemEntity> get all async* {
-    await for (final entity in (await dir).list()) {
-      yield entity;
-    }
+  Future<List<FileSystemEntity>> get all async {
+    final files = dir.list();
+    return files.toList();
   }
 
   IconData get icon => switch (this) {

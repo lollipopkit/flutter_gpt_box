@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/ext/file.dart';
@@ -8,6 +7,7 @@ import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:openai_dart/openai_dart.dart';
 import 'package:shortid/shortid.dart';
 
 part 'history.g.dart';
@@ -116,7 +116,7 @@ final class ChatHistory {
   }
 }
 
-typedef OaiHistoryItem = OpenAIChatCompletionChoiceMessageModel;
+typedef OaiHistoryItem = ChatCompletionMessage;
 
 @HiveType(typeId: 0)
 final class ChatHistoryItem {
@@ -194,16 +194,37 @@ final class ChatHistoryItem {
     );
   }
 
-  OaiHistoryItem get toOpenAI {
-    return OaiHistoryItem(
-      role: role.toOpenAI,
-      content: content.map((e) => e.toOpenAI).toList(),
-    );
+  /// - If [asStr], return [ChatCompletionMessage] with [String] content.
+  /// It's for deepseek's api compatibility.
+  OaiHistoryItem toOpenAI({bool asStr = true}) {
+    switch (role) {
+      case ChatRole.user:
+        return ChatCompletionMessage.user(
+          content: asStr
+              ? ChatCompletionUserMessageContent.string(
+                  content.map((e) => e.raw).join('\n'))
+              : ChatCompletionUserMessageContent.parts(
+                  content.map((e) => e.toOpenAI).toList()),
+        );
+      case ChatRole.assist:
+        return ChatCompletionMessage.assistant(
+          content: content.map((e) => e.raw).join('\n'),
+        );
+      case ChatRole.system:
+        return ChatCompletionMessage.system(
+          content: content.map((e) => e.raw).join('\n'),
+        );
+      case ChatRole.tool:
+        return ChatCompletionMessage.tool(
+          toolCallId: id,
+          content: content.map((e) => e.raw).join('\n'),
+        );
+    }
   }
 
-  Future<OaiHistoryItem> get toApi async {
+  Future<OaiHistoryItem> toApi({bool asStr = true}) async {
     final contents = await Future.wait(content.map((e) => e.toApi));
-    return copyWith(content: contents).toOpenAI;
+    return copyWith(content: contents).toOpenAI(asStr: asStr);
   }
 }
 
@@ -219,7 +240,7 @@ enum ChatContentType {
   ;
 }
 
-typedef OaiContent = OpenAIChatCompletionChoiceMessageContentItemModel;
+typedef OaiContent = ChatCompletionMessageContentPart;
 
 @HiveType(typeId: 2)
 final class ChatContent {
@@ -249,8 +270,9 @@ final class ChatContent {
   bool get isAudio => type == ChatContentType.audio;
 
   OaiContent get toOpenAI => switch (type) {
-        ChatContentType.text => OaiContent.text(raw),
-        ChatContentType.image => OaiContent.imageUrl(raw),
+        ChatContentType.text => OaiContent.text(text: raw),
+        ChatContentType.image =>
+          OaiContent.image(imageUrl: ChatCompletionMessageImageUrl(url: raw)),
         _ => throw UnimplementedError('$type.toOpenAI'),
       };
 
@@ -331,13 +353,6 @@ enum ChatRole {
   bool get isAssist => this == assist;
   bool get isSystem => this == system;
   bool get isTool => this == tool;
-
-  OpenAIChatMessageRole get toOpenAI => switch (this) {
-        assist => OpenAIChatMessageRole.assistant,
-        system => OpenAIChatMessageRole.system,
-        user => OpenAIChatMessageRole.user,
-        tool => OpenAIChatMessageRole.system,
-      };
 
   String get localized => switch (this) {
         user => Stores.setting.avatar.fetch(),

@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
@@ -87,8 +86,6 @@ Future<void> _initAppComponents() async {
     listener: WindowSizeListener(size),
   );
 
-  OpenAI.showLogs = !BuildMode.isRelease;
-  OpenAI.showResponsesLogs = !BuildMode.isRelease;
   OpenAICfg.apply();
   OpenAICfg.updateModels();
 

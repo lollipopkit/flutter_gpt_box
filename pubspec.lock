@@ -350,15 +350,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  dart_openai:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
-      resolved-ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
-      url: "https://github.com/lollipopkit/dart_openai"
-    source: git
-    version: "5.1.0"
   dart_style:
     dependency: transitive
     description:
@@ -508,8 +499,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.165"
-      resolved-ref: "553bb1890b3467fbbe7204ce47f10f65e680b0c0"
+      ref: "v1.0.166"
+      resolved-ref: "59c2e4f353df53d782ba440ac581e29c0f149ae8"
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
@@ -606,6 +597,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      sha256: c2e2d632dd9b8a2b7751117abcfc2b4888ecfe181bd9fca7170d9ef02e595fe2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.4"
   frontend_server_client:
     dependency: transitive
     description:
@@ -982,6 +981,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  openai_dart:
+    dependency: "direct main"
+    description:
+      name: openai_dart
+      sha256: "718a59975cecd241817142b1c7b7b0d9229504a88697b25da19e6846848305a8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   package_config:
     dependency: transitive
     description:
