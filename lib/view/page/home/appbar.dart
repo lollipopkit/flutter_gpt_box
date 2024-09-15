@@ -78,10 +78,7 @@ final class _CustomAppBar extends CustomAppBar {
       leading: Btn.icon(
         icon: const Icon(Icons.settings),
         onTap: () async {
-          final ret = await SettingsPage.route.go(
-            context,
-            const SettingsPageArgs(),
-          );
+          final ret = await SettingsPage.route.go(context);
           if (ret?.restored == true) {
             HomePage.afterRestore();
           }

@@ -23,23 +23,14 @@ part 'tool.dart';
 part 'profile.dart';
 part 'res.dart';
 part 'about.dart';
-
-final class SettingsPageRet {
-  final bool restored;
-  const SettingsPageRet({required this.restored});
-}
-
-final class SettingsPageArgs {
-  final SettingsTab tabIndex;
-  const SettingsPageArgs({this.tabIndex = SettingsTab.app});
-}
+part 'def.dart';
 
 class SettingsPage extends StatefulWidget {
-  final SettingsPageArgs args;
+  final SettingsPageArgs? args;
 
-  const SettingsPage({super.key, required this.args});
+  const SettingsPage({super.key, this.args});
 
-  static const route = AppRouteArg<SettingsPageRet, SettingsPageArgs>(
+  static const route = AppRoute<SettingsPageRet, SettingsPageArgs>(
     page: SettingsPage.new,
     path: '/settings',
   );
@@ -48,34 +39,12 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-enum SettingsTab {
-  app,
-  profile,
-  tool,
-  res,
-  about,
-  ;
-
-  String get i18n => switch (this) {
-        app => libL10n.app,
-        profile => l10n.profile,
-        tool => l10n.tool,
-        res => l10n.res,
-        about => libL10n.about,
-      };
-
-  static List<Tab> get tabs => values.map((e) => Tab(text: e.i18n)).toList();
-}
-
 class _SettingsPageState extends State<SettingsPage>
     with SingleTickerProviderStateMixin {
-  final _setStore = Stores.setting;
-  var _localeStr = '';
-
   late final _tabCtrl = TabController(
       length: SettingsTab.values.length,
       vsync: this,
-      initialIndex: widget.args.tabIndex.index);
+      initialIndex: widget.args?.tabIndex.index ?? 0);
 
   @override
   void dispose() {
@@ -85,8 +54,9 @@ class _SettingsPageState extends State<SettingsPage>
 
   @override
   Widget build(BuildContext context) {
+    dprint('SettingsPage build');
     return Scaffold(
-      key: Key(_localeStr),
+      key: UniqueKey(),
       appBar: CustomAppBar(
         title: Text(libL10n.setting),
         bottom: TabBar(
@@ -99,18 +69,31 @@ class _SettingsPageState extends State<SettingsPage>
       ),
       body: TabBarView(
         controller: _tabCtrl,
-        children: [
-          _buildAppTab(),
-          const ProfilePage(),
-          const ToolPage(),
-          const ResPage(),
-          const AboutPage(),
+        children: const [
+          AppSettingsPage(),
+          ProfilePage(),
+          ToolPage(),
+          ResPage(),
+          AboutPage(),
         ],
       ),
     );
   }
+}
 
-  Widget _buildAppTab() {
+final class AppSettingsPage extends StatefulWidget {
+  const AppSettingsPage({super.key});
+
+  @override
+  State<AppSettingsPage> createState() => _AppSettingsPageState();
+}
+
+final class _AppSettingsPageState extends State<AppSettingsPage> {
+  final _setStore = Stores.setting;
+
+  @override
+  Widget build(BuildContext context) {
+    dprint('AppSettingsPage build');
     return MultiList(
       children: [
         [
@@ -252,9 +235,9 @@ class _SettingsPageState extends State<SettingsPage>
             final newLocaleStr = result.toLanguageTag();
             _setStore.locale.put(newLocaleStr);
             await RNodes.app.notify(delay: true);
-            setState(() {
-              _localeStr = newLocaleStr;
-            });
+            // setState(() {
+            //   _localeStr = newLocaleStr;
+            // });
           }
         },
       ),

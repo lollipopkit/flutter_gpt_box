@@ -84,7 +84,7 @@ abstract final class AppLink {
             case 'res':
             case 'about':
             case 'backup':
-              SettingsPage.route.go(context, const SettingsPageArgs());
+              SettingsPage.route.go(context);
               return true;
             default:
               final msg = l10n.invalidLinkFmt(page);
