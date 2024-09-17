@@ -64,6 +64,7 @@
   "memoryAdded": "Gedächtnis hinzugefügt: {str}",
   "memoryTip": "[{txt}] merken?",
   "message": "Nachricht",
+  "migrationV1UrlTip": "Soll \"/v1\" automatisch am Ende der Konfiguration hinzugefügt werden?",
   "minute": "Minute",
   "model": "Modell",
   "modelRegExpTip": "Wenn der Modellname übereinstimmt, werden Tools verwendet",

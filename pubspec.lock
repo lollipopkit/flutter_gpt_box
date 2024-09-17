@@ -490,8 +490,8 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: "v1.0.43"
-      resolved-ref: df503ed1598f4fc6a3d3904491d54a1738d4be98
+      ref: "v1.0.45"
+      resolved-ref: cba7c619312213cb4cc6f13630d661f4df168a5a
       url: "https://github.com/lppcg/fl_build.git"
     source: git
     version: "1.0.0"
@@ -499,8 +499,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.171"
-      resolved-ref: "6785bf98d8b2311617195732e9b5f912bec58155"
+      ref: "v1.0.177"
+      resolved-ref: c0c788c4d4d38c4041779e82daf6dbc5dcd8acbe
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
@@ -830,13 +830,21 @@ packages:
     source: hosted
     version: "0.7.1"
   json_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_annotation
       sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
+  json_serializable:
+    dependency: "direct dev"
+    description:
+      name: json_serializable
+      sha256: ea1432d167339ea9b5bb153f0571d0039607a873d6e04e0117af043f14a1fd4b
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.8.0"
   leak_tracker:
     dependency: transitive
     description:

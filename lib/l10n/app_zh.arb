@@ -64,6 +64,7 @@
   "memoryAdded": "记忆已添加: {str}",
   "memoryTip": "记住 [{txt}]?",
   "message": "消息",
+  "migrationV1UrlTip": "是否自动在配置的末尾添加\"/v1\"？",
   "minute": "分钟",
   "model": "模型",
   "modelRegExpTip": "如果模型名匹配，则使用 Tools",

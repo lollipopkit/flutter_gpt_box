@@ -64,6 +64,7 @@
   "memoryAdded": "Memori ditambahkan: {str}",
   "memoryTip": "Ingat [{txt}]?",
   "message": "Pesan",
+  "migrationV1UrlTip": "Haruskah \"/v1\" ditambahkan secara otomatis di akhir konfigurasi?",
   "minute": "menit",
   "model": "Model",
   "modelRegExpTip": "Jika nama model cocok, Tools akan digunakan",

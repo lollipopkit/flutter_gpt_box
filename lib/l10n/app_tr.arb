@@ -64,6 +64,7 @@
   "memoryAdded": "Hafıza eklendi: {str}",
   "memoryTip": "[{txt}] hatırlansın mı?",
   "message": "Mesaj",
+  "migrationV1UrlTip": "Yapılandırmanın sonuna otomatik olarak \"/v1\" eklensin mi?",
   "minute": "dakika",
   "model": "Model",
   "modelRegExpTip": "Model adı eşleşirse, araçlar kullanılacak",

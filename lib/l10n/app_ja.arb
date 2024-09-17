@@ -64,6 +64,7 @@
   "memoryAdded": "メモリに追加しました：{str}",
   "memoryTip": "[{txt}]を記憶しますか？",
   "message": "メッセージ",
+  "migrationV1UrlTip": "設定の末尾に自動的に\"/v1\"を追加すべきですか？",
   "minute": "分",
   "model": "モデル",
   "modelRegExpTip": "モデル名が一致する場合、ツールを使用します",

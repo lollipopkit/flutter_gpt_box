@@ -10,8 +10,6 @@ import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
-import 'package:gpt_box/data/res/build.dart';
-import 'package:gpt_box/data/res/misc.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';
@@ -40,11 +38,18 @@ void _runInZone(void Function() body) {
 Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Paths.init(Build.name, bakName: Miscs.bakFileName);
+  _initBuild();
+  await Paths.init();
   await _initDb();
 
   _setupLogger();
   _initAppComponents();
+}
+
+void _initBuild() {
+  Build.mockVer = 314;
+  Build.mockName = 'GPTBox';
+  Build.mockId = 'gptbox';
 }
 
 Future<void> _initDb() async {
@@ -62,7 +67,8 @@ Future<void> _initDb() async {
 
   await PrefStore.init();
   await Stores.init();
-  await Migration.run(Build.build);
+
+  await Migrations.call(Migrations.initDbFns);
 }
 
 void _setupLogger() {

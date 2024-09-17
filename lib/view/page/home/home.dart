@@ -16,8 +16,8 @@ import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/history/view.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
-import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/migrations.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
@@ -119,12 +119,11 @@ class _HomePageState extends State<HomePage>
     //_removeDuplicateHistory(context);
 
     if (Stores.setting.autoCheckUpdate.fetch()) {
-      AppUpdateIface.doUpdate(
-        build: Build.build,
-        url: Urls.appUpdateCfg,
-        context: context,
-      );
+      AppUpdateIface.doUpdate(url: Urls.appUpdateCfg, context: context);
     }
+
+    Migrations.enterHomeFns.add(MigrationFns.appendV1ToUrl);
+    Migrations.call(Migrations.enterHomeFns, context: context);
   }
 
   void _listenKeyboard() {

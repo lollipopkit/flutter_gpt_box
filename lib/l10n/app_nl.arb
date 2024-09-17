@@ -64,6 +64,7 @@
   "memoryAdded": "Geheugen toegevoegd: {str}",
   "memoryTip": "Onthouden [{txt}]?",
   "message": "Bericht",
+  "migrationV1UrlTip": "Moet \"/v1\" automatisch worden toegevoegd aan het einde van de configuratie?",
   "minute": "minuut",
   "model": "Model",
   "modelRegExpTip": "Als de modelnaam overeenkomt, worden tools gebruikt",

@@ -130,7 +130,7 @@ abstract final class _ModelsCacher {
     final resp = val.data?['data'] as List?;
     final strs = resp?.map((e) => e['id']).whereType<String>().toList();
     if (strs == null) {
-      throw 'Failed to fetch models';
+      throw 'get models list failed';
     }
     models[key] = strs;
     updateTime[key] = now;

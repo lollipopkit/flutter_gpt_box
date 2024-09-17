@@ -93,7 +93,7 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
   try {
     final content = await Backup.backup();
     await File(Paths.bak).writeAsString(content);
-    await webdav.upload(relativePath: Miscs.bakFileName);
+    await webdav.upload(relativePath: Paths.bakName);
     context.showSnackBar(libL10n.success);
   } catch (e, s) {
     context.showErrDialog(e, s, 'Upload webdav backup');

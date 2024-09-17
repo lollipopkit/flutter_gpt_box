@@ -147,6 +147,7 @@ Future<void> _onCreateText(
   final isToolsEmpty = availableTools.isEmpty;
 
   if (toolCompatible && chatScopeUseTools && !isToolsEmpty) {
+    // Used for logging tool call resp
     final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
     workingChat.items.add(toolReply);
     _loadingChatIds.add(toolReply.id);
@@ -174,8 +175,8 @@ Future<void> _onCreateText(
         _chatItemRNMap[toolReply.id]?.notify();
       }
 
-      final contents = <ChatContent>[];
       for (final toolCall in toolCalls) {
+        final contents = <ChatContent>[];
         try {
           final msg = await OpenAIFuncCalls.handle(
             toolCall,
@@ -186,19 +187,22 @@ Future<void> _onCreateText(
         } catch (e, s) {
           _onErr(e, s, chatId, 'Tool call');
         }
+        if (contents.isNotEmpty && contents.every((e) => e.raw.isNotEmpty)) {
+          final historyItem = ChatHistoryItem.gen(
+            role: ChatRole.tool,
+            content: contents,
+            toolCallId: toolCall.id,
+          );
+          workingChat.items.add(historyItem);
+          msgs.add(historyItem.toOpenAI());
+        }
       }
-      toolReply.content.clear();
-      if (contents.isNotEmpty && contents.every((e) => e.raw.isNotEmpty)) {
-        toolReply.content.addAll(contents);
-        _chatItemRNMap[toolReply.id]?.notify();
-        msgs.add(toolReply.toOpenAI());
-      }
-    } else {
-      workingChat.items.remove(toolReply);
-      _chatItemRNMap[toolReply.id]?.notify();
-      _chatRN.notify();
     }
 
+    _chatItemRNMap[toolReply.id]?.notify();
+    workingChat.items.remove(toolReply);
+    _chatRN.notify();
+    _chatItemRNMap.remove(toolReply.id)?.dispose();
     _loadingChatIds.remove(toolReply.id);
     _loadingChatIdRN.notify();
   }

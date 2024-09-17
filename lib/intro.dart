@@ -23,7 +23,7 @@ final class _IntroPage extends StatelessWidget {
           args: IntroPageArgs(
             pages: pages_,
             onDone: (ctx) {
-              Stores.setting.introVer.put(Build.build);
+              Stores.setting.introVer.put(Build.ver);
               Navigator.of(ctx).pushReplacement(
                 MaterialPageRoute(builder: (_) => const HomePage()),
               );

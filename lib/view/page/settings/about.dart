@@ -14,8 +14,8 @@ class AboutPage extends StatelessWidget {
           _buildInfo(),
         ],
       ),
-      bottomSheet: const Text(
-        'GPT Box v${Build.build}',
+      bottomSheet: Text(
+        'GPT Box v${Build.ver}',
         textAlign: TextAlign.center,
       ).paddingSymmetric(horizontal: 13, vertical: 3),
     );

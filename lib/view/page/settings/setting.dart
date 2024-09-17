@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
-import 'package:gpt_box/data/res/build.dart';
 import 'package:gpt_box/data/res/github_id.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
@@ -246,18 +245,16 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
         valueListenable: AppUpdateIface.newestBuild,
         builder: (_, val, __) {
           final text = switch (val) {
-            null => '${l10n.current} v1.0.${Build.build}, ${l10n.clickToCheck}',
-            > Build.build => libL10n.versionHasUpdate(val),
-            _ => libL10n.versionUpdated(Build.build),
+            null => '${l10n.current} v1.0.${Build.ver}, ${l10n.clickToCheck}',
+            final v when v > Build.ver => libL10n.versionHasUpdate(val),
+            _ => libL10n.versionUpdated(Build.ver),
           };
           return Text(text, style: UIs.textGrey);
         },
       ),
-      onTap: () => Funcs.throttle(() => AppUpdateIface.doUpdate(
-            build: Build.build,
-            url: Urls.appUpdateCfg,
-            context: context,
-          )),
+      onTap: () => Funcs.throttle(
+        () => AppUpdateIface.doUpdate(url: Urls.appUpdateCfg, context: context),
+      ),
       trailing: StoreSwitch(prop: _setStore.autoCheckUpdate),
     );
   }
@@ -397,7 +394,6 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
           }
           await AppUpdateIface.doUpdate(
             context: context,
-            build: Build.build,
             url: Urls.appUpdateCfg,
           );
         },

@@ -255,7 +255,7 @@ final class _ProfilePageState extends State<ProfilePage>
           actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
-        if (!result.contains('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
+        if (!result.endsWith('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
           final sure = await context.showRoundDialog(
             title: l10n.attention,
             child: Text(l10n.apiUrlV1Tip),

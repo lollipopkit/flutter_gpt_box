@@ -64,6 +64,7 @@
   "memoryAdded": "Memória adicionada: {str}",
   "memoryTip": "Lembrar [{txt}]?",
   "message": "Mensagem",
+  "migrationV1UrlTip": "Deve-se adicionar automaticamente \"/v1\" ao final da configuração?",
   "minute": "minuto",
   "model": "Modelo",
   "modelRegExpTip": "Se o nome do modelo corresponder, as ferramentas serão usadas",
