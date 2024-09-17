@@ -4,6 +4,7 @@ import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:openai_dart/openai_dart.dart';
+import 'package:dio/dio.dart';
 
 abstract final class OpenAICfg {
   static OpenAIClient? client;
@@ -59,8 +60,8 @@ abstract final class OpenAICfg {
     try {
       models.value = await _ModelsCacher.fetch(current.id, refresh: force);
       return true;
-    } catch (e) {
-      Loggers.app.warning('Failed to update models', e);
+    } catch (e, s) {
+      Loggers.app.warning('Failed to update models', e, s);
       if (diffUrl) models.value = [];
       return false;
     }
@@ -119,8 +120,18 @@ abstract final class _ModelsCacher {
       if (models_ != null) return models_;
     }
 
-    final val = await OpenAICfg.client!.listModels();
-    final strs = val.data.map((e) => e.id).toList();
+    // For most compatibility, use dio instead of openai_dart
+    final val = await myDio.get<Map>(
+      '${OpenAICfg.current.url}/models',
+      options: Options(
+        headers: {'Authorization': 'Bearer ${OpenAICfg.current.key}'},
+      ),
+    );
+    final resp = val.data?['data'] as List?;
+    final strs = resp?.map((e) => e['id']).whereType<String>().toList();
+    if (strs == null) {
+      throw 'Failed to fetch models';
+    }
     models[key] = strs;
     updateTime[key] = now;
     return strs;
