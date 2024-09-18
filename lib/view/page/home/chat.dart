@@ -129,6 +129,10 @@ class _ChatPageState extends State<_ChatPage>
     final chatItem = chatItems[idx];
     final node = _chatItemRNMap.putIfAbsent(chatItem.id, () => RNode());
 
+    if (chatItem.toolCalls != null) {
+      return const SizedBox();
+    }
+
     final title = switch (chatItem.role) {
       // User & System msgs have no loading status
       ChatRole.user || ChatRole.system => ChatRoleTitle(
