@@ -24,7 +24,7 @@ abstract final class OpenAICfg {
     config.save();
     _store.profileId.put(config.id);
 
-    if (config.shouldUpdateRelavance(old)) {
+    if (config.shouldUpdateRelated(old)) {
       updateModels(diffUrl: old.url != config.url);
       ApiBalance.refresh();
     }
@@ -48,7 +48,8 @@ abstract final class OpenAICfg {
 
   /// Update models list
   /// - [force] force update, ignore cache
-  /// - [diffUrl] if true, not set [models.value] to empty list if failed
+  /// - [diffUrl] abbreviation for `isDifferentUrl`.
+  /// if true, not set [models.value] to empty list if failed
   static Future<bool> updateModels({
     bool force = false,
     bool diffUrl = false,

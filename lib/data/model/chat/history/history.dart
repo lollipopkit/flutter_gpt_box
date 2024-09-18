@@ -117,6 +117,9 @@ final class ChatHistoryItem {
   @HiveField(4)
   @JsonKey(includeIfNull: false)
   final String? toolCallId;
+  @HiveField(5)
+  @JsonKey(includeIfNull: false)
+  final List<ChatCompletionMessageToolCall>? toolCalls;
 
   const ChatHistoryItem({
     required this.role,
@@ -124,12 +127,14 @@ final class ChatHistoryItem {
     required this.createdAt,
     required this.id,
     this.toolCallId,
+    this.toolCalls,
   });
 
   ChatHistoryItem.gen({
     required this.role,
     required this.content,
     this.toolCallId,
+    this.toolCalls,
   })  : createdAt = DateTime.now(),
         id = shortid.generate();
 
@@ -139,6 +144,7 @@ final class ChatHistoryItem {
     ChatContentType type = ChatContentType.text,
     DateTime? createdAt,
     this.toolCallId,
+    this.toolCalls,
   })  : content = [ChatContent.noid(type: type, raw: raw)],
         createdAt = createdAt ?? DateTime.now(),
         id = shortid.generate();
@@ -184,6 +190,7 @@ final class ChatHistoryItem {
         );
       case ChatRole.assist:
         return ChatCompletionMessage.assistant(
+          toolCalls: toolCalls,
           content: content.map((e) => e.raw).join('\n'),
         );
       case ChatRole.system:
@@ -192,7 +199,7 @@ final class ChatHistoryItem {
         );
       case ChatRole.tool:
         return ChatCompletionMessage.tool(
-          toolCallId: toolCallId!,
+          toolCallId: toolCallId ?? '',
           content: content.map((e) => e.raw).join('\n'),
         );
     }

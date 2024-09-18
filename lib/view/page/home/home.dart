@@ -122,8 +122,13 @@ class _HomePageState extends State<HomePage>
       AppUpdateIface.doUpdate(url: Urls.appUpdateCfg, context: context);
     }
 
-    Migrations.enterHomeFns.add(MigrationFns.appendV1ToUrl);
-    Migrations.call(Migrations.enterHomeFns, context: context);
+    _migrate();
+  }
+
+  void _migrate() async {
+    final lastVer = PrefProps.lastVer.get();
+    final now = Build.ver;
+    await MigrationFns.appendV1ToUrl(lastVer, now, context: context);
   }
 
   void _listenKeyboard() {

@@ -73,7 +73,7 @@ final class ChatConfig {
 
   void save() => Stores.config.put(this);
 
-  bool shouldUpdateRelavance(ChatConfig old) {
+  bool shouldUpdateRelated(ChatConfig old) {
     if (id != old.id) return true;
     if (key != old.key) return true;
     if (url != old.url) return true;

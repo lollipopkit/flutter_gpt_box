@@ -1,6 +1,7 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
 
 abstract final class MigrationFns {
@@ -28,6 +29,9 @@ abstract final class MigrationFns {
         url: cfg.url.endsWith('/') ? '${cfg.url}v1' : '${cfg.url}/v1',
       );
       Stores.config.put(newCfg);
+      if (OpenAICfg.current.id == cfg.id) {
+        OpenAICfg.setTo(newCfg);
+      }
       dprint('Migration: append /v1 to ${cfg.url}');
     }
   }

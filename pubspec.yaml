@@ -40,11 +40,11 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.177
+      ref: v1.0.179
 
 dependency_overrides:
-  # fl_lib:
-  #   path: ../fl_lib
+  fl_lib:
+    path: ../fl_lib
   # flutter_highlight:
   #   path: ../highlight.dart/flutter_highlight
 

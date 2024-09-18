@@ -67,8 +67,6 @@ Future<void> _initDb() async {
 
   await PrefStore.init();
   await Stores.init();
-
-  await Migrations.call(Migrations.initDbFns);
 }
 
 void _setupLogger() {

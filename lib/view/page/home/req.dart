@@ -168,8 +168,16 @@ Future<void> _onCreateText(
       _onErr(e, s, chatId, 'Tool');
     }
 
-    final toolCalls = resp?.choices.firstOrNull?.message.toolCalls;
+    final firstToolReply = resp?.choices.firstOrNull;
+    final toolCalls = firstToolReply?.message.toolCalls;
     if (toolCalls != null && toolCalls.isNotEmpty) {
+      final assistReply = ChatHistoryItem.gen(
+        role: ChatRole.assist,
+        content: [],
+        toolCalls: toolCalls,
+      );
+      workingChat.items.add(assistReply);
+      msgs.add(assistReply.toOpenAI());
       void onToolLog(String log) {
         toolReply.content.first.raw = log;
         _chatItemRNMap[toolReply.id]?.notify();
