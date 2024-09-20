@@ -112,7 +112,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
               //   onPressed: _onTapAudioPick,
               //   icon: Icon(Icons.mic, size: 19),
               // ),
-              _ => UIs.placeholder,
+              //_ => UIs.placeholder,
             };
           },
         );

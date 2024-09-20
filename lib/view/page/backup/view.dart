@@ -10,11 +10,11 @@ import 'package:gpt_box/data/model/chat/gpt_next.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/openai.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/misc.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gpt_box/view/page/settings/setting.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 part 'impl/file.dart';
@@ -26,13 +26,8 @@ part 'impl/shared.dart';
 
 final _webdavLoading = ValueNotifier(false);
 
-final class BackupPageRet {
-  final bool isRestoreSuc;
-  const BackupPageRet({this.isRestoreSuc = false});
-}
-
 final class BackupPage extends StatelessWidget {
-  const BackupPage({super.key, Never? args});
+  const BackupPage({super.key});
 
   @override
   Widget build(BuildContext context) {

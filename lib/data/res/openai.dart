@@ -1,11 +1,13 @@
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:openai_dart/openai_dart.dart';
+import 'package:dio/dio.dart';
 
 abstract final class OpenAICfg {
+  static OpenAIClient? client;
   static final models = <String>[].vn;
 
   // ignore: deprecated_member_use_from_same_package
@@ -22,7 +24,7 @@ abstract final class OpenAICfg {
     config.save();
     _store.profileId.put(config.id);
 
-    if (config.shouldUpdateRelavance(old)) {
+    if (config.shouldUpdateRelated(old)) {
       updateModels(diffUrl: old.url != config.url);
       ApiBalance.refresh();
     }
@@ -46,7 +48,8 @@ abstract final class OpenAICfg {
 
   /// Update models list
   /// - [force] force update, ignore cache
-  /// - [diffUrl] if true, not set [models.value] to empty list if failed
+  /// - [diffUrl] abbreviation for `isDifferentUrl`.
+  /// if true, not set [models.value] to empty list if failed
   static Future<bool> updateModels({
     bool force = false,
     bool diffUrl = false,
@@ -58,8 +61,8 @@ abstract final class OpenAICfg {
     try {
       models.value = await _ModelsCacher.fetch(current.id, refresh: force);
       return true;
-    } catch (e) {
-      Loggers.app.warning('Failed to update models', e);
+    } catch (e, s) {
+      Loggers.app.warning('Failed to update models', e, s);
       if (diffUrl) models.value = [];
       return false;
     }
@@ -71,8 +74,10 @@ abstract final class OpenAICfg {
     } else {
       Loggers.app.info('Profile [${vn.value.name}]');
     }
-    OpenAI.apiKey = vn.value.key;
-    OpenAI.baseUrl = vn.value.url;
+    client = OpenAIClient(
+      apiKey: vn.value.key,
+      baseUrl: vn.value.url,
+    );
   }
 
   static void switchToDefault(BuildContext context) {
@@ -116,8 +121,18 @@ abstract final class _ModelsCacher {
       if (models_ != null) return models_;
     }
 
-    final val = await OpenAI.instance.model.list();
-    final strs = val.map((e) => e.id).toList();
+    // For most compatibility, use dio instead of openai_dart
+    final val = await myDio.get<Map>(
+      '${OpenAICfg.current.url}/models',
+      options: Options(
+        headers: {'Authorization': 'Bearer ${OpenAICfg.current.key}'},
+      ),
+    );
+    final resp = val.data?['data'] as List?;
+    final strs = resp?.map((e) => e['id']).whereType<String>().toList();
+    if (strs == null) {
+      throw 'get models list failed';
+    }
     models[key] = strs;
     updateTime[key] = now;
     return strs;

@@ -1,5 +1,3 @@
 {
-    "appName": "GPTBox",
-    "buildDataPath": "lib/data/res/build.dart",
-    "buildDataClass": "Build"
+    "appName": "GPTBox"
 }

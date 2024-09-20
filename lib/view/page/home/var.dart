@@ -69,6 +69,7 @@ const _durationMedium = Durations.medium1;
 
 final _chatFabAutoHideKey = GlobalKey<AutoHideState>();
 
+// ignore: unused_element
 KeyboardCtrlListener? _keyboardSendListener;
 
 /// Timestamp that user activate 'No confirm' for deleting chats

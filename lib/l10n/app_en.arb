@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "apiUrlTip": "API URL should be like `https://api.openai.com` without the trailing `/v1`. Continue to use this URL?",
+  "apiUrlV1Tip": "Similar to https://api.openai.com/v1 (requiring the final /v1). Continue using this URL?",
   "assistant": "Assistant",
   "attention": "Attention",
   "audio": "Audio",
@@ -64,6 +64,7 @@
   "memoryAdded": "Memory added: {str}",
   "memoryTip": "Memorise [{txt}]?",
   "message": "Message",
+  "migrationV1UrlTip": "Should \"/v1\" be automatically added to the end of the configuration?",
   "minute": "min",
   "model": "Model",
   "modelRegExpTip": "If the model name matches, use tools.",

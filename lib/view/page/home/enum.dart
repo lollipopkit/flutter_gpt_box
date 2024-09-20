@@ -44,7 +44,7 @@ enum HomePageEnum {
               context.pop();
               SettingsPage.route.go(
                 context,
-                const SettingsPageArgs(tabIndex: SettingsTab.profile),
+                args: const SettingsPageArgs(tabIndex: SettingsTab.profile),
               );
             },
             child: Text(libL10n.add),

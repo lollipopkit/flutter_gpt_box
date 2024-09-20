@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/ext/file.dart';
@@ -8,20 +7,25 @@ import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:openai_dart/openai_dart.dart';
 import 'package:shortid/shortid.dart';
 
 part 'history.g.dart';
 
 @HiveType(typeId: 5)
+@JsonSerializable()
 final class ChatHistory {
   @HiveField(0)
   final String id;
   @HiveField(1)
   final List<ChatHistoryItem> items;
   @HiveField(2)
+  @JsonKey(includeIfNull: false)
   final String? name;
   // Fields with id 3/4/5 are deleted
   @HiveField(6)
+  @JsonKey(includeIfNull: false)
   final ChatSettings? settings;
 
   ChatHistory({
@@ -46,30 +50,6 @@ final class ChatHistory {
       sb.writeln(item.toMarkdown);
     }
     return sb.toString();
-  }
-
-  Map<String, dynamic> toJson() {
-    final map = {
-      'id': id,
-      'name': name,
-      'items': items.map((e) => e.toJson()).toList(),
-    };
-    if (settings != null) {
-      map['settings'] = settings;
-    }
-    return map;
-  }
-
-  static ChatHistory fromJson(Map<String, dynamic> json) {
-    return ChatHistory(
-      id: json['id'] as String,
-      name: json['name'] as String?,
-      items: (json['items'] as List)
-          .map((e) => ChatHistoryItem.fromJson(e.cast<String, dynamic>()))
-          .toList(),
-      settings:
-          ChatSettings.fromJson(json['settings']?.cast<String, dynamic>()),
-    );
   }
 
   static ChatHistory get example => ChatHistory.noid(
@@ -114,11 +94,17 @@ final class ChatHistory {
       ),
     );
   }
+
+  factory ChatHistory.fromJson(Map<String, dynamic> json) =>
+      _$ChatHistoryFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChatHistoryToJson(this);
 }
 
-typedef OaiHistoryItem = OpenAIChatCompletionChoiceMessageModel;
+typedef OaiHistoryItem = ChatCompletionMessage;
 
 @HiveType(typeId: 0)
+@JsonSerializable()
 final class ChatHistoryItem {
   @HiveField(0)
   final ChatRole role;
@@ -128,17 +114,27 @@ final class ChatHistoryItem {
   final DateTime createdAt;
   @HiveField(3)
   final String id;
+  @HiveField(4)
+  @JsonKey(includeIfNull: false)
+  final String? toolCallId;
+  @HiveField(5)
+  @JsonKey(includeIfNull: false)
+  final List<ChatCompletionMessageToolCall>? toolCalls;
 
   const ChatHistoryItem({
     required this.role,
     required this.content,
     required this.createdAt,
     required this.id,
+    this.toolCallId,
+    this.toolCalls,
   });
 
   ChatHistoryItem.gen({
     required this.role,
     required this.content,
+    this.toolCallId,
+    this.toolCalls,
   })  : createdAt = DateTime.now(),
         id = shortid.generate();
 
@@ -147,9 +143,12 @@ final class ChatHistoryItem {
     String raw = '',
     ChatContentType type = ChatContentType.text,
     DateTime? createdAt,
+    this.toolCallId,
+    this.toolCalls,
   })  : content = [ChatContent.noid(type: type, raw: raw)],
         createdAt = createdAt ?? DateTime.now(),
         id = shortid.generate();
+
   String get toMarkdown {
     return content
         .map((e) => switch (e.type) {
@@ -160,55 +159,66 @@ final class ChatHistoryItem {
         .join('\n');
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'role': role.index,
-      'content': content.map((e) => e.toJson()).toList(),
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'id': id,
-    };
-  }
-
-  static ChatHistoryItem fromJson(Map<String, dynamic> json) {
-    return ChatHistoryItem(
-      role: ChatRole.values[json['role'] as int],
-      content: (json['content'] as List)
-          .map((e) => ChatContent.fromJson(e.cast<String, dynamic>()))
-          .toList(),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(json['createdAt'] as int),
-      id: json['id'] as String? ?? shortid.generate(),
-    );
-  }
-
   ChatHistoryItem copyWith({
     ChatRole? role,
     List<ChatContent>? content,
     DateTime? createdAt,
     @protected String? id,
+    String? toolCallId,
   }) {
     return ChatHistoryItem(
       role: role ?? this.role,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
+      toolCallId: toolCallId ?? this.toolCallId,
     );
   }
 
-  OaiHistoryItem get toOpenAI {
-    return OaiHistoryItem(
-      role: role.toOpenAI,
-      content: content.map((e) => e.toOpenAI).toList(),
-    );
+  /// - If [asStr], return [ChatCompletionMessage] with [String] content.
+  /// It's for deepseek's api compatibility.
+  OaiHistoryItem toOpenAI({bool asStr = true}) {
+    switch (role) {
+      case ChatRole.user:
+        final hasImg = content.any((e) => e.isImg);
+        return ChatCompletionMessage.user(
+          content: asStr && !hasImg
+              ? ChatCompletionUserMessageContent.string(
+                  content.map((e) => e.raw).join('\n'))
+              : ChatCompletionUserMessageContent.parts(
+                  content.map((e) => e.toOpenAI).toList()),
+        );
+      case ChatRole.assist:
+        return ChatCompletionMessage.assistant(
+          toolCalls: toolCalls,
+          content: content.map((e) => e.raw).join('\n'),
+        );
+      case ChatRole.system:
+        return ChatCompletionMessage.system(
+          content: content.map((e) => e.raw).join('\n'),
+        );
+      case ChatRole.tool:
+        return ChatCompletionMessage.tool(
+          toolCallId: toolCallId ?? '',
+          content: content.map((e) => e.raw).join('\n'),
+        );
+    }
   }
 
-  Future<OaiHistoryItem> get toApi async {
+  Future<OaiHistoryItem> toApi({bool asStr = true}) async {
     final contents = await Future.wait(content.map((e) => e.toApi));
-    return copyWith(content: contents).toOpenAI;
+    return copyWith(content: contents).toOpenAI(asStr: asStr);
   }
+
+  factory ChatHistoryItem.fromJson(Map<String, dynamic> json) =>
+      _$ChatHistoryItemFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChatHistoryItemToJson(this);
 }
 
-/// Handle [audio] and [image] as url (file:// & https://) or base64
+/// Handle [audio] and [image] as url (/path & https://) or base64
 @HiveType(typeId: 1)
+@JsonEnum()
 enum ChatContentType {
   @HiveField(0)
   text,
@@ -219,9 +229,10 @@ enum ChatContentType {
   ;
 }
 
-typedef OaiContent = OpenAIChatCompletionChoiceMessageContentItemModel;
+typedef OaiContent = ChatCompletionMessageContentPart;
 
 @HiveType(typeId: 2)
+@JsonSerializable()
 final class ChatContent {
   @HiveField(0)
   final ChatContentType type;
@@ -230,8 +241,11 @@ final class ChatContent {
   @HiveField(2, defaultValue: '')
   final String id;
 
-  ChatContent({required this.type, required this.raw, required String id})
-      : id = id.isEmpty ? shortid.generate() : id;
+  ChatContent({
+    required this.type,
+    required this.raw,
+    required String id,
+  }) : id = id.isEmpty ? shortid.generate() : id;
   ChatContent.noid({required this.type, required this.raw})
       : id = shortid.generate();
   ChatContent.text(this.raw)
@@ -249,26 +263,11 @@ final class ChatContent {
   bool get isAudio => type == ChatContentType.audio;
 
   OaiContent get toOpenAI => switch (type) {
-        ChatContentType.text => OaiContent.text(raw),
-        ChatContentType.image => OaiContent.imageUrl(raw),
+        ChatContentType.text => OaiContent.text(text: raw),
+        ChatContentType.image =>
+          OaiContent.image(imageUrl: ChatCompletionMessageImageUrl(url: raw)),
         _ => throw UnimplementedError('$type.toOpenAI'),
       };
-
-  Map<String, dynamic> toJson() {
-    return {
-      'type': type.index,
-      'raw': raw,
-      'id': id,
-    };
-  }
-
-  static ChatContent fromJson(Map<String, dynamic> json) {
-    return ChatContent(
-      type: ChatContentType.values[json['type'] as int],
-      raw: json['raw'] as String,
-      id: json['id'] as String? ?? shortid.generate(),
-    );
-  }
 
   ChatContent copyWith({
     ChatContentType? type,
@@ -313,9 +312,15 @@ final class ChatContent {
       await FileApi.delete([raw]);
     }
   }
+
+  factory ChatContent.fromJson(Map<String, dynamic> json) =>
+      _$ChatContentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChatContentToJson(this);
 }
 
 @HiveType(typeId: 3)
+@JsonEnum()
 enum ChatRole {
   @HiveField(0)
   user,
@@ -331,13 +336,6 @@ enum ChatRole {
   bool get isAssist => this == assist;
   bool get isSystem => this == system;
   bool get isTool => this == tool;
-
-  OpenAIChatMessageRole get toOpenAI => switch (this) {
-        assist => OpenAIChatMessageRole.assistant,
-        system => OpenAIChatMessageRole.system,
-        user => OpenAIChatMessageRole.user,
-        tool => OpenAIChatMessageRole.system,
-      };
 
   String get localized => switch (this) {
         user => Stores.setting.avatar.fetch(),
@@ -363,12 +361,16 @@ enum ChatRole {
 }
 
 @HiveType(typeId: 8)
+@JsonSerializable()
 final class ChatSettings {
   @HiveField(0)
+  @JsonKey(name: 'htm')
   final bool headTailMode;
   @HiveField(1)
+  @JsonKey(name: 'ut')
   final bool useTools;
   @HiveField(2)
+  @JsonKey(name: 'icc')
   final bool ignoreContextConstraint;
 
   /// Use this constrctor pattern to avoid null value as the [ChatSettings]'s
@@ -380,22 +382,6 @@ final class ChatSettings {
   })  : headTailMode = headTailMode ?? false,
         useTools = useTools ?? true,
         ignoreContextConstraint = ignoreContextConstraint ?? false;
-
-  Map<String, dynamic> toJson() {
-    return {
-      'htm': headTailMode,
-      'ut': useTools,
-      'icc': ignoreContextConstraint,
-    };
-  }
-
-  static ChatSettings fromJson(Map<String, dynamic> json) {
-    return ChatSettings(
-      headTailMode: json['htm'] as bool?,
-      useTools: json['ut'] as bool?,
-      ignoreContextConstraint: json['icc'] as bool?,
-    );
-  }
 
   ChatSettings copyWith({
     bool? headTailMode,
@@ -412,4 +398,9 @@ final class ChatSettings {
 
   @override
   String toString() => 'ChatSettings${toJson()}';
+
+  factory ChatSettings.fromJson(Map<String, dynamic> json) =>
+      _$ChatSettingsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChatSettingsToJson(this);
 }

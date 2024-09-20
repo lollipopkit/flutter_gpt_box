@@ -28,7 +28,7 @@ Widget _buildWebdav(BuildContext context) {
                   return false;
                 }
               }
-              sync.sync(rs: webdav);
+              BakSync.instance.sync(rs: webdav);
               return true;
             },
           ),
@@ -79,6 +79,8 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak.merge(force: true);
     context.showSnackBar(libL10n.success);
+
+    context.pop(const SettingsPageRet(restored: true));
   } catch (e, s) {
     context.showErrDialog(e, s, 'Download webdav backup');
   } finally {
@@ -91,7 +93,7 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
   try {
     final content = await Backup.backup();
     await File(Paths.bak).writeAsString(content);
-    await webdav.upload(relativePath: Miscs.bakFileName);
+    await webdav.upload(relativePath: Paths.bakName);
     context.showSnackBar(libL10n.success);
   } catch (e, s) {
     context.showErrDialog(e, s, 'Upload webdav backup');

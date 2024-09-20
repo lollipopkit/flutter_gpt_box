@@ -5,19 +5,22 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
-      children: [
-        UIs.height13,
-        const Text(
-          'GPT Box v${Build.build}',
+    return Scaffold(
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 17),
+        children: [
+          _buildUniLinks(),
+          _buildLicense(context),
+          _buildInfo(),
+        ],
+      ),
+      bottomSheet: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 3, horizontal: 13),
+        child: Text(
+          'GPT Box v${BuildData.build}',
           textAlign: TextAlign.center,
         ),
-        UIs.height13,
-        _buildUniLinks(),
-        _buildLicense(context),
-        _buildInfo(),
-      ],
+      ),
     );
   }
 

@@ -1,6 +1,6 @@
 {
   "@@locale": "tr",
-  "apiUrlTip": "API URL'si `https://api.openai.com` gibi görünmeli ve sonunda `/v1` olmamalıdır. Bu URL ile devam edilsin mi?",
+  "apiUrlV1Tip": "https://api.openai.com/v1 gibi (sondaki /v1 gerekli). Bu URL'yi kullanmaya devam edilsin mi?",
   "assistant": "Asistan",
   "attention": "Dikkat",
   "audio": "Ses",
@@ -64,6 +64,7 @@
   "memoryAdded": "Hafıza eklendi: {str}",
   "memoryTip": "[{txt}] hatırlansın mı?",
   "message": "Mesaj",
+  "migrationV1UrlTip": "Yapılandırmanın sonuna otomatik olarak \"/v1\" eklensin mi?",
   "minute": "dakika",
   "model": "Model",
   "modelRegExpTip": "Model adı eşleşirse, araçlar kullanılacak",

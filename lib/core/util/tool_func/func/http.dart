@@ -70,6 +70,10 @@ If blob, encode it into base64 String.''';
     final truncateSize = args['truncateSize'] as int?;
     final followRedirects = args['followRedirects'] as int?;
 
+    if (url.startsWith(ApiUrls.base) && headers['Authorization'] == null) {
+      headers['Authorization'] = Apis.tokenProp.get();
+    }
+
     log('Http $method -> $url');
     final resp = await myDio.request(
       url,

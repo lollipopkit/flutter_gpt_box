@@ -14,6 +14,8 @@ final class _IntroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
+      // To fix the l10n issue
+      key: UniqueKey(),
       builder: (context, cons) {
         final padTop = cons.maxHeight * .12;
         final pages_ = pages.map((e) => e(context, padTop)).toList();
@@ -21,7 +23,7 @@ final class _IntroPage extends StatelessWidget {
           args: IntroPageArgs(
             pages: pages_,
             onDone: (ctx) {
-              Stores.setting.introVer.put(Build.build);
+              Stores.setting.introVer.put(BuildData.build);
               Navigator.of(ctx).pushReplacement(
                 MaterialPageRoute(builder: (_) => const HomePage()),
               );
@@ -47,12 +49,12 @@ final class _IntroPage extends StatelessWidget {
             final selected = await ctx.showPickSingleDialog(
               title: libL10n.language,
               items: AppLocalizations.supportedLocales,
-              display: (p0) => p0.code,
+              display: (p0) => p0.nativeName,
               initial: _setting.locale.fetch().toLocale,
             );
             if (selected != null) {
               _setting.locale.put(selected.code);
-              RNodes.app.notify();
+              RNodes.app.notify(delay: true);
             }
           },
           trailing: Text(

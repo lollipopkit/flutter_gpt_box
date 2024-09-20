@@ -1,6 +1,6 @@
 {
   "@@locale": "nl",
-  "apiUrlTip": "De API-URL moet eruitzien als `https://api.openai.com` en heeft geen `/v1` aan het einde nodig. Doorgaan met deze URL?",
+  "apiUrlV1Tip": "Vergelijkbaar met https://api.openai.com/v1 (met de laatste /v1 vereist). Doorgaan met het gebruik van deze URL?",
   "assistant": "Assistent",
   "attention": "Opgelet",
   "audio": "Audio",
@@ -64,6 +64,7 @@
   "memoryAdded": "Geheugen toegevoegd: {str}",
   "memoryTip": "Onthouden [{txt}]?",
   "message": "Bericht",
+  "migrationV1UrlTip": "Moet \"/v1\" automatisch worden toegevoegd aan het einde van de configuratie?",
   "minute": "minuut",
   "model": "Model",
   "modelRegExpTip": "Als de modelnaam overeenkomt, worden tools gebruikt",

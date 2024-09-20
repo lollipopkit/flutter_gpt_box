@@ -1,7 +1,7 @@
 part of 'tool.dart';
 
 typedef _Ret = List<ChatContent>;
-typedef _CallResp = OpenAIResponseToolCall;
+typedef _CallResp = ChatCompletionMessageToolCall;
 typedef _Map = Map<String, dynamic>;
 typedef ToolConfirm = Future<bool> Function(ToolFunc func, String help);
 typedef OnToolLog = void Function(String log);

@@ -1,6 +1,6 @@
 {
   "@@locale": "zh",
-  "apiUrlTip": "API Url 应该类似 `https://api.openai.com`，且不需要最后的 `/v1`。继续使用该 URL 吗？",
+  "apiUrlV1Tip": "类似 `https://api.openai.com/v1`（需要最后的 `/v1`）。继续使用该 URL 吗？",
   "assistant": "助手",
   "attention": "注意",
   "audio": "音频",
@@ -64,6 +64,7 @@
   "memoryAdded": "记忆已添加: {str}",
   "memoryTip": "记住 [{txt}]?",
   "message": "消息",
+  "migrationV1UrlTip": "是否自动在配置的末尾添加\"/v1\"？",
   "minute": "分钟",
   "model": "模型",
   "modelRegExpTip": "如果模型名匹配，则使用 Tools",

@@ -54,7 +54,7 @@ void _onTapFileRestore(BuildContext context) async {
       ],
     );
     if (suc == true) {
-      context.pop(const BackupPageRet(isRestoreSuc: true));
+      context.pop(const SettingsPageRet(restored: true));
     }
   } catch (e, trace) {
     Loggers.app.warning('Import backup failed', e, trace);

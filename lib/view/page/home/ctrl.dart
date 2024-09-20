@@ -516,7 +516,7 @@ void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
   final newModel = switch (_chatType.value) {
     ChatType.text => cfg.copyWith(model: model),
     ChatType.img => cfg.copyWith(imgModel: model),
-    ChatType.audio => cfg.copyWith(speechModel: model),
+    //ChatType.audio => cfg.copyWith(speechModel: model),
   };
   OpenAICfg.setTo(newModel);
 }

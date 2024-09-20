@@ -59,7 +59,7 @@ final class _CustomAppBar extends CustomAppBar {
                 switch (type) {
                   ChatType.text => val.model,
                   ChatType.img => val.imgModel,
-                  ChatType.audio => val.speechModel,
+                  //ChatType.audio => val.speechModel,
                 },
                 key: ValueKey(val),
                 maxLines: 1,
@@ -78,20 +78,14 @@ final class _CustomAppBar extends CustomAppBar {
       leading: Btn.icon(
         icon: const Icon(Icons.settings),
         onTap: () async {
-          final ret = await SettingsPage.route.go(
-            context,
-            const SettingsPageArgs(),
-          );
+          final ret = await SettingsPage.route.go(context);
           if (ret?.restored == true) {
             HomePage.afterRestore();
           }
         },
       ),
       title: GestureDetector(
-        onLongPress: () => DebugPage.route.go(
-          context,
-          args: const DebugPageArgs(title: 'Logs(${Build.build})'),
-        ),
+        onLongPress: () => DebugPage.route.go(context),
         onTap: () => _onSwitchModel(context, notifyKey: true),
         child: Column(
           mainAxisSize: MainAxisSize.min,

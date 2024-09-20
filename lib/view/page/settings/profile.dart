@@ -248,17 +248,17 @@ final class _ProfilePageState extends State<ProfilePage>
           title: libL10n.edit,
           child: Input(
             controller: ctrl,
-            hint: 'https://api.openai.com',
+            hint: 'https://api.openai.com/v1',
             maxLines: 3,
             autoFocus: true,
           ),
           actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
-        if (result.contains('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
+        if (!result.endsWith('/v1') || !ChatConfig.apiUrlReg.hasMatch(result)) {
           final sure = await context.showRoundDialog(
             title: l10n.attention,
-            child: Text(l10n.apiUrlTip),
+            child: Text(l10n.apiUrlV1Tip),
             actions: Btnx.okReds,
           );
           if (sure != true) return;

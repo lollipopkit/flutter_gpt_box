@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:app_links/app_links.dart';
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +16,9 @@ import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/history/view.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
-import 'package:gpt_box/data/res/build.dart';
+import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/migrations.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
@@ -27,6 +27,7 @@ import 'package:gpt_box/view/page/settings/setting.dart';
 import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:openai_dart/openai_dart.dart';
 import 'package:screenshot/screenshot.dart';
 
 part 'chat.dart';
@@ -65,11 +66,13 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
-    _inputCtrl.dispose();
+    // Do NOT dispose these, it's global and will be reused
+    // _inputCtrl.dispose();
+    // _chatScrollCtrl.dispose();
+    // _historyScrollCtrl.dispose();
+    // _keyboardSendListener?.dispose();
+
     _refreshTimeTimer?.cancel();
-    _chatScrollCtrl.dispose();
-    _historyScrollCtrl.dispose();
-    _keyboardSendListener?.dispose();
     super.dispose();
   }
 
@@ -118,11 +121,19 @@ class _HomePageState extends State<HomePage>
 
     if (Stores.setting.autoCheckUpdate.fetch()) {
       AppUpdateIface.doUpdate(
-        build: Build.build,
         url: Urls.appUpdateCfg,
         context: context,
+        build: BuildData.build,
       );
     }
+
+    _migrate();
+  }
+
+  void _migrate() async {
+    final lastVer = PrefProps.lastVer.get();
+    const now = BuildData.build;
+    await MigrationFns.appendV1ToUrl(lastVer, now, context: context);
   }
 
   void _listenKeyboard() {

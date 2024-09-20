@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:dart_openai/dart_openai.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
@@ -10,9 +9,9 @@ import 'package:gpt_box/core/util/datetime.dart';
 import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
+import 'package:gpt_box/data/model/chat/history/hive_adapter.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
-import 'package:gpt_box/data/res/build.dart';
-import 'package:gpt_box/data/res/misc.dart';
+import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';
@@ -41,7 +40,7 @@ void _runInZone(void Function() body) {
 Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Paths.init(Build.name, bakName: Miscs.bakFileName);
+  await Paths.init(BuildData.name);
   await _initDb();
 
   _setupLogger();
@@ -60,6 +59,8 @@ Future<void> _initDb() async {
   Hive.registerAdapter(ChatConfigAdapter()); // 6
   Hive.registerAdapter(ChatTypeAdapter()); // 7
   Hive.registerAdapter(ChatSettingsAdapter()); // 8
+  Hive.registerAdapter(ChatCompletionMessageToolCallAdapter()); // 9
+  Hive.registerAdapter(ChatCompletionMessageFunctionCallAdapter()); // 10
 
   await PrefStore.init();
   await Stores.init();
@@ -87,12 +88,10 @@ Future<void> _initAppComponents() async {
     listener: WindowSizeListener(size),
   );
 
-  OpenAI.showLogs = !BuildMode.isRelease;
-  OpenAI.showResponsesLogs = !BuildMode.isRelease;
   OpenAICfg.apply();
   OpenAICfg.updateModels();
 
-  sync.sync();
+  BakSync.instance.sync();
 
   if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
 }
