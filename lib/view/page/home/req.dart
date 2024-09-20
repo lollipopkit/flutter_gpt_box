@@ -255,7 +255,7 @@ Future<void> _onCreateText(
     _storeChat(chatId);
     // Wait for db to store the chat
     await Future.delayed(const Duration(milliseconds: 300));
-    sync.sync();
+    BakSync.instance.sync();
   }
 }
 

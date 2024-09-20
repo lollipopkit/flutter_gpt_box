@@ -16,6 +16,7 @@ import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/history/view.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
+import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/migrations.dart';
 import 'package:gpt_box/data/res/openai.dart';
@@ -119,7 +120,11 @@ class _HomePageState extends State<HomePage>
     //_removeDuplicateHistory(context);
 
     if (Stores.setting.autoCheckUpdate.fetch()) {
-      AppUpdateIface.doUpdate(url: Urls.appUpdateCfg, context: context);
+      AppUpdateIface.doUpdate(
+        url: Urls.appUpdateCfg,
+        context: context,
+        build: BuildData.build,
+      );
     }
 
     _migrate();
@@ -127,7 +132,7 @@ class _HomePageState extends State<HomePage>
 
   void _migrate() async {
     final lastVer = PrefProps.lastVer.get();
-    final now = Build.ver;
+    const now = BuildData.build;
     await MigrationFns.appendV1ToUrl(lastVer, now, context: context);
   }
 

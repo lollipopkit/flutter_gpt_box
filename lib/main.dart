@@ -10,6 +10,7 @@ import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
+import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';
@@ -38,18 +39,11 @@ void _runInZone(void Function() body) {
 Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  _initBuild();
-  await Paths.init();
+  await Paths.init(BuildData.name);
   await _initDb();
 
   _setupLogger();
   _initAppComponents();
-}
-
-void _initBuild() {
-  Build.mockVer = 314;
-  Build.mockName = 'GPTBox';
-  Build.mockId = 'gptbox';
 }
 
 Future<void> _initDb() async {
@@ -94,7 +88,7 @@ Future<void> _initAppComponents() async {
   OpenAICfg.apply();
   OpenAICfg.updateModels();
 
-  sync.sync();
+  BakSync.instance.sync();
 
   if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
 }

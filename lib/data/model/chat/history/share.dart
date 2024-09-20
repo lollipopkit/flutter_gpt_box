@@ -2,6 +2,7 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/history/view.dart';
+import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/view/widget/code.dart';
@@ -58,7 +59,7 @@ extension ChatHistoryShare on ChatHistory {
               ),
               UIs.height13,
               Text(
-                '${l10n.shareFrom} GPT Box v1.0.${Build.ver}',
+                '${l10n.shareFrom} GPT Box v1.0.${BuildData.build}',
                 style: const TextStyle(
                   fontSize: 9,
                   color: Colors.grey,

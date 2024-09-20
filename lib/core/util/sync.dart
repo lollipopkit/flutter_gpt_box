@@ -4,10 +4,10 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/app/backup.dart';
 import 'package:gpt_box/data/store/all.dart';
 
-const sync = Sync._();
+final class BakSync extends SyncIface {
+  const BakSync._() : super();
 
-final class Sync extends SyncIface {
-  const Sync._() : super();
+  static const instance = BakSync._();
 
   @override
   Future<void> saveToFile() => Backup.backupToFile();

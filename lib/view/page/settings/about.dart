@@ -14,10 +14,13 @@ class AboutPage extends StatelessWidget {
           _buildInfo(),
         ],
       ),
-      bottomSheet: Text(
-        'GPT Box v${Build.ver}',
-        textAlign: TextAlign.center,
-      ).paddingSymmetric(horizontal: 13, vertical: 3),
+      bottomSheet: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 3, horizontal: 13),
+        child: Text(
+          'GPT Box v${BuildData.build}',
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 

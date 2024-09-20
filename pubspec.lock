@@ -490,17 +490,19 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: "v1.0.45"
-      resolved-ref: cba7c619312213cb4cc6f13630d661f4df168a5a
+      ref: "v1.0.44"
+      resolved-ref: cc77a409966fcf104933aa63be05938e029cf4b3
       url: "https://github.com/lppcg/fl_build.git"
     source: git
     version: "1.0.0"
   fl_lib:
     dependency: "direct main"
     description:
-      path: "../fl_lib"
-      relative: true
-    source: path
+      path: "."
+      ref: "v1.0.183"
+      resolved-ref: "1333b6269a4caa54c58324c66558e09a0525784b"
+      url: "https://github.com/lppcg/fl_lib"
+    source: git
     version: "0.0.1"
   flutter:
     dependency: "direct main"

@@ -401,6 +401,6 @@ final class ChatSettings {
 
   factory ChatSettings.fromJson(Map<String, dynamic> json) =>
       _$ChatSettingsFromJson(json);
-  
+
   Map<String, dynamic> toJson() => _$ChatSettingsToJson(this);
 }

@@ -28,7 +28,7 @@ Widget _buildWebdav(BuildContext context) {
                   return false;
                 }
               }
-              sync.sync(rs: webdav);
+              BakSync.instance.sync(rs: webdav);
               return true;
             },
           ),
