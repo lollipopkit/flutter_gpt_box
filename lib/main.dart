@@ -9,6 +9,7 @@ import 'package:gpt_box/core/util/datetime.dart';
 import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
+import 'package:gpt_box/data/model/chat/history/hive_adapter.dart';
 import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/openai.dart';
@@ -58,6 +59,8 @@ Future<void> _initDb() async {
   Hive.registerAdapter(ChatConfigAdapter()); // 6
   Hive.registerAdapter(ChatTypeAdapter()); // 7
   Hive.registerAdapter(ChatSettingsAdapter()); // 8
+  Hive.registerAdapter(ChatCompletionMessageToolCallAdapter()); // 9
+  Hive.registerAdapter(ChatCompletionMessageFunctionCallAdapter()); // 10
 
   await PrefStore.init();
   await Stores.init();

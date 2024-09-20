@@ -65,13 +65,14 @@ class ChatHistoryItemAdapter extends TypeAdapter<ChatHistoryItem> {
       createdAt: fields[2] as DateTime,
       id: fields[3] as String,
       toolCallId: fields[4] as String?,
+      toolCalls: (fields[5] as List?)?.cast<ChatCompletionMessageToolCall>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatHistoryItem obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.role)
       ..writeByte(1)
@@ -81,7 +82,9 @@ class ChatHistoryItemAdapter extends TypeAdapter<ChatHistoryItem> {
       ..writeByte(3)
       ..write(obj.id)
       ..writeByte(4)
-      ..write(obj.toolCallId);
+      ..write(obj.toolCallId)
+      ..writeByte(5)
+      ..write(obj.toolCalls);
   }
 
   @override
@@ -309,6 +312,10 @@ ChatHistoryItem _$ChatHistoryItemFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       id: json['id'] as String,
       toolCallId: json['toolCallId'] as String?,
+      toolCalls: (json['toolCalls'] as List<dynamic>?)
+          ?.map((e) =>
+              ChatCompletionMessageToolCall.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ChatHistoryItemToJson(ChatHistoryItem instance) {
@@ -326,6 +333,7 @@ Map<String, dynamic> _$ChatHistoryItemToJson(ChatHistoryItem instance) {
   }
 
   writeNotNull('toolCallId', instance.toolCallId);
+  writeNotNull('toolCalls', instance.toolCalls);
   return val;
 }
 
