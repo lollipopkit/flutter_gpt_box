@@ -1,7 +1,8 @@
 import 'package:openai_dart/openai_dart.dart';
 import 'package:hive_flutter/adapters.dart';
 
-class ChatCompletionMessageToolCallAdapter extends TypeAdapter<ChatCompletionMessageToolCall> {
+class ChatCompletionMessageToolCallAdapter
+    extends TypeAdapter<ChatCompletionMessageToolCall> {
   @override
   final typeId = 9;
 
@@ -31,7 +32,8 @@ class ChatCompletionMessageToolCallAdapter extends TypeAdapter<ChatCompletionMes
   }
 }
 
-class ChatCompletionMessageFunctionCallAdapter extends TypeAdapter<ChatCompletionMessageFunctionCall> {
+class ChatCompletionMessageFunctionCallAdapter
+    extends TypeAdapter<ChatCompletionMessageFunctionCall> {
   @override
   final typeId = 10;
 

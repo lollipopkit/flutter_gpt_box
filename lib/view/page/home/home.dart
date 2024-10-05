@@ -70,9 +70,10 @@ class _HomePageState extends State<HomePage>
     // _inputCtrl.dispose();
     // _chatScrollCtrl.dispose();
     // _historyScrollCtrl.dispose();
-    // _keyboardSendListener?.dispose();
 
     _refreshTimeTimer?.cancel();
+    // The context used inside the listener will be invalid after dispose
+    _keyboardSendListener?.dispose();
     super.dispose();
   }
 

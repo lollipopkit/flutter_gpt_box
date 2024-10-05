@@ -72,5 +72,5 @@ final _chatFabAutoHideKey = GlobalKey<AutoHideState>();
 // ignore: unused_element
 KeyboardCtrlListener? _keyboardSendListener;
 
-/// Timestamp that user activate 'No confirm' for deleting chats
+/// If current `ts > this + duration`, then no delete confirmation required.
 var _noChatDeleteConfirmTS = 0;
