@@ -42,22 +42,6 @@ final _imeFocus = FocusNode();
 MediaQueryData? _media;
 final _isWide = false.vn..addListener(_onIsWideChanged);
 
-const _boxShadow = [
-  BoxShadow(
-    color: Colors.black12,
-    blurRadius: 3,
-    offset: Offset(0, -0.5),
-  ),
-];
-
-const _boxShadowDark = [
-  BoxShadow(
-    color: Colors.white12,
-    blurRadius: 3,
-    offset: Offset(0, -0.5),
-  ),
-];
-
 /// Set it as final, so we can scroll to it.
 /// Mobile has higher density.
 final _historyItemHeight = isDesktop ? 73.0 : 79.0;

@@ -72,7 +72,8 @@ class _HomePageState extends State<HomePage>
     // _historyScrollCtrl.dispose();
 
     _refreshTimeTimer?.cancel();
-    // The context used inside the listener will be invalid after dispose
+    // The context used inside the keyboard listener will be invalid after 
+    // [_HomePageState.dispose], so this must be disposed here
     _keyboardSendListener?.dispose();
     super.dispose();
   }

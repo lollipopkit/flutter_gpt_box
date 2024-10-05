@@ -78,6 +78,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0"
+  asn1lib:
+    dependency: transitive
+    description:
+      name: asn1lib
+      sha256: "6b151826fcc95ff246cd219a0bf4c753ea14f4081ad71c61939becf3aba27f70"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.5"
   async:
     dependency: transitive
     description:
@@ -374,6 +382,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  encrypt:
+    dependency: transitive
+    description:
+      name: encrypt
+      sha256: "62d9aa4670cc2a8798bab89b39fc71b6dfbacf615de6cf5001fb39f7e4a996a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.3"
   equatable:
     dependency: transitive
     description:
@@ -499,8 +515,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.183"
-      resolved-ref: "1333b6269a4caa54c58324c66558e09a0525784b"
+      ref: "v1.0.190"
+      resolved-ref: c7bfbf519ce1d598f955e65624dc9281282d13a3
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
@@ -1093,6 +1109,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "4be0097fcf3fd3e8449e53730c631200ebc7b88016acecab2b0da2f0149222fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.9.1"
   pool:
     dependency: transitive
     description:

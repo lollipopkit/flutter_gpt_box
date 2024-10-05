@@ -10,6 +10,14 @@ class _HomeBottom extends StatefulWidget {
 }
 
 final class _HomeBottomState extends State<_HomeBottom> {
+  static const _boxShadow = [
+    BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0, -0.5)),
+  ];
+
+  static const _boxShadowDark = [
+    BoxShadow(color: Colors.white12, blurRadius: 3, offset: Offset(0, -0.5)),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final child = ListenBuilder(
