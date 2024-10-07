@@ -32,7 +32,6 @@ final class BackupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: Text(libL10n.backup)),
       body: _buildBody(context),
     );
   }

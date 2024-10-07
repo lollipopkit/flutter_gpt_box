@@ -14,6 +14,7 @@ import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:gpt_box/view/page/backup/view.dart';
 import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:shortid/shortid.dart';
@@ -66,16 +67,7 @@ class _SettingsPageState extends State<SettingsPage>
           isScrollable: true,
         ),
       ),
-      body: TabBarView(
-        controller: _tabCtrl,
-        children: const [
-          AppSettingsPage(),
-          ProfilePage(),
-          ToolPage(),
-          ResPage(),
-          AboutPage(),
-        ],
-      ),
+      body: TabBarView(controller: _tabCtrl, children: SettingsTab.pages),
     );
   }
 }
