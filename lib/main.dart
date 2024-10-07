@@ -77,8 +77,8 @@ void _setupLogger() {
 }
 
 Future<void> _initAppComponents() async {
-  Apis.init();
   DeepLinks.appId = AppLink.host;
+  UserApi.init();
 
   final sets = Stores.setting;
   final size = sets.windowSize;

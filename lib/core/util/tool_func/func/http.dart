@@ -71,7 +71,7 @@ If blob, encode it into base64 String.''';
     final followRedirects = args['followRedirects'] as int?;
 
     if (url.startsWith(ApiUrls.base) && headers['Authorization'] == null) {
-      headers['Authorization'] = Apis.tokenProp.get();
+      headers['Authorization'] = UserApi.tokenProp.get();
     }
 
     log('Http $method -> $url');

@@ -64,9 +64,9 @@ void _storeChat(String chatId) {
 ChatHistory _newChat() {
   late final ChatHistory newHistory;
   if (_allHistories.isEmpty && !Stores.setting.initHelpShown.fetch()) {
-    newHistory = ChatHistory.example;
+    newHistory = ChatHistoryX.example;
   } else {
-    newHistory = ChatHistory.empty;
+    newHistory = ChatHistoryX.empty;
   }
 
   /// Put newHistory to the first place, the default implementation of Dart's

@@ -141,7 +141,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
           final result = await context.showPickSingleDialog(
             title: l10n.themeMode,
             items: ThemeMode.values,
-            display: (e) => e.name,
+            display: (e) => e.i18n,
             initial: ThemeMode.values[val],
           );
           if (result != null) {
