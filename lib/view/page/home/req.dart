@@ -241,21 +241,29 @@ Future<void> _onCreateText(
 
         _autoScroll(chatId);
       },
+      onDone: () async {
+        _onStopStreamSub(chatId);
+        _loadingChatIds.remove(chatId);
+        _loadingChatIds.remove(assistReply.id);
+        _loadingChatIdRN.notify();
+        _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
+
+        _storeChat(chatId);
+        // Wait for db to store the chat
+        await Future.delayed(const Duration(milliseconds: 300));
+        BakSync.instance.sync();
+      },
+      onError: (e, s) {
+        _onErr(e, s, chatId, 'Listen text stream');
+        _loadingChatIds.remove(chatId);
+        _loadingChatIds.remove(assistReply.id);
+        _loadingChatIdRN.notify();
+        _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
+      },
     );
   } catch (e, s) {
     _onErr(e, s, chatId, 'Listen text stream');
     _loadingChatIds.remove(chatId);
-  } finally {
-    _onStopStreamSub(chatId);
-    _loadingChatIds.remove(chatId);
-    _loadingChatIds.remove(assistReply.id);
-    _loadingChatIdRN.notify();
-    _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
-
-    _storeChat(chatId);
-    // Wait for db to store the chat
-    await Future.delayed(const Duration(milliseconds: 300));
-    BakSync.instance.sync();
   }
 }
 

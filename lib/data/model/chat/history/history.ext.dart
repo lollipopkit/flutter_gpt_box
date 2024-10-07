@@ -46,9 +46,7 @@ extension ChatHistoryX on ChatHistory {
     );
   }
 
-  void save() {
-    Stores.history.put(this);
-  }
+  void save() => Stores.history.put(this);
 
   bool containsKeywords(List<String> keywords) {
     return items.any(
