@@ -80,15 +80,13 @@ class _ChatPageState extends State<_ChatPage>
         final item = _curChat?.items;
         if (item == null) return UIs.placeholder;
         final listView = ListView.builder(
-          key: Key(_curChatId),
+          key: Key(_curChatId), // Used for animation
           controller: _chatScrollCtrl,
           padding: const EdgeInsets.all(7),
           physics: const AlwaysScrollableScrollPhysics(
-              parent: ClampingScrollPhysics()),
+              parent: BouncingScrollPhysics()),
           itemCount: item.length,
-          itemBuilder: (_, index) {
-            return _buildChatItem(item, index);
-          },
+          itemBuilder: (_, index) => _buildChatItem(item, index),
         );
         if (!scrollSwitchChat) return listView;
         return AnimatedSwitcher(

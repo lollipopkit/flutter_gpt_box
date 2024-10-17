@@ -166,9 +166,10 @@ Future<void> _onCreateText(
       );
     } catch (e, s) {
       _onErr(e, s, chatId, 'Tool');
+      return;
     }
 
-    final firstToolReply = resp?.choices.firstOrNull;
+    final firstToolReply = resp.choices.firstOrNull;
     final toolCalls = firstToolReply?.message.toolCalls;
     if (toolCalls != null && toolCalls.isNotEmpty) {
       final assistReply = ChatHistoryItem.gen(
@@ -254,16 +255,13 @@ Future<void> _onCreateText(
         BakSync.instance.sync();
       },
       onError: (e, s) {
-        _onErr(e, s, chatId, 'Listen text stream');
-        _loadingChatIds.remove(chatId);
         _loadingChatIds.remove(assistReply.id);
-        _loadingChatIdRN.notify();
-        _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
+        _onErr(e, s, chatId, 'Listen text stream');
       },
     );
   } catch (e, s) {
-    _onErr(e, s, chatId, 'Listen text stream');
-    _loadingChatIds.remove(chatId);
+    _loadingChatIds.remove(assistReply.id);
+    _onErr(e, s, chatId, 'Catch text stream');
   }
 }
 
@@ -563,6 +561,9 @@ void _onReplay({
 void _onErr(Object e, StackTrace s, String chatId, String action) {
   Loggers.app.warning('$action: $e');
   _onStopStreamSub(chatId);
+  _loadingChatIds.remove(chatId);
+  _loadingChatIdRN.notify();
+  _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
 
   final msg = '$e\n\n```$s```';
   final workingChat = _allHistories[chatId];
@@ -571,7 +572,9 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   // If previous msg is assistant reply and it's empty, remove it
   if (workingChat.items.isNotEmpty) {
     final last = workingChat.items.last;
-    if (last.role.isAssist && last.content.every((e) => e.raw.isEmpty)) {
+    final role = last.role;
+    if ((role.isAssist || role.isTool) &&
+        last.content.every((e) => e.raw.isEmpty)) {
       workingChat.items.removeLast();
     }
   }

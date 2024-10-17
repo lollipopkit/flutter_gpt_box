@@ -326,6 +326,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  computer:
+    dependency: transitive
+    description:
+      path: "."
+      ref: "v1.0.88"
+      resolved-ref: b0819c8a939e1fa6858f1a0e12ee8122db0df390
+      url: "https://github.com/lollipopkit/dart_computer"
+    source: git
+    version: "3.2.1"
   convert:
     dependency: transitive
     description:
@@ -515,8 +524,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.192"
-      resolved-ref: a2155d7a7f2d6d0cc540883f3b5e52c045b11614
+      ref: "v1.0.196"
+      resolved-ref: a7e00e1c83d52b312e4675b474ff85f4cc04fb71
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
