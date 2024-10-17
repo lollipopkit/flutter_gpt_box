@@ -4,7 +4,9 @@ final class ToolStore extends PersistentStore {
   ToolStore() : super('tool');
 
   /// Switch for enabling/disabling all tools.
-  late final enabled = property('enabled', true);
+  /// 
+  /// It will slow down the resp, so disabled by default.
+  late final enabled = property('enabled', false);
 
   /// All enabled tools will be added to the chat req's tool list.
   /// By default, all tools are enabled.

@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage>
     // _historyScrollCtrl.dispose();
 
     _refreshTimeTimer?.cancel();
-    // The context used inside the keyboard listener will be invalid after 
+    // The context used inside the keyboard listener will be invalid after
     // [_HomePageState.dispose], so this must be disposed here
     _keyboardSendListener?.dispose();
     super.dispose();
@@ -135,7 +135,10 @@ class _HomePageState extends State<HomePage>
   void _migrate() async {
     final lastVer = PrefProps.lastVer.get();
     const now = BuildData.build;
+
     await MigrationFns.appendV1ToUrl(lastVer, now, context: context);
+
+    PrefProps.lastVer.set(now);
   }
 
   void _listenKeyboard() {

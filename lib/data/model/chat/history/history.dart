@@ -4,6 +4,7 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/ext/file.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/adapters.dart';
