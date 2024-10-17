@@ -4,7 +4,7 @@ final class ToolStore extends PersistentStore {
   ToolStore() : super('tool');
 
   /// Switch for enabling/disabling all tools.
-  /// 
+  ///
   /// It will slow down the resp, so disabled by default.
   late final enabled = property('enabled', false);
 
