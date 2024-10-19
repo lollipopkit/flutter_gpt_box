@@ -248,7 +248,7 @@ final class _ProfilePageState extends State<ProfilePage>
           title: libL10n.edit,
           child: Input(
             controller: ctrl,
-            hint: 'https://api.openai.com/v1',
+            hint: ChatConfig.defaultUrl,
             maxLines: 3,
             autoFocus: true,
           ),
@@ -263,6 +263,7 @@ final class _ProfilePageState extends State<ProfilePage>
           );
           if (sure != true) return;
         }
+
         OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result));
         _cfgRN.notify();
       },
@@ -273,16 +274,17 @@ final class _ProfilePageState extends State<ProfilePage>
     return ValBuilder(
       listenable: OpenAICfg.models,
       builder: (models) {
-        return ExpandTile(
-          leading: const Icon(Icons.model_training),
-          title: Text(l10n.model),
-          children: [
-            _buildOpenAIChatModel(),
-            _buildOpenAIImgModel(),
-            _buildOpenAISpeechModel(),
-            // _buildOpenAITranscribeModel(),
-          ],
-        );
+        return _buildOpenAIChatModel();
+        // return ExpandTile(
+        //   leading: const Icon(Icons.model_training),
+        //   title: Text(l10n.model),
+        //   children: [
+        //     _buildOpenAIChatModel(),
+        //     _buildOpenAIImgModel(),
+        //     _buildOpenAISpeechModel(),
+        //     // _buildOpenAITranscribeModel(),
+        //   ],
+        // );
       },
     );
   }
@@ -325,7 +327,6 @@ final class _ProfilePageState extends State<ProfilePage>
               title: l10n.custom,
               child: Input(
                 controller: ctrl,
-                hint: kChatModel,
                 autoFocus: true,
                 onSubmitted: (s) => onSave(s),
               ),
@@ -343,9 +344,8 @@ final class _ProfilePageState extends State<ProfilePage>
     final val = cfg.model;
     return ListTile(
       leading: const Icon(Icons.chat),
-      title: Text(l10n.chat),
-      trailing: const Icon(Icons.keyboard_arrow_right),
-      subtitle: Text(val, style: UIs.text13Grey),
+      title: Text(l10n.model),
+      trailing: Text(val, style: UIs.text13Grey),
       onTap: () async {
         final model = await _showPickModelDialog(l10n.model, val);
         if (model != null) {
@@ -356,41 +356,41 @@ final class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget _buildOpenAIImgModel() {
-    final cfg = OpenAICfg.current;
-    final val = cfg.imgModel;
-    return ListTile(
-      leading: const Icon(Icons.photo),
-      title: Text(l10n.image),
-      trailing: const Icon(Icons.keyboard_arrow_right),
-      subtitle: Text(val, style: UIs.text13Grey),
-      onTap: () async {
-        final model = await _showPickModelDialog(l10n.model, val);
-        if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model));
-          _cfgRN.notify();
-        }
-      },
-    );
-  }
+  // Widget _buildOpenAIImgModel() {
+  //   final cfg = OpenAICfg.current;
+  //   final val = cfg.imgModel;
+  //   return ListTile(
+  //     leading: const Icon(Icons.photo),
+  //     title: Text(l10n.image),
+  //     trailing: const Icon(Icons.keyboard_arrow_right),
+  //     subtitle: Text(val, style: UIs.text13Grey),
+  //     onTap: () async {
+  //       final model = await _showPickModelDialog(l10n.model, val);
+  //       if (model != null) {
+  //         OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model));
+  //         _cfgRN.notify();
+  //       }
+  //     },
+  //   );
+  // }
 
-  Widget _buildOpenAISpeechModel() {
-    final cfg = OpenAICfg.current;
-    final val = cfg.speechModel;
-    return ListTile(
-      leading: const Icon(Icons.speaker),
-      title: Text(l10n.tts),
-      trailing: const Icon(Icons.keyboard_arrow_right),
-      subtitle: Text(val, style: UIs.text13Grey),
-      onTap: () async {
-        final model = await _showPickModelDialog(l10n.model, val);
-        if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(speechModel: model));
-          _cfgRN.notify();
-        }
-      },
-    );
-  }
+  // Widget _buildOpenAISpeechModel() {
+  //   final cfg = OpenAICfg.current;
+  //   final val = cfg.speechModel;
+  //   return ListTile(
+  //     leading: const Icon(Icons.speaker),
+  //     title: Text(l10n.tts),
+  //     trailing: const Icon(Icons.keyboard_arrow_right),
+  //     subtitle: Text(val, style: UIs.text13Grey),
+  //     onTap: () async {
+  //       final model = await _showPickModelDialog(l10n.model, val);
+  //       if (model != null) {
+  //         OpenAICfg.setTo(OpenAICfg.current.copyWith(speechModel: model));
+  //         _cfgRN.notify();
+  //       }
+  //     },
+  //   );
+  // }
 
   // Widget _buildOpenAITranscribeModel() {
   //   final cfg = OpenAICfg.current;

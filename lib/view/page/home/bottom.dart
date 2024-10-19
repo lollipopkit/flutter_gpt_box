@@ -258,7 +258,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
     context.showRoundDialog(
       title: '${l10n.current}: ${chat.name ?? l10n.untitled}',
       child: _ChatSettings(chat),
-      actions: [Btn.ok()],
+      actions: Btnx.oks,
     );
   }
 }

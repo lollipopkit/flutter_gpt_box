@@ -1,39 +1,28 @@
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:shortid/shortid.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'config.g.dart';
 
-const _kUrl = 'https://api.openai.com';
-const kChatModel = 'gpt-4o';
-const _kHistoryLen = 7;
-const _kImgModel = 'dall-e-3';
-const _kSpeechModel = 'tts-1';
-const _kTranscribeModel = 'whisper-1';
-
 @HiveType(typeId: 6)
+@JsonSerializable()
 final class ChatConfig {
   @HiveField(0, defaultValue: '')
   final String prompt;
-  @HiveField(1, defaultValue: _kUrl)
+  @HiveField(1, defaultValue: defaultUrl)
   final String url;
   @HiveField(2, defaultValue: '')
   final String key;
-  @HiveField(3, defaultValue: kChatModel)
+  @HiveField(3, defaultValue: '')
   final String model;
-  @HiveField(7, defaultValue: _kHistoryLen)
+  @HiveField(7, defaultValue: defaultHistoryLen)
   final int historyLen;
   @HiveField(8, defaultValue: defaultId)
+  @JsonKey(defaultValue: defaultId)
   final String id;
   @HiveField(9, defaultValue: '')
   final String name;
-  @HiveField(10, defaultValue: _kImgModel)
-  final String imgModel;
-  @HiveField(11, defaultValue: _kSpeechModel)
-  final String speechModel;
-  @HiveField(12, defaultValue: _kTranscribeModel)
-  final String transcribeModel;
   @HiveField(14)
   final String? genTitlePrompt;
 
@@ -45,28 +34,25 @@ final class ChatConfig {
     required this.historyLen,
     required this.id,
     required this.name,
-    required this.imgModel,
-    required this.speechModel,
-    required this.transcribeModel,
     this.genTitlePrompt,
   });
 
   static final apiUrlReg = RegExp(r'^https?://[0-9A-Za-z\.]+(:\d+)?$');
   static const defaultId = 'defaultId';
+  static const defaultUrl = 'https://api.openai.com/v1';
+  static const defaultHistoryLen = 7;
   static const defaultOne = ChatConfig(
     id: defaultId,
     prompt: '',
-    url: _kUrl,
+    url: defaultUrl,
     key: '',
-    model: kChatModel,
-    historyLen: _kHistoryLen,
+    model: '',
+    historyLen: defaultHistoryLen,
     name: '',
-    imgModel: _kImgModel,
-    speechModel: _kSpeechModel,
-    transcribeModel: _kTranscribeModel,
   );
 
   String get displayName => switch (id) {
+        // Corresponding as `id == defaultId && name.isEmpty`
         defaultId when name.isEmpty => l10n.defaulT,
         _ => name,
       };
@@ -101,38 +87,10 @@ final class ChatConfig {
         model: model ?? this.model,
         historyLen: historyLen ?? this.historyLen,
         name: name ?? this.name,
-        imgModel: imgModel ?? this.imgModel,
-        speechModel: speechModel ?? this.speechModel,
-        transcribeModel: transcribeModel ?? this.transcribeModel,
       );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'prompt': prompt,
-      'url': url,
-      'key': key,
-      'model': model,
-      'historyLen': historyLen,
-      'name': name,
-      'imgModel': imgModel,
-      'speechModel': speechModel,
-      'transcribeModel': transcribeModel,
-    };
-  }
+  factory ChatConfig.fromJson(Map<String, dynamic> json) =>
+      _$ChatConfigFromJson(json);
 
-  static ChatConfig fromJson(Map<String, dynamic> json) {
-    return ChatConfig(
-      id: json['id'] as String? ?? shortid.generate(),
-      prompt: json['prompt'] as String,
-      url: json['url'] as String,
-      key: json['key'] as String,
-      model: json['model'] as String,
-      historyLen: json['historyLen'] as int,
-      name: json['name'] as String? ?? 'Untitled',
-      imgModel: json['imgModel'] as String? ?? _kImgModel,
-      speechModel: json['speechModel'] as String? ?? _kSpeechModel,
-      transcribeModel: json['transcribeModel'] as String? ?? _kTranscribeModel,
-    );
-  }
+  Map<String, dynamic> toJson() => _$ChatConfigToJson(this);
 }
