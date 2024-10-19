@@ -1,4 +1,4 @@
-part of 'home.dart';
+part of '../home.dart';
 
 class _HomeBottom extends StatefulWidget {
   final bool isHome;
@@ -72,6 +72,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
                     // _buildTokenCount(),
                     UIs.width7,
                     //_buildSwitchChatType(),
+                    _buildChatMeta(),
                     UIs.width7,
                   ],
                 ),
@@ -258,109 +259,33 @@ final class _HomeBottomState extends State<_HomeBottom> {
 
     await _ChatSettings.route.go(context, chat);
   }
-}
 
-final class _ChatSettings extends StatefulWidget {
-  final ChatHistory args;
+  Widget _buildChatMeta() {
+    return Btn.icon(
+      icon: const Icon(Icons.code, size: 19),
+      onTap: _onTapMeta,
+    );
+  }
 
-  const _ChatSettings({Key? key, required this.args});
+  void _onTapMeta() {
+    final chat = _curChat;
+    if (chat == null) {
+      context.showSnackBar(libL10n.empty);
+      return;
+    }
 
-  static const route = AppRouteArg(
-    page: _ChatSettings.new,
-    path: '/chat_settings',
-  );
+    final jsonRaw = jsonIndentEncoder.convert(chat.toJson());
+    final md = '''
+```json
+$jsonRaw
+```''';
 
-  @override
-  State<_ChatSettings> createState() => _ChatSettingsState();
-}
-
-final class _ChatSettingsState extends State<_ChatSettings> {
-  late final settings = (widget.args.settings ?? const ChatSettings()).vn;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(libL10n.setting),
-        actions: [
-          IconButton(
-            onPressed: () {
-              _save();
-              context.pop();
-            },
-            icon: const Icon(Icons.save),
-          ),
-        ],
+    context.showRoundDialog(
+      title: l10n.raw,
+      child: SingleChildScrollView(
+        child: SimpleMarkdown(data: md),
       ),
-      body: ListView(
-        children: [
-          _buildIgnoreCtxConstraint(),
-          _buildUseTools(),
-          _buildHeadTailMode(),
-        ],
-      ),
+      actions: Btnx.oks,
     );
-  }
-
-  Widget _buildIgnoreCtxConstraint() {
-    return ListTile(
-      title: Text(l10n.ignoreContextConstraint),
-      trailing: settings.listenVal((val) {
-        return Switch(
-          value: val.ignoreContextConstraint,
-          onChanged: (_) {
-            settings.value = settings.value.copyWith(
-              ignoreContextConstraint: !val.ignoreContextConstraint,
-            );
-            if (settings.value.headTailMode &&
-                settings.value.ignoreContextConstraint) {
-              settings.value = settings.value.copyWith(headTailMode: false);
-            }
-          },
-        );
-      }),
-    );
-  }
-
-  Widget _buildUseTools() {
-    return ListTile(
-      title: Text(l10n.tool),
-      trailing: settings.listenVal((val) {
-        return Switch(
-          value: val.useTools,
-          onChanged: (_) {
-            settings.value = settings.value.copyWith(useTools: !val.useTools);
-          },
-        );
-      }),
-    );
-  }
-
-  Widget _buildHeadTailMode() {
-    return ListTile(
-      title: TipText(l10n.headTailMode, l10n.headTailModeTip),
-      trailing: settings.listenVal((val) {
-        return Switch(
-          value: val.headTailMode,
-          onChanged: (_) {
-            settings.value =
-                settings.value.copyWith(headTailMode: !val.headTailMode);
-            if (settings.value.headTailMode &&
-                settings.value.ignoreContextConstraint) {
-              settings.value =
-                  settings.value.copyWith(ignoreContextConstraint: false);
-            }
-          },
-        );
-      }),
-    );
-  }
-
-  void _save() {
-    final newOne = widget.args.copyWith(
-      settings: settings.value,
-    );
-    newOne.save();
-    _allHistories[_curChatId] = newOne;
   }
 }

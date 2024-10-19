@@ -227,7 +227,7 @@ class _ChatPageState extends State<_ChatPage>
       Btn.icon(
         onTap: () {
           context.pop();
-          _MarkdownCopyPage.go(context, chatItem);
+          _MarkdownCopyPage.route.go(context, chatItem);
         },
         text: l10n.freeCopy,
         icon: Icon(BoxIcons.bxs_crop, size: size, color: color),
@@ -286,7 +286,7 @@ class _ChatPageState extends State<_ChatPage>
       Btn.tile(
         onTap: () {
           context.pop();
-          _MarkdownCopyPage.go(context, chatItem);
+          _MarkdownCopyPage.route.go(context, chatItem);
         },
         text: l10n.freeCopy,
         icon: const Icon(BoxIcons.bxs_crop),

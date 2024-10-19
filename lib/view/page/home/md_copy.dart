@@ -1,43 +1,43 @@
 part of 'home.dart';
 
 final class _MarkdownCopyPage extends StatelessWidget {
-  final ChatHistoryItem item;
+  final ChatHistoryItem args;
 
-  const _MarkdownCopyPage({required this.item});
+  const _MarkdownCopyPage({Key? key, required this.args});
 
-  static void go(BuildContext context, ChatHistoryItem item) =>
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => _MarkdownCopyPage(item: item),
-        ),
-      );
+  static const route = AppRouteArg(
+    page: _MarkdownCopyPage.new,
+    path: '/md_copy',
+  );
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: Text(l10n.raw),
-        centerTitle: false,
+    return FutureWidget(
+      future: compute((e) => e.toMarkdown, args),
+      error: (e, s) => SimpleMarkdown(data: '$e\n\n$s'),
+      loading: Scaffold(
+        appBar: CustomAppBar(
+          title: Text(l10n.raw),
+          centerTitle: false,
+          actions: const [SizedLoading.small, UIs.width7],
+        ),
       ),
-      body: _buildBody(),
+      success: (val) => Scaffold(
+        appBar: CustomAppBar(
+          title: Text(l10n.raw),
+          centerTitle: false,
+        ),
+        body: _buildBody(val),
+      ),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(String? val) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 13),
-      child: FutureWidget(
-        future: compute((e) => e.toMarkdown, item),
-        error: (e, s) => SimpleMarkdown(data: '$e\n\n$s'),
-        success: (val) => SelectableText(
-          val ?? 'null',
-          autofocus: true,
-          showCursor: true,
-          style: TextStyle(
-            fontSize: 14,
-            color: UIs.textColor.fromBool(RNodes.dark.value),
-          ),
-        ),
+      child: SelectableText(
+        val ?? 'null',
+        autofocus: true,
       ),
     );
   }

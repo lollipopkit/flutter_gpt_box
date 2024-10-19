@@ -105,7 +105,9 @@ final class ChatHistoryContentView extends StatelessWidget {
         'code': CodeElementBuilder(onCopy: Pfs.copy),
         'latex': LatexElementBuilder(),
       },
-      styleSheet: MarkdownStyleSheet.fromTheme(context.theme),
+      styleSheet: MarkdownStyleSheet.fromTheme(context.theme).copyWith(
+        a: TextStyle(color: UIs.primaryColor),
+      ),
       extensionSet: MarkdownUtils.extensionSet,
       onTapLink: MarkdownUtils.onLinkTap,
       shrinkWrap: false,
