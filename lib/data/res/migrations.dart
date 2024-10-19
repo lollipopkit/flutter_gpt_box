@@ -2,6 +2,7 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
+import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 
 abstract final class MigrationFns {
@@ -19,6 +20,9 @@ abstract final class MigrationFns {
     for (final key in cfgs.keys) {
       final cfg = cfgs[key];
       if (cfg == null) continue;
+      // Skip github models, it has no '/v1' suffix.
+      if (cfg.url == Urls.githubModels) continue;
+
       if (!userConfirm) {
         userConfirm =
             await context?.showMigrationDialog(l10n.migrationV1UrlTip) ?? true;

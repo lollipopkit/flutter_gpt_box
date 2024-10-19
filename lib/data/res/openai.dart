@@ -2,6 +2,8 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
+import 'package:gpt_box/data/model/chat/github_model.dart';
+import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:dio/dio.dart';
@@ -54,6 +56,7 @@ abstract final class OpenAICfg {
     bool force = false,
     bool diffUrl = false,
   }) async {
+    // Some private sites may not need key
     if (current.url.startsWith('https://api.openai.com') &&
         current.key.isEmpty) {
       return false;
@@ -121,20 +124,37 @@ abstract final class _ModelsCacher {
       if (models_ != null) return models_;
     }
 
+    final endpoint = OpenAICfg.current.url;
     // For most compatibility, use dio instead of openai_dart
-    final val = await myDio.get<Map>(
-      '${OpenAICfg.current.url}/models',
+    final val = await myDio.get(
+      '$endpoint/models',
       options: Options(
         headers: {'Authorization': 'Bearer ${OpenAICfg.current.key}'},
       ),
     );
-    final resp = val.data?['data'] as List?;
-    final strs = resp?.map((e) => e['id']).whereType<String>().toList();
-    if (strs == null) {
-      throw 'get models list failed';
-    }
+    final strs = _decodeModels(val, endpoint);
     models[key] = strs;
     updateTime[key] = now;
     return strs;
+  }
+
+  static List<String> _decodeModels(Response resp, String endpoint) {
+    final respData = resp.data;
+    if (resp.statusCode != 200 || respData == null) {
+      throw 'get models list failed';
+    }
+    final modelStrs = <String>[];
+    switch (endpoint) {
+      // Using Github models
+      case Urls.githubModels:
+        final data = respData as List;
+        final models = GithubModelsList.fromJson(data);
+        modelStrs.addAll(models.models.map((e) => e.name));
+      default:
+        final data = respData as Map;
+        final resp = data['data'] as List;
+        modelStrs.addAll(resp.map((e) => e['id']).whereType<String>());
+    }
+    return modelStrs;
   }
 }
