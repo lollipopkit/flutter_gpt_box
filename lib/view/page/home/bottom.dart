@@ -71,7 +71,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
                     const Spacer(),
                     // _buildTokenCount(),
                     UIs.width7,
-                    _buildSwitchChatType(),
+                    //_buildSwitchChatType(),
                     UIs.width7,
                   ],
                 ),
@@ -197,29 +197,29 @@ final class _HomeBottomState extends State<_HomeBottom> {
     );
   }
 
-  Widget _buildSwitchChatType() {
-    return ValBuilder(
-      listenable: _chatType,
-      builder: (chatT) {
-        return FadeIn(
-          key: ValueKey(chatT),
-          child: PopupMenu(
-            items: ChatType.btns,
-            onSelected: (val) => _chatType.value = val,
-            initialValue: _chatType.value,
-            tooltip: libL10n.select,
-            child: _buildRoundRect(Row(
-              children: [
-                Icon(_chatType.value.icon, size: 15),
-                UIs.width7,
-                Text(_chatType.value.name, style: UIs.text13),
-              ],
-            )),
-          ),
-        );
-      },
-    );
-  }
+  // Widget _buildSwitchChatType() {
+  //   return ValBuilder(
+  //     listenable: _chatType,
+  //     builder: (chatT) {
+  //       return FadeIn(
+  //         key: ValueKey(chatT),
+  //         child: PopupMenu(
+  //           items: ChatType.btns,
+  //           onSelected: (val) => _chatType.value = val,
+  //           initialValue: _chatType.value,
+  //           tooltip: libL10n.select,
+  //           child: _buildRoundRect(Row(
+  //             children: [
+  //               Icon(_chatType.value.icon, size: 15),
+  //               UIs.width7,
+  //               Text(_chatType.value.name, style: UIs.text13),
+  //             ],
+  //           )),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   // Widget _buildTokenCount() {
   //   return ValueListenableBuilder(
@@ -238,16 +238,16 @@ final class _HomeBottomState extends State<_HomeBottom> {
   //   );
   // }
 
-  Widget _buildRoundRect(Widget child) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(17),
-        color: const Color.fromARGB(35, 151, 151, 151),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
-      child: child,
-    );
-  }
+  // Widget _buildRoundRect(Widget child) {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(17),
+  //       color: const Color.fromARGB(35, 151, 151, 151),
+  //     ),
+  //     padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+  //     child: child,
+  //   );
+  // }
 
   void _onTapSetting() async {
     final chat = _curChat;
@@ -255,42 +255,50 @@ final class _HomeBottomState extends State<_HomeBottom> {
       context.showSnackBar(libL10n.empty);
       return;
     }
-    context.showRoundDialog(
-      title: '${l10n.current}: ${chat.name ?? l10n.untitled}',
-      child: _ChatSettings(chat),
-      actions: Btnx.oks,
-    );
+
+    await _ChatSettings.route.go(context, chat);
   }
 }
 
 final class _ChatSettings extends StatefulWidget {
-  final ChatHistory chat;
+  final ChatHistory args;
 
-  const _ChatSettings(this.chat);
+  const _ChatSettings({Key? key, required this.args});
+
+  static const route = AppRouteArg(
+    page: _ChatSettings.new,
+    path: '/chat_settings',
+  );
 
   @override
   State<_ChatSettings> createState() => _ChatSettingsState();
 }
 
 final class _ChatSettingsState extends State<_ChatSettings> {
-  late final settings = (widget.chat.settings ?? const ChatSettings()).vn;
-
-  @override
-  void initState() {
-    super.initState();
-    // After creating a new chat in UI, the chat is not saved to DB yet
-    widget.chat.save();
-  }
+  late final settings = (widget.args.settings ?? const ChatSettings()).vn;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildHeadTailMode(),
-        _buildUseTools(),
-        _buildIgnoreCtxConstraint(),
-      ].map((e) => e.cardx).toList(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(libL10n.setting),
+        actions: [
+          IconButton(
+            onPressed: () {
+              _save();
+              context.pop();
+            },
+            icon: const Icon(Icons.save),
+          ),
+        ],
+      ),
+      body: ListView(
+        children: [
+          _buildIgnoreCtxConstraint(),
+          _buildUseTools(),
+          _buildHeadTailMode(),
+        ],
+      ),
     );
   }
 
@@ -308,7 +316,6 @@ final class _ChatSettingsState extends State<_ChatSettings> {
                 settings.value.ignoreContextConstraint) {
               settings.value = settings.value.copyWith(headTailMode: false);
             }
-            _save();
           },
         );
       }),
@@ -323,7 +330,6 @@ final class _ChatSettingsState extends State<_ChatSettings> {
           value: val.useTools,
           onChanged: (_) {
             settings.value = settings.value.copyWith(useTools: !val.useTools);
-            _save();
           },
         );
       }),
@@ -344,7 +350,6 @@ final class _ChatSettingsState extends State<_ChatSettings> {
               settings.value =
                   settings.value.copyWith(ignoreContextConstraint: false);
             }
-            _save();
           },
         );
       }),
@@ -352,7 +357,7 @@ final class _ChatSettingsState extends State<_ChatSettings> {
   }
 
   void _save() {
-    final newOne = widget.chat.copyWith(
+    final newOne = widget.args.copyWith(
       settings: settings.value,
     );
     newOne.save();

@@ -1,5 +1,4 @@
 abstract final class GithubId {
-  /// Sorted by name
   static const participants = {
     'Annalasu',
     'bxoooooo',
@@ -8,6 +7,8 @@ abstract final class GithubId {
     'luoxiashen',
     'Mgrsc',
     'SeaHI-Robot',
+    'alphavvv',
+    'vimbackground',
   };
 
   static const contributors = {
