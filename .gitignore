@@ -48,3 +48,4 @@ GPTBox*.AppImage
 
 **/*.bak
 a.txt
+curl.sh
