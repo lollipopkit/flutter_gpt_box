@@ -9,4 +9,7 @@ abstract final class Urls {
 
   static const backendBase = 'https://cdn.lpkt.cn/gptbox/';
   static const appUpdateCfg = '${backendBase}update2.json';
+
+  /// Github models url has no '/v1' suffix
+  static const githubModels = 'https://models.inference.ai.azure.com';
 }
