@@ -1,6 +1,5 @@
 part of '../home.dart';
 
-
 final class _ChatSettings extends StatefulWidget {
   final ChatHistory args;
 
