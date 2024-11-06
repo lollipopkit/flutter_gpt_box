@@ -495,14 +495,20 @@ void _scrollBottom() async {
 
 void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
   final cfg = OpenAICfg.current;
-  if (cfg.key.isEmpty) {
-    if (notifyKey) {
-      context.showRoundDialog(
-        title: l10n.attention,
-        child: Text(l10n.needOpenAIKey),
-        actions: Btnx.oks,
-      );
-    }
+  if (cfg.key.isEmpty && notifyKey) {
+    context.showRoundDialog(
+      title: l10n.attention,
+      child: Text(l10n.needOpenAIKey),
+      actions: Btn.ok(
+        onTap: () {
+          context.pop();
+          SettingsPage.route.go(
+            context,
+            args: SettingsPageArgs(tabIndex: SettingsTab.profile),
+          );
+        },
+      ).toList,
+    );
     return;
   }
 
