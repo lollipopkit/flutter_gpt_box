@@ -29,8 +29,8 @@ abstract final class OpenAIFuncCalls {
 
   static List<ChatCompletionTool> get tools {
     final tools = <ChatCompletionTool>[];
-    if (!Stores.tool.enabled.fetch()) return tools;
-    final disabledTools = Stores.tool.disabledTools.fetch();
+    if (!Stores.tool.enabled.get()) return tools;
+    final disabledTools = Stores.tool.disabledTools.get();
     for (final tool in internalTools) {
       if (!disabledTools.contains(tool.name)) {
         tools.add(tool.into);

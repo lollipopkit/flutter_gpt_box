@@ -22,13 +22,13 @@ abstract final class MigrationFns {
       if (cfg == null) continue;
       // Skip github models, it has no '/v1' suffix.
       if (cfg.url == Urls.githubModels) continue;
+      if (cfg.url.endsWith('/v1')) continue;
 
       if (!userConfirm) {
         userConfirm =
             await context?.showMigrationDialog(l10n.migrationV1UrlTip) ?? true;
         if (!userConfirm) return;
       }
-      if (cfg.url.endsWith('/v1')) continue;
       final newCfg = cfg.copyWith(
         url: cfg.url.endsWith('/') ? '${cfg.url}v1' : '${cfg.url}/v1',
       );

@@ -1,12 +1,12 @@
 import 'package:fl_lib/fl_lib.dart';
 
-final class ToolStore extends PersistentStore {
+final class ToolStore extends HiveStore {
   ToolStore() : super('tool');
 
   /// Switch for enabling/disabling all tools.
   ///
   /// It will slow down the resp, so disabled by default.
-  late final enabled = property('enabled', false);
+  late final enabled = propertyDefault('enabled', false);
 
   /// All enabled tools will be added to the chat req's tool list.
   /// By default, all tools are enabled.
@@ -16,19 +16,19 @@ final class ToolStore extends PersistentStore {
   // );
 
   /// Disabled tools
-  late final disabledTools = property('disabledTools', <String>[]);
+  late final disabledTools = propertyDefault('disabledTools', <String>[]);
 
   /// Tools that are permitted to be used by the user.
   /// A dialog will be shown if the tool has not been permitted.
-  late final permittedTools = listProperty('permittedTools', <String>[]);
+  late final permittedTools = propertyDefault('permittedTools', <String>[]);
 
   /// Memories that are saved by the user.
   /// It will be added to prompt when sending a chat req.
   /// {id: memory}
-  late final memories = listProperty('memories', <String>[]);
+  late final memories = propertyDefault('memories', <String>[]);
 
   /// Models regexp list, split by ','
-  late final toolsRegExp = property(
+  late final toolsRegExp = propertyDefault(
     'toolsRegExp',
     'gpt-4o|gpt-4-turbo|gpt-3.5-turbo|deepseek',
   );

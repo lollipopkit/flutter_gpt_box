@@ -29,7 +29,7 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
     return Future.wait(workingChat.items.map((e) async => await e.toApi()));
   }
 
-  final promptStr = config.prompt + Stores.tool.memories.fetch().join('\n');
+  final promptStr = config.prompt + Stores.tool.memories.get().join('\n');
   final prompt = promptStr.isNotEmpty
       ? ChatHistoryItem.single(
           role: ChatRole.system,
@@ -467,7 +467,7 @@ Future<void> _genChatTitle(
   String chatId,
   ChatConfig cfg,
 ) async {
-  if (!Stores.setting.genTitle.fetch()) return;
+  if (!Stores.setting.genTitle.get()) return;
 
   final entity = _allHistories[chatId];
   if (entity == null) {
@@ -588,6 +588,6 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
 
   _chatRN.notify();
 
-  if (Stores.setting.saveErrChat.fetch()) _storeChat(chatId);
+  if (Stores.setting.saveErrChat.get()) _storeChat(chatId);
   _sendBtnRN.notify();
 }

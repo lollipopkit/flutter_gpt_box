@@ -1,12 +1,12 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 
-final class ConfigStore extends PersistentStore {
+final class ConfigStore extends HiveStore {
   ConfigStore() : super('config');
 
   static const _SELECTED_KEY = 'selectedKey';
 
-  late final profileId = property('profileId', ChatConfig.defaultId);
+  late final profileId = propertyDefault('profileId', ChatConfig.defaultId);
 
   /// If [ChatHistory.model] is not null, and the saved model ([followModel])
   /// exists in current models list, then set current model to it.

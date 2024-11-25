@@ -24,7 +24,6 @@ import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
-import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:openai_dart/openai_dart.dart';
@@ -110,7 +109,7 @@ class _HomePageState extends State<HomePage>
       },
     );
     _initUrlScheme();
-    AudioCard.listenAudioPlayer();
+    // AudioCard.listenAudioPlayer();
 
     /// Keep this here.
     /// - If there is not chat history, [_switchChat] will create one
@@ -122,7 +121,7 @@ class _HomePageState extends State<HomePage>
     _historyRN.notify();
     //_removeDuplicateHistory(context);
 
-    if (Stores.setting.autoCheckUpdate.fetch()) {
+    if (Stores.setting.autoCheckUpdate.get()) {
       AppUpdateIface.doUpdate(
         url: Urls.appUpdateCfg,
         context: context,
@@ -134,7 +133,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void _migrate() async {
-    final lastVer = PrefProps.lastVer.get();
+    final lastVer = await PrefProps.lastVer.get();
     const now = BuildData.build;
 
     await MigrationFns.appendV1ToUrl(lastVer, now, context: context);

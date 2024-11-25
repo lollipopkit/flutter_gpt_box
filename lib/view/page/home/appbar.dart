@@ -127,7 +127,7 @@ final class _CustomAppBar extends CustomAppBar {
 
 // Future<void> _onLongTapSetting(
 //   BuildContext context,
-//   PersistentStore store,
+//   HiveStore store,
 // ) async {
 //   final map = store.box.toJson(includeInternal: false);
 //   final keys = map.keys;

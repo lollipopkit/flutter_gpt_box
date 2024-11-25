@@ -10,7 +10,7 @@ abstract final class Stores {
   static final config = ConfigStore();
   static final tool = ToolStore();
 
-  static final List<PersistentStore> all = [
+  static final List<HiveStore> all = [
     setting,
     history,
     config,
@@ -21,14 +21,16 @@ abstract final class Stores {
     await Future.wait(all.map((e) => e.init()));
   }
 
-  static int get lastModTime {
-    int lastModTime = 0;
+  static DateTime? get lastModTime {
+    DateTime? lastModTime_;
     for (final store in all) {
-      final last = store.box.lastModified ?? 0;
-      if (last > lastModTime) {
-        lastModTime = last;
+      final last = store.lastUpdateTs;
+      if (last != null) {
+        if (lastModTime_ == null || lastModTime_.isBefore(last)) {
+          lastModTime_ = last;
+        }
       }
     }
-    return lastModTime;
+    return lastModTime_;
   }
 }

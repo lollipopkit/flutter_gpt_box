@@ -12,7 +12,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   app_links: ^6.1.1
-  audioplayers: ^6.0.0
   extended_image: ^8.2.1
   file_picker: ^8.0.0+1
   flutter_js: ^0.8.1
@@ -40,12 +39,12 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.199
+      ref: v1.0.207
   riverpod: ^2.6.1
 
 dependency_overrides:
-  # fl_lib:
-  #   path: ../fl_lib
+  fl_lib:
+    path: ../fl_lib
   # flutter_highlight:
   #   path: ../highlight.dart/flutter_highlight
 

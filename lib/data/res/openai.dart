@@ -24,7 +24,7 @@ abstract final class OpenAICfg {
     vn.value = config;
     apply();
     config.save();
-    _store.profileId.put(config.id);
+    _store.profileId.set(config.id);
 
     if (config.shouldUpdateRelated(old)) {
       updateModels(diffUrl: old.url != config.url);
@@ -33,7 +33,7 @@ abstract final class OpenAICfg {
   }
 
   static void setToId([String? id]) {
-    final cfg = _store.fetch(id ?? _store.profileId.fetch());
+    final cfg = _store.fetch(id ?? _store.profileId.get());
     if (cfg != null) {
       setTo(cfg);
     } else {
@@ -95,7 +95,7 @@ abstract final class OpenAICfg {
     final prop = Stores.tool.toolsRegExp;
 
     void setExp() {
-      final val = prop.fetch();
+      final val = prop.get();
       _modelsUseToolReExp = RegExp(val);
     }
 

@@ -24,21 +24,21 @@ final class _ResPageState extends State<ResPage>
     super.dispose();
   }
 
-  List<Tab> get _tabs =>
-      _ResType.values.map((e) => Tab(icon: Icon(e.icon))).toList();
+  // List<Tab> get _tabs =>
+  //     _ResType.values.map((e) => Tab(icon: Icon(e.icon))).toList();
 
-  late final _tabCtrl = TabController(length: _tabs.length, vsync: this);
+  // late final _tabCtrl = TabController(length: _tabs.length, vsync: this);
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: TabBar(
-        tabs: _tabs,
-        controller: _tabCtrl,
-        dividerHeight: 0,
-        onTap: (value) => _resType.value = _ResType.values[value],
-      ),
+      // appBar: TabBar(
+      //   tabs: _tabs,
+      //   controller: _tabCtrl,
+      //   dividerHeight: 0,
+      //   onTap: (value) => _resType.value = _ResType.values[value],
+      // ),
       body: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 840),
         child: ListenBuilder(
@@ -65,13 +65,14 @@ final class _ResPageState extends State<ResPage>
   Widget _buildTile(int idx, Animation<double> anime) {
     final entity = _filesList[idx];
     final child = switch (_resType.value) {
-      _ResType.audio => AudioCard(
-          key: ValueKey(entity.path),
-          id: entity.path.split('/').last,
-          path: entity.path,
-          buildSlider: false,
-          onDelete: () => _onAudioDelete(idx),
-        ),
+      // _ResType.audio => AudioCard(
+      //     key: ValueKey(entity.path),
+      //     id: entity.path.split('/').last,
+      //     path: entity.path,
+      //     buildSlider: false,
+      //     onDelete: () => _onAudioDelete(idx),
+      //   ),
+      _ResType.audio => const SizedBox(),
       _ResType.image => ImageCard(
           key: ValueKey(entity.path),
           imageUrl: entity.path,
@@ -112,15 +113,15 @@ final class _ResPageState extends State<ResPage>
     }
   }
 
-  void _onAudioDelete(int idx) async {
-    _listKey.currentState?.removeItem(
-      idx,
-      (_, anime) => _buildTile(idx, anime),
-      duration: _dur,
-    );
-    await Future.delayed(_dur);
-    _filesList.removeAt(idx);
-  }
+  // void _onAudioDelete(int idx) async {
+  //   _listKey.currentState?.removeItem(
+  //     idx,
+  //     (_, anime) => _buildTile(idx, anime),
+  //     duration: _dur,
+  //   );
+  //   await Future.delayed(_dur);
+  //   _filesList.removeAt(idx);
+  // }
 
   void _onImageRet(ImagePageRet ret, FileSystemEntity entity, int idx) async {
     if (ret.isDeleted) {

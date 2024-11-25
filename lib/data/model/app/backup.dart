@@ -73,10 +73,10 @@ class Backup implements Mergeable {
   static Backup loadFromStore() {
     return Backup(
       version: validVer,
-      lastModTime: Stores.lastModTime,
+      lastModTime: Stores.lastModTime?.millisecondsSinceEpoch ?? 0,
       history: Stores.history.fetchAll().values.toList(),
       configs: Stores.config.fetchAll().values.toList(),
-      tools: Stores.tool.box.toJson(),
+      tools: Stores.tool.getAllMap(),
     );
   }
 
@@ -91,7 +91,7 @@ class Backup implements Mergeable {
 
   @override
   Future<void> merge({bool force = false}) async {
-    final curTime = Stores.lastModTime;
+    final curTime = Stores.lastModTime?.millisecondsSinceEpoch ?? 0;
     final bakTime = lastModTime;
     final override = force || curTime < bakTime;
     if (!override) {

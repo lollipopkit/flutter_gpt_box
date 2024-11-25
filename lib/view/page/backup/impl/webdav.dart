@@ -16,19 +16,19 @@ Widget _buildWebdav(BuildContext context) {
           trailing: StoreSwitch(
             prop: Stores.setting.webdavSync,
             validator: (p0) {
-              if (Stores.setting.icloudSync.fetch() && p0) {
+              if (Stores.setting.icloudSync.get() && p0) {
                 context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
                 return false;
               }
               if (p0) {
-                if (Stores.setting.webdavUrl.fetch().isEmpty ||
-                    Stores.setting.webdavUser.fetch().isEmpty ||
-                    Stores.setting.webdavPwd.fetch().isEmpty) {
+                if (Stores.setting.webdavUrl.get().isEmpty ||
+                    Stores.setting.webdavUser.get().isEmpty ||
+                    Stores.setting.webdavPwd.get().isEmpty) {
                   context.showSnackBar(l10n.emptyFields(libL10n.setting));
                   return false;
                 }
               }
-              BakSync.instance.sync(rs: webdav);
+              BakSync.instance.sync(rs: Webdav.shared);
               return true;
             },
           ),
@@ -65,7 +65,7 @@ Widget _buildWebdav(BuildContext context) {
 Future<void> _onTapWebdavDl(BuildContext context) async {
   _webdavLoading.value = true;
   try {
-    final files = await webdav.list();
+    final files = await Webdav.shared.list();
     if (files.isEmpty) return context.showSnackBar(libL10n.empty);
 
     final fileName = await context.showPickSingleDialog(
@@ -74,7 +74,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     );
     if (fileName == null) return;
 
-    await webdav.download(relativePath: fileName);
+    await Webdav.shared.download(relativePath: fileName);
     final dlFile = await File('${Paths.doc}/$fileName').readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak.merge(force: true);
@@ -93,7 +93,7 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
   try {
     final content = await Backup.backup();
     await File(Paths.bak).writeAsString(content);
-    await webdav.upload(relativePath: Paths.bakName);
+    await Webdav.shared.upload(relativePath: Paths.bakName);
     context.showSnackBar(libL10n.success);
   } catch (e, s) {
     context.showErrDialog(e, s, 'Upload webdav backup');
@@ -104,28 +104,27 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
 
 Future<void> _onTapWebdavSetting(BuildContext context) async {
   final urlCtrl = TextEditingController(
-    text: Stores.setting.webdavUrl.fetch(),
+    text: Stores.setting.webdavUrl.get(),
   );
   final userCtrl = TextEditingController(
-    text: Stores.setting.webdavUser.fetch(),
+    text: Stores.setting.webdavUser.get(),
   );
   final pwdCtrl = TextEditingController(
-    text: Stores.setting.webdavPwd.fetch(),
+    text: Stores.setting.webdavPwd.get(),
   );
 
   void onSubmit() async {
     final (_, err) = await context.showLoadingDialog(fn: () async {
-      await webdav.init(WebdavInitArgs(
+      Webdav.shared.client = WebdavClient(
         url: urlCtrl.text,
         user: userCtrl.text,
         pwd: pwdCtrl.text,
-        prefix: 'gptbox/',
-      ));
+      );
     });
     if (err != null) return;
-    Stores.setting.webdavUrl.put(urlCtrl.text);
-    Stores.setting.webdavUser.put(userCtrl.text);
-    Stores.setting.webdavPwd.put(pwdCtrl.text);
+    Stores.setting.webdavUrl.set(urlCtrl.text);
+    Stores.setting.webdavUser.set(userCtrl.text);
+    Stores.setting.webdavPwd.set(pwdCtrl.text);
     context.pop();
     context.showSnackBar(libL10n.success);
   }

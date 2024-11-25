@@ -62,7 +62,7 @@ Future<void> _initDb() async {
   Hive.registerAdapter(ChatCompletionMessageToolCallAdapter()); // 9
   Hive.registerAdapter(ChatCompletionMessageFunctionCallAdapter()); // 10
 
-  await PrefStore.init();
+  await PrefStore.shared.init();
   await Stores.init();
 }
 
@@ -83,8 +83,8 @@ Future<void> _initAppComponents() async {
   final sets = Stores.setting;
   final size = sets.windowSize;
   SystemUIs.initDesktopWindow(
-    hideTitleBar: sets.hideTitleBar.fetch(),
-    size: size.fetch().toSize(),
+    hideTitleBar: sets.hideTitleBar.get(),
+    size: size.get()?.toSize(),
     listener: WindowSizeListener(size),
   );
 
@@ -93,5 +93,5 @@ Future<void> _initAppComponents() async {
 
   BakSync.instance.sync();
 
-  if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
+  if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;
 }

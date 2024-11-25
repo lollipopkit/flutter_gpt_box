@@ -72,7 +72,7 @@ class _ChatPageState extends State<_ChatPage>
 
   Widget _buildChat() {
     var switchDirection = SwitchDirection.next;
-    final scrollSwitchChat = Stores.setting.scrollSwitchChat.fetch();
+    final scrollSwitchChat = Stores.setting.scrollSwitchChat.get();
 
     final child = ListenBuilder(
       listenable: _chatRN,

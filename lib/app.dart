@@ -1,12 +1,12 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:fl_lib/l10n/gen_l10n/lib_l10n.dart';
+import 'package:fl_lib/generated/l10n/lib_l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/home/home.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 part 'intro.dart';
@@ -20,13 +20,13 @@ class MyApp extends StatelessWidget {
     return ListenBuilder(
       listenable: RNodes.app,
       builder: () {
-        UIs.colorSeed = Color(Stores.setting.themeColorSeed.fetch());
-        final themeMode = switch (Stores.setting.themeMode.fetch()) {
+        UIs.colorSeed = Color(Stores.setting.themeColorSeed.get());
+        final themeMode = switch (Stores.setting.themeMode.get()) {
           1 => ThemeMode.light,
           2 => ThemeMode.dark,
           _ => ThemeMode.system,
         };
-        final locale = Stores.setting.locale.fetch();
+        final locale = Stores.setting.locale.get();
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'GPT Box',

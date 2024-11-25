@@ -9,6 +9,8 @@ final class BakSync extends SyncIface {
 
   static const instance = BakSync._();
 
+  static final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
+
   @override
   Future<void> saveToFile() => Backup.backupToFile();
 
@@ -22,19 +24,13 @@ final class BakSync extends SyncIface {
 
   @override
   Future<RemoteStorage?> get remoteStorage async {
-    if (isMacOS || isIOS) await icloud.init('iCloud.tech.lolli.gptbox');
-    await webdav.init(WebdavInitArgs(
-      url: _set.webdavUrl.fetch(),
-      user: _set.webdavUser.fetch(),
-      pwd: _set.webdavPwd.fetch(),
-      prefix: 'gptbox/',
-    ));
+    Webdav.shared.prefix = 'gptbox/';
 
-    final icloudEnabled = _set.icloudSync.fetch();
+    final icloudEnabled = _set.icloudSync.get();
     if (icloudEnabled) return icloud;
 
-    final webdavEnabled = _set.webdavSync.fetch();
-    if (webdavEnabled) return webdav;
+    final webdavEnabled = _set.webdavSync.get();
+    if (webdavEnabled) return Webdav.shared;
 
     return null;
   }

@@ -60,7 +60,7 @@ final class _FilePicked {
   String get url => remote ?? local;
 
   static bool get canUpload =>
-      Stores.setting.usePhotograph.fetch() && UserApi.loggedIn;
+      Stores.setting.usePhotograph.get() && UserApi.loggedIn;
 
   @override
   String toString() => '_FilePicked(local: $local, remote: $remote)';

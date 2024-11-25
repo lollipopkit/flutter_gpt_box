@@ -39,7 +39,7 @@ final class _ToolPageState extends State<ToolPage>
         ListTile(
           title: Text(libL10n.edit),
           onTap: () async {
-            final data = _toolStore.memories.fetch();
+            final data = _toolStore.memories.get();
             final dataMap = <String, String>{};
             for (var idx = 0; idx < data.length; idx++) {
               dataMap['$idx'] = data[idx];
@@ -49,7 +49,7 @@ final class _ToolPageState extends State<ToolPage>
               KvEditorArgs(data: dataMap),
             );
             if (res != null) {
-              _toolStore.memories.put(res.values.toList());
+              _toolStore.memories.set(res.values.toList());
               context.showSnackBar(libL10n.success);
             }
           },
@@ -85,7 +85,7 @@ final class _ToolPageState extends State<ToolPage>
       onTap: () {
         final ctrl = TextEditingController(text: listenable.value);
         void onSave(String v) {
-          prop.put(v);
+          prop.set(v);
           context.pop();
         }
 
@@ -119,8 +119,8 @@ final class _ToolPageState extends State<ToolPage>
             value: !vals.contains(name),
             onChanged: (val) {
               final _ = switch (val) {
-                true => prop.put(vals..remove(name)),
-                false => prop.put(vals..add(name)),
+                true => prop.set(vals..remove(name)),
+                false => prop.set(vals..add(name)),
               };
             },
           ),
