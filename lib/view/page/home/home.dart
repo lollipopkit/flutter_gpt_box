@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gpt_box/core/util/sync.dart';
+import 'package:gpt_box/core/util/url.dart';
 //import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:gpt_box/data/model/chat/history/share.dart';
 import 'package:gpt_box/core/util/chat_title.dart';
@@ -156,7 +157,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> _initUrlScheme() async {
-    DeepLinks.register(AppLink.handle);
+    DeepLinks.register(_AppLink.handle);
 
     if (isWeb) {
       final uri = await _appLink.getInitialLink();

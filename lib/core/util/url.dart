@@ -1,3 +1,20 @@
+abstract final class AppLink {
+  /// lpkt.cn
+  static const scheme = 'lpkt.cn';
+  static const host = 'gptbox';
+
+  /// lpkt.cn://gptbox
+  static const prefix = '$scheme://$host';
+
+  static const newChatPath = '/new';
+  static const openChatPath = '/open';
+  static const searchPath = '/search';
+  static const shareChatPath = '/share';
+  static const goPath = '/go';
+  static const setPath = '/set';
+  static const profilePath = '/profile';
+}
+
 enum UrlType {
   file,
   http,

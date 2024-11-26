@@ -75,6 +75,7 @@ final class _ProfilePageState extends State<ProfilePage>
       builder: () {
         final cfg = OpenAICfg.current;
         final children = [
+          _buildQuickShare(),
           _buildPrompt(cfg.prompt),
           _buildHistoryLength(cfg.historyLen),
           _buildGenTitlePrompt(cfg.genTitlePrompt),
@@ -147,10 +148,8 @@ final class _ProfilePageState extends State<ProfilePage>
           Btn.icon(
             icon: const Icon(OctIcons.arrow_switch, size: 19),
             onTap: () async {
-              final vals = Stores.config
-                  .getAllMapT<ChatConfig>()
-                  .values
-                  .toList();
+              final vals =
+                  Stores.config.getAllMapT<ChatConfig>().values.toList();
               final newCfg = await context.showPickSingleDialog(
                 items: vals,
                 initial: cfg,
@@ -494,6 +493,19 @@ final class _ProfilePageState extends State<ProfilePage>
         }
         OpenAICfg.setTo(OpenAICfg.current.copyWith(historyLen: newVal));
         _cfgRN.notify();
+      },
+    );
+  }
+
+  Widget _buildQuickShare() {
+    return ListTile(
+      leading: const Icon(Icons.share),
+      title: TipText(libL10n.share, l10n.quickShareTip),
+      trailing: const Icon(Icons.keyboard_arrow_right),
+      onTap: () {
+        final url = OpenAICfg.current.shareUrl;
+        if (url.isEmpty) return;
+        Share.share(url);
       },
     );
   }

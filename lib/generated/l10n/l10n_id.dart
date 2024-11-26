@@ -288,6 +288,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get promptsSettingsItem => 'Prompt';
 
   @override
+  String get quickShareTip => 'Buka tautan ini di perangkat lain untuk dengan cepat mengimpor konfigurasi saat ini.';
+
+  @override
   String get raw => 'Mentah';
 
   @override

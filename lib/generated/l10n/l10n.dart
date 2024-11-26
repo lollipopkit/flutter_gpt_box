@@ -638,6 +638,12 @@ abstract class AppLocalizations {
   /// **'Prompts'**
   String get promptsSettingsItem;
 
+  /// No description provided for @quickShareTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Open this link on another device to quickly import the current configuration.'**
+  String get quickShareTip;
+
   /// No description provided for @raw.
   ///
   /// In en, this message translates to:
