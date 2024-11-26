@@ -72,7 +72,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
                     // _buildTokenCount(),
                     UIs.width7,
                     //_buildSwitchChatType(),
-                    _buildChatMeta(),
+                    _buildRight(),
                     UIs.width7,
                   ],
                 ),
@@ -260,6 +260,22 @@ final class _HomeBottomState extends State<_HomeBottom> {
     await _ChatSettings.route.go(context, chat);
   }
 
+  Widget _buildRight() {
+    return _curPage.listenVal((val) {
+      return val == HomePageEnum.chat ? _buildChatMeta() : _buildSyncChats();
+    });
+  }
+
+  Widget _buildSyncChats() {
+    final rs = BakSync.instance.remoteStorage;
+    if (rs == null) return UIs.placeholder;
+    return IconButton(
+      onPressed: () => _onTapSyncChats(context),
+      icon: const Icon(Icons.sync, size: 19),
+      tooltip: libL10n.sync,
+    );
+  }
+
   Widget _buildChatMeta() {
     return Btn.icon(
       icon: const Icon(Icons.code, size: 19),
@@ -287,5 +303,9 @@ $jsonRaw
       ),
       actions: Btnx.oks,
     );
+  }
+
+  void _onTapSyncChats(BuildContext context) async {
+    await BakSync.instance.sync();
   }
 }

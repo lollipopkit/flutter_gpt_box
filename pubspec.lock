@@ -467,9 +467,11 @@ packages:
   fl_lib:
     dependency: "direct main"
     description:
-      path: "../fl_lib"
-      relative: true
-    source: path
+      path: "."
+      ref: "v1.0.209"
+      resolved-ref: "582767b31def104cd276e560a2842f118cbc2e7b"
+      url: "https://github.com/lppcg/fl_lib"
+    source: git
     version: "0.0.1"
   flutter:
     dependency: "direct main"
