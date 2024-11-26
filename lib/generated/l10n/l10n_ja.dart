@@ -288,6 +288,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get promptsSettingsItem => 'プロンプト';
 
   @override
+  String get quickShareTip => 'このリンクを他のデバイスで開いて、現在の設定を迅速にインポートしてください。';
+
+  @override
   String get raw => '生データ';
 
   @override

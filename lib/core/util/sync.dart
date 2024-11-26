@@ -23,7 +23,7 @@ final class BakSync extends SyncIface {
   static final _set = Stores.setting;
 
   @override
-  Future<RemoteStorage?> get remoteStorage async {
+  RemoteStorage? get remoteStorage {
     Webdav.shared.prefix = 'gptbox/';
 
     final icloudEnabled = _set.icloudSync.get();

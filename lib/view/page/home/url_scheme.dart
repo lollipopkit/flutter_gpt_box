@@ -1,15 +1,14 @@
 part of 'home.dart';
 
-abstract final class AppLink {
-  static const host = 'gptbox';
 
+extension _AppLink on AppLink {
   /// example: lpkt.cn://gptbox/PATH?KEY=VAL
   static bool? handle(Uri uri, [BuildContext? context]) {
     final path = uri.path;
     final params = uri.queryParameters;
 
     switch (path) {
-      case '/new':
+      case AppLink.newChatPath:
         final msg = params['msg'];
         final send = params['send'];
         final chat = _newChat();
@@ -21,7 +20,7 @@ abstract final class AppLink {
           }
         }
         return true;
-      case '/open':
+      case AppLink.openChatPath:
         final chatId = params['chatId'];
         final title = params['title'];
         if (chatId != null) {
@@ -41,7 +40,7 @@ abstract final class AppLink {
           _switchPage(HomePageEnum.history);
         }
         return true;
-      case '/search':
+      case AppLink.searchPath:
         if (context == null) return false;
         final query = params['keyword'];
         showSearch(
@@ -49,7 +48,7 @@ abstract final class AppLink {
           delegate: _ChatSearchDelegate(initKeyword: query),
         );
         return true;
-      case '/share':
+      case AppLink.shareChatPath:
         final chatId = params['chatId'];
         final title = params['title'];
         if (chatId != null) {
@@ -75,7 +74,7 @@ abstract final class AppLink {
         if (context == null) return false;
         _onShareChat(context);
         return true;
-      case '/go':
+      case AppLink.goPath:
         if (context == null) return false;
         final page = params['page'];
         if (page != null) {
@@ -97,7 +96,7 @@ abstract final class AppLink {
         context.showSnackBar(msg);
         Loggers.app.warning(msg);
         return true;
-      case '/set':
+      case AppLink.setPath:
         final openAiUrl = params['openAiUrl'];
         final openAiKey = params['openAiKey'];
         final openAiModel = params['openAiModel'];
@@ -112,6 +111,15 @@ abstract final class AppLink {
           key: openAiKey,
           model: openAiModel,
         ));
+        return true;
+      case AppLink.profilePath:
+        final paramsStr = params['params'];
+        if (paramsStr == null) return false;
+
+        final cfg = ChatConfig.fromUrlParams(paramsStr);
+        cfg.save();
+        OpenAICfg.setToId(cfg.id);
+
         return true;
       default:
         if (isWeb && path == '/') return true;

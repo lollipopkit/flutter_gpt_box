@@ -288,6 +288,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get promptsSettingsItem => 'Komutlar';
 
   @override
+  String get quickShareTip => 'Mevcut yapılandırmayı hızlıca içe aktarmak için bu bağlantıyı başka bir cihazda açın.';
+
+  @override
   String get raw => 'Ham';
 
   @override

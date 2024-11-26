@@ -288,6 +288,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get promptsSettingsItem => 'Indicaciones';
 
   @override
+  String get quickShareTip => 'Abre este enlace en otro dispositivo para importar rápidamente la configuración actual.';
+
+  @override
   String get raw => 'Crudo';
 
   @override

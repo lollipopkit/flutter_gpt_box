@@ -288,6 +288,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get promptsSettingsItem => 'Підказки';
 
   @override
+  String get quickShareTip => 'Відкрийте це посилання на іншому пристрої, щоб швидко імпортувати поточну конфігурацію.';
+
+  @override
   String get raw => 'Сирий';
 
   @override
