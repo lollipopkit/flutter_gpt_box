@@ -10,7 +10,7 @@ abstract final class Stores {
   static final config = ConfigStore();
   static final tool = ToolStore();
 
-  static final List<PersistentStore> all = [
+  static final List<HiveStore> all = [
     setting,
     history,
     config,
@@ -22,9 +22,9 @@ abstract final class Stores {
   }
 
   static int get lastModTime {
-    int lastModTime = 0;
+    var lastModTime = DateTime.now().millisecondsSinceEpoch;
     for (final store in all) {
-      final last = store.box.lastModified ?? 0;
+      final last = store.lastUpdateTs?.millisecondsSinceEpoch ?? 0;
       if (last > lastModTime) {
         lastModTime = last;
       }

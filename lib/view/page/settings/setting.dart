@@ -13,7 +13,7 @@ import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
 import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -195,12 +195,12 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
   }
 
   void _onSaveColor(String s) {
-    final color = s.hexToColor;
+    final color = s.fromColorHex;
     if (color == null) {
       context.showSnackBar('Invalid color code: $s');
       return;
     }
-    _setStore.themeColorSeed.put(color.value);
+    _setStore.themeColorSeed.put(color.value255);
     RNodes.app.notify(delay: true);
   }
 

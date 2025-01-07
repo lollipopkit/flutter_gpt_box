@@ -1,7 +1,7 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 
-class HistoryStore extends PersistentStore {
+class HistoryStore extends HiveStore {
   HistoryStore() : super('history');
 
   Map<String, ChatHistory> fetchAll() {
@@ -63,11 +63,9 @@ class HistoryStore extends PersistentStore {
 
   void put(ChatHistory history, [bool update = true]) {
     box.put(history.id, history);
-    if (update) box.updateLastModified();
   }
 
   void delete(String id) {
     box.delete(id);
-    box.updateLastModified();
   }
 }

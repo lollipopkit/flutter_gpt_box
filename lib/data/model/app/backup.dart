@@ -70,18 +70,18 @@ class Backup implements Mergeable {
     return Backup.fromJson(json.decode(raw));
   }
 
-  static Backup loadFromStore() {
+  static Future<Backup> loadFromStore() async {
     return Backup(
       version: validVer,
       lastModTime: Stores.lastModTime,
       history: Stores.history.fetchAll().values.toList(),
       configs: Stores.config.fetchAll().values.toList(),
-      tools: Stores.tool.box.toJson(),
+      tools: await Stores.tool.getAllMap(),
     );
   }
 
   static Future<String> backup() async {
-    final bak = Backup.loadFromStore();
+    final bak = await Backup.loadFromStore();
     return json.encode(bak);
   }
 

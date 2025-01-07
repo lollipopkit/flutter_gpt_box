@@ -179,7 +179,7 @@ enum ChatRole {
       system => UIs.primaryColor.withRed(233),
       tool => UIs.primaryColor.withBlue(33),
     };
-    return c.withOpacity(0.5);
+    return c.withValues(alpha: 0.5);
   }
 
   static ChatRole? fromString(String? val) => switch (val) {

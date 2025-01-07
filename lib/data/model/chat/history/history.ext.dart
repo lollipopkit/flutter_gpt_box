@@ -157,7 +157,7 @@ extension ChatContentX on ChatContent {
   ///
   /// Seperate from [toApi] to decouple the logic
   static Future<String> contentToApi(String raw) async {
-    final isLocal = raw.isFileUrl(false);
+    final isLocal = raw.startsWith('/');
     if (isLocal) {
       final file = File(raw);
       final b64 = await file.base64;
@@ -168,7 +168,7 @@ extension ChatContentX on ChatContent {
 
   void deleteFile() async {
     if (isText) return;
-    final isLocal = raw.isFileUrl(false);
+    final isLocal = raw.startsWith('/');
     if (isLocal) {
       final file = File(raw);
       await file.delete();

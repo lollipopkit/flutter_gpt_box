@@ -28,7 +28,7 @@ Widget _buildWebdav(BuildContext context) {
                   return false;
                 }
               }
-              BakSync.instance.sync(rs: webdav);
+              BakSync.instance.sync(rs: Webdav.shared);
               return true;
             },
           ),
@@ -65,7 +65,7 @@ Widget _buildWebdav(BuildContext context) {
 Future<void> _onTapWebdavDl(BuildContext context) async {
   _webdavLoading.value = true;
   try {
-    final files = await webdav.list();
+    final files = await Webdav.shared.list();
     if (files.isEmpty) return context.showSnackBar(libL10n.empty);
 
     final fileName = await context.showPickSingleDialog(
@@ -74,7 +74,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     );
     if (fileName == null) return;
 
-    await webdav.download(relativePath: fileName);
+    await Webdav.shared.download(relativePath: fileName);
     final dlFile = await File('${Paths.doc}/$fileName').readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak.merge(force: true);
@@ -93,7 +93,7 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
   try {
     final content = await Backup.backup();
     await File(Paths.bak).writeAsString(content);
-    await webdav.upload(relativePath: Paths.bakName);
+    await Webdav.shared.upload(relativePath: Paths.bakName);
     context.showSnackBar(libL10n.success);
   } catch (e, s) {
     context.showErrDialog(e, s, 'Upload webdav backup');
@@ -115,12 +115,11 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
 
   void onSubmit() async {
     final (_, err) = await context.showLoadingDialog(fn: () async {
-      await webdav.init(WebdavInitArgs(
+      Webdav.shared.client = WebdavClient(
         url: urlCtrl.text,
         user: userCtrl.text,
         pwd: pwdCtrl.text,
-        prefix: 'gptbox/',
-      ));
+      );
     });
     if (err != null) return;
     Stores.setting.webdavUrl.put(urlCtrl.text);

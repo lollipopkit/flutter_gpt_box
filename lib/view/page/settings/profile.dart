@@ -147,10 +147,9 @@ final class _ProfilePageState extends State<ProfilePage>
           Btn.icon(
             icon: const Icon(OctIcons.arrow_switch, size: 19),
             onTap: () async {
-              final vals = Stores.config.box
-                  .toJson<ChatConfig>(includeInternal: false)
-                  .values
-                  .toList();
+              final map = await Stores.config
+                  .getAllMapTyped<ChatConfig>(includeInternalKeys: false);
+              final vals = map.values.toList();
               final newCfg = await context.showPickSingleDialog(
                 items: vals,
                 initial: cfg,

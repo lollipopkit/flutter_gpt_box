@@ -54,8 +54,6 @@ abstract final class OpenAIFuncCalls {
         if (!await askConfirm(func, func.help(resp, args))) return null;
 
         return await func.run(resp, args, onToolLog);
-      default:
-        throw 'Unknown tool type ${resp.type}';
     }
   }
 }

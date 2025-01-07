@@ -62,7 +62,7 @@ Future<void> _initDb() async {
   Hive.registerAdapter(ChatCompletionMessageToolCallAdapter()); // 9
   Hive.registerAdapter(ChatCompletionMessageFunctionCallAdapter()); // 10
 
-  await PrefStore.init();
+  await PrefStore.shared.init();
   await Stores.init();
 }
 
