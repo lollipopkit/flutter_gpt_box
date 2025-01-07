@@ -1,7 +1,11 @@
+import 'dart:convert';
+
+import 'package:gpt_box/core/util/url.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:shortid/shortid.dart';
 
 part 'config.g.dart';
 
@@ -36,6 +40,16 @@ final class ChatConfig {
     required this.name,
     this.genTitlePrompt,
   });
+
+  ChatConfig.noid({
+    required this.prompt,
+    required this.url,
+    required this.key,
+    required this.model,
+    required this.historyLen,
+    required this.name,
+    this.genTitlePrompt,
+  }) : id = shortid.generate();
 
   static final apiUrlReg = RegExp(r'^https?://[0-9A-Za-z\.]+(:\d+)?$');
   static const defaultId = 'defaultId';
@@ -93,4 +107,27 @@ final class ChatConfig {
       _$ChatConfigFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatConfigToJson(this);
+
+  /// Get share url.
+  /// 
+  /// eg.: lpkt.cn://gptbox/profile?params=...
+  String get shareUrl {
+    final jsonStr = json.encode(toJson());
+    final urlEncoded = Uri.encodeComponent(jsonStr);
+    return '${AppLink.prefix}${AppLink.profilePath}?params=$urlEncoded';
+  }
+
+  /// Parse url params to [ChatConfig].
+  static ChatConfig fromUrlParams(String params) {
+    final params_ = json.decode(params) as Map<String, dynamic>;
+    return ChatConfig.noid(
+      url: params_['url'] ?? defaultUrl,
+      key: params_['key'] ?? '',
+      model: params_['model'] ?? '',
+      prompt: params_['prompt'] ?? '',
+      name: params_['name'] ?? '',
+      genTitlePrompt: params_['genTitlePrompt'],
+      historyLen: params_['historyLen'] ?? defaultHistoryLen,
+    );
+  }
 }

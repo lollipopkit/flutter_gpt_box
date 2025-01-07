@@ -288,6 +288,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get promptsSettingsItem => '提示词';
 
   @override
+  String get quickShareTip => '在其他设备上打开此链接以快速导入当前配置';
+
+  @override
   String get raw => '原始';
 
   @override
@@ -718,6 +721,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get promptsSettingsItem => '提示詞';
+
+  @override
+  String get quickShareTip => '在其他裝置上打開此連結以快速導入當前配置。';
 
   @override
   String get raw => '原始';

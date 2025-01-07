@@ -15,8 +15,8 @@ import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
-import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shortid/shortid.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -137,7 +137,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
             initial: ThemeMode.values[val],
           );
           if (result != null) {
-            _setStore.themeMode.put(result.index);
+            _setStore.themeMode.set(result.index);
             context.pop();
 
             /// Set delay to true to wait for db update.
@@ -222,7 +222,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
             initial: val.toLocale ?? l10n.localeName.toLocale,
           );
           if (result != null) {
-            _setStore.locale.put(result.code);
+            _setStore.locale.set(result.code);
             await RNodes.app.notify(delay: true);
           }
         },
@@ -433,9 +433,9 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
         builder: (val) => Text(val, style: const TextStyle(fontSize: 18)),
       ),
       onTap: () async {
-        final ctrl = TextEditingController(text: property.fetch());
+        final ctrl = TextEditingController(text: property.get());
         void onSave(String s) {
-          property.put(s);
+          property.set(s);
           context.pop();
         }
 

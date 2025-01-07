@@ -28,7 +28,7 @@ final class BakSync extends SyncIface {
   static final _set = Stores.setting;
 
   @override
-  Future<RemoteStorage?> get remoteStorage async {
+  RemoteStorage? get remoteStorage {
     final icloudEnabled = _set.icloudSync.fetch();
     if (icloudEnabled) return icloud;
 

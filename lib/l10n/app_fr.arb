@@ -87,6 +87,7 @@
   "privacyTip": "Cette application ne collecte aucune information.",
   "profile": "Profil",
   "promptsSettingsItem": "Invites",
+  "quickShareTip": "Ouvrez ce lien sur un autre appareil pour importer rapidement la configuration actuelle.",
   "raw": "Brut",
   "refresh": "Actualiser",
   "regExp": "Expression régulière",

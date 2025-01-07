@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
 import 'package:gpt_box/core/util/datetime.dart';
 import 'package:gpt_box/core/util/sync.dart';
+import 'package:gpt_box/core/util/url.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/history/hive_adapter.dart';
@@ -14,7 +15,6 @@ import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/page/home/home.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
 
@@ -83,8 +83,8 @@ Future<void> _initAppComponents() async {
   final sets = Stores.setting;
   final size = sets.windowSize;
   SystemUIs.initDesktopWindow(
-    hideTitleBar: sets.hideTitleBar.fetch(),
-    size: size.fetch().toSize(),
+    hideTitleBar: sets.hideTitleBar.get(),
+    size: size.get().toSize(),
     listener: WindowSizeListener(size),
   );
 
@@ -93,5 +93,5 @@ Future<void> _initAppComponents() async {
 
   BakSync.instance.sync();
 
-  if (Stores.setting.joinBeta.fetch()) AppUpdate.chan = AppUpdateChan.beta;
+  if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;
 }

@@ -87,6 +87,7 @@
   "privacyTip": "This app does not collect any data.",
   "profile": "Profile",
   "promptsSettingsItem": "Prompts",
+  "quickShareTip": "Open this link on another device to quickly import the current configuration.",
   "raw": "Raw",
   "refresh": "Refresh",
   "regExp": "Reg Exp",

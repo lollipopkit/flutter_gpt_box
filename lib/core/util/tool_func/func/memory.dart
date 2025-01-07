@@ -36,8 +36,8 @@ Only call this func if users explicitly ask to memorise something.''';
     if (memory == null) return null;
 
     final prop = Stores.tool.memories;
-    final memories = prop.fetch();
-    prop.put(memories..add(memory));
+    final memories = prop.get();
+    prop.set(memories..add(memory));
     await Future.delayed(Durations.medium1);
     return [ChatContent.text(l10n.memoryAdded(memory))];
   }

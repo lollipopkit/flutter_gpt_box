@@ -23,7 +23,7 @@ final class _IntroPage extends StatelessWidget {
           args: IntroPageArgs(
             pages: pages_,
             onDone: (ctx) {
-              Stores.setting.introVer.put(BuildData.build);
+              Stores.setting.introVer.set(BuildData.build);
               Navigator.of(ctx).pushReplacement(
                 MaterialPageRoute(builder: (_) => const HomePage()),
               );
@@ -50,10 +50,10 @@ final class _IntroPage extends StatelessWidget {
               title: libL10n.language,
               items: AppLocalizations.supportedLocales,
               display: (p0) => p0.nativeName,
-              initial: _setting.locale.fetch().toLocale,
+              initial: _setting.locale.get().toLocale,
             );
             if (selected != null) {
-              _setting.locale.put(selected.code);
+              _setting.locale.set(selected.code);
               RNodes.app.notify(delay: true);
             }
           },
@@ -115,7 +115,7 @@ final class _IntroPage extends StatelessWidget {
   static const _introListPad = EdgeInsets.symmetric(horizontal: 17);
 
   static List<_Builder> get builders {
-    final storedVer = _setting.introVer.fetch();
+    final storedVer = _setting.introVer.get();
     return _builders.entries
         .where((e) => e.key > storedVer)
         .map((e) => e.value)

@@ -1,7 +1,6 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
-import 'package:gpt_box/view/widget/audio.dart';
 import 'package:gpt_box/view/widget/code.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
@@ -89,7 +88,7 @@ final class ChatHistoryContentView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: chatItem.content
           .map((e) => switch (e.type) {
-                ChatContentType.audio => _buildAudio(e),
+                // ChatContentType.audio => _buildAudio(e),
                 ChatContentType.image => _buildImage(e),
                 _ => _buildText(context, e),
               })
@@ -126,9 +125,9 @@ final class ChatHistoryContentView extends StatelessWidget {
     );
   }
 
-  Widget _buildAudio(ChatContent content) {
-    return AudioCard(id: content.id, path: content.raw);
-  }
+  // Widget _buildAudio(ChatContent content) {
+  //   return AudioCard(id: content.id, path: content.raw);
+  // }
 
   void _onImgRet(ImagePageRet ret, String raw) async {
     if (ret.isDeleted) {

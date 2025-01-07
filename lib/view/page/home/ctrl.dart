@@ -18,7 +18,7 @@ void _switchChat([String? id]) {
   Future.delayed(_durationMedium, () {
     // Different chats have different height
     _chatFabRN.notify();
-    if (Stores.setting.scrollAfterSwitch.fetch()) {
+    if (Stores.setting.scrollAfterSwitch.get()) {
       _scrollBottom();
     }
   });
@@ -63,7 +63,7 @@ void _storeChat(String chatId) {
 
 ChatHistory _newChat() {
   late final ChatHistory newHistory;
-  if (_allHistories.isEmpty && !Stores.setting.initHelpShown.fetch()) {
+  if (_allHistories.isEmpty && !Stores.setting.initHelpShown.get()) {
     newHistory = ChatHistoryX.example;
   } else {
     newHistory = ChatHistoryX.empty;
@@ -115,7 +115,7 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
     return _onDeleteChat(chatId);
   }
 
-  if (!Stores.setting.confrimDel.fetch()) return _onDeleteChat(chatId);
+  if (!Stores.setting.confrimDel.get()) return _onDeleteChat(chatId);
 
   final name = entity.name ?? 'Untitled';
   void onTap() {
@@ -230,7 +230,7 @@ void _onShareChat(BuildContext context) async {
       pixelRatio: _media?.devicePixelRatio ?? 1,
       delay: Durations.short4,
     );
-    compressImg = Stores.setting.compressImg.fetch();
+    compressImg = Stores.setting.compressImg.get();
     if (compressImg) {
       return await ImageUtil.compress(raw);
     }
@@ -468,7 +468,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
 }
 
 void _autoScroll(String chatId) {
-  if (Stores.setting.scrollBottom.fetch()) {
+  if (Stores.setting.scrollBottom.get()) {
     Funcs.throttle(() {
       // Only scroll to bottom when current chat is the working chat
       final isCurrentChat = chatId == _curChatId;
@@ -495,14 +495,20 @@ void _scrollBottom() async {
 
 void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
   final cfg = OpenAICfg.current;
-  if (cfg.key.isEmpty) {
-    if (notifyKey) {
-      context.showRoundDialog(
-        title: l10n.attention,
-        child: Text(l10n.needOpenAIKey),
-        actions: Btnx.oks,
-      );
-    }
+  if (cfg.key.isEmpty && notifyKey) {
+    context.showRoundDialog(
+      title: l10n.attention,
+      child: Text(l10n.needOpenAIKey),
+      actions: Btn.ok(
+        onTap: () {
+          context.pop();
+          SettingsPage.route.go(
+            context,
+            args: SettingsPageArgs(tabIndex: SettingsTab.profile),
+          );
+        },
+      ).toList,
+    );
     return;
   }
 
@@ -594,7 +600,7 @@ Future<bool> _askToolConfirm(
   ToolFunc func,
   String help,
 ) async {
-  final permittedTools = Stores.tool.permittedTools.fetch();
+  final permittedTools = Stores.tool.permittedTools.get();
   if (permittedTools.contains(func.name)) return true;
 
   final remember = false.vn;
@@ -610,7 +616,7 @@ Future<bool> _askToolConfirm(
   );
   if (permitted == true && remember.value) {
     permittedTools.add(func.name);
-    Stores.tool.permittedTools.put(permittedTools);
+    Stores.tool.permittedTools.set(permittedTools);
   }
   return permitted == true;
 }

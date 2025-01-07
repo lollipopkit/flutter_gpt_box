@@ -87,6 +87,7 @@
   "privacyTip": "此 app 不搜集任何信息。",
   "profile": "配置",
   "promptsSettingsItem": "提示词",
+  "quickShareTip": "在其他设备上打开此链接以快速导入当前配置",
   "raw": "原始",
   "refresh": "刷新",
   "regExp": "正则表达式",

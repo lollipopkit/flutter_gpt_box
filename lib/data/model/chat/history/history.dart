@@ -166,7 +166,7 @@ enum ChatRole {
   bool get isTool => this == tool;
 
   String get localized => switch (this) {
-        user => Stores.setting.avatar.fetch(),
+        user => Stores.setting.avatar.get(),
         assist => '🤖',
         system => '⚙️',
         tool => '🛠️',

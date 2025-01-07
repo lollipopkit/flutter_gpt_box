@@ -20,13 +20,13 @@ class MyApp extends StatelessWidget {
     return ListenBuilder(
       listenable: RNodes.app,
       builder: () {
-        UIs.colorSeed = Color(Stores.setting.themeColorSeed.fetch());
-        final themeMode = switch (Stores.setting.themeMode.fetch()) {
+        UIs.colorSeed = Color(Stores.setting.themeColorSeed.get());
+        final themeMode = switch (Stores.setting.themeMode.get()) {
           1 => ThemeMode.light,
           2 => ThemeMode.dark,
           _ => ThemeMode.system,
         };
-        final locale = Stores.setting.locale.fetch();
+        final locale = Stores.setting.locale.get();
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'GPT Box',

@@ -288,6 +288,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get promptsSettingsItem => 'Подсказки';
 
   @override
+  String get quickShareTip => 'Откройте эту ссылку на другом устройстве, чтобы быстро импортировать текущую конфигурацию.';
+
+  @override
   String get raw => 'Необработанный';
 
   @override

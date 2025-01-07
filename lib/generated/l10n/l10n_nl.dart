@@ -288,6 +288,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get promptsSettingsItem => 'Prompts';
 
   @override
+  String get quickShareTip => 'Open deze link op een ander apparaat om de huidige configuratie snel te importeren.';
+
+  @override
   String get raw => 'Onbewerkt';
 
   @override

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gpt_box/core/util/sync.dart';
+import 'package:gpt_box/core/util/url.dart';
 //import 'package:flutter_tiktoken/flutter_tiktoken.dart';
 import 'package:gpt_box/data/model/chat/history/share.dart';
 import 'package:gpt_box/core/util/chat_title.dart';
@@ -24,7 +25,6 @@ import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
-import 'package:gpt_box/view/widget/audio.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:openai_dart/openai_dart.dart';
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage>
       },
     );
     _initUrlScheme();
-    AudioCard.listenAudioPlayer();
+    // AudioCard.listenAudioPlayer();
 
     /// Keep this here.
     /// - If there is not chat history, [_switchChat] will create one
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage>
     _historyRN.notify();
     //_removeDuplicateHistory(context);
 
-    if (Stores.setting.autoCheckUpdate.fetch()) {
+    if (Stores.setting.autoCheckUpdate.get()) {
       AppUpdateIface.doUpdate(
         url: Urls.appUpdateCfg,
         context: context,
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> _initUrlScheme() async {
-    DeepLinks.register(AppLink.handle);
+    DeepLinks.register(_AppLink.handle);
 
     if (isWeb) {
       final uri = await _appLink.getInitialLink();
