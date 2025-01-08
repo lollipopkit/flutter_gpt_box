@@ -512,19 +512,7 @@ void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
     return;
   }
 
-  final models = OpenAICfg.models.value;
-  final model = await context.showPickSingleDialog(
-    items: models,
-    initial: cfg.model,
-    title: l10n.model,
-  );
-  if (model == null) return;
-  final newModel = switch (_chatType.value) {
-    ChatType.text => cfg.copyWith(model: model),
-    ChatType.img => cfg.copyWith(imgModel: model),
-    //ChatType.audio => cfg.copyWith(speechModel: model),
-  };
-  OpenAICfg.setTo(newModel);
+  await OpenAICfg.showPickModelDialog(context);
 }
 
 // /// The chat type is determined by the following order:
