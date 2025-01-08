@@ -109,7 +109,7 @@ final class ChatConfig {
   Map<String, dynamic> toJson() => _$ChatConfigToJson(this);
 
   /// Get share url.
-  /// 
+  ///
   /// eg.: lpkt.cn://gptbox/profile?params=...
   String get shareUrl {
     final jsonStr = json.encode(toJson());

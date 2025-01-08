@@ -118,8 +118,10 @@ enum ApiBalanceProvider {
   //    "success": true
   //  }
   Future<String> _refreshOneapi() async {
+    final uri = Uri.parse(OpenAICfg.current.url);
+    const path = '/api/user/self';
     final resp = await myDio.get(
-      '${OpenAICfg.current.url}/api/user/self',
+      '${uri.scheme}://${uri.host}$path',
       options: Options(
           headers: {'Authorization': 'Bearer ${OpenAICfg.current.key}'}),
     );
@@ -137,7 +139,9 @@ enum ApiBalanceProvider {
   //     "status": 1
   // }
   Future<String> _refreshChatanywhere() async {
-    final endpoint = '${OpenAICfg.current.url}/v1/query/balance';
+    final uri = Uri.parse(OpenAICfg.current.url);
+    const path = '/v1/query/balance';
+    final endpoint = 'https://${uri.host}$path';
     final resp = await myDio.post(
       endpoint,
       options: Options(headers: {'Authorization': OpenAICfg.current.key}),
