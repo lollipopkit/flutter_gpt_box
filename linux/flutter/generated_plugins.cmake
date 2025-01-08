@@ -6,7 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
   flutter_js
   gtk
-  screen_retriever
+  screen_retriever_linux
   url_launcher_linux
   window_manager
 )

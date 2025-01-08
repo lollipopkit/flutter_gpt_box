@@ -200,7 +200,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
       context.showSnackBar('Invalid color code: $s');
       return;
     }
-    _setStore.themeColorSeed.set(color.value);
+    _setStore.themeColorSeed.put(color.value255);
     RNodes.app.notify(delay: true);
   }
 

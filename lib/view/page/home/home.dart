@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void _migrate() async {
-    final lastVer = await PrefProps.lastVer.get();
+    final lastVer = PrefProps.lastVer.get();
     const now = BuildData.build;
 
     await MigrationFns.appendV1ToUrl(lastVer, now, context: context);

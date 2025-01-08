@@ -221,7 +221,7 @@ class _ChatPageState extends State<_ChatPage>
   ) {
     final replayEnabled = chatItem.role.isUser;
     const size = 18.0;
-    final color = context.theme.iconTheme.color?.withOpacity(0.8);
+    final color = context.theme.iconTheme.color?.withValues(alpha: 0.8);
 
     return [
       Btn.icon(

@@ -12,7 +12,7 @@ Widget _buildIcloud(BuildContext context) {
             context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
             return false;
           }
-          BakSync.instance.sync(rs: BakSync.icloud);
+          BakSync.instance.sync(rs: icloud);
           return true;
         },
       ),

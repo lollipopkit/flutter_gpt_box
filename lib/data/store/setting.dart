@@ -59,7 +59,7 @@ class SettingStore extends HiveStore {
   late final scrollSwitchChat = propertyDefault('scrollSwitchChat', isMobile);
 
   /// {width}x{height}
-  late final windowSize = property<String>('windowSize');
+  late final windowSize = propertyDefault('windowSize', '');
 
   late final avatar = propertyDefault('avatar', '🧐');
 

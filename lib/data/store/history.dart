@@ -63,11 +63,9 @@ class HistoryStore extends HiveStore {
 
   void put(ChatHistory history, [bool update = true]) {
     box.put(history.id, history);
-    if (update) updateLastUpdateTs();
   }
 
   void delete(String id) {
     box.delete(id);
-    updateLastUpdateTs();
   }
 }

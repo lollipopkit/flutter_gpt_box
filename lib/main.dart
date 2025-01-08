@@ -84,7 +84,7 @@ Future<void> _initAppComponents() async {
   final size = sets.windowSize;
   SystemUIs.initDesktopWindow(
     hideTitleBar: sets.hideTitleBar.get(),
-    size: size.get()?.toSize(),
+    size: size.get().toSize(),
     listener: WindowSizeListener(size),
   );
 

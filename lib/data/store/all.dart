@@ -21,16 +21,14 @@ abstract final class Stores {
     await Future.wait(all.map((e) => e.init()));
   }
 
-  static DateTime? get lastModTime {
-    DateTime? lastModTime_;
+  static int get lastModTime {
+    var lastModTime = DateTime.now().millisecondsSinceEpoch;
     for (final store in all) {
-      final last = store.lastUpdateTs;
-      if (last != null) {
-        if (lastModTime_ == null || lastModTime_.isBefore(last)) {
-          lastModTime_ = last;
-        }
+      final last = store.lastUpdateTs?.millisecondsSinceEpoch ?? 0;
+      if (last > lastModTime) {
+        lastModTime = last;
       }
     }
-    return lastModTime_;
+    return lastModTime;
   }
 }

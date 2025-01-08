@@ -70,18 +70,18 @@ class Backup implements Mergeable {
     return Backup.fromJson(json.decode(raw));
   }
 
-  static Backup loadFromStore() {
+  static Future<Backup> loadFromStore() async {
     return Backup(
       version: validVer,
-      lastModTime: Stores.lastModTime?.millisecondsSinceEpoch ?? 0,
+      lastModTime: Stores.lastModTime,
       history: Stores.history.fetchAll().values.toList(),
       configs: Stores.config.fetchAll().values.toList(),
-      tools: Stores.tool.getAllMap(),
+      tools: await Stores.tool.getAllMap(),
     );
   }
 
   static Future<String> backup() async {
-    final bak = Backup.loadFromStore();
+    final bak = await Backup.loadFromStore();
     return json.encode(bak);
   }
 
@@ -91,7 +91,7 @@ class Backup implements Mergeable {
 
   @override
   Future<void> merge({bool force = false}) async {
-    final curTime = Stores.lastModTime?.millisecondsSinceEpoch ?? 0;
+    final curTime = Stores.lastModTime;
     final bakTime = lastModTime;
     final override = force || curTime < bakTime;
     if (!override) {

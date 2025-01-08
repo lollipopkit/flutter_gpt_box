@@ -4,12 +4,17 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/app/backup.dart';
 import 'package:gpt_box/data/store/all.dart';
 
+final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
+
 final class BakSync extends SyncIface {
   const BakSync._() : super();
 
   static const instance = BakSync._();
 
-  static final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
+  @override
+  void init() {
+    Webdav.shared.prefix = 'gptbox/';
+  }
 
   @override
   Future<void> saveToFile() => Backup.backupToFile();
@@ -24,12 +29,10 @@ final class BakSync extends SyncIface {
 
   @override
   RemoteStorage? get remoteStorage {
-    Webdav.shared.prefix = 'gptbox/';
-
-    final icloudEnabled = _set.icloudSync.get();
+    final icloudEnabled = _set.icloudSync.fetch();
     if (icloudEnabled) return icloud;
 
-    final webdavEnabled = _set.webdavSync.get();
+    final webdavEnabled = _set.webdavSync.fetch();
     if (webdavEnabled) return Webdav.shared;
 
     return null;
