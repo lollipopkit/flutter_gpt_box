@@ -9,7 +9,7 @@ final class ProfilePage extends StatefulWidget {
 
 final class _ProfilePageState extends State<ProfilePage>
     with AutomaticKeepAliveClientMixin {
-  final _cfgRN = RNode();
+  final _cfgRN = OpenAICfg.vn;
 
   @override
   void initState() {
@@ -294,56 +294,7 @@ final class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Future<String?> _showPickModelDialog(String title, String val) async {
-    if (OpenAICfg.current.key.isEmpty) {
-      context.showRoundDialog(
-        title: l10n.attention,
-        child: Text(l10n.needOpenAIKey),
-        actions: Btnx.oks,
-      );
-      return null;
-    }
-
-    return context.showPickSingleDialog(
-      items: OpenAICfg.models.value,
-      initial: val,
-      title: title,
-      actions: [
-        TextButton(
-          onPressed: () async {
-            context.pop();
-            await context.showLoadingDialog(
-                fn: () => OpenAICfg.updateModels(force: true));
-            _showPickModelDialog(title, val);
-          },
-          child: Text(l10n.refresh),
-        ),
-        TextButton(
-          onPressed: () {
-            void onSave(String s) {
-              context.pop();
-              OpenAICfg.setTo(OpenAICfg.current.copyWith(model: s));
-              _cfgRN.notify();
-            }
-
-            context.pop();
-            final ctrl = TextEditingController();
-            context.showRoundDialog(
-              title: l10n.custom,
-              child: Input(
-                controller: ctrl,
-                autoFocus: true,
-                onSubmitted: (s) => onSave(s),
-              ),
-              actions: Btn.ok(onTap: () => onSave(ctrl.text)).toList,
-            );
-          },
-          child: Text(l10n.custom),
-        ),
-      ],
-    );
-  }
-
+  
   Widget _buildOpenAIChatModel() {
     final cfg = OpenAICfg.current;
     final val = cfg.model;
@@ -351,12 +302,8 @@ final class _ProfilePageState extends State<ProfilePage>
       leading: const Icon(Icons.chat),
       title: Text(l10n.model),
       trailing: Text(val, style: UIs.text13Grey),
-      onTap: () async {
-        final model = await _showPickModelDialog(l10n.model, val);
-        if (model != null) {
-          OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model));
-          _cfgRN.notify();
-        }
+      onTap: () {
+        OpenAICfg.showPickModelDialog(context);
       },
     );
   }
