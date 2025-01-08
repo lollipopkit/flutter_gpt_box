@@ -75,16 +75,12 @@ android {
 
         debug {
             applicationIdSuffix '.debug'
-            resValue "string", "app_name", "GPTBox-dbg"
+            resValue "string", "app_name", "GPTBoxD"
         }
 
         profile {
             applicationIdSuffix '.debug'
-            resValue "string", "app_name", "GPTBox-dbg"
-        }
-
-        release {
-            resValue "string", "app_name", "GPT Box"
+            resValue "string", "app_name", "GPTBoxP"
         }
     }
 }

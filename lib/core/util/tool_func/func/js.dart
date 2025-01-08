@@ -25,7 +25,7 @@
 //     final scripts = Stores.tool.jsScripts;
 //     final names = scripts.keys.join('\n');
 //     return '''
-// This tool has a quickjs runtime, you can generate some JS code to run, 
+// This tool has a quickjs runtime, you can generate some JS code to run,
 // like calculation and etc.
 
 // ${names.isEmpty ? '' : "Also, there are some users' scripts that can be run in this tool:\n$names"}

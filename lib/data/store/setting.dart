@@ -25,9 +25,12 @@ class SettingStore extends HiveStore {
   /// Webdav sync
   late final webdavSync =
       propertyDefault('webdavSync', false, updateLastModified: false);
-  late final webdavUrl = propertyDefault('webdavUrl', '', updateLastModified: false);
-  late final webdavUser = propertyDefault('webdavUser', '', updateLastModified: false);
-  late final webdavPwd = propertyDefault('webdavPwd', '', updateLastModified: false);
+  late final webdavUrl =
+      propertyDefault('webdavUrl', '', updateLastModified: false);
+  late final webdavUser =
+      propertyDefault('webdavUser', '', updateLastModified: false);
+  late final webdavPwd =
+      propertyDefault('webdavPwd', '', updateLastModified: false);
 
   /// Only valid on iOS and macOS
   late final icloudSync =
@@ -41,7 +44,8 @@ class SettingStore extends HiveStore {
 
   // late final replay = property('replay', true);
 
-  late final cupertinoRoute = propertyDefault('cupertinoRoute', isIOS || isMacOS);
+  late final cupertinoRoute =
+      propertyDefault('cupertinoRoute', isIOS || isMacOS);
 
   late final hideTitleBar = propertyDefault('hideTitleBar', isDesktop);
 

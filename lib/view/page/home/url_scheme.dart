@@ -1,6 +1,5 @@
 part of 'home.dart';
 
-
 extension _AppLink on AppLink {
   /// example: lpkt.cn://gptbox/PATH?KEY=VAL
   static bool? handle(Uri uri, [BuildContext? context]) {
