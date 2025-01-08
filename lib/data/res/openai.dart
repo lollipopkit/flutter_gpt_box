@@ -9,7 +9,7 @@ import 'package:gpt_box/data/store/all.dart';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:dio/dio.dart';
 
-abstract final class OpenAICfg {
+abstract final class Cfg {
   static OpenAIClient? client;
   static final models = <String>[].vn;
 
@@ -90,7 +90,7 @@ abstract final class OpenAICfg {
   /// 
   /// Return the model name if any model is picked, otherwise return null.
   static Future<void> showPickModelDialog(BuildContext context) async {
-    if (OpenAICfg.current.key.isEmpty) {
+    if (Cfg.current.key.isEmpty) {
       context.showRoundDialog(
         title: l10n.attention,
         child: Text(l10n.needOpenAIKey),
@@ -100,15 +100,15 @@ abstract final class OpenAICfg {
     }
 
     final model = await context.showPickSingleDialog(
-      items: OpenAICfg.models.value,
-      initial: OpenAICfg.current.model,
+      items: Cfg.models.value,
+      initial: Cfg.current.model,
       title: l10n.model,
       actions: [
         TextButton(
           onPressed: () async {
             context.pop();
             await context.showLoadingDialog(
-                fn: () => OpenAICfg.updateModels(force: true),);
+                fn: () => Cfg.updateModels(force: true),);
             await showPickModelDialog(context);
           },
           child: Text(l10n.refresh),
@@ -117,7 +117,7 @@ abstract final class OpenAICfg {
           onPressed: () {
             void onSave(String s) {
               context.pop();
-              OpenAICfg.setTo(OpenAICfg.current.copyWith(model: s));
+              Cfg.setTo(Cfg.current.copyWith(model: s));
             }
 
             context.pop();
@@ -137,7 +137,7 @@ abstract final class OpenAICfg {
       ],
     );
     if (model == null) return;
-    OpenAICfg.setTo(OpenAICfg.current.copyWith(model: model));
+    Cfg.setTo(Cfg.current.copyWith(model: model));
     
   }
 
@@ -183,7 +183,7 @@ abstract final class _ModelsCacher {
       if (models_ != null) return models_;
     }
 
-    final endpoint = OpenAICfg.current.url;
+    final endpoint = Cfg.current.url;
     // For most compatibility, use dio instead of openai_dart
     final url = switch (endpoint) {
       _ when endpoint.startsWith('https://api.deepseek.com/beta') => 'https://api.deepseek.com/v1/models',
@@ -192,7 +192,7 @@ abstract final class _ModelsCacher {
     final val = await myDio.get(
       url,
       options: Options(
-        headers: {'Authorization': 'Bearer ${OpenAICfg.current.key}'},
+        headers: {'Authorization': 'Bearer ${Cfg.current.key}'},
       ),
     );
     final strs = _decodeModels(val, endpoint);

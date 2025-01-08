@@ -33,8 +33,8 @@ abstract final class MigrationFns {
         url: cfg.url.endsWith('/') ? '${cfg.url}v1' : '${cfg.url}/v1',
       );
       Stores.config.put(newCfg);
-      if (OpenAICfg.current.id == cfg.id) {
-        OpenAICfg.setTo(newCfg);
+      if (Cfg.current.id == cfg.id) {
+        Cfg.setTo(newCfg);
       }
       dprint('Migration: append /v1 to ${cfg.url}');
     }

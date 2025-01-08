@@ -8,7 +8,7 @@ abstract final class ApiBalance {
 
   static Future<void> refresh() async {
     balance.value = _balance;
-    final provider = ApiBalanceProvider.fromEndpoint(OpenAICfg.current.url);
+    final provider = ApiBalanceProvider.fromEndpoint(Cfg.current.url);
     try {
       final newBalance = await provider?.refresh();
       balance.value = ApiBalanceState(loading: false, state: newBalance);
@@ -78,7 +78,7 @@ enum ApiBalanceProvider {
     final resp = await myDio.get(
       endpoint,
       options: Options(headers: {
-        'Authorization': 'Bearer ${OpenAICfg.current.key}',
+        'Authorization': 'Bearer ${Cfg.current.key}',
       }),
     );
     final data = resp.data as Map<String, dynamic>;
@@ -118,12 +118,12 @@ enum ApiBalanceProvider {
   //    "success": true
   //  }
   Future<String> _refreshOneapi() async {
-    final uri = Uri.parse(OpenAICfg.current.url);
+    final uri = Uri.parse(Cfg.current.url);
     const path = '/api/user/self';
     final resp = await myDio.get(
       '${uri.scheme}://${uri.host}$path',
       options: Options(
-          headers: {'Authorization': 'Bearer ${OpenAICfg.current.key}'}),
+          headers: {'Authorization': 'Bearer ${Cfg.current.key}'}),
     );
     final data = resp.data as Map<String, dynamic>;
     final quota = data['data']['quota'] as int? ?? 0;
@@ -139,12 +139,12 @@ enum ApiBalanceProvider {
   //     "status": 1
   // }
   Future<String> _refreshChatanywhere() async {
-    final uri = Uri.parse(OpenAICfg.current.url);
+    final uri = Uri.parse(Cfg.current.url);
     const path = '/v1/query/balance';
     final endpoint = 'https://${uri.host}$path';
     final resp = await myDio.post(
       endpoint,
-      options: Options(headers: {'Authorization': OpenAICfg.current.key}),
+      options: Options(headers: {'Authorization': Cfg.current.key}),
     );
     final data = resp.data as Map<String, dynamic>;
     final total = data['balanceTotal'] as num? ?? 0;

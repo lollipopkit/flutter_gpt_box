@@ -9,7 +9,7 @@ final class ProfilePage extends StatefulWidget {
 
 final class _ProfilePageState extends State<ProfilePage>
     with AutomaticKeepAliveClientMixin {
-  final _cfgRN = OpenAICfg.vn;
+  final _cfgRN = Cfg.vn;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ final class _ProfilePageState extends State<ProfilePage>
     return ListenBuilder(
       listenable: _cfgRN,
       builder: () {
-        final cfg = OpenAICfg.current;
+        final cfg = Cfg.current;
         final children = [
           _buildSwitchCfg(cfg),
           _buildBalance(),
@@ -73,7 +73,7 @@ final class _ProfilePageState extends State<ProfilePage>
     return ListenBuilder(
       listenable: _cfgRN,
       builder: () {
-        final cfg = OpenAICfg.current;
+        final cfg = Cfg.current;
         final children = [
           _buildQuickShare(),
           _buildPrompt(cfg.prompt),
@@ -109,7 +109,7 @@ final class _ProfilePageState extends State<ProfilePage>
                       _cfgRN.notify();
                       context.pop();
                       if (cfg.id == cfg.id) {
-                        OpenAICfg.switchToDefault(context);
+                        Cfg.switchToDefault(context);
                         _cfgRN.notify();
                       }
                     },
@@ -136,7 +136,7 @@ final class _ProfilePageState extends State<ProfilePage>
                     if (name.isEmpty) return;
                     final newCfg = cfg.copyWith(name: name);
                     newCfg.save();
-                    OpenAICfg.setTo(newCfg);
+                    Cfg.setTo(newCfg);
                     _cfgRN.notify();
                     context.pop();
                   },
@@ -159,7 +159,7 @@ final class _ProfilePageState extends State<ProfilePage>
               );
 
               if (newCfg == null) return;
-              OpenAICfg.setTo(newCfg);
+              Cfg.setTo(newCfg);
               _cfgRN.notify();
             },
           ),
@@ -186,14 +186,14 @@ final class _ProfilePageState extends State<ProfilePage>
                   key = clipboardData;
                 }
               }
-              final newCfg = OpenAICfg.current.copyWith(
+              final newCfg = Cfg.current.copyWith(
                 id: shortid.generate(),
                 name: ctrl.text,
                 key: key,
                 url: url,
               );
               newCfg.save();
-              OpenAICfg.setTo(newCfg);
+              Cfg.setTo(newCfg);
               _cfgRN.notify();
             },
           ),
@@ -228,7 +228,7 @@ final class _ProfilePageState extends State<ProfilePage>
           actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
-        OpenAICfg.setTo(OpenAICfg.current.copyWith(key: result));
+        Cfg.setTo(Cfg.current.copyWith(key: result));
         _cfgRN.notify();
       },
     );
@@ -269,7 +269,7 @@ final class _ProfilePageState extends State<ProfilePage>
           if (sure != true) return;
         }
 
-        OpenAICfg.setTo(OpenAICfg.current.copyWith(url: result));
+        Cfg.setTo(Cfg.current.copyWith(url: result));
         _cfgRN.notify();
       },
     );
@@ -277,7 +277,7 @@ final class _ProfilePageState extends State<ProfilePage>
 
   Widget _buildOpenAIModels(ChatConfig cfg) {
     return ValBuilder(
-      listenable: OpenAICfg.models,
+      listenable: Cfg.models,
       builder: (models) {
         return _buildOpenAIChatModel();
         // return ExpandTile(
@@ -296,14 +296,14 @@ final class _ProfilePageState extends State<ProfilePage>
 
   
   Widget _buildOpenAIChatModel() {
-    final cfg = OpenAICfg.current;
+    final cfg = Cfg.current;
     final val = cfg.model;
     return ListTile(
       leading: const Icon(Icons.chat),
       title: Text(l10n.model),
       trailing: Text(val, style: UIs.text13Grey),
       onTap: () {
-        OpenAICfg.showPickModelDialog(context);
+        Cfg.showPickModelDialog(context);
       },
     );
   }
@@ -387,7 +387,7 @@ final class _ProfilePageState extends State<ProfilePage>
           actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
-        OpenAICfg.setTo(OpenAICfg.current.copyWith(prompt: result));
+        Cfg.setTo(Cfg.current.copyWith(prompt: result));
         _cfgRN.notify();
       },
     );
@@ -410,7 +410,7 @@ final class _ProfilePageState extends State<ProfilePage>
           actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
-        OpenAICfg.setTo(OpenAICfg.current.copyWith(genTitlePrompt: result));
+        Cfg.setTo(Cfg.current.copyWith(genTitlePrompt: result));
         _cfgRN.notify();
       },
     );
@@ -439,7 +439,7 @@ final class _ProfilePageState extends State<ProfilePage>
           context.showSnackBar('Invalid number: $result');
           return;
         }
-        OpenAICfg.setTo(OpenAICfg.current.copyWith(historyLen: newVal));
+        Cfg.setTo(Cfg.current.copyWith(historyLen: newVal));
         _cfgRN.notify();
       },
     );
@@ -451,7 +451,7 @@ final class _ProfilePageState extends State<ProfilePage>
       title: TipText(libL10n.share, l10n.quickShareTip),
       trailing: const Icon(Icons.keyboard_arrow_right),
       onTap: () {
-        final url = OpenAICfg.current.shareUrl;
+        final url = Cfg.current.shareUrl;
         if (url.isEmpty) return;
         Share.share(url);
       },

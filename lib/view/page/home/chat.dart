@@ -137,13 +137,10 @@ class _ChatPageState extends State<_ChatPage>
           role: chatItem.role,
           loading: false,
         ),
-      ChatRole.tool || ChatRole.assist => ListenBuilder(
-          listenable: _loadingChatIdRN,
-          builder: () {
-            final isWorking = _loadingChatIds.contains(chatItem.id);
-            return ChatRoleTitle(role: chatItem.role, loading: isWorking);
-          },
-        ),
+      ChatRole.tool || ChatRole.assist => _loadingChatIds.listenVal((chats) {
+          final isWorking = chats.contains(chatItem.id);
+          return ChatRoleTitle(role: chatItem.role, loading: isWorking);
+        }),
     };
 
     final child = Padding(
@@ -233,10 +230,8 @@ class _ChatPageState extends State<_ChatPage>
         icon: Icon(BoxIcons.bxs_crop, size: size, color: color),
       ),
       if (replayEnabled)
-        ListenBuilder(
-          listenable: _sendBtnRN,
-          builder: () {
-            final isWorking = _loadingChatIds.contains(_curChatId);
+        _loadingChatIds.listenVal((chats) {
+            final isWorking = chats.contains(_curChatId);
             if (isWorking) return UIs.placeholder;
             return Btn.icon(
               onTap: () {
@@ -292,10 +287,8 @@ class _ChatPageState extends State<_ChatPage>
         icon: const Icon(BoxIcons.bxs_crop),
       ),
       if (replayEnabled)
-        ListenBuilder(
-          listenable: _sendBtnRN,
-          builder: () {
-            final isWorking = _loadingChatIds.contains(_curChatId);
+        _loadingChatIds.listenVal((chats) {
+            final isWorking = chats.contains(_curChatId);
             if (isWorking) return UIs.placeholder;
             return Btn.tile(
               onTap: () {

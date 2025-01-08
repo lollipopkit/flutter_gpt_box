@@ -87,7 +87,7 @@ extension ChatHistoryItemX on ChatHistoryItem {
   /// - If [asStr], return [ChatCompletionMessage] with [String] content.
   /// It's for deepseek's api compatibility.
   OaiHistoryItem toOpenAI({bool? asStr}) {
-    final asStr_ = asStr ?? OpenAICfg.current.model.contains('deepseek');
+    final asStr_ = asStr ?? Cfg.current.model.contains('deepseek');
     switch (role) {
       case ChatRole.user:
         final hasImg = content.any((e) => e.isImg);
