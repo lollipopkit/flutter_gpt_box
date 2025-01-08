@@ -23,7 +23,6 @@
   - 加载历史聊天作为上下文
   - 请求 GPT 添加记忆
   - 查看 Http 链接的内容。[视频](https://cdn.lpkt.cn/gptbox/screenshot/tools.mp4)
-  - 本地运行 JS 脚本
 - 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
 - 文本 / 图片 / 音频聊天
 - 本地化 (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)

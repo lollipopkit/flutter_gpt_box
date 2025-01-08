@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   app_links
   file_selector_windows
   flutter_inappwebview_windows
-  flutter_js
   local_auth_windows
   screen_retriever_windows
   share_plus
