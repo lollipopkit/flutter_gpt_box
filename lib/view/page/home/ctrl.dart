@@ -231,7 +231,7 @@ void _onShareChat(BuildContext context) async {
     );
     compressImg = Stores.setting.compressImg.get();
     if (compressImg) {
-      return await ImageUtil.compress(raw);
+      return await ImageUtil.compress(raw, mime: 'image/png');
     }
     return raw;
   });
