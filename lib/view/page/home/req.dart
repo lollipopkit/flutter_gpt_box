@@ -477,7 +477,7 @@ Future<void> _genChatTitle(
   void onErr(Object e, StackTrace s) {
     Loggers.app.warning('Gen title: $e');
     _historyRNMap[chatId]?.notify();
-    if (chatId == _curChatId) _appbarTitleRN.notify();
+    if (chatId == _curChatId.value) _appbarTitleRN.notify();
   }
 
   try {
@@ -506,7 +506,7 @@ Future<void> _genChatTitle(
       final ne = entity.copyWith(name: title)..save();
       _allHistories[chatId] = ne;
       _historyRNMap[chatId]?.notify();
-      if (chatId == _curChatId) _appbarTitleRN.notify();
+      if (chatId == _curChatId.value) _appbarTitleRN.notify();
     }
   } catch (e, s) {
     onErr(e, s);

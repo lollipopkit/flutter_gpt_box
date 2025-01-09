@@ -103,6 +103,6 @@ final class _ChatSettingsState extends State<_ChatSettings> {
       settings: settings.value,
     );
     newOne.save();
-    _allHistories[_curChatId] = newOne;
+    _allHistories[_curChatId.value] = newOne;
   }
 }

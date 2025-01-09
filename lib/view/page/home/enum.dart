@@ -23,7 +23,7 @@ enum HomePageEnum {
               child: display
                   ? FloatingActionButton(
                       key: const Key('locate-history-btn'),
-                      onPressed: () => _gotoHistory(_curChatId),
+                      onPressed: () => _gotoHistory(_curChatId.value),
                       mini: true,
                       child: const Icon(Icons.gps_fixed, size: 17),
                     )

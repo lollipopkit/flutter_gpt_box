@@ -10,7 +10,7 @@ void _switchChat([String? id]) {
     return;
   }
 
-  _curChatId = id;
+  _curChatId.value = id;
   _chatItemRNMap.clear();
   _chatRN.notify();
   _appbarTitleRN.notify();
@@ -31,7 +31,7 @@ void _switchPreviousChat() {
       _switchChat(iter.current);
       return;
     }
-    if (iter.current == _curChatId) next = true;
+    if (iter.current == _curChatId.value) next = true;
   }
 }
 
@@ -39,7 +39,7 @@ void _switchNextChat() {
   final iter = _allHistories.keys.iterator;
   String? last;
   while (iter.moveNext()) {
-    if (iter.current == _curChatId) {
+    if (iter.current == _curChatId.value) {
       if (last != null) {
         _switchChat(last);
         return;
@@ -91,8 +91,8 @@ void _onTapDelChatItem(
   );
   if (result != true) return;
   chatItems.remove(chatItem);
-  _storeChat(chatId);
-  _historyRNMap[chatId]?.notify();
+  _storeChat(chatId.value);
+  _historyRNMap[chatId.value]?.notify();
   _chatRN.notify();
 }
 
@@ -140,7 +140,7 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
 
 void _onDeleteChat(String chatId) {
   Stores.history.delete(chatId);
-  if (_curChatId == chatId) {
+  if (_curChatId.value == chatId) {
     _switchPreviousChat();
   }
   final rm = _allHistories.remove(chatId);
@@ -403,7 +403,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
 void _locateHistoryListener() => Funcs.throttle(
       () {
         // Calculate _curChatId is visible or not
-        final idx = _allHistories.keys.toList().indexOf(_curChatId);
+        final idx = _allHistories.keys.toList().indexOf(_curChatId.value);
         final offset = _historyScrollCtrl.offset;
         final height = _historyScrollCtrl.position.viewportDimension;
         final visible =
@@ -446,7 +446,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
   void onSubmit() {
     chatItem.content.clear();
     chatItem.content.add(ChatContent.text(ctrl.text));
-    _storeChat(_curChatId);
+    _storeChat(_curChatId.value);
     _chatRN.notify();
     context.pop();
   }
@@ -470,7 +470,7 @@ void _autoScroll(String chatId) {
   if (Stores.setting.scrollBottom.get()) {
     Funcs.throttle(() {
       // Only scroll to bottom when current chat is the working chat
-      final isCurrentChat = chatId == _curChatId;
+      final isCurrentChat = chatId == _curChatId.value;
       if (isCurrentChat) {
         _scrollBottom();
       }

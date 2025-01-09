@@ -27,8 +27,12 @@ final _chatFabRN = RNode();
 final _homeBottomRN = RNode();
 
 var _allHistories = <String, ChatHistory>{};
-var _curChatId = 'fake-non-exist-id';
-ChatHistory? get _curChat => _allHistories[_curChatId];
+ChatHistory? _curChat;
+final _curChatId = 'fake-non-exist-id'.vn..addListener(_onCurChatIdChanged);
+void _onCurChatIdChanged() {
+  _curChat = _allHistories[_curChatId.value];
+  _chatRN.notify();
+}
 
 /// [ChatHistory.id] or [ChatHistoryItem.id]
 final _loadingChatIds = <String>{}.vn;

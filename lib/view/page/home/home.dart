@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage>
         if (context.stillOnPage != true) return false;
 
         if (_inputCtrl.text.isEmpty) return false;
-        _onCreateRequest(context, _curChatId);
+        _onCreateRequest(context, _curChatId.value);
         return true;
       },
     );
