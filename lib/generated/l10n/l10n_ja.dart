@@ -7,8 +7,7 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
-  String get apiUrlV1Tip =>
-      'https://api.openai.com/v1に似ています（最後の /v1 が必要）。このURLを引き続き使用しますか？';
+  String get apiUrlV1Tip => 'https://api.openai.com/v1に似ています（最後の /v1 が必要）。このURLを引き続き使用しますか？';
 
   @override
   String get assistant => 'アシスタント';
@@ -41,8 +40,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get calcTokenLen => 'トークン長を計算';
 
   @override
-  String get changeModelTip =>
-      '異なるキーで利用可能なモデルリストが異なる場合があります。メカニズムがわからない場合やエラーが発生する場合は、モデルを再設定することをお勧めします。';
+  String get changeModelTip => '異なるキーで利用可能なモデルリストが異なる場合があります。メカニズムがわからない場合やエラーが発生する場合は、モデルを再設定することをお勧めします。';
 
   @override
   String get chat => 'チャット';
@@ -143,8 +141,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get headTailMode => 'ヘッドテールモード';
 
   @override
-  String get headTailModeTip =>
-      '`プロンプト+最初のユーザーメッセージ+現在の入力`のみをコンテキストとして送信します。\n\nこれは会話の翻訳に特に有用です（トークンを節約できます）。';
+  String get headTailModeTip => '`プロンプト+最初のユーザーメッセージ+現在の入力`のみをコンテキストとして送信します。\n\nこれは会話の翻訳に特に有用です（トークンを節約できます）。';
 
   @override
   String get help => 'ヘルプ';
