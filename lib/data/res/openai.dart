@@ -182,7 +182,8 @@ abstract final class _ModelsCacher {
       if (models_ != null) return models_;
     }
 
-    final endpoint = Cfg.current.url;
+    final uri = Uri.parse(Cfg.current.url);
+    final endpoint = '${uri.scheme}://${uri.host}';
     // For most compatibility, use dio instead of openai_dart
     final url = switch (endpoint) {
       _ when endpoint.startsWith('https://api.deepseek.com/beta') =>
