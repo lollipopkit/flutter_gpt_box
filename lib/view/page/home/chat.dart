@@ -23,7 +23,8 @@ class _ChatPageState extends State<_ChatPage>
   Widget _buildFAB() {
     return AutoHide(
       key: _chatFabAutoHideKey,
-      controller: _chatScrollCtrl,
+      scrollController: _chatScrollCtrl,
+      hideController: _autoHideCtrl,
       direction: AxisDirection.right,
       offset: 75,
       child: ListenBuilder(

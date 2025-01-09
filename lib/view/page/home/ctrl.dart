@@ -190,7 +190,7 @@ void _onStopStreamSub(String chatId) async {
   _chatStreamSubs[chatId]?.cancel();
   _loadingChatIds.value.remove(chatId);
   _loadingChatIds.notify();
-  _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
+  _autoHideCtrl.autoHideEnabled = true;
 }
 
 void _onShareChat(BuildContext context) async {
@@ -610,8 +610,4 @@ Future<bool> _askToolConfirm(
 
 void _onChatScroll() {
   Funcs.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
-}
-
-void _onIsWideChanged() {
-  _curPage.value = HomePageEnum.chat;
 }

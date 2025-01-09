@@ -97,7 +97,7 @@ void _onCreateRequest(BuildContext context, String chatId) async {
 
   _loadingChatIds.value.add(chatId);
   _loadingChatIds.notify();
-  _chatFabAutoHideKey.currentState?.autoHideEnabled = false;
+  _autoHideCtrl.autoHideEnabled = false;
 
   return await _onCreateText(context, chatId, input, _filePicked.value?.url);
 }
@@ -242,7 +242,7 @@ Future<void> _onCreateText(
         _onStopStreamSub(chatId);
         _loadingChatIds.value.remove(chatId);
         _loadingChatIds.notify();
-        _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
+        _autoHideCtrl.autoHideEnabled = true;
 
         _storeChat(chatId);
         // Wait for db to store the chat
@@ -569,7 +569,7 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   _onStopStreamSub(chatId);
   _loadingChatIds.value.remove(chatId);
   _loadingChatIds.notify();
-  _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
+  _autoHideCtrl.autoHideEnabled = true;
 
   final msg = '$e\n\n```$s```';
   final workingChat = _allHistories[chatId];

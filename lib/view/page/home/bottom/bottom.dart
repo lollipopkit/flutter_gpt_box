@@ -32,7 +32,8 @@ final class _HomeBottomState extends State<_HomeBottom> {
             boxShadow: RNodes.dark.value ? _boxShadow : _boxShadowDark,
           ),
           child: AnimatedPadding(
-            padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.viewInsetsOf(context).bottom),
             curve: Curves.fastEaseInToSlowEaseOut,
             duration: Durations.short1,
             child: Column(
@@ -57,12 +58,14 @@ final class _HomeBottomState extends State<_HomeBottom> {
                       tooltip: l10n.newChat,
                     ),
                     IconButton(
-                      onPressed: () => _onTapRenameChat(_curChatId.value, context),
+                      onPressed: () =>
+                          _onTapRenameChat(_curChatId.value, context),
                       icon: const Icon(Icons.edit, size: 19),
                       tooltip: l10n.rename,
                     ),
                     IconButton(
-                      onPressed: () => _onTapDeleteChat(_curChatId.value, context),
+                      onPressed: () =>
+                          _onTapDeleteChat(_curChatId.value, context),
                       icon: const Icon(Icons.delete, size: 19),
                       tooltip: l10n.delete,
                     ),
@@ -180,17 +183,19 @@ final class _HomeBottomState extends State<_HomeBottom> {
           buttonItems: buttonItems,
         );
       },
-      suffix: _loadingChatIds.listenVal((chats) {
-        final isWorking = chats.contains(_curChatId.value);
-        return isWorking
-            ? IconButton(
-                onPressed: () => _onStopStreamSub(_curChatId.value),
-                icon: const Icon(Icons.stop),
-              )
-            : IconButton(
-                onPressed: () => _onCreateRequest(context, _curChatId.value),
-                icon: const Icon(Icons.send, size: 19),
-              );
+      suffix: _curChatId.listenVal((chatId) {
+        return _loadingChatIds.listenVal((chats) {
+          final isWorking = chats.contains(chatId);
+          return isWorking
+              ? IconButton(
+                  onPressed: () => _onStopStreamSub(chatId),
+                  icon: const Icon(Icons.stop),
+                )
+              : IconButton(
+                  onPressed: () => _onCreateRequest(context, _curChatId.value),
+                  icon: const Icon(Icons.send, size: 19),
+                );
+        });
       }),
     );
   }

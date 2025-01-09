@@ -42,13 +42,16 @@ final _curPage = HomePageEnum.chat.vn;
 
 final _imeFocus = FocusNode();
 
-Size? _size;
+Size? _windowSize;
 final _isWide = false.vn..addListener(_onIsWideChanged);
+void _onIsWideChanged() {
+  _curPage.value = HomePageEnum.chat;
+}
 
-/// Set it as final, so we can scroll to it.
 /// Mobile has higher density.
 final _historyItemHeight = isDesktop ? 73.0 : 79.0;
-// The pixel tollerance
+
+/// The pixel tollerance
 final _historyLocateTollerance = _historyItemHeight / 3;
 
 const _durationShort = Durations.short4;
@@ -61,3 +64,5 @@ KeyboardCtrlListener? _keyboardSendListener;
 
 /// If current `ts > this + duration`, then no delete confirmation required.
 var _noChatDeleteConfirmTS = 0;
+
+final _autoHideCtrl = AutoHideController();
