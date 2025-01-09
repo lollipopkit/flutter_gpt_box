@@ -178,7 +178,7 @@ final class _ProfilePageState extends State<ProfilePage>
               );
               if (ok != true) return;
               final clipboardData = await Pfs.paste();
-              var (key, url) = ('', '');
+              var (key, url) = ('', ChatConfig.defaultUrl);
               if (clipboardData != null) {
                 if (clipboardData.startsWith('https://')) {
                   url = clipboardData;

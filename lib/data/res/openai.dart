@@ -182,12 +182,13 @@ abstract final class _ModelsCacher {
       if (models_ != null) return models_;
     }
 
-    final uri = Uri.parse(Cfg.current.url);
-    final endpoint = '${uri.scheme}://${uri.host}';
+    final endpoint = Cfg.current.url;
     // For most compatibility, use dio instead of openai_dart
     final url = switch (endpoint) {
-      _ when endpoint.startsWith('https://api.deepseek.com/beta') =>
+      _ when endpoint.startsWith('https://api.deepseek.com') =>
         'https://api.deepseek.com/v1/models',
+      _ when endpoint.startsWith('https://models.inference.ai.azure.com') =>
+        'https://models.inference.ai.azure.com/models',
       _ => '$endpoint/models',
     };
     final val = await myDio.get(
