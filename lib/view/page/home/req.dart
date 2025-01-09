@@ -545,11 +545,8 @@ void _onReplay({
   }
   chatHistory.items.removeRange(replayMsgIdx, chatHistory.items.length);
 
-  final text =
-      item.content.firstWhereOrNull((e) => e.type == ChatContentType.text)?.raw;
-  final img = item.content
-      .firstWhereOrNull((e) => e.type == ChatContentType.image)
-      ?.raw;
+  final text = item.content.firstWhereOrNull((e) => e.type.isText)?.raw;
+  final img = item.content.firstWhereOrNull((e) => e.type.isImage)?.raw;
 
   if (text == null) {
     final msg = 'Replay Chat($chatId) item($item) text is null';
@@ -559,7 +556,9 @@ void _onReplay({
   }
 
   _inputCtrl.text = text;
-  _filePicked.value = img != null ? await _FilePicked.fromUrl(img) : null;
+  await context.showLoadingDialog(fn: () async {
+    _filePicked.value = img != null ? await _FilePicked.fromUrl(img) : null;
+  });
 
   _onCreateRequest(context, chatId);
 }

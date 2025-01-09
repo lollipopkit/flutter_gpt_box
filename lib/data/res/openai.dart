@@ -52,7 +52,7 @@ abstract final class Cfg {
   /// Update models list
   /// - [force] force update, ignore cache
   /// - [diffUrl] abbreviation for `isDifferentUrl`.
-  /// if true, not set [models.value] to empty list if failed
+  /// if true, skip setting [models.value] to empty list if failed
   static Future<bool> updateModels({
     bool force = false,
     bool diffUrl = false,

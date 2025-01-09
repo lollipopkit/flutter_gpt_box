@@ -112,6 +112,10 @@ enum ChatContentType {
   @HiveField(2)
   image,
   ;
+
+  bool get isText => this == text;
+  bool get isAudio => this == audio;
+  bool get isImage => this == image;
 }
 
 @HiveType(typeId: 2)
