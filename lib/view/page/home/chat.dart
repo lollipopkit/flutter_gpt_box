@@ -138,7 +138,8 @@ class _ChatPageState extends State<_ChatPage>
           loading: false,
         ),
       ChatRole.tool || ChatRole.assist => _loadingChatIds.listenVal((chats) {
-          final isWorking = chats.contains(chatItem.id);
+          final isLast = chatItems.length - 1 == idx;
+          final isWorking = chats.contains(_curChatId) && isLast;
           return ChatRoleTitle(role: chatItem.role, loading: isWorking);
         }),
     };

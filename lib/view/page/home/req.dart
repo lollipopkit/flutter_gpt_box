@@ -551,7 +551,17 @@ void _onReplay({
       .firstWhereOrNull((e) => e.type == ChatContentType.image)
       ?.raw;
 
-  _onCreateText(context, chatId, text ?? '', img);
+  if (text == null) {
+    final msg = 'Replay Chat($chatId) item($item) text is null';
+    Loggers.app.warning(msg);
+    context.showSnackBar('${libL10n.fail}: $msg');
+    return;
+  }
+  
+  _inputCtrl.text = text;
+  _filePicked.value = img != null ? await _FilePicked.fromUrl(img) : null;
+
+  _onCreateRequest(context, chatId);
 }
 
 void _onErr(Object e, StackTrace s, String chatId, String action) {
