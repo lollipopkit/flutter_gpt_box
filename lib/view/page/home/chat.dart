@@ -233,18 +233,17 @@ class _ChatPageState extends State<_ChatPage>
       ),
       if (replayEnabled)
         _loadingChatIds.listenVal((chats) {
-            final isWorking = chats.contains(_curChatId.value);
-            if (isWorking) return UIs.placeholder;
-            return Btn.icon(
-              onTap: () {
-                context.pop();
-                _onTapReplay(context, _curChatId.value, chatItem);
-              },
-              text: l10n.replay,
-              icon: Icon(MingCute.refresh_4_line, size: size, color: color),
-            );
-          },
-        ),
+          final isWorking = chats.contains(_curChatId.value);
+          if (isWorking) return UIs.placeholder;
+          return Btn.icon(
+            onTap: () {
+              context.pop();
+              _onTapReplay(context, _curChatId.value, chatItem);
+            },
+            text: l10n.replay,
+            icon: Icon(MingCute.refresh_4_line, size: size, color: color),
+          );
+        }),
       if (replayEnabled)
         Btn.icon(
           onTap: () {
@@ -290,18 +289,17 @@ class _ChatPageState extends State<_ChatPage>
       ),
       if (replayEnabled)
         _loadingChatIds.listenVal((chats) {
-            final isWorking = chats.contains(_curChatId.value);
-            if (isWorking) return UIs.placeholder;
-            return Btn.tile(
-              onTap: () {
-                context.pop();
-                _onTapReplay(context, _curChatId.value, chatItem);
-              },
-              text: l10n.replay,
-              icon: const Icon(MingCute.refresh_4_line),
-            );
-          },
-        ),
+          final isWorking = chats.contains(_curChatId.value);
+          if (isWorking) return UIs.placeholder;
+          return Btn.tile(
+            onTap: () {
+              context.pop();
+              _onTapReplay(context, _curChatId.value, chatItem);
+            },
+            text: l10n.replay,
+            icon: const Icon(MingCute.refresh_4_line),
+          );
+        }),
       if (replayEnabled)
         Btn.tile(
           onTap: () {

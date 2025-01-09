@@ -557,7 +557,7 @@ void _onReplay({
     context.showSnackBar('${libL10n.fail}: $msg');
     return;
   }
-  
+
   _inputCtrl.text = text;
   _filePicked.value = img != null ? await _FilePicked.fromUrl(img) : null;
 

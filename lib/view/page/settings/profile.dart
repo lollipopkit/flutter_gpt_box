@@ -294,7 +294,6 @@ final class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  
   Widget _buildOpenAIChatModel() {
     final cfg = Cfg.current;
     final val = cfg.model;

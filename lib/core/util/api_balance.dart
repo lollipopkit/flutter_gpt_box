@@ -122,8 +122,7 @@ enum ApiBalanceProvider {
     const path = '/api/user/self';
     final resp = await myDio.get(
       '${uri.scheme}://${uri.host}$path',
-      options: Options(
-          headers: {'Authorization': 'Bearer ${Cfg.current.key}'}),
+      options: Options(headers: {'Authorization': 'Bearer ${Cfg.current.key}'}),
     );
     final data = resp.data as Map<String, dynamic>;
     final quota = data['data']['quota'] as int? ?? 0;

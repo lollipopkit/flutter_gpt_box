@@ -85,9 +85,9 @@ abstract final class Cfg {
   }
 
   /// Show the dialog to pick the model.
-  /// 
+  ///
   /// - [context] the context to show the dialog.
-  /// 
+  ///
   /// Return the model name if any model is picked, otherwise return null.
   static Future<void> showPickModelDialog(BuildContext context) async {
     if (Cfg.current.key.isEmpty) {
@@ -108,7 +108,8 @@ abstract final class Cfg {
           onPressed: () async {
             context.pop();
             await context.showLoadingDialog(
-                fn: () => Cfg.updateModels(force: true),);
+              fn: () => Cfg.updateModels(force: true),
+            );
             await showPickModelDialog(context);
           },
           child: Text(l10n.refresh),
@@ -138,9 +139,7 @@ abstract final class Cfg {
     );
     if (model == null) return;
     Cfg.setTo(Cfg.current.copyWith(model: model));
-    
   }
-
 
   static void switchToDefault(BuildContext context) {
     final cfg = _store.fetch(ChatConfig.defaultId);
@@ -186,7 +185,8 @@ abstract final class _ModelsCacher {
     final endpoint = Cfg.current.url;
     // For most compatibility, use dio instead of openai_dart
     final url = switch (endpoint) {
-      _ when endpoint.startsWith('https://api.deepseek.com/beta') => 'https://api.deepseek.com/v1/models',
+      _ when endpoint.startsWith('https://api.deepseek.com/beta') =>
+        'https://api.deepseek.com/v1/models',
       _ => '$endpoint/models',
     };
     final val = await myDio.get(
