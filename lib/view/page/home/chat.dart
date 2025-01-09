@@ -80,7 +80,7 @@ class _ChatPageState extends State<_ChatPage>
         final item = _curChat?.items;
         if (item == null) return UIs.placeholder;
         final listView = ListView.builder(
-          key: Key(_curChatId), // Used for animation
+          key: Key(_curChatId.value), // Used for animation
           controller: _chatScrollCtrl,
           padding: const EdgeInsets.all(7),
           physics: const AlwaysScrollableScrollPhysics(
@@ -139,7 +139,7 @@ class _ChatPageState extends State<_ChatPage>
         ),
       ChatRole.tool || ChatRole.assist => _loadingChatIds.listenVal((chats) {
           final isLast = chatItems.length - 1 == idx;
-          final isWorking = chats.contains(_curChatId) && isLast;
+          final isWorking = chats.contains(_curChatId.value) && isLast;
           return ChatRoleTitle(role: chatItem.role, loading: isWorking);
         }),
     };
@@ -232,12 +232,12 @@ class _ChatPageState extends State<_ChatPage>
       ),
       if (replayEnabled)
         _loadingChatIds.listenVal((chats) {
-            final isWorking = chats.contains(_curChatId);
+            final isWorking = chats.contains(_curChatId.value);
             if (isWorking) return UIs.placeholder;
             return Btn.icon(
               onTap: () {
                 context.pop();
-                _onTapReplay(context, _curChatId, chatItem);
+                _onTapReplay(context, _curChatId.value, chatItem);
               },
               text: l10n.replay,
               icon: Icon(MingCute.refresh_4_line, size: size, color: color),
@@ -289,12 +289,12 @@ class _ChatPageState extends State<_ChatPage>
       ),
       if (replayEnabled)
         _loadingChatIds.listenVal((chats) {
-            final isWorking = chats.contains(_curChatId);
+            final isWorking = chats.contains(_curChatId.value);
             if (isWorking) return UIs.placeholder;
             return Btn.tile(
               onTap: () {
                 context.pop();
-                _onTapReplay(context, _curChatId, chatItem);
+                _onTapReplay(context, _curChatId.value, chatItem);
               },
               text: l10n.replay,
               icon: const Icon(MingCute.refresh_4_line),
