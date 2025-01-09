@@ -54,11 +54,11 @@ enum HomePageEnum {
             title: l10n.profile,
             items: profiles,
             display: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
-            initial: OpenAICfg.current,
+            initial: Cfg.current,
             actions: [addBtn],
           );
           if (select == null) return;
-          OpenAICfg.setTo(select);
+          Cfg.setTo(select);
         },
         icon: const Icon(Icons.switch_account),
         tooltip: l10n.profile,

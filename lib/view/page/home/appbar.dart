@@ -21,7 +21,7 @@ final class _CustomAppBar extends CustomAppBar {
           // Use a SizedBox to avoid the title jumping when switching chats.
           child: SizedBox(
             key: Key(entity.id),
-            width: (_media?.size.width ?? 300) * 0.5,
+            width: (_size?.width ?? 300) * 0.5,
             child: Text(
               _curChat?.name ?? l10n.untitled,
               maxLines: 1,
@@ -34,7 +34,7 @@ final class _CustomAppBar extends CustomAppBar {
       },
     );
 
-    final subtitle = OpenAICfg.vn.listenVal((val) {
+    final subtitle = Cfg.vn.listenVal((val) {
       return Text(
         val.model.isEmpty ? libL10n.empty : val.model,
         key: ValueKey(val),
@@ -95,7 +95,7 @@ final class _CustomAppBar extends CustomAppBar {
           children: [
             title,
             SizedBox(
-              width: (_media?.size.width ?? 300) * 0.5,
+              width: (_size?.width ?? 300) * 0.5,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,

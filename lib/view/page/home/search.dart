@@ -63,7 +63,7 @@ class _ChatSearchDelegate extends SearchDelegate<ChatHistory> {
     return FutureWidget(
       future: _filterChats(query),
       loading: SizedBox(
-        width: _media?.size.width ?? 300,
+        width: _size?.width ?? 300,
         child: SizedLoading.medium,
       ),
       error: (error, trace) {

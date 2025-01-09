@@ -13,7 +13,6 @@ void _switchChat([String? id]) {
   _curChatId = id;
   _chatItemRNMap.clear();
   _chatRN.notify();
-  _sendBtnRN.notify();
   _appbarTitleRN.notify();
   Future.delayed(_durationMedium, () {
     // Different chats have different height
@@ -188,9 +187,9 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
 
 /// Used in send btn and [_onCreateText]
 void _onStopStreamSub(String chatId) async {
-  _loadingChatIds.remove(chatId);
-  _loadingChatIdRN.notify();
-  _sendBtnRN.notify();
+  _chatStreamSubs[chatId]?.cancel();
+  _loadingChatIds.value.remove(chatId);
+  _loadingChatIds.notify();
   _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
 }
 
@@ -227,7 +226,7 @@ void _onShareChat(BuildContext context) async {
       result,
       context: context,
       constraints: const BoxConstraints(maxWidth: 577),
-      pixelRatio: _media?.devicePixelRatio ?? 1,
+      pixelRatio: MediaQuery.devicePixelRatioOf(context),
       delay: Durations.short4,
     );
     compressImg = Stores.setting.compressImg.get();
@@ -494,7 +493,7 @@ void _scrollBottom() async {
 }
 
 void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
-  final cfg = OpenAICfg.current;
+  final cfg = Cfg.current;
   if (cfg.key.isEmpty && notifyKey) {
     context.showRoundDialog(
       title: l10n.attention,
@@ -512,7 +511,7 @@ void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
     return;
   }
 
-  await OpenAICfg.showPickModelDialog(context);
+  await Cfg.showPickModelDialog(context);
 }
 
 // /// The chat type is determined by the following order:

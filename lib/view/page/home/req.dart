@@ -2,7 +2,7 @@
 part of 'home.dart';
 
 bool _validChatCfg(BuildContext context) {
-  final config = OpenAICfg.current;
+  final config = Cfg.current;
   final urlEmpty = config.url == 'https://api.openai.com' || config.url.isEmpty;
   if (urlEmpty && config.key.isEmpty) {
     final msg = l10n.emptyFields('${l10n.secretKey} | Api Url');
@@ -21,7 +21,7 @@ bool _validChatCfg(BuildContext context) {
 Future<Iterable<ChatCompletionMessage>> _historyCarried(
   ChatHistory workingChat,
 ) async {
-  final config = OpenAICfg.current;
+  final config = Cfg.current;
 
   // #106
   final ignoreCtxCons = workingChat.settings?.ignoreContextConstraint == true;
@@ -91,9 +91,14 @@ void _onCreateRequest(BuildContext context, String chatId) async {
   //   (ChatType.audio, _) => _onCreateSTT,
   // };
 
-  if (_inputCtrl.text.isEmpty) return;
-  _imeFocus.unfocus();
   final input = _inputCtrl.text;
+  if (input.isEmpty) return;
+  _imeFocus.unfocus();
+
+  _loadingChatIds.value.add(chatId);
+  _loadingChatIds.notify();
+  _chatFabAutoHideKey.currentState?.autoHideEnabled = false;
+
   return await _onCreateText(context, chatId, input, _filePicked.value?.url);
 }
 
@@ -110,7 +115,7 @@ Future<void> _onCreateText(
     context.showSnackBar(msg);
     return;
   }
-  final config = OpenAICfg.current;
+  final config = Cfg.current;
 
   final hasImg = fileUrl != null;
   final question = ChatHistoryItem.gen(
@@ -134,10 +139,9 @@ Future<void> _onCreateText(
   _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
   _chatRN.notify();
-  _loadingChatIds.add(chatId);
   _autoScroll(chatId);
 
-  final toolCompatible = OpenAICfg.isToolCompatible();
+  final toolCompatible = Cfg.isToolCompatible();
 
   // #104
   final chatScopeUseTools = workingChat.settings?.useTools != false;
@@ -150,14 +154,12 @@ Future<void> _onCreateText(
     // Used for logging tool call resp
     final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
     workingChat.items.add(toolReply);
-    _loadingChatIds.add(toolReply.id);
-    _loadingChatIdRN.notify();
     _chatRN.notify();
     _autoScroll(chatId);
 
     CreateChatCompletionResponse? resp;
     try {
-      resp = await OpenAICfg.client!.createChatCompletion(
+      resp = await Cfg.client!.createChatCompletion(
         request: CreateChatCompletionRequest(
           messages: msgs,
           model: ChatCompletionModel.modelId(config.model),
@@ -212,11 +214,9 @@ Future<void> _onCreateText(
     workingChat.items.remove(toolReply);
     _chatRN.notify();
     _chatItemRNMap.remove(toolReply.id)?.dispose();
-    _loadingChatIds.remove(toolReply.id);
-    _loadingChatIdRN.notify();
   }
 
-  final chatStream = OpenAICfg.client!.createChatCompletionStream(
+  final chatStream = Cfg.client!.createChatCompletionStream(
     request: CreateChatCompletionRequest(
       messages: msgs,
       model: ChatCompletionModel.modelId(config.model),
@@ -225,14 +225,10 @@ Future<void> _onCreateText(
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
   _chatRN.notify();
-  _loadingChatIds.add(assistReply.id);
-  _loadingChatIdRN.notify();
   _filePicked.value = null;
-  _sendBtnRN.notify();
-  _chatFabAutoHideKey.currentState?.autoHideEnabled = false;
 
   try {
-    chatStream.listen(
+    final sub = chatStream.listen(
       (eve) async {
         final first = eve.choices.firstOrNull;
         final delta = first?.delta.content;
@@ -244,9 +240,8 @@ Future<void> _onCreateText(
       },
       onDone: () async {
         _onStopStreamSub(chatId);
-        _loadingChatIds.remove(chatId);
-        _loadingChatIds.remove(assistReply.id);
-        _loadingChatIdRN.notify();
+        _loadingChatIds.value.remove(chatId);
+        _loadingChatIds.notify();
         _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
 
         _storeChat(chatId);
@@ -255,12 +250,13 @@ Future<void> _onCreateText(
         BakSync.instance.sync();
       },
       onError: (e, s) {
-        _loadingChatIds.remove(assistReply.id);
         _onErr(e, s, chatId, 'Listen text stream');
       },
     );
+    _chatStreamSubs[chatId] = sub;
   } catch (e, s) {
-    _loadingChatIds.remove(assistReply.id);
+    _loadingChatIds.value.remove(chatId);
+    _loadingChatIds.notify();
     _onErr(e, s, chatId, 'Catch text stream');
   }
 }
@@ -485,12 +481,12 @@ Future<void> _genChatTitle(
   }
 
   try {
-    final resp = await OpenAICfg.client!.createChatCompletion(
+    final resp = await Cfg.client!.createChatCompletion(
       request: CreateChatCompletionRequest(
         model: ChatCompletionModel.modelId(cfg.model),
         messages: [
           ChatHistoryItem.single(
-            raw: OpenAICfg.current.genTitlePrompt ?? ChatTitleUtil.titlePrompt,
+            raw: Cfg.current.genTitlePrompt ?? ChatTitleUtil.titlePrompt,
             role: ChatRole.system,
           ).toOpenAI(),
           ChatHistoryItem.single(
@@ -527,7 +523,7 @@ void _onReplay({
   if (!_validChatCfg(context)) return;
 
   // If is receiving the reply, ignore this action
-  if (_loadingChatIds.contains(chatId)) {
+  if (_loadingChatIds.value.contains(chatId)) {
     return;
   }
 
@@ -555,14 +551,24 @@ void _onReplay({
       .firstWhereOrNull((e) => e.type == ChatContentType.image)
       ?.raw;
 
-  _onCreateText(context, chatId, text ?? '', img);
+  if (text == null) {
+    final msg = 'Replay Chat($chatId) item($item) text is null';
+    Loggers.app.warning(msg);
+    context.showSnackBar('${libL10n.fail}: $msg');
+    return;
+  }
+  
+  _inputCtrl.text = text;
+  _filePicked.value = img != null ? await _FilePicked.fromUrl(img) : null;
+
+  _onCreateRequest(context, chatId);
 }
 
 void _onErr(Object e, StackTrace s, String chatId, String action) {
   Loggers.app.warning('$action: $e');
   _onStopStreamSub(chatId);
-  _loadingChatIds.remove(chatId);
-  _loadingChatIdRN.notify();
+  _loadingChatIds.value.remove(chatId);
+  _loadingChatIds.notify();
   _chatFabAutoHideKey.currentState?.autoHideEnabled = true;
 
   final msg = '$e\n\n```$s```';
@@ -589,5 +595,4 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   _chatRN.notify();
 
   if (Stores.setting.saveErrChat.get()) _storeChat(chatId);
-  _sendBtnRN.notify();
 }

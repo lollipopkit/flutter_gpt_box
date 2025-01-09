@@ -88,8 +88,8 @@ Future<void> _initAppComponents() async {
     listener: WindowSizeListener(size),
   );
 
-  OpenAICfg.apply();
-  OpenAICfg.updateModels();
+  Cfg.apply();
+  Cfg.updateModels();
 
   BakSync.instance.sync();
 

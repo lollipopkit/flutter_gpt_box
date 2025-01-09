@@ -22,7 +22,6 @@ final _chatType = ChatType.text.vn;
 final _chatRN = RNode();
 final _historyRN = RNode();
 final _appbarTitleRN = RNode();
-final _sendBtnRN = RNode();
 final _locateHistoryBtn = false.vn;
 final _chatFabRN = RNode();
 final _homeBottomRN = RNode();
@@ -32,14 +31,14 @@ var _curChatId = 'fake-non-exist-id';
 ChatHistory? get _curChat => _allHistories[_curChatId];
 
 /// [ChatHistory.id] or [ChatHistoryItem.id]
-final _loadingChatIds = <String>{};
-final _loadingChatIdRN = RNode();
+final _loadingChatIds = <String>{}.vn;
+final _chatStreamSubs = <String, StreamSubscription>{};
 
 final _curPage = HomePageEnum.chat.vn;
 
 final _imeFocus = FocusNode();
 
-MediaQueryData? _media;
+Size? _size;
 final _isWide = false.vn..addListener(_onIsWideChanged);
 
 /// Set it as final, so we can scroll to it.

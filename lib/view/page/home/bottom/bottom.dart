@@ -32,7 +32,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
             boxShadow: RNodes.dark.value ? _boxShadow : _boxShadowDark,
           ),
           child: AnimatedPadding(
-            padding: EdgeInsets.only(bottom: _media?.viewInsets.bottom ?? 0),
+            padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
             curve: Curves.fastEaseInToSlowEaseOut,
             duration: Durations.short1,
             child: Column(
@@ -77,7 +77,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
                   ],
                 ),
                 _buildTextField(),
-                SizedBox(height: _media?.padding.bottom),
+                SizedBox(height: MediaQuery.paddingOf(context).bottom),
               ],
             ),
           ),
@@ -180,21 +180,18 @@ final class _HomeBottomState extends State<_HomeBottom> {
           buttonItems: buttonItems,
         );
       },
-      suffix: ListenBuilder(
-        listenable: _sendBtnRN,
-        builder: () {
-          final isWorking = _loadingChatIds.contains(_curChatId);
-          return isWorking
-              ? IconButton(
-                  onPressed: () => _onStopStreamSub(_curChatId),
-                  icon: const Icon(Icons.stop),
-                )
-              : IconButton(
-                  onPressed: () => _onCreateRequest(context, _curChatId),
-                  icon: const Icon(Icons.send, size: 19),
-                );
-        },
-      ),
+      suffix: _loadingChatIds.listenVal((chats) {
+        final isWorking = chats.contains(_curChatId);
+        return isWorking
+            ? IconButton(
+                onPressed: () => _onStopStreamSub(_curChatId),
+                icon: const Icon(Icons.stop),
+              )
+            : IconButton(
+                onPressed: () => _onCreateRequest(context, _curChatId),
+                icon: const Icon(Icons.send, size: 19),
+              );
+      }),
     );
   }
 

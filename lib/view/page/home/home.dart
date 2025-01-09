@@ -56,7 +56,7 @@ class HomePage extends StatefulWidget {
     _chatRN.notify();
     _appbarTitleRN.notify();
     _switchChat();
-    OpenAICfg.setToId();
+    Cfg.setToId();
   }
 }
 
@@ -81,9 +81,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   void didChangeDependencies() {
-    _media = MediaQuery.of(context);
+    _size = MediaQuery.sizeOf(context);
     RNodes.dark.value = context.isDark;
-    _isWide.value = (_media?.size.width ?? 0) > 639;
+    _isWide.value = (_size?.width ?? 0) > 639;
     super.didChangeDependencies();
     _homeBottomRN.notify();
   }
