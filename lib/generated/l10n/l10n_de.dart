@@ -7,7 +7,8 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get apiUrlV1Tip => 'Ähnlich wie https://api.openai.com/v1 (mit dem abschließenden /v1). Soll diese URL weiterhin verwendet werden?';
+  String get apiUrlV1Tip =>
+      'Ähnlich wie https://api.openai.com/v1 (mit dem abschließenden /v1). Soll diese URL weiterhin verwendet werden?';
 
   @override
   String get assistant => 'Assistent';
@@ -31,7 +32,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get autoScrollBottom => 'Automatisch nach unten scrollen';
 
   @override
-  String get backupTip => 'Bitte stellen Sie sicher, dass Ihre Sicherungsdatei privat und sicher ist!';
+  String get backupTip =>
+      'Bitte stellen Sie sicher, dass Ihre Sicherungsdatei privat und sicher ist!';
 
   @override
   String get balance => 'Guthaben';
@@ -40,7 +42,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get calcTokenLen => 'Token-Länge berechnen';
 
   @override
-  String get changeModelTip => 'Verschiedene Schlüssel können möglicherweise auf unterschiedliche Modelllisten zugreifen. Wenn Sie den Mechanismus nicht verstehen und Fehler auftreten, empfiehlt es sich, das Modell neu einzustellen.';
+  String get changeModelTip =>
+      'Verschiedene Schlüssel können möglicherweise auf unterschiedliche Modelllisten zugreifen. Wenn Sie den Mechanismus nicht verstehen und Fehler auftreten, empfiehlt es sich, das Modell neu einzustellen.';
 
   @override
   String get chat => 'Chat';
@@ -141,7 +144,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get headTailMode => 'Kopf-Schwanz-Modus';
 
   @override
-  String get headTailModeTip => 'Sendet nur `Prompt + erste Benutzernachricht + aktuelle Eingabe` als Kontext.\n\nDies ist besonders nützlich für die Übersetzung von Gesprächen (spart Tokens).';
+  String get headTailModeTip =>
+      'Sendet nur `Prompt + erste Benutzernachricht + aktuelle Eingabe` als Kontext.\n\nDies ist besonders nützlich für die Übersetzung von Gesprächen (spart Tokens).';
 
   @override
   String get help => 'Hilfe';
@@ -217,7 +221,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get message => 'Nachricht';
 
   @override
-  String get migrationV1UrlTip => 'Soll \"/v1\" automatisch am Ende der Konfiguration hinzugefügt werden?';
+  String get migrationV1UrlTip =>
+      'Soll \"/v1\" automatisch am Ende der Konfiguration hinzugefügt werden?';
 
   @override
   String get minute => 'Minute';
@@ -226,7 +231,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get model => 'Modell';
 
   @override
-  String get modelRegExpTip => 'Wenn der Modellname übereinstimmt, werden Tools verwendet';
+  String get modelRegExpTip =>
+      'Wenn der Modellname übereinstimmt, werden Tools verwendet';
 
   @override
   String get more => 'Mehr';
@@ -261,7 +267,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get onSwitchChat => 'Beim Wechseln der Konversation';
 
   @override
-  String get onlyRestoreHistory => 'Nur Chat-Verlauf wiederherstellen (API-URL und geheimer Schlüssel werden nicht wiederhergestellt)';
+  String get onlyRestoreHistory =>
+      'Nur Chat-Verlauf wiederherstellen (API-URL und geheimer Schlüssel werden nicht wiederhergestellt)';
 
   @override
   String get onlySyncOnLaunch => 'Nur beim Start synchronisieren';
@@ -288,7 +295,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get promptsSettingsItem => 'Prompts';
 
   @override
-  String get quickShareTip => 'Öffnen Sie diesen Link auf einem anderen Gerät, um die aktuelle Konfiguration schnell zu importieren.';
+  String get quickShareTip =>
+      'Öffnen Sie diesen Link auf einem anderen Gerät, um die aktuelle Konfiguration schnell zu importieren.';
 
   @override
   String get raw => 'Roh';
@@ -309,7 +317,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get replay => 'Wiederholen';
 
   @override
-  String get replayTip => 'Die wiederholten Nachrichten und alle folgenden Nachrichten werden gelöscht.';
+  String get replayTip =>
+      'Die wiederholten Nachrichten und alle folgenden Nachrichten werden gelöscht.';
 
   @override
   String get res => 'Ressource';
@@ -337,7 +346,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get saveErrChat => 'Fehlerhaften Chat speichern';
 
   @override
-  String get saveErrChatTip => 'Speichern Sie nach dem Empfangen/Senden jeder Nachricht, auch wenn Fehler auftreten';
+  String get saveErrChatTip =>
+      'Speichern Sie nach dem Empfangen/Senden jeder Nachricht, auch wenn Fehler auftreten';
 
   @override
   String get scrollSwitchChat => 'Scrollen zum Wechseln des Chats';
@@ -355,7 +365,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shareFrom => 'Geteilt von';
 
   @override
-  String get skipSameTitle => 'Chats mit demselben Titel wie lokale Chats überspringen';
+  String get skipSameTitle =>
+      'Chats mit demselben Titel wie lokale Chats überspringen';
 
   @override
   String get softWrap => 'Zeilenumbruch';
