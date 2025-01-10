@@ -164,27 +164,15 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
             child: Container(color: primaryColor, height: 27, width: 27),
           ),
           onTap: () async {
-            final ctrl = TextEditingController(text: primaryColor.toHex);
+            var color = primaryColor;
             await context.showRoundDialog(
               title: libL10n.select,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Input(
-                    onSubmitted: _onSaveColor,
-                    controller: ctrl,
-                    hint: '#8b2252',
-                    icon: Icons.colorize,
-                    autoFocus: true,
-                  ),
-                  ColorPicker(
-                    color: primaryColor,
-                    onColorChanged: (c) => ctrl.text = c.toHex,
-                  )
-                ],
+              child: ColorPicker(
+                color: primaryColor,
+                onColorChanged: (c) => color = c,
               ),
               actions: Btn.ok(onTap: () {
-                _onSaveColor(ctrl.text);
+                _onSaveColor(color);
                 context.pop();
               }).toList,
             );
@@ -194,13 +182,8 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
     );
   }
 
-  void _onSaveColor(String s) {
-    final color = s.fromColorHex;
-    if (color == null) {
-      context.showSnackBar('Invalid color code: $s');
-      return;
-    }
-    _setStore.themeColorSeed.put(color.value255);
+  void _onSaveColor(Color c) {
+    _setStore.themeColorSeed.put(c.value255);
     RNodes.app.notify(delay: true);
   }
 
