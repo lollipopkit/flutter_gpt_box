@@ -1,0 +1,23 @@
+icon: assets/app_icon.png
+summary: A third-party GPT Client for OpenAI API.
+group: Application/Chat
+vendor: lollipopkit
+packager: lollipopkit
+packagerEmail: 10864310+lollipopkit@users.noreply.github.com
+license: GPLv3
+url: https://github.com/lollipopkit/flutter_gpt_box
+
+display_name: GPT Box
+
+keywords:
+  - gpt
+  - chat
+  - openai
+  - ai
+
+generic_name: GPT Box
+
+categories:
+  - Utility
+
+startup_notify: true

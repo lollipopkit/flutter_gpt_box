@@ -1,0 +1,41 @@
+variables:
+output: dist/
+releases:
+  - name: android
+    jobs:
+      - name: release-android
+        package:
+          platform: android
+          target: apk
+          build_args:
+            target-platform: android-arm,android-arm64,android-x64
+  - name: apple
+    jobs:
+      - name: release-ios
+        package:
+          platform: ios
+          target: ipa
+          build_args:
+            export-options-plist: ios/Runner/Info.plist
+      - name: release-macos
+        package:
+          platform: macos
+          target: dmg
+          build_args:
+            export-options-plist: macos/Runner/Info.plist
+  - name: linux
+    jobs:
+      - name: release-linux-deb
+        package:
+          platform: linux
+          target: deb
+      - name: release-linux-rpm
+        package:
+          platform: linux
+          target: rpm
+  - name: windows
+    jobs:
+      - name: release-windows
+        package:
+          platform: windows
+          target: zip
