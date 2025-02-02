@@ -58,7 +58,7 @@ enum HomePageEnum {
             actions: [addBtn],
           );
           if (select == null) return;
-          Cfg.setTo(select);
+          Cfg.setTo(cfg: select);
         },
         icon: const Icon(Icons.switch_account),
         tooltip: l10n.profile,

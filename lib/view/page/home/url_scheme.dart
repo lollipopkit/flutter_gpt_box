@@ -105,7 +105,7 @@ extension _AppLink on AppLink {
           Loggers.app.warning(msg);
           return true;
         }
-        Cfg.setTo(Cfg.current.copyWith(
+        Cfg.setTo(cfg: Cfg.current.copyWith(
           url: openAiUrl,
           key: openAiKey,
           model: openAiModel,
@@ -117,7 +117,7 @@ extension _AppLink on AppLink {
 
         final cfg = ChatConfig.fromUrlParams(paramsStr);
         cfg.save();
-        Cfg.setToId(cfg.id);
+        Cfg.setTo(id: cfg.id);
 
         return true;
       default:

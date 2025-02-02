@@ -56,7 +56,7 @@ class HomePage extends StatefulWidget {
     _chatRN.notify();
     _appbarTitleRN.notify();
     _switchChat();
-    Cfg.setToId();
+    Cfg.setTo();
   }
 }
 

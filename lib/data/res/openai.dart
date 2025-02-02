@@ -20,25 +20,24 @@ abstract final class Cfg {
 
   static final _store = Stores.config;
 
-  static void setTo(ChatConfig config) {
-    final old = vn.value;
-    vn.value = config;
-    apply();
-    config.save();
-    _store.profileId.set(config.id);
-
-    if (config.shouldUpdateRelated(old)) {
-      updateModels(diffUrl: old.url != config.url);
-      ApiBalance.refresh();
+  static void setTo({ChatConfig? cfg, String? id}) {
+    if (cfg == null) {
+      cfg = _store.fetch(id ?? _store.profileId.get());
+      if (cfg == null) {
+        Loggers.app.warning('Profile not found: $id');
+        return;
+      }
     }
-  }
 
-  static void setToId([String? id]) {
-    final cfg = _store.fetch(id ?? _store.profileId.get());
-    if (cfg != null) {
-      setTo(cfg);
-    } else {
-      Loggers.app.warning('Config [$id] not found');
+    final old = vn.value;
+    vn.value = cfg;
+    apply();
+    cfg.save();
+    _store.profileId.set(cfg.id);
+
+    if (cfg.shouldUpdateRelated(old)) {
+      updateModels(diffUrl: old.url != cfg.url);
+      ApiBalance.refresh();
     }
   }
 
@@ -118,7 +117,7 @@ abstract final class Cfg {
           onPressed: () {
             void onSave(String s) {
               context.pop();
-              Cfg.setTo(Cfg.current.copyWith(model: s));
+              Cfg.setTo(cfg: Cfg.current.copyWith(model: s));
             }
 
             context.pop();
@@ -138,14 +137,14 @@ abstract final class Cfg {
       ],
     );
     if (model == null) return;
-    Cfg.setTo(Cfg.current.copyWith(model: model));
+    Cfg.setTo(cfg: Cfg.current.copyWith(model: model));
   }
 
   static void switchToDefault(BuildContext context) {
     final cfg = _store.fetch(ChatConfig.defaultId);
-    if (cfg != null) return setTo(cfg);
+    if (cfg != null) return setTo(cfg: cfg);
 
-    setTo(ChatConfig.defaultOne);
+    setTo(cfg: ChatConfig.defaultOne);
     Loggers.app.warning('Default config not found');
   }
 

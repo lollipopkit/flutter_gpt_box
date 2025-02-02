@@ -34,7 +34,7 @@ abstract final class MigrationFns {
       );
       Stores.config.put(newCfg);
       if (Cfg.current.id == cfg.id) {
-        Cfg.setTo(newCfg);
+        Cfg.setTo(cfg: newCfg);
       }
       dprint('Migration: append /v1 to ${cfg.url}');
     }

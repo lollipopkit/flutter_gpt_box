@@ -136,7 +136,7 @@ final class _ProfilePageState extends State<ProfilePage>
                     if (name.isEmpty) return;
                     final newCfg = cfg.copyWith(name: name);
                     newCfg.save();
-                    Cfg.setTo(newCfg);
+                    Cfg.setTo(cfg: newCfg);
                     _cfgRN.notify();
                     context.pop();
                   },
@@ -159,7 +159,7 @@ final class _ProfilePageState extends State<ProfilePage>
               );
 
               if (newCfg == null) return;
-              Cfg.setTo(newCfg);
+              Cfg.setTo(cfg: newCfg);
               _cfgRN.notify();
             },
           ),
@@ -193,7 +193,7 @@ final class _ProfilePageState extends State<ProfilePage>
                 url: url,
               );
               newCfg.save();
-              Cfg.setTo(newCfg);
+              Cfg.setTo(cfg: newCfg);
               _cfgRN.notify();
             },
           ),
@@ -228,7 +228,7 @@ final class _ProfilePageState extends State<ProfilePage>
           actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
-        Cfg.setTo(Cfg.current.copyWith(key: result));
+        Cfg.setTo(cfg: Cfg.current.copyWith(key: result));
         _cfgRN.notify();
       },
     );
@@ -269,7 +269,7 @@ final class _ProfilePageState extends State<ProfilePage>
           if (sure != true) return;
         }
 
-        Cfg.setTo(Cfg.current.copyWith(url: result));
+        Cfg.setTo(cfg: Cfg.current.copyWith(url: result));
         _cfgRN.notify();
       },
     );
@@ -386,7 +386,7 @@ final class _ProfilePageState extends State<ProfilePage>
           actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
-        Cfg.setTo(Cfg.current.copyWith(prompt: result));
+        Cfg.setTo(cfg: Cfg.current.copyWith(prompt: result));
         _cfgRN.notify();
       },
     );
@@ -409,7 +409,7 @@ final class _ProfilePageState extends State<ProfilePage>
           actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
         );
         if (result == null) return;
-        Cfg.setTo(Cfg.current.copyWith(genTitlePrompt: result));
+        Cfg.setTo(cfg: Cfg.current.copyWith(genTitlePrompt: result));
         _cfgRN.notify();
       },
     );
@@ -438,7 +438,7 @@ final class _ProfilePageState extends State<ProfilePage>
           context.showSnackBar('Invalid number: $result');
           return;
         }
-        Cfg.setTo(Cfg.current.copyWith(historyLen: newVal));
+        Cfg.setTo(cfg: Cfg.current.copyWith(historyLen: newVal));
         _cfgRN.notify();
       },
     );
