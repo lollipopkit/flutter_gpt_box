@@ -57,16 +57,7 @@ class _ChatPageState extends State<_ChatPage>
     return FloatingActionButton(
       key: ValueKey(up),
       mini: true,
-      onPressed: () async {
-        if (!_chatScrollCtrl.hasClients) return;
-        if (up) {
-          await _chatScrollCtrl.animateTo(0,
-              duration: _durationMedium, curve: Curves.easeInOut);
-        } else {
-          _scrollBottom();
-        }
-        _chatFabRN.notify();
-      },
+      onPressed: () => _onTapFAB(up),
       child: Icon(icon),
     );
   }
@@ -169,18 +160,7 @@ class _ChatPageState extends State<_ChatPage>
           borderRadius: BorderRadius.circular(13),
           onLongPress: isHovered
               ? null
-              : () {
-                  final funcs = _buildChatItemFuncs(chatItems, chatItem);
-                  context.showRoundDialog(
-                    contentPadding: const EdgeInsets.all(11),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: funcs,
-                      ),
-                    ),
-                  );
-                },
+              : () => _onLongPressChatItem(context, chatItems, chatItem),
           child: child,
         );
 
@@ -330,4 +310,34 @@ class _ChatPageState extends State<_ChatPage>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+extension on _ChatPageState {
+  void _onTapFAB(bool up) async {
+    if (!_chatScrollCtrl.hasClients) return;
+    if (up) {
+      await _chatScrollCtrl.animateTo(0,
+          duration: _durationMedium, curve: Curves.easeInOut);
+    } else {
+      _scrollBottom();
+    }
+    _chatFabRN.notify();
+  }
+
+  void _onLongPressChatItem(
+    BuildContext context,
+    List<ChatHistoryItem> chatItems,
+    ChatHistoryItem chatItem,
+  ) {
+    final funcs = _buildChatItemFuncs(chatItems, chatItem);
+    context.showRoundDialog(
+      contentPadding: const EdgeInsets.all(11),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: funcs,
+        ),
+      ),
+    );
+  }
 }

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:icons_plus/icons_plus.dart';
 
 final _textStyle = GoogleFonts.robotoMono();
 
@@ -98,15 +99,51 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       selectable: false,
       padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
     );
-    return ValBuilder(
-      listenable: Stores.setting.softWrap.listenable(),
-      builder: (val) {
+
+    var lineFeedCount = 0;
+    // If line feed count is greater than 5, a copy btn will be shown.
+    const maxLineFeedCount = 5;
+    for (var i = 0; i < textContent.length; i++) {
+      if (textContent[i] == '\n') {
+        lineFeedCount++;
+        if (lineFeedCount > maxLineFeedCount) {
+          break;
+        }
+      }
+    }
+
+    final autoWrapped = Stores.setting.softWrap.listenable().listenVal(
+      (val) {
         if (val) return child;
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: child,
         );
       },
+    );
+
+    if (lineFeedCount <= maxLineFeedCount) {
+      return autoWrapped;
+    }
+
+    return Stack(
+      children: [
+        autoWrapped,
+        Positioned(
+          right: 0,
+          top: 0,
+          child: Btn.icon(
+            icon: const Icon(
+              MingCute.copy_2_fill,
+              size: 15,
+              color: Color.fromARGB(117, 129, 129, 129),
+            ),
+            onTap: () {
+              onCopy?.call(element.textContent.trim());
+            },
+          ),
+        ),
+      ],
     );
   }
 
