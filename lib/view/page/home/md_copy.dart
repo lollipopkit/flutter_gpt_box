@@ -16,14 +16,14 @@ final class _MarkdownCopyPage extends StatelessWidget {
       future: compute((e) => e.toMarkdown, args),
       error: (e, s) => SimpleMarkdown(data: '$e\n\n$s'),
       loading: Scaffold(
-        appBar: CustomAppBar(
+        appBar: AppBar(
           title: Text(l10n.raw),
           centerTitle: false,
           actions: const [SizedLoading.small, UIs.width7],
         ),
       ),
       success: (val) => Scaffold(
-        appBar: CustomAppBar(
+        appBar: AppBar(
           title: Text(l10n.raw),
           centerTitle: false,
         ),
