@@ -400,7 +400,7 @@ Future<void> _onTapImgPick(BuildContext context) async {
 //   );
 // }
 
-void _locateHistoryListener() => Funcs.throttle(
+void _locateHistoryListener() => Fns.throttle(
       () {
         // Calculate _curChatId is visible or not
         final idx = _allHistories.keys.toList().indexOf(_curChatId.value);
@@ -468,7 +468,7 @@ void _onTapEditMsg(BuildContext context, ChatHistoryItem chatItem) async {
 
 void _autoScroll(String chatId) {
   if (Stores.setting.scrollBottom.get()) {
-    Funcs.throttle(() {
+    Fns.throttle(() {
       // Only scroll to bottom when current chat is the working chat
       final isCurrentChat = chatId == _curChatId.value;
       if (isCurrentChat) {
@@ -609,5 +609,5 @@ Future<bool> _askToolConfirm(
 }
 
 void _onChatScroll() {
-  Funcs.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
+  Fns.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
 }

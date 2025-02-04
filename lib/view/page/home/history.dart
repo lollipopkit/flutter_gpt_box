@@ -98,7 +98,7 @@ class _HistoryPageState extends State<_HistoryPage>
         ],
       ),
       onTap: () {
-        Funcs.throttle(
+        Fns.throttle(
           () {
             _switchChat(chatId);
             if (!_isWide.value && _curPage.value != HomePageEnum.chat) {

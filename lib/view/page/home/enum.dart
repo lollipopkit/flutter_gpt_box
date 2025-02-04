@@ -87,7 +87,7 @@ enum HomePageEnum {
       items.insert(
           0,
           IconButton(
-            onPressed: () => Funcs.throttle(() {
+            onPressed: () => Fns.throttle(() {
               item.onTap();
             }),
             icon: Icon(item.icon),

@@ -492,8 +492,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.235"
-      resolved-ref: b6b2fda4d91554c8c9b93bf360c672ec75fde74e
+      ref: "v1.0.236"
+      resolved-ref: "67a9fe0766b37f240c294c3770ab6515cf80816f"
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
