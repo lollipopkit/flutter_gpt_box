@@ -2,7 +2,9 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 
 class HistoryStore extends HiveStore {
-  HistoryStore() : super('history');
+  HistoryStore._() : super('history');
+
+  static final instance = HistoryStore._();
 
   Map<String, ChatHistory> fetchAll() {
     final map = <String, ChatHistory>{};

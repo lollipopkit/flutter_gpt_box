@@ -1,7 +1,9 @@
 import 'package:fl_lib/fl_lib.dart';
 
 final class ToolStore extends HiveStore {
-  ToolStore() : super('tool');
+  ToolStore._() : super('tool');
+
+  static final instance = ToolStore._();
 
   /// Switch for enabling/disabling all tools.
   ///

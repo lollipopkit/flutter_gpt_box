@@ -7,7 +7,8 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get apiUrlV1Tip => 'Similar to https://api.openai.com/v1 (requiring the final /v1). Continue using this URL?';
+  String get apiUrlV1Tip =>
+      'Similar to https://api.openai.com/v1 (requiring the final /v1). Continue using this URL?';
 
   @override
   String get assistant => 'Assistant';
@@ -40,7 +41,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calcTokenLen => 'Calculate tokens length';
 
   @override
-  String get changeModelTip => 'Different keys may be able to access different lists of models, so if you don\'t understand the mechanism and get an error, it is recommended to reset the model.';
+  String get changeModelTip =>
+      'Different keys may be able to access different lists of models, so if you don\'t understand the mechanism and get an error, it is recommended to reset the model.';
 
   @override
   String get chat => 'Chat';
@@ -141,7 +143,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get headTailMode => 'Head-Tail';
 
   @override
-  String get headTailModeTip => 'Only send `prompt + first user message + current input` as the context. \n\nThis is useful for translating as it saves tokens.';
+  String get headTailModeTip =>
+      'Only send `prompt + first user message + current input` as the context. \n\nThis is useful for translating as it saves tokens.';
 
   @override
   String get help => 'Help';
@@ -217,7 +220,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get message => 'Message';
 
   @override
-  String get migrationV1UrlTip => 'Should \"/v1\" be automatically added to the end of the configuration?';
+  String get migrationV1UrlTip =>
+      'Should \"/v1\" be automatically added to the end of the configuration?';
 
   @override
   String get minute => 'min';
@@ -261,7 +265,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onSwitchChat => 'When switching conversations';
 
   @override
-  String get onlyRestoreHistory => 'Only restore histories (exclude api url / secret key)';
+  String get onlyRestoreHistory =>
+      'Only restore histories (exclude api url / secret key)';
 
   @override
   String get onlySyncOnLaunch => 'Only sync on launch';
@@ -288,7 +293,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get promptsSettingsItem => 'Prompts';
 
   @override
-  String get quickShareTip => 'Open this link on another device to quickly import the current configuration.';
+  String get quickShareTip =>
+      'Open this link on another device to quickly import the current configuration.';
 
   @override
   String get raw => 'Raw';
@@ -309,7 +315,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replay => 'Replay';
 
   @override
-  String get replayTip => 'The replayed messages and all subsequent messages will be cleared.';
+  String get replayTip =>
+      'The replayed messages and all subsequent messages will be cleared.';
 
   @override
   String get res => 'Resource';
@@ -337,7 +344,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveErrChat => 'Save chat with errors';
 
   @override
-  String get saveErrChatTip => 'Save the chat after each message sent or received even if it has error.';
+  String get saveErrChatTip =>
+      'Save the chat after each message sent or received even if it has error.';
 
   @override
   String get scrollSwitchChat => 'Scroll to switch chat';
@@ -355,7 +363,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareFrom => 'Share from';
 
   @override
-  String get skipSameTitle => 'Skip chats with titles that are the same as local chats.';
+  String get skipSameTitle =>
+      'Skip chats with titles that are the same as local chats.';
 
   @override
   String get softWrap => 'Soft wrap';

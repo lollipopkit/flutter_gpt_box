@@ -2,7 +2,9 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 
 final class ConfigStore extends HiveStore {
-  ConfigStore() : super('config');
+  ConfigStore._() : super('config');
+
+  static final instance = ConfigStore._();
 
   static const _SELECTED_KEY = 'selectedKey';
 

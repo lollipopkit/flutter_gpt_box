@@ -1,7 +1,9 @@
 import 'package:fl_lib/fl_lib.dart';
 
 class SettingStore extends HiveStore {
-  SettingStore() : super('setting');
+  SettingStore._() : super('setting');
+
+  static final instance = SettingStore._();
 
   late final themeMode = propertyDefault('themeMode', 0);
 
