@@ -159,7 +159,7 @@ Future<void> _onCreateText(
 
     CreateChatCompletionResponse? resp;
     try {
-      resp = await Cfg.client!.createChatCompletion(
+      resp = await Cfg.client.createChatCompletion(
         request: CreateChatCompletionRequest(
           messages: msgs,
           model: ChatCompletionModel.modelId(config.model),
@@ -216,7 +216,7 @@ Future<void> _onCreateText(
     _chatItemRNMap.remove(toolReply.id)?.dispose();
   }
 
-  final chatStream = Cfg.client!.createChatCompletionStream(
+  final chatStream = Cfg.client.createChatCompletionStream(
     request: CreateChatCompletionRequest(
       messages: msgs,
       model: ChatCompletionModel.modelId(config.model),
@@ -481,7 +481,7 @@ Future<void> _genChatTitle(
   }
 
   try {
-    final resp = await Cfg.client!.createChatCompletion(
+    final resp = await Cfg.client.createChatCompletion(
       request: CreateChatCompletionRequest(
         model: ChatCompletionModel.modelId(cfg.model),
         messages: [

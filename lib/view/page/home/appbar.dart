@@ -37,7 +37,6 @@ final class _CustomAppBar extends CustomAppBar {
     final subtitle = Cfg.vn.listenVal((val) {
       return Text(
         val.model.isEmpty ? libL10n.empty : val.model,
-        key: ValueKey(val),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.left,

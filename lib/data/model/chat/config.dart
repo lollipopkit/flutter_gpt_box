@@ -130,4 +130,7 @@ final class ChatConfig {
       historyLen: params_['historyLen'] ?? defaultHistoryLen,
     );
   }
+
+  @override
+  String toString() => 'ChatConfig($id, $url, $model)';
 }

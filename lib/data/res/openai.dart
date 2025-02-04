@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/util/api_balance.dart';
@@ -10,8 +12,11 @@ import 'package:openai_dart/openai_dart.dart';
 import 'package:dio/dio.dart';
 
 abstract final class Cfg {
-  static OpenAIClient? client;
-  static final models = <String>[].vn;
+  static var client = OpenAIClient(
+    apiKey: vn.value.key,
+    baseUrl: vn.value.url,
+  );
+  static final models = nvn<List<String>>();
 
   // ignore: deprecated_member_use_from_same_package
   static final vn = _init.vn;
@@ -31,7 +36,8 @@ abstract final class Cfg {
 
     final old = vn.value;
     vn.value = cfg;
-    apply();
+    Loggers.app.info('Switch to profile $cfg');
+    applyClient();
     cfg.save();
     _store.profileId.set(cfg.id);
 
@@ -71,12 +77,8 @@ abstract final class Cfg {
     }
   }
 
-  static void apply() {
-    if (vn.value.id == ChatConfig.defaultId) {
-      Loggers.app.info('Using default profile');
-    } else {
-      Loggers.app.info('Profile [${vn.value.name}]');
-    }
+  /// Apply the current profile to the openai client.
+  static void applyClient() {
     client = OpenAIClient(
       apiKey: vn.value.key,
       baseUrl: vn.value.url,
@@ -98,8 +100,23 @@ abstract final class Cfg {
       return;
     }
 
+    final completer = Completer<bool>();
+    void listener() {
+      if (models.value != null) {
+        completer.complete(true);
+      }
+    }
+
+    if (models.value == null) {
+      models.addListener(listener);
+    } else {
+      completer.complete(true);
+    }
+
+    await completer.future;
+
     final model = await context.showPickSingleDialog(
-      items: Cfg.models.value,
+      items: Cfg.models.value ?? [],
       initial: Cfg.current.model,
       title: l10n.model,
       actions: [
