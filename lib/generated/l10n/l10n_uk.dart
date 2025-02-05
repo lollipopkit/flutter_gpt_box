@@ -113,6 +113,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get emptyTrash => 'Очистити кошик';
 
   @override
+  String get emptyTrashTip => '==0, видалити під час наступного запуску. <0 не видаляти автоматично.';
+
+  @override
   String fileNotFound(Object file) {
     return 'Файл ($file) не знайдено';
   }

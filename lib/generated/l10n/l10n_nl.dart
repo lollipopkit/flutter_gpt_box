@@ -113,6 +113,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get emptyTrash => 'Prullenbak leegmaken';
 
   @override
+  String get emptyTrashTip => '==0, bij de volgende start verwijderen. <0 niet automatisch verwijderen.';
+
+  @override
   String fileNotFound(Object file) {
     return 'Bestand ($file) niet gevonden';
   }

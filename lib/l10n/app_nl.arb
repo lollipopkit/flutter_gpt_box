@@ -34,6 +34,7 @@
   "editor": "Editor",
   "emptyFields": "{fields} zijn leeg",
   "emptyTrash": "Prullenbak leegmaken",
+  "emptyTrashTip": "==0, bij de volgende start verwijderen. <0 niet automatisch verwijderen.",
   "fileNotFound": "Bestand ({file}) niet gevonden",
   "fileTooLarge": "Bestand te groot: {size}",
   "followChatModel": "Chatmodel volgen",

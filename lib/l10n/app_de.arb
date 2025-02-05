@@ -34,6 +34,7 @@
   "editor": "Editor",
   "emptyFields": "{fields} sind leer",
   "emptyTrash": "Papierkorb leeren",
+  "emptyTrashTip": "==0, beim nächsten Start löschen. <0 nicht automatisch löschen.",
   "fileNotFound": "Datei ({file}) nicht gefunden",
   "fileTooLarge": "Datei zu groß: {size}",
   "followChatModel": "Chat-Modell folgen",

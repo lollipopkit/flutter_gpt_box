@@ -113,6 +113,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get emptyTrash => '清理回收站';
 
   @override
+  String get emptyTrashTip => '==0，下次启动时删除。<0 不自动删除。';
+
+  @override
   String fileNotFound(Object file) {
     return '文件（$file）未能找到';
   }
@@ -549,6 +552,9 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get emptyTrash => '清理回收站';
+
+  @override
+  String get emptyTrashTip => '==0，下次啟動時刪除。<0 不自動刪除。';
 
   @override
   String fileNotFound(Object file) {

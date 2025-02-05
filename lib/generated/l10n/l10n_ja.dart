@@ -113,6 +113,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get emptyTrash => 'ゴミ箱を空にする';
 
   @override
+  String get emptyTrashTip => '==0、次回起動時に削除。<0 自動削除しない。';
+
+  @override
   String fileNotFound(Object file) {
     return 'ファイル（$file）が見つかりません';
   }

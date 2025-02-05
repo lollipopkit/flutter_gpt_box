@@ -113,6 +113,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get emptyTrash => 'Vider la corbeille';
 
   @override
+  String get emptyTrashTip => '==0, supprimer au prochain démarrage. <0 ne pas supprimer automatiquement.';
+
+  @override
   String fileNotFound(Object file) {
     return 'Fichier ($file) non trouvé';
   }

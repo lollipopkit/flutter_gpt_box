@@ -113,6 +113,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get emptyTrash => 'Очистить корзину';
 
   @override
+  String get emptyTrashTip => '==0, удалить при следующем запуске. <0 не удалять автоматически.';
+
+  @override
   String fileNotFound(Object file) {
     return 'Файл ($file) не найден';
   }

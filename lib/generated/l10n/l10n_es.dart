@@ -113,6 +113,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get emptyTrash => 'Vaciar la papelera de reciclaje';
 
   @override
+  String get emptyTrashTip => '==0, eliminar en el próximo inicio. <0 no eliminar automáticamente.';
+
+  @override
   String fileNotFound(Object file) {
     return 'Archivo ($file) no encontrado';
   }

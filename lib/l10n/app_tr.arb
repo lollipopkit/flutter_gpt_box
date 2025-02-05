@@ -34,6 +34,7 @@
   "editor": "Düzenleyici",
   "emptyFields": "{fields} boş",
   "emptyTrash": "Geri dönüşüm kutusunu boşalt",
+  "emptyTrashTip": "==0, bir sonraki başlangıçta sil. <0 otomatik olarak silme.",
   "fileNotFound": "Dosya ({file}) bulunamadı",
   "fileTooLarge": "Dosya çok büyük: {size}",
   "followChatModel": "Sohbet modelini takip et",

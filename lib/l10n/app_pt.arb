@@ -34,6 +34,7 @@
   "editor": "Editor",
   "emptyFields": "{fields} estão vazios",
   "emptyTrash": "Esvaziar a lixeira",
+  "emptyTrashTip": "==0, excluir na próxima inicialização. <0 não excluir automaticamente.",
   "fileNotFound": "Arquivo ({file}) não encontrado",
   "fileTooLarge": "Arquivo muito grande: {size}",
   "followChatModel": "Seguir modelo de chat",

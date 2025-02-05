@@ -34,6 +34,7 @@
   "editor": "編輯器",
   "emptyFields": "{fields} 為空",
   "emptyTrash": "清理回收站",
+  "emptyTrashTip": "==0，下次啟動時刪除。<0 不自動刪除。",
   "fileNotFound": "檔案（{file}）未能找到",
   "fileTooLarge": "檔案過大：{size}",
   "followChatModel": "跟隨聊天模型",

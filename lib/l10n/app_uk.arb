@@ -34,6 +34,7 @@
   "editor": "Редактор",
   "emptyFields": "{fields} порожні",
   "emptyTrash": "Очистити кошик",
+  "emptyTrashTip": "==0, видалити під час наступного запуску. <0 не видаляти автоматично.",
   "fileNotFound": "Файл ({file}) не знайдено",
   "fileTooLarge": "Файл занадто великий: {size}",
   "followChatModel": "Слідувати моделі чату",

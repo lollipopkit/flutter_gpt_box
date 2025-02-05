@@ -34,6 +34,7 @@
   "editor": "エディタ",
   "emptyFields": "{fields}が空です",
   "emptyTrash": "ゴミ箱を空にする",
+  "emptyTrashTip": "==0、次回起動時に削除。<0 自動削除しない。",
   "fileNotFound": "ファイル（{file}）が見つかりません",
   "fileTooLarge": "ファイルが大きすぎます：{size}",
   "followChatModel": "チャットモデルに従う",

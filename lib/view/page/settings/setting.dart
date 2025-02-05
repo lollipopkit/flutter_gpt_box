@@ -492,7 +492,8 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
 
     return ListTile(
       leading: const Icon(Icons.delete),
-      title: Text(l10n.emptyTrash),
+      title: TipText(
+          l10n.emptyTrash, '${l10n.emptyTrashTip}\n${l10n.needRestart}'),
       onTap: () {
         context.showRoundDialog(
           title: l10n.emptyTrash,
