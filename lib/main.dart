@@ -81,11 +81,13 @@ Future<void> _initAppComponents() async {
   UserApi.init();
 
   final sets = Stores.setting;
-  final size = sets.windowSize;
+  final windowStateProp = sets.windowState;
+  final windowState = windowStateProp.fetch();
   SystemUIs.initDesktopWindow(
     hideTitleBar: sets.hideTitleBar.get(),
-    size: size.get().toSize(),
-    listener: WindowSizeListener(size),
+    size: windowState?.size,
+    position: windowState?.position,
+    listener: WindowStateListener(windowStateProp),
   );
 
   Cfg.applyClient();
