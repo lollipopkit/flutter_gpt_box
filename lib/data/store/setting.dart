@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fl_lib/fl_lib.dart';
 
 class SettingStore extends HiveStore {
@@ -64,8 +66,14 @@ class SettingStore extends HiveStore {
 
   late final scrollSwitchChat = propertyDefault('scrollSwitchChat', isMobile);
 
-  /// {width}x{height}
-  late final windowSize = propertyDefault('windowSize', '');
+  /// For desktop only.
+  /// Record the position and size of the window.
+  late final windowState = property<WindowState>(
+    'windowState',
+    fromStr: (jsonStr) =>
+        WindowState.fromJson(jsonDecode(jsonStr) as Map<String, dynamic>),
+    toStr: (state) => state == null ? null : jsonEncode(state.toJson()),
+  );
 
   late final avatar = propertyDefault('avatar', '🧐');
 
