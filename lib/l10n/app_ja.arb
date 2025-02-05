@@ -33,6 +33,7 @@
   "deleteConfirm": "削除前に確認",
   "editor": "エディタ",
   "emptyFields": "{fields}が空です",
+  "emptyTrash": "ゴミ箱を空にする",
   "fileNotFound": "ファイル（{file}）が見つかりません",
   "fileTooLarge": "ファイルが大きすぎます：{size}",
   "followChatModel": "チャットモデルに従う",

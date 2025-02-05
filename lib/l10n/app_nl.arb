@@ -33,6 +33,7 @@
   "deleteConfirm": "Bevestigen voor verwijderen",
   "editor": "Editor",
   "emptyFields": "{fields} zijn leeg",
+  "emptyTrash": "Prullenbak leegmaken",
   "fileNotFound": "Bestand ({file}) niet gevonden",
   "fileTooLarge": "Bestand te groot: {size}",
   "followChatModel": "Chatmodel volgen",

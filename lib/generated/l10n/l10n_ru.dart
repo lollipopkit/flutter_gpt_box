@@ -7,8 +7,7 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get apiUrlV1Tip =>
-      'Похоже на https://api.openai.com/v1 (требуется конечный /v1). Продолжить использование этого URL?';
+  String get apiUrlV1Tip => 'Похоже на https://api.openai.com/v1 (требуется конечный /v1). Продолжить использование этого URL?';
 
   @override
   String get assistant => 'Ассистент';
@@ -32,8 +31,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get autoScrollBottom => 'Автоматическая прокрутка вниз';
 
   @override
-  String get backupTip =>
-      'Пожалуйста, убедитесь, что ваш файл резервной копии является приватным и безопасным!';
+  String get backupTip => 'Пожалуйста, убедитесь, что ваш файл резервной копии является приватным и безопасным!';
 
   @override
   String get balance => 'Баланс';
@@ -42,8 +40,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get calcTokenLen => 'Рассчитать длину токенов';
 
   @override
-  String get changeModelTip =>
-      'Разные ключи могут иметь доступ к разным спискам моделей. Если вы не понимаете механизм и возникают ошибки, рекомендуется переустановить модель.';
+  String get changeModelTip => 'Разные ключи могут иметь доступ к разным спискам моделей. Если вы не понимаете механизм и возникают ошибки, рекомендуется переустановить модель.';
 
   @override
   String get chat => 'Чат';
@@ -113,6 +110,9 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Очистить корзину';
+
+  @override
   String fileNotFound(Object file) {
     return 'Файл ($file) не найден';
   }
@@ -144,8 +144,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get headTailMode => 'Режим начало-конец';
 
   @override
-  String get headTailModeTip =>
-      'Отправляет только `подсказку + первое сообщение пользователя + текущий ввод` в качестве контекста.\n\nЭто особенно полезно для перевода разговоров (экономит токены).';
+  String get headTailModeTip => 'Отправляет только `подсказку + первое сообщение пользователя + текущий ввод` в качестве контекста.\n\nЭто особенно полезно для перевода разговоров (экономит токены).';
 
   @override
   String get help => 'Помощь';
@@ -221,8 +220,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get message => 'Сообщение';
 
   @override
-  String get migrationV1UrlTip =>
-      'Следует ли автоматически добавлять \"/v1\" в конец конфигурации?';
+  String get migrationV1UrlTip => 'Следует ли автоматически добавлять \"/v1\" в конец конфигурации?';
 
   @override
   String get minute => 'минута';
@@ -231,8 +229,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get model => 'Модель';
 
   @override
-  String get modelRegExpTip =>
-      'Если имя модели совпадает, будут использованы инструменты';
+  String get modelRegExpTip => 'Если имя модели совпадает, будут использованы инструменты';
 
   @override
   String get more => 'Больше';
@@ -267,8 +264,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get onSwitchChat => 'При переключении разговора';
 
   @override
-  String get onlyRestoreHistory =>
-      'Восстановить только историю чатов (не восстанавливать URL API и секретный ключ)';
+  String get onlyRestoreHistory => 'Восстановить только историю чатов (не восстанавливать URL API и секретный ключ)';
 
   @override
   String get onlySyncOnLaunch => 'Синхронизировать только при запуске';
@@ -295,8 +291,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get promptsSettingsItem => 'Подсказки';
 
   @override
-  String get quickShareTip =>
-      'Откройте эту ссылку на другом устройстве, чтобы быстро импортировать текущую конфигурацию.';
+  String get quickShareTip => 'Откройте эту ссылку на другом устройстве, чтобы быстро импортировать текущую конфигурацию.';
 
   @override
   String get raw => 'Необработанный';
@@ -317,8 +312,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get replay => 'Повтор';
 
   @override
-  String get replayTip =>
-      'Воспроизведенные сообщения и все последующие сообщения будут удалены.';
+  String get replayTip => 'Воспроизведенные сообщения и все последующие сообщения будут удалены.';
 
   @override
   String get res => 'Ресурс';
@@ -346,8 +340,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get saveErrChat => 'Сохранить чат с ошибкой';
 
   @override
-  String get saveErrChatTip =>
-      'Сохранять после получения/отправки каждого сообщения, даже если есть ошибки';
+  String get saveErrChatTip => 'Сохранять после получения/отправки каждого сообщения, даже если есть ошибки';
 
   @override
   String get scrollSwitchChat => 'Прокрутка для переключения чата';
@@ -365,8 +358,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get shareFrom => 'Поделился';
 
   @override
-  String get skipSameTitle =>
-      'Пропустить чаты с тем же заголовком, что и у локальных чатов';
+  String get skipSameTitle => 'Пропустить чаты с тем же заголовком, что и у локальных чатов';
 
   @override
   String get softWrap => 'Мягкий перенос';

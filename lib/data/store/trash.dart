@@ -1,5 +1,6 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
+import 'package:gpt_box/data/store/all.dart';
 
 final class TrashStore extends HiveStore {
   TrashStore._() : super('trash');
@@ -58,5 +59,28 @@ final class TrashStore extends HiveStore {
     }
 
     return map;
+  }
+
+  /// Auto delete histories older than [days] days.
+  ///
+  /// - [days] is the number of days to keep the histories.
+  void autoDelete({int? days, bool refresh = true}) {
+    days ??= Stores.setting.trashDays.get();
+
+    final now = DateTime.now();
+    final ts = now.subtract(Duration(days: days)).millisecondsSinceEpoch;
+    for (final key in keys()) {
+      if (key.startsWith(historyKeyPrefix)) {
+        final item = box.get(key);
+        if (item is ChatHistory) {
+          final lastTimeTs = item.lastTime?.millisecondsSinceEpoch ?? 0;
+          if (lastTimeTs < ts) {
+            remove(key);
+          }
+        }
+      }
+    }
+
+    if (refresh) historiesVN.value = _histories;
   }
 }

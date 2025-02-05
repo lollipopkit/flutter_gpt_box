@@ -81,6 +81,19 @@ final class AppSettingsPage extends StatefulWidget {
 
 final class _AppSettingsPageState extends State<AppSettingsPage> {
   final _setStore = Stores.setting;
+  final _autoDelTrashCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _autoDelTrashCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _autoDelTrashCtrl.text = _setStore.trashDays.get().toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -446,6 +459,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
         _buildAutoRmDupChat(),
         _buildDeleteConfrim(),
         _buildCompressImg(),
+        _buildAutoDeleteTrash,
       ],
     );
   }
@@ -462,6 +476,38 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
     return ListTile(
       title: Text(l10n.onSwitchChat),
       trailing: StoreSwitch(prop: _setStore.scrollAfterSwitch),
+    );
+  }
+
+  Widget get _buildAutoDeleteTrash {
+    void onSave(String s) {
+      final days = int.tryParse(s);
+      if (days == null) {
+        context.showSnackBar(libL10n.fail);
+        return;
+      }
+      _setStore.trashDays.put(days);
+      context.pop();
+    }
+
+    return ListTile(
+      leading: const Icon(Icons.delete),
+      title: Text(l10n.emptyTrash),
+      onTap: () {
+        context.showRoundDialog(
+          title: l10n.emptyTrash,
+          child: Input(
+            controller: _autoDelTrashCtrl,
+            type: TextInputType.number,
+            autoFocus: true,
+            onSubmitted: onSave,
+          ),
+          actions: Btn.ok(onTap: () => onSave(_autoDelTrashCtrl.text)).toList,
+        );
+      },
+      trailing: _setStore.trashDays
+          .listenable()
+          .listenVal((days) => Text('$days ${libL10n.day}')),
     );
   }
 }

@@ -33,6 +33,7 @@
   "deleteConfirm": "Konfirmasi sebelum menghapus",
   "editor": "Editor",
   "emptyFields": "{fields} kosong",
+  "emptyTrash": "Kosongkan tempat sampah",
   "fileNotFound": "File ({file}) tidak ditemukan",
   "fileTooLarge": "File terlalu besar: {size}",
   "followChatModel": "Ikuti model obrolan",

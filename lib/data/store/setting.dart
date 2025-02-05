@@ -76,4 +76,7 @@ class SettingStore extends HiveStore {
 
   /// If true, app will uploads the photo to the server.
   late final usePhotograph = propertyDefault('usePhotograph', true);
+
+  /// Days to keep the chat history trashes.
+  late final trashDays = propertyDefault('trashDays', 7);
 }

@@ -7,8 +7,7 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
-  String get apiUrlV1Tip =>
-      'Vergelijkbaar met https://api.openai.com/v1 (met de laatste /v1 vereist). Doorgaan met het gebruik van deze URL?';
+  String get apiUrlV1Tip => 'Vergelijkbaar met https://api.openai.com/v1 (met de laatste /v1 vereist). Doorgaan met het gebruik van deze URL?';
 
   @override
   String get assistant => 'Assistent';
@@ -32,8 +31,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get autoScrollBottom => 'Automatisch naar beneden scrollen';
 
   @override
-  String get backupTip =>
-      'Zorg ervoor dat uw back-upbestand privé en veilig is!';
+  String get backupTip => 'Zorg ervoor dat uw back-upbestand privé en veilig is!';
 
   @override
   String get balance => 'Saldo';
@@ -42,8 +40,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get calcTokenLen => 'Tokenlengte berekenen';
 
   @override
-  String get changeModelTip =>
-      'Verschillende sleutels kunnen toegang hebben tot verschillende modellijsten. Als u het mechanisme niet begrijpt en er fouten optreden, is het raadzaam om het model opnieuw in te stellen.';
+  String get changeModelTip => 'Verschillende sleutels kunnen toegang hebben tot verschillende modellijsten. Als u het mechanisme niet begrijpt en er fouten optreden, is het raadzaam om het model opnieuw in te stellen.';
 
   @override
   String get chat => 'Chat';
@@ -113,6 +110,9 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Prullenbak leegmaken';
+
+  @override
   String fileNotFound(Object file) {
     return 'Bestand ($file) niet gevonden';
   }
@@ -144,8 +144,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get headTailMode => 'Kop-staart modus';
 
   @override
-  String get headTailModeTip =>
-      'Stuurt alleen `prompt + eerste gebruikersbericht + huidige invoer` als context.\n\nDit is vooral handig voor het vertalen van gesprekken (bespaart tokens).';
+  String get headTailModeTip => 'Stuurt alleen `prompt + eerste gebruikersbericht + huidige invoer` als context.\n\nDit is vooral handig voor het vertalen van gesprekken (bespaart tokens).';
 
   @override
   String get help => 'Help';
@@ -165,8 +164,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get hour => 'uur';
 
   @override
-  String get httpToolTip =>
-      'HTTP-verzoek uitvoeren, bijvoorbeeld: inhoud zoeken';
+  String get httpToolTip => 'HTTP-verzoek uitvoeren, bijvoorbeeld: inhoud zoeken';
 
   @override
   String get ignoreContextConstraint => 'Contextbeperking negeren';
@@ -222,8 +220,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get message => 'Bericht';
 
   @override
-  String get migrationV1UrlTip =>
-      'Moet \"/v1\" automatisch worden toegevoegd aan het einde van de configuratie?';
+  String get migrationV1UrlTip => 'Moet \"/v1\" automatisch worden toegevoegd aan het einde van de configuratie?';
 
   @override
   String get minute => 'minuut';
@@ -232,8 +229,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get model => 'Model';
 
   @override
-  String get modelRegExpTip =>
-      'Als de modelnaam overeenkomt, worden tools gebruikt';
+  String get modelRegExpTip => 'Als de modelnaam overeenkomt, worden tools gebruikt';
 
   @override
   String get more => 'Meer';
@@ -268,8 +264,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get onSwitchChat => 'Bij het wisselen van gesprekken';
 
   @override
-  String get onlyRestoreHistory =>
-      'Alleen chatgeschiedenis herstellen (API-URL en geheime sleutel niet herstellen)';
+  String get onlyRestoreHistory => 'Alleen chatgeschiedenis herstellen (API-URL en geheime sleutel niet herstellen)';
 
   @override
   String get onlySyncOnLaunch => 'Alleen synchroniseren bij opstarten';
@@ -296,8 +291,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get promptsSettingsItem => 'Prompts';
 
   @override
-  String get quickShareTip =>
-      'Open deze link op een ander apparaat om de huidige configuratie snel te importeren.';
+  String get quickShareTip => 'Open deze link op een ander apparaat om de huidige configuratie snel te importeren.';
 
   @override
   String get raw => 'Onbewerkt';
@@ -318,8 +312,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get replay => 'Herhalen';
 
   @override
-  String get replayTip =>
-      'De herhaalde berichten en alle volgende berichten worden gewist.';
+  String get replayTip => 'De herhaalde berichten en alle volgende berichten worden gewist.';
 
   @override
   String get res => 'Bron';
@@ -347,8 +340,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get saveErrChat => 'Foutieve chat opslaan';
 
   @override
-  String get saveErrChatTip =>
-      'Opslaan na ontvangen/verzenden van elk bericht, zelfs als er fouten zijn';
+  String get saveErrChatTip => 'Opslaan na ontvangen/verzenden van elk bericht, zelfs als er fouten zijn';
 
   @override
   String get scrollSwitchChat => 'Scrollen om van chat te wisselen';
@@ -366,8 +358,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get shareFrom => 'Gedeeld van';
 
   @override
-  String get skipSameTitle =>
-      'Chats met dezelfde titel als lokale chats overslaan';
+  String get skipSameTitle => 'Chats met dezelfde titel als lokale chats overslaan';
 
   @override
   String get softWrap => 'Zachte terugloop';

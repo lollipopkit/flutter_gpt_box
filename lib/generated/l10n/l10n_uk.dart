@@ -7,8 +7,7 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
-  String get apiUrlV1Tip =>
-      'Схоже на https://api.openai.com/v1 (потрібен кінцевий /v1). Продовжити використання цього URL?';
+  String get apiUrlV1Tip => 'Схоже на https://api.openai.com/v1 (потрібен кінцевий /v1). Продовжити використання цього URL?';
 
   @override
   String get assistant => 'Асистент';
@@ -32,8 +31,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get autoScrollBottom => 'Автоматично прокручувати до низу';
 
   @override
-  String get backupTip =>
-      'Будь ласка, зберігайте резервну копію файлу в безпеці та приватності!';
+  String get backupTip => 'Будь ласка, зберігайте резервну копію файлу в безпеці та приватності!';
 
   @override
   String get balance => 'Баланс';
@@ -42,8 +40,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get calcTokenLen => 'Обчислити довжину токенів';
 
   @override
-  String get changeModelTip =>
-      'Різні ключі можуть мати доступ до різних списків моделей. Якщо ви не розумієте механізму і виникають помилки, рекомендується переналаштувати модель.';
+  String get changeModelTip => 'Різні ключі можуть мати доступ до різних списків моделей. Якщо ви не розумієте механізму і виникають помилки, рекомендується переналаштувати модель.';
 
   @override
   String get chat => 'Чат';
@@ -113,6 +110,9 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Очистити кошик';
+
+  @override
   String fileNotFound(Object file) {
     return 'Файл ($file) не знайдено';
   }
@@ -144,8 +144,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get headTailMode => 'Режим голова-хвіст';
 
   @override
-  String get headTailModeTip =>
-      'Надсилає лише підказку + перше повідомлення користувача + поточне введення як контекст.\n\nЦе особливо корисно при перекладі діалогів (може заощадити токени).';
+  String get headTailModeTip => 'Надсилає лише підказку + перше повідомлення користувача + поточне введення як контекст.\n\nЦе особливо корисно при перекладі діалогів (може заощадити токени).';
 
   @override
   String get help => 'Допомога';
@@ -221,8 +220,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get message => 'Повідомлення';
 
   @override
-  String get migrationV1UrlTip =>
-      'Автоматично додати \"/v1\" у кінці конфігурації?';
+  String get migrationV1UrlTip => 'Автоматично додати \"/v1\" у кінці конфігурації?';
 
   @override
   String get minute => 'Хвилина';
@@ -231,8 +229,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get model => 'Модель';
 
   @override
-  String get modelRegExpTip =>
-      'Якщо назва моделі відповідає, використовувати інструменти';
+  String get modelRegExpTip => 'Якщо назва моделі відповідає, використовувати інструменти';
 
   @override
   String get more => 'Більше';
@@ -267,8 +264,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get onSwitchChat => 'При перемиканні чату';
 
   @override
-  String get onlyRestoreHistory =>
-      'Відновити лише історію чатів (без відновлення API Url та Secret Key)';
+  String get onlyRestoreHistory => 'Відновити лише історію чатів (без відновлення API Url та Secret Key)';
 
   @override
   String get onlySyncOnLaunch => 'Синхронізувати лише при запуску';
@@ -295,8 +291,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get promptsSettingsItem => 'Підказки';
 
   @override
-  String get quickShareTip =>
-      'Відкрийте це посилання на іншому пристрої, щоб швидко імпортувати поточну конфігурацію.';
+  String get quickShareTip => 'Відкрийте це посилання на іншому пристрої, щоб швидко імпортувати поточну конфігурацію.';
 
   @override
   String get raw => 'Сирий';
@@ -345,12 +340,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get saveErrChat => 'Зберегти помилку чату';
 
   @override
-  String get saveErrChatTip =>
-      'Зберігати після отримання/відправлення кожного повідомлення, навіть якщо є помилки';
+  String get saveErrChatTip => 'Зберігати після отримання/відправлення кожного повідомлення, навіть якщо є помилки';
 
   @override
-  String get scrollSwitchChat =>
-      'Прокручування вгору-вниз для перемикання чатів';
+  String get scrollSwitchChat => 'Прокручування вгору-вниз для перемикання чатів';
 
   @override
   String get search => 'Пошук';
@@ -365,8 +358,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get shareFrom => 'Поділитися з';
 
   @override
-  String get skipSameTitle =>
-      'Пропустити чати з такими ж заголовками, як у локальних';
+  String get skipSameTitle => 'Пропустити чати з такими ж заголовками, як у локальних';
 
   @override
   String get softWrap => 'М\'який перенос';

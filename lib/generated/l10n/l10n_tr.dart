@@ -7,8 +7,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get apiUrlV1Tip =>
-      'https://api.openai.com/v1 gibi (sondaki /v1 gerekli). Bu URL\'yi kullanmaya devam edilsin mi?';
+  String get apiUrlV1Tip => 'https://api.openai.com/v1 gibi (sondaki /v1 gerekli). Bu URL\'yi kullanmaya devam edilsin mi?';
 
   @override
   String get assistant => 'Asistan';
@@ -32,8 +31,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get autoScrollBottom => 'Otomatik aşağı kaydır';
 
   @override
-  String get backupTip =>
-      'Lütfen yedekleme dosyanızın özel ve güvenli olduğundan emin olun!';
+  String get backupTip => 'Lütfen yedekleme dosyanızın özel ve güvenli olduğundan emin olun!';
 
   @override
   String get balance => 'Bakiye';
@@ -42,8 +40,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get calcTokenLen => 'Token uzunluğunu hesapla';
 
   @override
-  String get changeModelTip =>
-      'Farklı anahtarlar farklı model listelerine erişebilir. Mekanizmayı anlamıyorsanız ve hatalar oluşuyorsa, modeli yeniden ayarlamanız önerilir.';
+  String get changeModelTip => 'Farklı anahtarlar farklı model listelerine erişebilir. Mekanizmayı anlamıyorsanız ve hatalar oluşuyorsa, modeli yeniden ayarlamanız önerilir.';
 
   @override
   String get chat => 'Sohbet';
@@ -113,6 +110,9 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Geri dönüşüm kutusunu boşalt';
+
+  @override
   String fileNotFound(Object file) {
     return 'Dosya ($file) bulunamadı';
   }
@@ -144,8 +144,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get headTailMode => 'Baş-Kuyruk modu';
 
   @override
-  String get headTailModeTip =>
-      'Sadece `prompt + ilk kullanıcı mesajı + mevcut giriş` bağlam olarak gönderilir.\n\nBu özellikle konuşmaları çevirmek için kullanışlıdır (token tasarrufu sağlar).';
+  String get headTailModeTip => 'Sadece `prompt + ilk kullanıcı mesajı + mevcut giriş` bağlam olarak gönderilir.\n\nBu özellikle konuşmaları çevirmek için kullanışlıdır (token tasarrufu sağlar).';
 
   @override
   String get help => 'Yardım';
@@ -221,8 +220,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get message => 'Mesaj';
 
   @override
-  String get migrationV1UrlTip =>
-      'Yapılandırmanın sonuna otomatik olarak \"/v1\" eklensin mi?';
+  String get migrationV1UrlTip => 'Yapılandırmanın sonuna otomatik olarak \"/v1\" eklensin mi?';
 
   @override
   String get minute => 'dakika';
@@ -266,8 +264,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get onSwitchChat => 'Konuşmalar arasında geçiş yaparken';
 
   @override
-  String get onlyRestoreHistory =>
-      'Sadece sohbet geçmişini geri yükle (API URL\'sini ve gizli anahtarı geri yükleme)';
+  String get onlyRestoreHistory => 'Sadece sohbet geçmişini geri yükle (API URL\'sini ve gizli anahtarı geri yükleme)';
 
   @override
   String get onlySyncOnLaunch => 'Sadece başlatırken senkronize et';
@@ -294,8 +291,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get promptsSettingsItem => 'Komutlar';
 
   @override
-  String get quickShareTip =>
-      'Mevcut yapılandırmayı hızlıca içe aktarmak için bu bağlantıyı başka bir cihazda açın.';
+  String get quickShareTip => 'Mevcut yapılandırmayı hızlıca içe aktarmak için bu bağlantıyı başka bir cihazda açın.';
 
   @override
   String get raw => 'Ham';
@@ -316,8 +312,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get replay => 'Tekrar oynat';
 
   @override
-  String get replayTip =>
-      'Tekrar oynatılan mesajlar ve sonraki tüm mesajlar temizlenecek.';
+  String get replayTip => 'Tekrar oynatılan mesajlar ve sonraki tüm mesajlar temizlenecek.';
 
   @override
   String get res => 'Kaynak';
@@ -345,8 +340,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get saveErrChat => 'Hatalı sohbeti kaydet';
 
   @override
-  String get saveErrChatTip =>
-      'Her mesajı aldıktan/gönderdikten sonra kaydet, hata olsa bile';
+  String get saveErrChatTip => 'Her mesajı aldıktan/gönderdikten sonra kaydet, hata olsa bile';
 
   @override
   String get scrollSwitchChat => 'Sohbeti değiştirmek için kaydır';
@@ -364,8 +358,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get shareFrom => 'Paylaşan';
 
   @override
-  String get skipSameTitle =>
-      'Yerel sohbetlerle aynı başlığa sahip sohbetleri atla';
+  String get skipSameTitle => 'Yerel sohbetlerle aynı başlığa sahip sohbetleri atla';
 
   @override
   String get softWrap => 'Yumuşak kaydırma';

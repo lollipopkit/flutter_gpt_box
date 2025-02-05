@@ -33,6 +33,7 @@
   "deleteConfirm": "Silmeden önce onayla",
   "editor": "Düzenleyici",
   "emptyFields": "{fields} boş",
+  "emptyTrash": "Geri dönüşüm kutusunu boşalt",
   "fileNotFound": "Dosya ({file}) bulunamadı",
   "fileTooLarge": "Dosya çok büyük: {size}",
   "followChatModel": "Sohbet modelini takip et",

@@ -33,6 +33,7 @@
   "deleteConfirm": "Підтвердити перед видаленням",
   "editor": "Редактор",
   "emptyFields": "{fields} порожні",
+  "emptyTrash": "Очистити кошик",
   "fileNotFound": "Файл ({file}) не знайдено",
   "fileTooLarge": "Файл занадто великий: {size}",
   "followChatModel": "Слідувати моделі чату",

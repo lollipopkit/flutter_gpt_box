@@ -33,6 +33,7 @@
   "deleteConfirm": "Подтвердить перед удалением",
   "editor": "Редактор",
   "emptyFields": "{fields} пусты",
+  "emptyTrash": "Очистить корзину",
   "fileNotFound": "Файл ({file}) не найден",
   "fileTooLarge": "Файл слишком большой: {size}",
   "followChatModel": "Следовать модели чата",

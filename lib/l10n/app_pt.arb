@@ -33,6 +33,7 @@
   "deleteConfirm": "Confirmar antes de excluir",
   "editor": "Editor",
   "emptyFields": "{fields} estão vazios",
+  "emptyTrash": "Esvaziar a lixeira",
   "fileNotFound": "Arquivo ({file}) não encontrado",
   "fileTooLarge": "Arquivo muito grande: {size}",
   "followChatModel": "Seguir modelo de chat",

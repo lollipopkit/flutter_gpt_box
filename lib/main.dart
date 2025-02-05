@@ -94,4 +94,6 @@ Future<void> _initAppComponents() async {
   BakSync.instance.sync();
 
   if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;
+
+  Stores.trash.autoDelete();
 }
