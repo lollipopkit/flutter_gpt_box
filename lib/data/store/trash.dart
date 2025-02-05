@@ -2,9 +2,9 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 
 final class TrashStore extends HiveStore {
-  TrashStore() : super('trash');
+  TrashStore._() : super('trash');
 
-  static final instance = TrashStore();
+  static final instance = TrashStore._();
 
   /// All the hitories in the trash should have a key starting with this prefix.
   static const historyKeyPrefix = 'history_';
@@ -24,7 +24,7 @@ final class TrashStore extends HiveStore {
   }
 
   /// Remove the history item with the given [key].
-  /// 
+  ///
   /// - [key] is the key of the history item to remove. Example: 'history_1234567890'.
   void removeHistory(String key) {
     remove(key);
