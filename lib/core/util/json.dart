@@ -11,3 +11,17 @@ List<T> fromJsonList<T>(List? json, T Function(Map<String, dynamic>) fromJson) {
   }
   return items;
 }
+
+Map<String, T> fromJsonMap<T>(Map? json, T Function(Map<String, dynamic>) fromJson) {
+  final map = <String, T>{};
+  if (json == null) {
+    return map;
+  }
+  for (final entry in json.entries) {
+    try {
+      final item = fromJson(entry.value as Map<String, dynamic>);
+      map[entry.key] = item;
+    } catch (_) {}
+  }
+  return map;
+}

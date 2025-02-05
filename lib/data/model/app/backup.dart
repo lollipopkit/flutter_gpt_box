@@ -19,7 +19,7 @@ class Backup implements Mergeable {
   final List<ChatHistory> history;
   final List<ChatConfig> configs;
   final Map<String, dynamic> tools;
-  // TODO: Add trash store
+  final Map<String, ChatHistory> trashes;
   final int lastModTime;
 
   const Backup({
@@ -27,6 +27,7 @@ class Backup implements Mergeable {
     required this.history,
     required this.configs,
     required this.tools,
+    required this.trashes,
     required this.lastModTime,
   });
 
@@ -51,12 +52,14 @@ class Backup implements Mergeable {
       final Map map => map.cast<String, dynamic>(),
       _ => <String, dynamic>{},
     };
+    final trashes = fromJsonMap(json['trashes'], ChatHistory.fromJson);
     return Backup(
       version: version,
       lastModTime: lastModTime,
       configs: configs,
       history: history,
       tools: tools,
+      trashes: trashes,
     );
   }
 
@@ -78,6 +81,7 @@ class Backup implements Mergeable {
       history: Stores.history.fetchAll().values.toList(),
       configs: Stores.config.fetchAll().values.toList(),
       tools: await Stores.tool.getAllMap(),
+      trashes: Stores.trash.histories,
     );
   }
 
@@ -146,6 +150,22 @@ class Backup implements Mergeable {
     }
     for (final key in toolUpdate) {
       Stores.tool.box.put(key, tools[key]);
+    }
+
+    // Trash
+    final nowTrashKeys = Stores.trash.box.keys.toSet();
+    final bakTrashKeys = trashes.keys.toSet();
+    final trashNew = bakTrashKeys.difference(nowTrashKeys);
+    for (final key in trashNew) {
+      Stores.trash.box.put(key, trashes[key]);
+    }
+    final trashDelete = nowTrashKeys.difference(bakTrashKeys);
+    final trashUpdate = nowTrashKeys.intersection(bakTrashKeys);
+    for (final key in trashDelete) {
+      Stores.trash.box.delete(key);
+    }
+    for (final key in trashUpdate) {
+      Stores.trash.box.put(key, trashes[key]);
     }
 
     RNodes.app.notify();
