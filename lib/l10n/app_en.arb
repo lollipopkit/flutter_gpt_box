@@ -33,6 +33,8 @@
   "deleteConfirm": "Confirmation berfore delete",
   "editor": "Editor",
   "emptyFields": "{fields} is empty",
+  "emptyTrash": "Empty recycle bin",
+  "emptyTrashTip": "==0, delete on next startup. <0 do not delete automatically.",
   "fileNotFound": "File({file}) not found",
   "fileTooLarge": "File too large: {size}",
   "followChatModel": "Follow chat model",

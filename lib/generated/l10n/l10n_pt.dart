@@ -110,6 +110,12 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Esvaziar a lixeira';
+
+  @override
+  String get emptyTrashTip => '==0, excluir na próxima inicialização. <0 não excluir automaticamente.';
+
+  @override
   String fileNotFound(Object file) {
     return 'Arquivo ($file) não encontrado';
   }

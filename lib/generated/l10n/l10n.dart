@@ -314,6 +314,18 @@ abstract class AppLocalizations {
   /// **'{fields} is empty'**
   String emptyFields(Object fields);
 
+  /// No description provided for @emptyTrash.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty recycle bin'**
+  String get emptyTrash;
+
+  /// No description provided for @emptyTrashTip.
+  ///
+  /// In en, this message translates to:
+  /// **'==0, delete on next startup. <0 do not delete automatically.'**
+  String get emptyTrashTip;
+
   /// No description provided for @fileNotFound.
   ///
   /// In en, this message translates to:

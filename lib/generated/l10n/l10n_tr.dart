@@ -110,6 +110,12 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Geri dönüşüm kutusunu boşalt';
+
+  @override
+  String get emptyTrashTip => '==0, bir sonraki başlangıçta sil. <0 otomatik olarak silme.';
+
+  @override
   String fileNotFound(Object file) {
     return 'Dosya ($file) bulunamadı';
   }

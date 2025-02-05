@@ -43,6 +43,7 @@ part 'url_scheme.dart';
 part 'req.dart';
 part 'md_copy.dart';
 part 'file_picked.dart';
+part 'trash.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

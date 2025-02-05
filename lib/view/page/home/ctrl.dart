@@ -140,22 +140,25 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
 
 void _onDeleteChat(String chatId) {
   Stores.history.delete(chatId);
+
   if (_curChatId.value == chatId) {
     _switchPreviousChat();
   }
-  final rm = _allHistories.remove(chatId);
+  final rmed = _allHistories.remove(chatId);
   _historyRN.notify();
 
-  if (rm != null) {
-    for (final item in rm.items) {
-      for (final content in item.content) {
-        try {
-          content.deleteFile();
-        } catch (e, st) {
-          Loggers.app.warning('Delete file failed', e, st);
-        }
-      }
-    }
+  if (rmed != null) {
+    Stores.trash.addHistory(rmed);
+    // TODO: Only delete related files if the chat history in trash is deleted
+    // for (final item in rmed.items) {
+    //   for (final content in item.content) {
+    //     try {
+    //       content.deleteFile();
+    //     } catch (e, st) {
+    //       Loggers.app.warning('Delete file failed', e, st);
+    //     }
+    //   }
+    // }
   }
 }
 

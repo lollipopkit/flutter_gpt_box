@@ -110,6 +110,12 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Kosongkan tempat sampah';
+
+  @override
+  String get emptyTrashTip => '==0, hapus saat mulai berikutnya. <0 jangan hapus secara otomatis.';
+
+  @override
   String fileNotFound(Object file) {
     return 'File ($file) tidak ditemukan';
   }

@@ -1,7 +1,9 @@
 import 'package:fl_lib/fl_lib.dart';
 
 class SettingStore extends HiveStore {
-  SettingStore() : super('setting');
+  SettingStore._() : super('setting');
+
+  static final instance = SettingStore._();
 
   late final themeMode = propertyDefault('themeMode', 0);
 
@@ -74,4 +76,7 @@ class SettingStore extends HiveStore {
 
   /// If true, app will uploads the photo to the server.
   late final usePhotograph = propertyDefault('usePhotograph', true);
+
+  /// Days to keep the chat history trashes.
+  late final trashDays = propertyDefault('trashDays', 7);
 }

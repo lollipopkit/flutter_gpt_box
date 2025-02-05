@@ -3,18 +3,21 @@ import 'package:gpt_box/data/store/config.dart';
 import 'package:gpt_box/data/store/history.dart';
 import 'package:gpt_box/data/store/setting.dart';
 import 'package:gpt_box/data/store/tool.dart';
+import 'package:gpt_box/data/store/trash.dart';
 
 abstract final class Stores {
-  static final history = HistoryStore();
-  static final setting = SettingStore();
-  static final config = ConfigStore();
-  static final tool = ToolStore();
+  static final history = HistoryStore.instance;
+  static final setting = SettingStore.instance;
+  static final config = ConfigStore.instance;
+  static final tool = ToolStore.instance;
+  static final trash = TrashStore.instance;
 
   static final List<HiveStore> all = [
     setting,
     history,
     config,
     tool,
+    trash,
   ];
 
   static Future<void> init() async {

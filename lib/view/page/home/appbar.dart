@@ -74,7 +74,7 @@ final class _CustomAppBar extends CustomAppBar {
       // );
     });
 
-    return AppBar(
+    return CustomAppBar(
       centerTitle: false,
       leading: Btn.icon(
         icon: const Icon(Icons.settings),

@@ -57,12 +57,12 @@ final class _HomeBottomState extends State<_HomeBottom> {
                       icon: const Icon(MingCute.add_fill, size: 17),
                       tooltip: l10n.newChat,
                     ),
-                    IconButton(
-                      onPressed: () =>
-                          _onTapRenameChat(_curChatId.value, context),
-                      icon: const Icon(Icons.edit, size: 19),
-                      tooltip: l10n.rename,
-                    ),
+                    // IconButton(
+                    //   onPressed: () =>
+                    //       _onTapRenameChat(_curChatId.value, context),
+                    //   icon: const Icon(Icons.edit, size: 19),
+                    //   tooltip: l10n.rename,
+                    // ),
                     IconButton(
                       onPressed: () =>
                           _onTapDeleteChat(_curChatId.value, context),

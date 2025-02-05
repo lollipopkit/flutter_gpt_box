@@ -33,6 +33,8 @@
   "deleteConfirm": "Confirmer avant de supprimer",
   "editor": "Éditeur",
   "emptyFields": "{fields} sont vides",
+  "emptyTrash": "Vider la corbeille",
+  "emptyTrashTip": "==0, supprimer au prochain démarrage. <0 ne pas supprimer automatiquement.",
   "fileNotFound": "Fichier ({file}) non trouvé",
   "fileTooLarge": "Fichier trop volumineux : {size}",
   "followChatModel": "Suivre le modèle de chat",

@@ -33,6 +33,8 @@
   "deleteConfirm": "删除前确认",
   "editor": "编辑器",
   "emptyFields": "{fields} 为空",
+  "emptyTrash": "清理回收站",
+  "emptyTrashTip": "==0，下次启动时删除。<0 不自动删除。",
   "fileNotFound": "文件（{file}）未能找到",
   "fileTooLarge": "文件过大：{size}",
   "followChatModel": "跟随聊天模型",

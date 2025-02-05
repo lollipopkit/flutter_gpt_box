@@ -110,6 +110,12 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Papierkorb leeren';
+
+  @override
+  String get emptyTrashTip => '==0, beim nächsten Start löschen. <0 nicht automatisch löschen.';
+
+  @override
   String fileNotFound(Object file) {
     return 'Datei ($file) nicht gefunden';
   }

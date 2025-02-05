@@ -110,6 +110,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get emptyTrash => 'Empty recycle bin';
+
+  @override
+  String get emptyTrashTip => '==0, delete on next startup. <0 do not delete automatically.';
+
+  @override
   String fileNotFound(Object file) {
     return 'File($file) not found';
   }

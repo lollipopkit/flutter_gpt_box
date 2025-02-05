@@ -105,11 +105,13 @@ extension _AppLink on AppLink {
           Loggers.app.warning(msg);
           return true;
         }
-        Cfg.setTo(cfg: Cfg.current.copyWith(
-          url: openAiUrl,
-          key: openAiKey,
-          model: openAiModel,
-        ));
+        Cfg.setTo(
+          cfg: Cfg.current.copyWith(
+            url: openAiUrl,
+            key: openAiKey,
+            model: openAiModel,
+          ),
+        );
         return true;
       case AppLink.profilePath:
         final paramsStr = params['params'];
