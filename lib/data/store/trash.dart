@@ -6,20 +6,57 @@ final class TrashStore extends HiveStore {
 
   static final instance = TrashStore();
 
+  /// All the hitories in the trash should have a key starting with this prefix.
   static const historyKeyPrefix = 'history_';
 
+  /// Get all the histories in the trash as a [VNode].
+  late final historiesVN = _histories.vn;
+
+  /// Get all the histories in the trash.
+  Map<String, ChatHistory> get histories => historiesVN.value;
+
+  /// Add a history item to the trash.
   void addHistory(ChatHistory history) {
     final key = '$historyKeyPrefix${DateTimeX.timestamp}';
     set(key, history);
+    histories[key] = history;
+    historiesVN.notify();
   }
 
-  void removeHistory(int timestamp) {
-    final key = '$historyKeyPrefix$timestamp';
+  /// Remove the history item with the given [key].
+  /// 
+  /// - [key] is the key of the history item to remove. Example: 'history_1234567890'.
+  void removeHistory(String key) {
     remove(key);
+    histories.remove(key);
+    historiesVN.notify();
   }
 
-  List<ChatHistory> get histories {
-    final keys = this.keys().where((e) => e.startsWith(historyKeyPrefix));
-    return keys.map((e) => get(e) as ChatHistory).toList();
+  /// Get all the histories in the trash.
+  Map<String, ChatHistory> get _histories {
+    final map = <String, ChatHistory>{};
+    var errCount = 0;
+    for (final key in keys()) {
+      if (key.startsWith(historyKeyPrefix)) {
+        final item = box.get(key);
+        if (item != null) {
+          if (item is ChatHistory) {
+            map[key] = item;
+          } else if (item is Map) {
+            try {
+              map[key] = ChatHistory.fromJson(item.cast<String, dynamic>());
+            } catch (e) {
+              errCount++;
+            }
+          }
+        }
+      }
+    }
+
+    if (errCount > 0) {
+      Loggers.app.warning('Init trash: $errCount error(s)');
+    }
+
+    return map;
   }
 }

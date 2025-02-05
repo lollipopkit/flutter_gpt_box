@@ -47,6 +47,18 @@ final class ChatHistory {
       _$ChatHistoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatHistoryToJson(this);
+
+  /// Returns the last modified time of the history.
+  DateTime? get lastTime {
+    if (items.isEmpty) return null;
+    var last = items.first.createdAt;
+    for (final item in items) {
+      if (item.createdAt.isAfter(last)) {
+        last = item.createdAt;
+      }
+    }
+    return last;
+  }
 }
 
 @HiveType(typeId: 0)

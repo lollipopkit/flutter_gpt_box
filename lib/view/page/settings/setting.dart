@@ -57,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       key: UniqueKey(),
-      appBar: AppBar(
+      appBar: CustomAppBar(
         title: Text(libL10n.setting),
         bottom: TabBar(
           controller: _tabCtrl,

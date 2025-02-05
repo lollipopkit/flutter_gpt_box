@@ -13,28 +13,26 @@ class _HistoryPageState extends State<_HistoryPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: ListenBuilder(
-        listenable: _historyRN,
-        builder: () {
-          final keys = _allHistories.keys.toList();
-          final len = keys.length;
-          return ListView.builder(
-            controller: _historyScrollCtrl,
-            padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
-            reverse: true,
-            itemExtent: _historyItemHeight,
-            itemCount: len,
-            itemBuilder: (_, index) {
-              final chatId = keys[index];
-              return _buildHistoryListItem(chatId).cardx;
-            },
-          );
-        },
-      ),
+      body: _historyRN.listen(() {
+        final keys = _allHistories.keys.toList();
+        final len = keys.length;
+        return ListView.builder(
+          controller: _historyScrollCtrl,
+          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
+          reverse: true,
+          itemExtent: _historyItemHeight,
+          itemCount: len,
+          itemBuilder: (_, index) {
+            final chatId = keys[index];
+            return _buildHistoryListItem(chatId).cardx;
+          },
+        );
+      }),
       floatingActionButton: ValueListenableBuilder(
         valueListenable: _curPage,
         builder: (_, page, __) => page.fab,
       ),
+      bottomSheet: _buildTrashSheet,
     );
   }
 
@@ -107,6 +105,22 @@ class _HistoryPageState extends State<_HistoryPage>
           },
           id: 'history_item',
           duration: 70,
+        );
+      },
+    );
+  }
+
+  Widget get _buildTrashSheet {
+    return Stores.trash.historiesVN.listenVal(
+      (histories) {
+        if (histories.isEmpty) return const SizedBox();
+        return DraggableScrollableSheet(
+          initialChildSize: 0.1,
+          minChildSize: 0.1,
+          maxChildSize: 0.5,
+          builder: (_, controller) {
+            return _TrashSheet(scrollCtrl: controller);
+          },
         );
       },
     );

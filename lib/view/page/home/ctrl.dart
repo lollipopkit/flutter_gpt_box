@@ -149,15 +149,16 @@ void _onDeleteChat(String chatId) {
 
   if (rmed != null) {
     Stores.trash.addHistory(rmed);
-    for (final item in rmed.items) {
-      for (final content in item.content) {
-        try {
-          content.deleteFile();
-        } catch (e, st) {
-          Loggers.app.warning('Delete file failed', e, st);
-        }
-      }
-    }
+    // TODO: Only delete related files if the chat history in trash is deleted
+    // for (final item in rmed.items) {
+    //   for (final content in item.content) {
+    //     try {
+    //       content.deleteFile();
+    //     } catch (e, st) {
+    //       Loggers.app.warning('Delete file failed', e, st);
+    //     }
+    //   }
+    // }
   }
 }
 
