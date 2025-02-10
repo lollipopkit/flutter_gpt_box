@@ -15,7 +15,6 @@ final class _TrashSheetState extends State<_TrashSheet> {
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: Theme.of(context).canvasColor,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(25),
           topRight: Radius.circular(25),
@@ -26,7 +25,7 @@ final class _TrashSheetState extends State<_TrashSheet> {
           controller: widget.scrollCtrl,
           slivers: [
             SliverPersistentHeader(
-              delegate: _SliverPersistentHeadDragger(),
+              delegate: _SliverPersistentHeadDragger(widget.scrollCtrl),
               pinned: true,
             ),
             SliverList(
@@ -72,21 +71,34 @@ extension on _TrashSheetState {
 
 final class _SliverPersistentHeadDragger
     extends SliverPersistentHeaderDelegate {
-  const _SliverPersistentHeadDragger();
+  final ScrollController scrollCtrl;
+
+  const _SliverPersistentHeadDragger(this.scrollCtrl);
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).hintColor,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-        height: 4,
-        width: 40,
-        margin: const EdgeInsets.symmetric(vertical: 10),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
       ),
+      child: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).hintColor,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+          ),
+          height: 4,
+          width: 40,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+        ),
+      ),
+    ).tap(
+      onTap: () {
+        scrollCtrl.animateTo(60,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut);
+      },
     );
   }
 

@@ -32,7 +32,7 @@ class _HistoryPageState extends State<_HistoryPage>
         valueListenable: _curPage,
         builder: (_, page, __) => page.fab,
       ),
-      bottomSheet: _buildTrashSheet,
+      //bottomSheet: _buildTrashSheet,
     );
   }
 
@@ -105,22 +105,6 @@ class _HistoryPageState extends State<_HistoryPage>
           },
           id: 'history_item',
           duration: 70,
-        );
-      },
-    );
-  }
-
-  Widget get _buildTrashSheet {
-    return Stores.trash.historiesVN.listenVal(
-      (histories) {
-        if (histories.isEmpty) return const SizedBox();
-        return DraggableScrollableSheet(
-          initialChildSize: 0.1,
-          minChildSize: 0.1,
-          maxChildSize: 0.5,
-          builder: (_, controller) {
-            return _TrashSheet(scrollCtrl: controller);
-          },
         );
       },
     );

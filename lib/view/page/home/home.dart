@@ -55,7 +55,6 @@ class HomePage extends StatefulWidget {
     _allHistories = Stores.history.fetchAll();
     _historyRN.notify();
     _chatRN.notify();
-    _appbarTitleRN.notify();
     _switchChat();
     Cfg.setTo();
   }
