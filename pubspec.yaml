@@ -24,6 +24,8 @@ dependencies:
   shortid: ^0.1.2
   openai_dart: ^0.4.1
   json_annotation: ^4.9.0
+  # flutter_riverpod: ^2.6.1
+  # riverpod_annotation: ^2.6.1
   # dart_openai: #^5.1.0
   #   git:
   #     url: https://github.com/lollipopkit/dart_openai
@@ -40,11 +42,11 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.243
+      ref: v1.0.244
 
-dependency_overrides:
-  # fl_lib:
-  #   path: ../fl_lib
+# dependency_overrides:
+#   fl_lib:
+#     path: ../fl_lib
   # fl_build:
   #   path: ../fl_build
   # flutter_highlight:
@@ -58,11 +60,13 @@ dev_dependencies:
   hive_generator: ^2.0.1
   flutter_native_splash: ^2.3.9
   json_serializable: ^6.8.0
+  flutter_distributor: ^0.4.5
+  # riverpod_generator: ^2.6.1
+  # riverpod_lint: ^2.6.1
   fl_build:
     git:
       url: https://github.com/lppcg/fl_build.git
       ref: v1.0.48
-  flutter_distributor: ^0.4.5
     # path: ../fl_build
 
 flutter:

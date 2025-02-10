@@ -19,6 +19,7 @@ class Backup implements Mergeable {
   final List<ChatHistory> history;
   final List<ChatConfig> configs;
   final Map<String, dynamic> tools;
+  // TODO: It's optional
   final Map<String, ChatHistory> trashes;
   final int lastModTime;
 

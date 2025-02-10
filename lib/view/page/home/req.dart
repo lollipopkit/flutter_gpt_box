@@ -136,7 +136,6 @@ Future<void> _onCreateText(
   msgs.add(questionForApi.toOpenAI());
 
   workingChat.items.add(question);
-  _genChatTitle(context, chatId, config);
   _inputCtrl.clear();
   _chatRN.notify();
   _autoScroll(chatId);
@@ -245,6 +244,8 @@ Future<void> _onCreateText(
         _autoHideCtrl.autoHideEnabled = true;
 
         _storeChat(chatId);
+        await _genChatTitle(context, chatId, config);
+
         // Wait for db to store the chat
         await Future.delayed(const Duration(milliseconds: 300));
         BakSync.instance.sync();
@@ -472,12 +473,12 @@ Future<void> _genChatTitle(
     context.showSnackBar(msg);
     return;
   }
-  if (entity.items.length != 1) return;
+  if (entity.items.where((e) => e.role.isUser).length > 1) return;
 
   void onErr(Object e, StackTrace s) {
     Loggers.app.warning('Gen title: $e');
     _historyRNMap[chatId]?.notify();
-    if (chatId == _curChatId.value) _appbarTitleRN.notify();
+    // if (chatId == _curChatId.value) _appbarTitleRN.notify();
   }
 
   try {
@@ -506,7 +507,9 @@ Future<void> _genChatTitle(
       final ne = entity.copyWith(name: title)..save();
       _allHistories[chatId] = ne;
       _historyRNMap[chatId]?.notify();
-      if (chatId == _curChatId.value) _appbarTitleRN.notify();
+      if (chatId == _curChatId.value) {
+        _appbarTitleVN.value = title;
+      }
     }
   } catch (e, s) {
     onErr(e, s);

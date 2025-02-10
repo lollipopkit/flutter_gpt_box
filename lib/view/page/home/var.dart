@@ -18,10 +18,10 @@ final _filePicked = nvn<_FilePicked>();
 
 final _chatType = ChatType.text.vn;
 
-// For page body chat view
+/// Body chat view
 final _chatRN = RNode();
 final _historyRN = RNode();
-final _appbarTitleRN = RNode();
+final _appbarTitleVN = nvn<String>();
 final _locateHistoryBtn = false.vn;
 final _chatFabRN = RNode();
 final _homeBottomRN = RNode();
@@ -32,6 +32,7 @@ final _curChatId = 'fake-non-exist-id'.vn..addListener(_onCurChatIdChanged);
 void _onCurChatIdChanged() {
   _curChat = _allHistories[_curChatId.value];
   _chatRN.notify();
+  _appbarTitleVN.value = _curChat?.name;
 }
 
 /// [ChatHistory.id] or [ChatHistoryItem.id]

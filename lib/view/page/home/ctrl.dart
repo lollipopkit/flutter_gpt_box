@@ -13,7 +13,6 @@ void _switchChat([String? id]) {
   _curChatId.value = id;
   _chatItemRNMap.clear();
   _chatRN.notify();
-  _appbarTitleRN.notify();
   Future.delayed(_durationMedium, () {
     // Different chats have different height
     _chatFabRN.notify();
@@ -185,7 +184,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
   _allHistories[chatId] = ne;
   _historyRNMap[chatId]?.notify();
   _storeChat(chatId);
-  _appbarTitleRN.notify();
+  _appbarTitleVN.value = title;
 }
 
 /// Used in send btn and [_onCreateText]
