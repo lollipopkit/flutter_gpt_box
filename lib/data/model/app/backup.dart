@@ -19,8 +19,7 @@ class Backup implements Mergeable {
   final List<ChatHistory> history;
   final List<ChatConfig> configs;
   final Map<String, dynamic> tools;
-  // TODO: It's optional
-  final Map<String, ChatHistory> trashes;
+  final Map<String, ChatHistory>? trashes;
   final int lastModTime;
 
   const Backup({
@@ -154,19 +153,22 @@ class Backup implements Mergeable {
     }
 
     // Trash
-    final nowTrashKeys = Stores.trash.box.keys.toSet();
-    final bakTrashKeys = trashes.keys.toSet();
-    final trashNew = bakTrashKeys.difference(nowTrashKeys);
-    for (final key in trashNew) {
-      Stores.trash.box.put(key, trashes[key]);
-    }
-    final trashDelete = nowTrashKeys.difference(bakTrashKeys);
-    final trashUpdate = nowTrashKeys.intersection(bakTrashKeys);
-    for (final key in trashDelete) {
-      Stores.trash.box.delete(key);
-    }
-    for (final key in trashUpdate) {
-      Stores.trash.box.put(key, trashes[key]);
+    final trashes_ = trashes;
+    if (trashes_ != null) {
+      final nowTrashKeys = Stores.trash.box.keys.toSet();
+      final bakTrashKeys = trashes_.keys.toSet();
+      final trashNew = bakTrashKeys.difference(nowTrashKeys);
+      for (final key in trashNew) {
+        Stores.trash.box.put(key, trashes_[key]);
+      }
+      final trashDelete = nowTrashKeys.difference(bakTrashKeys);
+      final trashUpdate = nowTrashKeys.intersection(bakTrashKeys);
+      for (final key in trashDelete) {
+        Stores.trash.box.delete(key);
+      }
+      for (final key in trashUpdate) {
+        Stores.trash.box.put(key, trashes_[key]);
+      }
     }
 
     RNodes.app.notify();
