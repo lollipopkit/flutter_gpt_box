@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -7,7 +9,8 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get apiUrlV1Tip => 'Mirip dengan https://api.openai.com/v1 (memerlukan /v1 di akhir). Lanjutkan menggunakan URL ini?';
+  String get apiUrlV1Tip =>
+      'Mirip dengan https://api.openai.com/v1 (memerlukan /v1 di akhir). Lanjutkan menggunakan URL ini?';
 
   @override
   String get assistant => 'Asisten';
@@ -31,7 +34,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get autoScrollBottom => 'Gulir ke bawah secara otomatis';
 
   @override
-  String get backupTip => 'Pastikan file cadangan Anda bersifat pribadi dan aman!';
+  String get backupTip =>
+      'Pastikan file cadangan Anda bersifat pribadi dan aman!';
 
   @override
   String get balance => 'Saldo';
@@ -40,7 +44,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get calcTokenLen => 'Hitung panjang Token';
 
   @override
-  String get changeModelTip => 'Kunci yang berbeda mungkin dapat mengakses daftar model yang berbeda. Jika Anda tidak memahami mekanismenya dan terjadi kesalahan, disarankan untuk mengatur ulang model.';
+  String get changeModelTip =>
+      'Kunci yang berbeda mungkin dapat mengakses daftar model yang berbeda. Jika Anda tidak memahami mekanismenya dan terjadi kesalahan, disarankan untuk mengatur ulang model.';
 
   @override
   String get chat => 'Obrolan';
@@ -113,7 +118,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get emptyTrash => 'Kosongkan tempat sampah';
 
   @override
-  String get emptyTrashTip => '==0, hapus saat mulai berikutnya. <0 jangan hapus secara otomatis.';
+  String get emptyTrashTip =>
+      '==0, hapus saat mulai berikutnya. <0 jangan hapus secara otomatis.';
 
   @override
   String fileNotFound(Object file) {
@@ -147,7 +153,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get headTailMode => 'Mode kepala-ekor';
 
   @override
-  String get headTailModeTip => 'Hanya mengirim `prompt + pesan pengguna pertama + input saat ini` sebagai konteks.\n\nIni sangat berguna saat menerjemahkan percakapan (menghemat token).';
+  String get headTailModeTip =>
+      'Hanya mengirim `prompt + pesan pengguna pertama + input saat ini` sebagai konteks.\n\nIni sangat berguna saat menerjemahkan percakapan (menghemat token).';
 
   @override
   String get help => 'Bantuan';
@@ -223,7 +230,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get message => 'Pesan';
 
   @override
-  String get migrationV1UrlTip => 'Haruskah \"/v1\" ditambahkan secara otomatis di akhir konfigurasi?';
+  String get migrationV1UrlTip =>
+      'Haruskah \"/v1\" ditambahkan secara otomatis di akhir konfigurasi?';
 
   @override
   String get minute => 'menit';
@@ -267,7 +275,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get onSwitchChat => 'Saat beralih percakapan';
 
   @override
-  String get onlyRestoreHistory => 'Hanya pulihkan riwayat obrolan (tidak memulihkan URL API dan Kunci Rahasia)';
+  String get onlyRestoreHistory =>
+      'Hanya pulihkan riwayat obrolan (tidak memulihkan URL API dan Kunci Rahasia)';
 
   @override
   String get onlySyncOnLaunch => 'Hanya sinkronkan saat peluncuran';
@@ -294,7 +303,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get promptsSettingsItem => 'Prompt';
 
   @override
-  String get quickShareTip => 'Buka tautan ini di perangkat lain untuk dengan cepat mengimpor konfigurasi saat ini.';
+  String get quickShareTip =>
+      'Buka tautan ini di perangkat lain untuk dengan cepat mengimpor konfigurasi saat ini.';
 
   @override
   String get raw => 'Mentah';
@@ -315,7 +325,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get replay => 'Putar ulang';
 
   @override
-  String get replayTip => 'Pesan yang diputar ulang dan semua pesan selanjutnya akan dihapus.';
+  String get replayTip =>
+      'Pesan yang diputar ulang dan semua pesan selanjutnya akan dihapus.';
 
   @override
   String get res => 'Sumber daya';
@@ -343,7 +354,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get saveErrChat => 'Simpan obrolan error';
 
   @override
-  String get saveErrChatTip => 'Simpan setelah menerima/mengirim setiap pesan, bahkan jika ada kesalahan';
+  String get saveErrChatTip =>
+      'Simpan setelah menerima/mengirim setiap pesan, bahkan jika ada kesalahan';
 
   @override
   String get scrollSwitchChat => 'Gulir untuk beralih obrolan';
@@ -361,7 +373,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get shareFrom => 'Dibagikan dari';
 
   @override
-  String get skipSameTitle => 'Lewati obrolan dengan judul yang sama dengan obrolan lokal';
+  String get skipSameTitle =>
+      'Lewati obrolan dengan judul yang sama dengan obrolan lokal';
 
   @override
   String get softWrap => 'Pembungkus lunak';
