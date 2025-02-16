@@ -87,9 +87,13 @@ extension on _TrashSheetState {
     Stores.history.put(item);
     _allHistories[key] = item;
     _historyRN.notify();
+
+    context.pop();
   }
 
   void _delete(ChatHistory item, String key) {
     Stores.trash.removeHistory(key);
+
+    context.pop();
   }
 }
