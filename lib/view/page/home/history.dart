@@ -13,27 +13,50 @@ class _HistoryPageState extends State<_HistoryPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: _historyRN.listen(() {
-        final keys = _allHistories.keys.toList();
-        final len = keys.length;
-        return ListView.builder(
-          controller: _historyScrollCtrl,
-          padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
-          reverse: true,
-          itemExtent: _historyItemHeight,
-          itemCount: len,
-          itemBuilder: (_, index) {
-            final chatId = keys[index];
-            return _buildHistoryListItem(chatId).cardx;
-          },
-        );
-      }),
+      body: _buildBody,
       floatingActionButton: ValueListenableBuilder(
         valueListenable: _curPage,
         builder: (_, page, __) => page.fab,
       ),
       //bottomSheet: _buildTrashSheet,
     );
+  }
+
+  Widget get _buildBody {
+    return CustomScrollView(
+      controller: _historyScrollCtrl,
+      slivers: [
+        _buildTrash,
+        _buildHisotry,
+      ],
+    );
+  }
+
+  Widget get _buildTrash {
+    return Stores.trash.historiesVN.listenVal((vals) {
+      if (vals.isEmpty) return SliverToBoxAdapter(child: UIs.placeholder);
+      return SliverPersistentHeader(
+        delegate: _TrashSheetHeader(),
+      );
+    });
+  }
+
+  Widget get _buildHisotry {
+    return _historyRN.listen(() {
+      final keys = _allHistories.keys.toList();
+      final len = keys.length;
+      return SliverPadding(
+        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 11),
+        sliver: SliverList.builder(
+          // itemExtent: _historyItemHeight,
+          itemCount: len,
+          itemBuilder: (_, index) {
+            final chatId = keys[index];
+            return _buildHistoryListItem(chatId).cardx;
+          },
+        ),
+      );
+    });
   }
 
   Widget _buildHistoryListItem(String chatId) {

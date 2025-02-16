@@ -1,9 +1,25 @@
 part of 'home.dart';
 
-final class _TrashSheet extends StatefulWidget {
-  final ScrollController scrollCtrl;
+final class _TrashSheetHeader extends SliverPersistentHeaderDelegate {
+  @override
+  double get minExtent => 0;
 
-  const _TrashSheet({required this.scrollCtrl});
+  @override
+  double get maxExtent => _historyItemHeight + 11;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return _TrashSheet();
+  }
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
+}
+
+final class _TrashSheet extends StatefulWidget {
+  const _TrashSheet();
 
   @override
   State<StatefulWidget> createState() => _TrashSheetState();
@@ -12,104 +28,60 @@ final class _TrashSheet extends StatefulWidget {
 final class _TrashSheetState extends State<_TrashSheet> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
-        ),
-      ),
-      child: Stores.trash.historiesVN.listenVal((histories) {
-        return CustomScrollView(
-          controller: widget.scrollCtrl,
-          slivers: [
-            SliverPersistentHeader(
-              delegate: _SliverPersistentHeadDragger(widget.scrollCtrl),
-              pinned: true,
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (ctx, idx) {
-                  if (idx >= histories.length) return UIs.placeholder;
-                  final key = histories.keys.elementAt(idx);
-                  final item = histories[key];
-                  if (item == null) return UIs.placeholder;
-                  final lastTime = item.lastTime?.simple();
-                  return ListTile(
-                    title: Text(item.name ?? l10n.untitled),
-                    subtitle: lastTime != null ? Text(lastTime) : null,
-                    trailing: _buildRestoreBtn(item, key),
-                  );
-                },
-                childCount: histories.length,
-              ),
-            ),
-          ],
-        );
-      }),
-    );
+    return _buildList;
   }
 
-  Widget _buildRestoreBtn(ChatHistory item, String key) {
-    return Btn.icon(
-      icon: Icon(Icons.restore),
-      text: libL10n.restore,
-      onTap: () => _restore(item, key),
+  Widget get _buildList {
+    return Stores.trash.historiesVN.listenVal((histories) {
+      if (histories.isEmpty) return UIs.placeholder;
+      return ListView.builder(
+        padding: const EdgeInsets.only(left: 11, right: 11, top: 11),
+        scrollDirection: Axis.horizontal,
+        itemCount: histories.length,
+        itemBuilder: (ctx, idx) {
+          final key = histories.keys.elementAt(idx);
+          final item = histories[key];
+          if (item == null) return UIs.placeholder;
+          return _buildItem(item, key);
+        },
+      );
+    });
+  }
+
+  Widget _buildItem(ChatHistory item, String key) {
+    final lastTime = item.lastTime?.simple();
+    final subtitle = lastTime != null
+        ? Text(
+            lastTime,
+            style: TextStyle(color: Colors.grey, fontSize: 12),
+          )
+        : null;
+    return SizedBox(
+      width: 200,
+      child: ListTile(
+        title: Text(item.name ?? l10n.untitled),
+        subtitle: subtitle,
+        onTap: () => _showDialog(item, key),
+      ).cardx,
     );
   }
 }
 
 extension on _TrashSheetState {
+  Future<void> _showDialog(ChatHistory item, String key) {
+    return context.showRoundDialog(
+      title: libL10n.restore,
+      actions: [
+        Btn.cancel(),
+        Btn.ok(onTap: () => _restore(item, key)),
+      ],
+    );
+  }
+
   void _restore(ChatHistory item, String key) {
     Stores.trash.removeHistory(key);
     Stores.history.put(item);
     _allHistories[key] = item;
     _historyRN.notify();
-  }
-}
-
-final class _SliverPersistentHeadDragger
-    extends SliverPersistentHeaderDelegate {
-  final ScrollController scrollCtrl;
-
-  const _SliverPersistentHeadDragger(this.scrollCtrl);
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-      ),
-      child: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).hintColor,
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-          ),
-          height: 4,
-          width: 40,
-          margin: const EdgeInsets.symmetric(vertical: 10),
-        ),
-      ),
-    ).tap(
-      onTap: () {
-        scrollCtrl.animateTo(60,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut);
-      },
-    );
-  }
-
-  @override
-  double get maxExtent => 40;
-
-  @override
-  double get minExtent => 40;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
   }
 }
