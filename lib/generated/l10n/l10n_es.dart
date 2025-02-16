@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -9,8 +7,7 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get apiUrlV1Tip =>
-      'Similar a https://api.openai.com/v1 (requiriendo el /v1 final). ¿Continuar usando esta URL?';
+  String get apiUrlV1Tip => 'Similar a https://api.openai.com/v1 (requiriendo el /v1 final). ¿Continuar usando esta URL?';
 
   @override
   String get assistant => 'Asistente';
@@ -34,8 +31,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get autoScrollBottom => 'Desplazamiento automático hacia abajo';
 
   @override
-  String get backupTip =>
-      '¡Por favor, asegúrese de que su archivo de respaldo sea privado y seguro!';
+  String get backupTip => '¡Por favor, asegúrese de que su archivo de respaldo sea privado y seguro!';
 
   @override
   String get balance => 'Saldo';
@@ -44,8 +40,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get calcTokenLen => 'Calcular longitud de tokens';
 
   @override
-  String get changeModelTip =>
-      'Diferentes claves pueden acceder a diferentes listas de modelos. Si no entiendes el mecanismo y ocurren errores, se recomienda reconfigurar el modelo.';
+  String get changeModelTip => 'Diferentes claves pueden acceder a diferentes listas de modelos. Si no entiendes el mecanismo y ocurren errores, se recomienda reconfigurar el modelo.';
 
   @override
   String get chat => 'Chat';
@@ -118,8 +113,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get emptyTrash => 'Vaciar la papelera de reciclaje';
 
   @override
-  String get emptyTrashTip =>
-      '==0, eliminar en el próximo inicio. <0 no eliminar automáticamente.';
+  String get emptyTrashTip => '==0, eliminar en el próximo inicio. <0 no eliminar automáticamente.';
 
   @override
   String fileNotFound(Object file) {
@@ -153,8 +147,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get headTailMode => 'Modo cabeza-cola';
 
   @override
-  String get headTailModeTip =>
-      'Solo envía `prompt + primer mensaje del usuario + entrada actual` como contexto.\n\nEsto es especialmente útil para traducir conversaciones (ahorra tokens).';
+  String get headTailModeTip => 'Solo envía `prompt + primer mensaje del usuario + entrada actual` como contexto.\n\nEsto es especialmente útil para traducir conversaciones (ahorra tokens).';
 
   @override
   String get help => 'Ayuda';
@@ -174,8 +167,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get hour => 'hora';
 
   @override
-  String get httpToolTip =>
-      'Realizar una solicitud HTTP, por ejemplo: buscar contenido';
+  String get httpToolTip => 'Realizar una solicitud HTTP, por ejemplo: buscar contenido';
 
   @override
   String get ignoreContextConstraint => 'Ignorar restricción de contexto';
@@ -231,8 +223,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get message => 'Mensaje';
 
   @override
-  String get migrationV1UrlTip =>
-      '¿Se debe agregar automáticamente \"/v1\" al final de la configuración?';
+  String get migrationV1UrlTip => '¿Se debe agregar automáticamente \"/v1\" al final de la configuración?';
 
   @override
   String get minute => 'minuto';
@@ -241,8 +232,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get model => 'Modelo';
 
   @override
-  String get modelRegExpTip =>
-      'Si el nombre del modelo coincide, se usarán las herramientas';
+  String get modelRegExpTip => 'Si el nombre del modelo coincide, se usarán las herramientas';
 
   @override
   String get more => 'Más';
@@ -254,8 +244,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get myOtherApps => 'Mis otras aplicaciones';
 
   @override
-  String get needOpenAIKey =>
-      'Por favor, introduzca primero la clave de OpenAI';
+  String get needOpenAIKey => 'Por favor, introduzca primero la clave de OpenAI';
 
   @override
   String get needRestart => 'Se necesita reiniciar para aplicar';
@@ -278,8 +267,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get onSwitchChat => 'Al cambiar de conversación';
 
   @override
-  String get onlyRestoreHistory =>
-      'Solo restaurar historial de chat (no restaurar URL de API ni clave secreta)';
+  String get onlyRestoreHistory => 'Solo restaurar historial de chat (no restaurar URL de API ni clave secreta)';
 
   @override
   String get onlySyncOnLaunch => 'Sincronizar solo al iniciar';
@@ -306,8 +294,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get promptsSettingsItem => 'Indicaciones';
 
   @override
-  String get quickShareTip =>
-      'Abre este enlace en otro dispositivo para importar rápidamente la configuración actual.';
+  String get quickShareTip => 'Abre este enlace en otro dispositivo para importar rápidamente la configuración actual.';
 
   @override
   String get raw => 'Crudo';
@@ -328,8 +315,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get replay => 'Repetir';
 
   @override
-  String get replayTip =>
-      'Los mensajes reproducidos y todos los mensajes posteriores se borrarán.';
+  String get replayTip => 'Los mensajes reproducidos y todos los mensajes posteriores se borrarán.';
 
   @override
   String get res => 'Recurso';
@@ -357,8 +343,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get saveErrChat => 'Guardar chat con error';
 
   @override
-  String get saveErrChatTip =>
-      'Guardar después de recibir/enviar cada mensaje, incluso si hay errores';
+  String get saveErrChatTip => 'Guardar después de recibir/enviar cada mensaje, incluso si hay errores';
 
   @override
   String get scrollSwitchChat => 'Desplazar para cambiar de chat';
@@ -376,8 +361,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shareFrom => 'Compartido desde';
 
   @override
-  String get skipSameTitle =>
-      'Omitir chats con el mismo título que los chats locales';
+  String get skipSameTitle => 'Omitir chats con el mismo título que los chats locales';
 
   @override
   String get softWrap => 'Ajuste de línea';

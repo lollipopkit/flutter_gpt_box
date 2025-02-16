@@ -18,7 +18,6 @@ class _HistoryPageState extends State<_HistoryPage>
         valueListenable: _curPage,
         builder: (_, page, __) => page.fab,
       ),
-      //bottomSheet: _buildTrashSheet,
     );
   }
 

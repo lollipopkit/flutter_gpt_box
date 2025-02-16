@@ -72,7 +72,11 @@ extension on _TrashSheetState {
     return context.showRoundDialog(
       title: libL10n.restore,
       actions: [
-        Btn.cancel(),
+        Btn.text(
+          text: libL10n.delete,
+          onTap: () => _delete(item, key),
+          textStyle: UIs.textRed,
+        ),
         Btn.ok(onTap: () => _restore(item, key)),
       ],
     );
@@ -83,5 +87,9 @@ extension on _TrashSheetState {
     Stores.history.put(item);
     _allHistories[key] = item;
     _historyRN.notify();
+  }
+
+  void _delete(ChatHistory item, String key) {
+    Stores.trash.removeHistory(key);
   }
 }
