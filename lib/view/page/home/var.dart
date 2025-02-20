@@ -11,7 +11,6 @@ final _timeRN = RNode();
 
 /// Map for [ChatHistoryItem]'s [RNode]
 final _chatItemRNMap = <String, RNode>{};
-final _historyRNMap = <String, RNode>{};
 
 /// Audio / Image / File path
 final _filePicked = nvn<_FilePicked>();
@@ -56,8 +55,6 @@ final _historyLocateTollerance = _historyItemHeight / 3;
 
 const _durationShort = Durations.short4;
 const _durationMedium = Durations.medium1;
-
-final _chatFabAutoHideKey = GlobalKey<AutoHideState>();
 
 // ignore: unused_element
 KeyboardCtrlListener? _keyboardSendListener;

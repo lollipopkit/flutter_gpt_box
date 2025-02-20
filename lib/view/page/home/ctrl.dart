@@ -91,7 +91,7 @@ void _onTapDelChatItem(
   if (result != true) return;
   chatItems.remove(chatItem);
   _storeChat(chatId.value);
-  _historyRNMap[chatId.value]?.notify();
+  _historyRN.notify();
   _chatRN.notify();
 }
 
@@ -182,7 +182,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
   if (title == null || title.isEmpty) return;
   final ne = entity.copyWith(name: title)..save();
   _allHistories[chatId] = ne;
-  _historyRNMap[chatId]?.notify();
+  _historyRN.notify();
   _storeChat(chatId);
   _appbarTitleVN.value = title;
 }

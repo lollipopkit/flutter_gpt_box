@@ -42,10 +42,10 @@ packages:
     dependency: "direct main"
     description:
       name: app_links
-      sha256: "433df2e61b10519407475d7f69e470789d23d593f28224c38ba1068597be7950"
+      sha256: "85ed8fc1d25a76475914fff28cc994653bd900bc2c26e4b57a49e097febb54ba"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.3"
+    version: "6.4.0"
   app_links_linux:
     dependency: transitive
     description:
@@ -194,10 +194,10 @@ packages:
     dependency: transitive
     description:
       name: camera_avfoundation
-      sha256: eff7ed630b1ac3994737c790368fe006388ad9f271d7148e432263721e45dc75
+      sha256: "1eeb9ce7c9a397e312343fd7db337d95f35c3e65ad5a62ff637c8abce5102b98"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.18+7"
+    version: "0.9.18+8"
   camera_platform_interface:
     dependency: transitive
     description:
@@ -419,10 +419,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: "16ed7b077ef01ad6170a3d0c57caa4a112a38d7a2ed5602e0aca9ca6f3d98da6"
+      sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.3"
+    version: "2.1.4"
   file:
     dependency: transitive
     description:
@@ -866,10 +866,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_android
-      sha256: b62d34a506e12bb965e824b6db4fbf709ee4589cf5d3e99b45ab2287b008ee0c
+      sha256: "82652a75e3dd667a91187769a6a2cc81bd8c111bbead698d8e938d2b63e5e89a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.12+20"
+    version: "0.8.12+21"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -1314,10 +1314,10 @@ packages:
     dependency: transitive
     description:
       name: qr_code_dart_scan
-      sha256: "62c42c0c079657a42508764311219d0f7bb41644dcc37e7619c8b9349268d258"
+      sha256: a21340c4a2ca14e2e114915940fcad166f15c1a065fed8b4fede4a4aba5bc4ff
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.10"
+    version: "0.9.11"
   recase:
     dependency: transitive
     description:
@@ -1402,10 +1402,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: ea86be7b7114f9e94fddfbb52649e59a03d6627ccd2387ebddcd6624719e9f16
+      sha256: a768fc8ede5f0c8e6150476e14f38e2417c0864ca36bb4582be8e21925a03c22
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.5"
+    version: "2.4.6"
   shared_preferences_foundation:
     dependency: transitive
     description:
@@ -1434,10 +1434,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_web
-      sha256: d2ca4132d3946fec2184261726b355836a82c33d7d5b67af32692aff18a4684e
+      sha256: c49bd060261c9a3f0ff445892695d6212ff603ef3115edbb448509d407600019
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.3"
   shared_preferences_windows:
     dependency: transitive
     description:
@@ -1752,10 +1752,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: daf97c9d80197ed7b619040e86c8ab9a9dad285e7671ee7390f9180cc828a51e
+      sha256: b89e6e24d1454e149ab20fbb225af58660f0c0bf4475544650700d8e2da54aef
       url: "https://pub.dev"
     source: hosted
-    version: "5.10.1"
+    version: "5.11.0"
   window_manager:
     dependency: transitive
     description:
@@ -1797,5 +1797,5 @@ packages:
     source: hosted
     version: "1.1.2"
 sdks:
-  dart: ">=3.7.0-0 <4.0.0"
+  dart: ">=3.7.0 <4.0.0"
   flutter: ">=3.27.0"
