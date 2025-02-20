@@ -43,7 +43,6 @@ final _curPage = HomePageEnum.chat.vn;
 
 final _imeFocus = FocusNode();
 
-Size? _windowSize;
 final _isWide = false.vn..addListener(_onIsWideChanged);
 void _onIsWideChanged() {
   _curPage.value = HomePageEnum.chat;

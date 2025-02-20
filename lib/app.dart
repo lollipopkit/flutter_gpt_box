@@ -17,50 +17,50 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemUIs.setTransparentNavigationBar(context);
-    return ListenBuilder(
-      listenable: RNodes.app,
-      builder: () {
-        UIs.colorSeed = Color(Stores.setting.themeColorSeed.get());
-        final themeMode = switch (Stores.setting.themeMode.get()) {
-          1 => ThemeMode.light,
-          2 => ThemeMode.dark,
-          _ => ThemeMode.system,
-        };
-        final locale = Stores.setting.locale.get();
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'GPT Box',
-          locale: locale.toLocale,
-          localizationsDelegates: const [
-            ...AppLocalizations.localizationsDelegates,
-            LibLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          localeListResolutionCallback: LocaleUtil.resolve,
-          themeMode: themeMode,
-          theme: ThemeData(colorSchemeSeed: UIs.colorSeed).fixWindowsFont,
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            colorSchemeSeed: UIs.colorSeed,
-          ).toAmoled.fixWindowsFont,
-          home: VirtualWindowFrame(
-            child: Builder(
-              builder: (context) {
-                final l10n_ = AppLocalizations.of(context);
-                if (l10n_ != null) l10n = l10n_;
-                context.setLibL10n();
-                UIs.primaryColor = Theme.of(context).colorScheme.primary;
 
-                final intros = _IntroPage.builders;
-                if (intros.isNotEmpty) {
-                  return _IntroPage(intros);
-                }
-                return const HomePage();
-              },
-            ),
-          ),
-        );
-      },
+    return RNodes.app.listen(() => _buildApp(context));
+  }
+
+  Widget _buildApp(BuildContext context) {
+    UIs.colorSeed = Color(Stores.setting.themeColorSeed.get());
+    final themeMode = switch (Stores.setting.themeMode.get()) {
+      1 => ThemeMode.light,
+      2 => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
+    final locale = Stores.setting.locale.get();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'GPT Box',
+      locale: locale.toLocale,
+      localizationsDelegates: const [
+        ...AppLocalizations.localizationsDelegates,
+        LibLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      localeListResolutionCallback: LocaleUtil.resolve,
+      themeMode: themeMode,
+      theme: ThemeData(colorSchemeSeed: UIs.colorSeed).fixWindowsFont,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorSchemeSeed: UIs.colorSeed,
+      ).toAmoled.fixWindowsFont,
+      home: VirtualWindowFrame(
+        child: Builder(
+          builder: (context) {
+            final l10n_ = AppLocalizations.of(context);
+            if (l10n_ != null) l10n = l10n_;
+            context.setLibL10n();
+            UIs.primaryColor = Theme.of(context).colorScheme.primary;
+
+            final intros = _IntroPage.builders;
+            if (intros.isNotEmpty) {
+              return _IntroPage(intros);
+            }
+            return const HomePage();
+          },
+        ),
+      ),
     );
   }
 }

@@ -139,6 +139,7 @@ Future<void> _onCreateText(
   _inputCtrl.clear();
   _chatRN.notify();
   _autoScroll(chatId);
+  final titleCompleter = _genChatTitle(context, chatId, config);
 
   final toolCompatible = Cfg.isToolCompatible();
 
@@ -244,9 +245,9 @@ Future<void> _onCreateText(
         _autoHideCtrl.autoHideEnabled = true;
 
         _storeChat(chatId);
-        await _genChatTitle(context, chatId, config);
 
         // Wait for db to store the chat
+        await titleCompleter?.future;
         await Future.delayed(const Duration(milliseconds: 300));
         BakSync.instance.sync();
       },
@@ -459,60 +460,69 @@ Future<void> _onCreateText(
 //   }
 // }
 
-Future<void> _genChatTitle(
+Completer<void>? _genChatTitle(
   BuildContext context,
   String chatId,
   ChatConfig cfg,
-) async {
-  if (!Stores.setting.genTitle.get()) return;
+) {
+  if (!Stores.setting.genTitle.get()) return null;
 
   final entity = _allHistories[chatId];
   if (entity == null) {
     final msg = 'Gen Chat($chatId) not found';
     Loggers.app.warning(msg);
     context.showSnackBar(msg);
-    return;
+    return null;
   }
-  if (entity.items.where((e) => e.role.isUser).length > 1) return;
+  if (entity.items.where((e) => e.role.isUser).length > 1) return null;
 
+  final completer = Completer<void>();
   void onErr(Object e, StackTrace s) {
     Loggers.app.warning('Gen title: $e');
     _historyRNMap[chatId]?.notify();
-    // if (chatId == _curChatId.value) _appbarTitleRN.notify();
+    completer.complete();
   }
 
   try {
-    final resp = await Cfg.client.createChatCompletion(
-      request: CreateChatCompletionRequest(
-        model: ChatCompletionModel.modelId(cfg.model),
-        messages: [
-          ChatHistoryItem.single(
-            raw: Cfg.current.genTitlePrompt ?? ChatTitleUtil.titlePrompt,
-            role: ChatRole.system,
-          ).toOpenAI(),
-          ChatHistoryItem.single(
-            role: ChatRole.user,
-            raw: entity.items.first.content
-                .firstWhere((p0) => p0.type == ChatContentType.text)
-                .raw,
-          ).toOpenAI(),
-        ],
-      ),
+    final msgs = [
+      ChatHistoryItem.single(
+        raw: Cfg.current.genTitlePrompt ?? ChatTitleUtil.titlePrompt,
+        role: ChatRole.system,
+      ).toOpenAI(),
+      ChatHistoryItem.single(
+        role: ChatRole.user,
+        raw: entity.items.first.content
+            .firstWhere((p0) => p0.type == ChatContentType.text)
+            .raw,
+      ).toOpenAI(),
+    ];
+    final req = CreateChatCompletionRequest(
+      model: ChatCompletionModel.modelId(cfg.model),
+      messages: msgs,
+    );
+    Cfg.client.createChatCompletion(request: req).then(
+      (resp) {
+        var title = resp.choices.firstOrNull?.message.content;
+        title = ChatTitleUtil.prettify(title ?? '');
+
+        if (title.isNotEmpty) {
+          final ne = entity.copyWith(name: title)..save();
+          _allHistories[chatId] = ne;
+          _historyRNMap[chatId]?.notify();
+          if (chatId == _curChatId.value) {
+            _appbarTitleVN.value = title;
+          }
+        }
+
+        completer.complete();
+      },
+      onError: onErr,
     );
 
-    var title = resp.choices.firstOrNull?.message.content;
-    title = ChatTitleUtil.prettify(title ?? '');
-
-    if (title.isNotEmpty) {
-      final ne = entity.copyWith(name: title)..save();
-      _allHistories[chatId] = ne;
-      _historyRNMap[chatId]?.notify();
-      if (chatId == _curChatId.value) {
-        _appbarTitleVN.value = title;
-      }
-    }
+    return completer;
   } catch (e, s) {
     onErr(e, s);
+    return null;
   }
 }
 

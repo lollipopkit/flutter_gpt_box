@@ -7,14 +7,7 @@ class _ChatSearchDelegate extends SearchDelegate<ChatHistory> {
 
   @override
   List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
+    return [];
   }
 
   @override
@@ -63,7 +56,7 @@ class _ChatSearchDelegate extends SearchDelegate<ChatHistory> {
     return FutureWidget(
       future: _filterChats(query),
       loading: SizedBox(
-        width: _windowSize?.width ?? 300,
+        width: context.windowSize.width,
         child: SizedLoading.medium,
       ),
       error: (error, trace) {

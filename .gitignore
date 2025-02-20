@@ -51,3 +51,4 @@ GPTBox*.AppImage
 **/*.bak
 a.txt
 curl.sh
+android/app/.cxx
