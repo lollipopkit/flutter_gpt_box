@@ -26,13 +26,14 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       id: fields[8] == null ? 'defaultId' : fields[8] as String,
       name: fields[9] == null ? '' : fields[9] as String,
       genTitlePrompt: fields[14] as String?,
+      genTitleModel: fields[15] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatConfig obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.prompt)
       ..writeByte(1)
@@ -48,7 +49,9 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       ..writeByte(9)
       ..write(obj.name)
       ..writeByte(14)
-      ..write(obj.genTitlePrompt);
+      ..write(obj.genTitlePrompt)
+      ..writeByte(15)
+      ..write(obj.genTitleModel);
   }
 
   @override
@@ -75,6 +78,7 @@ ChatConfig _$ChatConfigFromJson(Map<String, dynamic> json) => ChatConfig(
       id: json['id'] as String? ?? 'defaultId',
       name: json['name'] as String,
       genTitlePrompt: json['genTitlePrompt'] as String?,
+      genTitleModel: json['genTitleModel'] as String?,
     );
 
 Map<String, dynamic> _$ChatConfigToJson(ChatConfig instance) =>
@@ -87,4 +91,5 @@ Map<String, dynamic> _$ChatConfigToJson(ChatConfig instance) =>
       'id': instance.id,
       'name': instance.name,
       'genTitlePrompt': instance.genTitlePrompt,
+      'genTitleModel': instance.genTitleModel,
     };

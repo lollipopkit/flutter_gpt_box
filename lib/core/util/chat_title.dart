@@ -1,3 +1,5 @@
+import 'package:gpt_box/data/res/openai.dart';
+
 abstract final class ChatTitleUtil {
   static const _maxLen = 20;
 
@@ -40,5 +42,36 @@ $userCotentLocator''';
     }
 
     return title;
+  }
+
+  /// Get the suitable model for generating title.
+  static String? get pickSuitableModel {
+    final cfgPromptModel = Cfg.current.genTitleModel;
+    if (cfgPromptModel != null && cfgPromptModel.isNotEmpty) {
+      return cfgPromptModel;
+    }
+
+    // Auto select
+    final models = Cfg.models.value;
+    if (models == null || models.isEmpty) return null;
+
+    const preferedModels = [
+      'deepseek-chat',
+      'deepseek-v3',
+      'gpt-4o-mini',
+      'claude-3.5-sonnet',
+      'claude-3-5-sonnet',
+      'gemini-2.0-flash',
+      'gpt-3.5-turbo',
+    ];
+
+    for (final pModel in preferedModels) {
+      for (final model in models) {
+        // Some third-party reverse api providers names the model with a prefix...
+        if (model.contains(pModel)) return model;
+      }
+    }
+
+    return Cfg.current.model;
   }
 }

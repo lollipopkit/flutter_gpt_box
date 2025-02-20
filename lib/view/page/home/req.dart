@@ -496,8 +496,9 @@ Completer<void>? _genChatTitle(
             .raw,
       ).toOpenAI(),
     ];
+    final model = ChatTitleUtil.pickSuitableModel ?? cfg.model;
     final req = CreateChatCompletionRequest(
-      model: ChatCompletionModel.modelId(cfg.model),
+      model: ChatCompletionModel.modelId(model),
       messages: msgs,
     );
     Cfg.client.createChatCompletion(request: req).then(
