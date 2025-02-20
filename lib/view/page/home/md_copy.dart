@@ -12,22 +12,15 @@ final class _MarkdownCopyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureWidget(
-      future: compute((e) => e.toMarkdown, args),
-      error: (e, s) => SimpleMarkdown(data: '$e\n\n$s'),
-      loading: Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.raw),
-          centerTitle: false,
-          actions: const [SizedLoading.small, UIs.width7],
-        ),
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: Text(l10n.raw),
+        centerTitle: false,
       ),
-      success: (val) => Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.raw),
-          centerTitle: false,
-        ),
-        body: _buildBody(val),
+      body: FutureWidget(
+        future: compute((e) => e.toMarkdown, args),
+        error: (e, s) => SimpleMarkdown(data: '$e\n\n$s'),
+        success: _buildBody,
       ),
     );
   }
