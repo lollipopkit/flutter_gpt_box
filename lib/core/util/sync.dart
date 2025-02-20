@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/app/backup.dart';
-import 'package:gpt_box/data/store/all.dart';
 
 final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
 
@@ -25,14 +25,12 @@ final class BakSync extends SyncIface {
     return Backup.fromJsonString(content);
   }
 
-  static final _set = Stores.setting;
-
   @override
   RemoteStorage? get remoteStorage {
-    final icloudEnabled = _set.icloudSync.fetch();
+    final icloudEnabled = PrefProps.icloudSync.get();
     if (icloudEnabled) return icloud;
 
-    final webdavEnabled = _set.webdavSync.fetch();
+    final webdavEnabled = PrefProps.webdavSync.get();
     if (webdavEnabled) return Webdav.shared;
 
     return null;

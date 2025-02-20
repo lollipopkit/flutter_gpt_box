@@ -93,6 +93,7 @@ Future<void> _initAppComponents() async {
   Cfg.applyClient();
   Cfg.updateModels();
 
+  BakSync.instance.init();
   BakSync.instance.sync();
 
   if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;

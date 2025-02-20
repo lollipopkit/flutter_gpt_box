@@ -26,16 +26,6 @@ class SettingStore extends HiveStore {
 
   late final genTitle = propertyDefault('genTitle', true);
 
-  /// Webdav sync
-  late final webdavSync =
-      propertyDefault('webdavSync', false, updateLastModified: false);
-  late final webdavUrl =
-      propertyDefault('webdavUrl', '', updateLastModified: false);
-  late final webdavUser =
-      propertyDefault('webdavUser', '', updateLastModified: false);
-  late final webdavPwd =
-      propertyDefault('webdavPwd', '', updateLastModified: false);
-
   /// Only valid on iOS and macOS
   late final icloudSync =
       propertyDefault('icloudSync', false, updateLastModified: false);
