@@ -83,7 +83,7 @@ Future<void> _initAppComponents() async {
   final sets = Stores.setting;
   final windowStateProp = sets.windowState;
   final windowState = windowStateProp.fetch();
-  SystemUIs.initDesktopWindow(
+  await SystemUIs.initDesktopWindow(
     hideTitleBar: sets.hideTitleBar.get(),
     size: windowState?.size,
     position: windowState?.position,
