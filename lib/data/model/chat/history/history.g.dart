@@ -286,22 +286,13 @@ ChatHistory _$ChatHistoryFromJson(Map<String, dynamic> json) => ChatHistory(
           : ChatSettings.fromJson(json['settings'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$ChatHistoryToJson(ChatHistory instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'items': instance.items,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('name', instance.name);
-  writeNotNull('settings', instance.settings);
-  return val;
-}
+Map<String, dynamic> _$ChatHistoryToJson(ChatHistory instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'items': instance.items,
+      if (instance.name case final value?) 'name': value,
+      if (instance.settings case final value?) 'settings': value,
+    };
 
 ChatHistoryItem _$ChatHistoryItemFromJson(Map<String, dynamic> json) =>
     ChatHistoryItem(
@@ -318,24 +309,15 @@ ChatHistoryItem _$ChatHistoryItemFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$ChatHistoryItemToJson(ChatHistoryItem instance) {
-  final val = <String, dynamic>{
-    'role': _$ChatRoleEnumMap[instance.role]!,
-    'content': instance.content,
-    'createdAt': instance.createdAt.toIso8601String(),
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('toolCallId', instance.toolCallId);
-  writeNotNull('toolCalls', instance.toolCalls);
-  return val;
-}
+Map<String, dynamic> _$ChatHistoryItemToJson(ChatHistoryItem instance) =>
+    <String, dynamic>{
+      'role': _$ChatRoleEnumMap[instance.role]!,
+      'content': instance.content,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'id': instance.id,
+      if (instance.toolCallId case final value?) 'toolCallId': value,
+      if (instance.toolCalls case final value?) 'toolCalls': value,
+    };
 
 const _$ChatRoleEnumMap = {
   ChatRole.user: 'user',

@@ -29,6 +29,8 @@ final class ChatConfig {
   final String name;
   @HiveField(14)
   final String? genTitlePrompt;
+  @HiveField(15)
+  final String? genTitleModel;
 
   const ChatConfig({
     required this.prompt,
@@ -39,6 +41,7 @@ final class ChatConfig {
     required this.id,
     required this.name,
     this.genTitlePrompt,
+    this.genTitleModel,
   });
 
   ChatConfig.noid({
@@ -49,6 +52,7 @@ final class ChatConfig {
     required this.historyLen,
     required this.name,
     this.genTitlePrompt,
+    this.genTitleModel,
   }) : id = shortid.generate();
 
   static final apiUrlReg = RegExp(r'^https?://[0-9A-Za-z\.]+(:\d+)?$');
