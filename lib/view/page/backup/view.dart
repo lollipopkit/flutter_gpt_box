@@ -38,18 +38,21 @@ final class BackupPage extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(17),
+    return MultiList(
       children: [
-        _buildTip(),
-        //_buildTitle(l10n.settings),
-        const CenterGreyTitle('App'),
-        if (isMacOS || isIOS) _buildIcloud(context),
-        if (!isWeb) _buildWebdav(context),
-        _buildFile(context),
-        CenterGreyTitle(l10n.thirdParty),
-        _buildGPTNext(context),
-        _buildOpenAI(context),
+        [
+          const CenterGreyTitle('App'),
+          if (isMacOS || isIOS) _buildIcloud(context),
+          if (!isWeb) _buildWebdav(context),
+          _buildFile(context),
+          CenterGreyTitle(libL10n.attention),
+          _buildTip(),
+        ],
+        [
+          CenterGreyTitle(l10n.thirdParty),
+          _buildGPTNext(context),
+          _buildOpenAI(context),
+        ],
       ],
     );
   }

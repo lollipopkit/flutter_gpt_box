@@ -14,16 +14,16 @@ Widget _buildWebdav(BuildContext context) {
         ListTile(
           title: Text(l10n.auto),
           trailing: StoreSwitch(
-            prop: Stores.setting.webdavSync,
+            prop: PrefProps.webdavSync,
             validator: (p0) {
               if (Stores.setting.icloudSync.get() && p0) {
                 context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
                 return false;
               }
               if (p0) {
-                if (Stores.setting.webdavUrl.get().isEmpty ||
-                    Stores.setting.webdavUser.get().isEmpty ||
-                    Stores.setting.webdavPwd.get().isEmpty) {
+                if (PrefProps.webdavUrl.get() == null ||
+                    PrefProps.webdavUser.get() == null ||
+                    PrefProps.webdavPwd.get() == null) {
                   context.showSnackBar(l10n.emptyFields(libL10n.setting));
                   return false;
                 }
@@ -104,13 +104,13 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
 
 Future<void> _onTapWebdavSetting(BuildContext context) async {
   final urlCtrl = TextEditingController(
-    text: Stores.setting.webdavUrl.get(),
+    text: PrefProps.webdavUrl.get(),
   );
   final userCtrl = TextEditingController(
-    text: Stores.setting.webdavUser.get(),
+    text: PrefProps.webdavUser.get(),
   );
   final pwdCtrl = TextEditingController(
-    text: Stores.setting.webdavPwd.get(),
+    text: PrefProps.webdavPwd.get(),
   );
 
   void onSubmit() async {
@@ -122,9 +122,10 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
       );
     });
     if (err != null) return;
-    Stores.setting.webdavUrl.set(urlCtrl.text);
-    Stores.setting.webdavUser.set(userCtrl.text);
-    Stores.setting.webdavPwd.set(pwdCtrl.text);
+    PrefProps.webdavUrl.set(urlCtrl.text);
+    PrefProps.webdavUser.set(userCtrl.text);
+    PrefProps.webdavPwd.set(pwdCtrl.text);
+
     context.pop();
     context.showSnackBar(libL10n.success);
   }
