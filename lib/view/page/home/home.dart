@@ -81,9 +81,8 @@ class _HomePageState extends State<HomePage>
 
   @override
   void didChangeDependencies() {
-    _windowSize = MediaQuery.sizeOf(context);
     RNodes.dark.value = context.isDark;
-    _isWide.value = (_windowSize?.width ?? 0) > 639;
+    _isWide.value = context.isWide;
     super.didChangeDependencies();
     _homeBottomRN.notify();
   }

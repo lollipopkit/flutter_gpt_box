@@ -17,7 +17,7 @@ final class _CustomAppBar extends CustomAppBar {
           ),
           // Use a SizedBox to avoid the title jumping when switching chats.
           child: SizedBox(
-            width: (_windowSize?.width ?? 300) * 0.5,
+            width: context.windowSize.width * 0.5,
             child: Text(
               val ?? l10n.untitled,
               maxLines: 1,
@@ -90,7 +90,7 @@ final class _CustomAppBar extends CustomAppBar {
           children: [
             title,
             SizedBox(
-              width: (_windowSize?.width ?? 300) * 0.5,
+              width: context.windowSize.width * 0.5,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
