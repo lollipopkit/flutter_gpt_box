@@ -479,7 +479,7 @@ Completer<void>? _genChatTitle(
   final completer = Completer<void>();
   void onErr(Object e, StackTrace s) {
     Loggers.app.warning('Gen title: $e');
-    _historyRNMap[chatId]?.notify();
+    _historyRN.notify();
     completer.complete();
   }
 
@@ -508,7 +508,7 @@ Completer<void>? _genChatTitle(
         if (title.isNotEmpty) {
           final ne = entity.copyWith(name: title)..save();
           _allHistories[chatId] = ne;
-          _historyRNMap[chatId]?.notify();
+          _historyRN.notify();
           if (chatId == _curChatId.value) {
             _appbarTitleVN.value = title;
           }
