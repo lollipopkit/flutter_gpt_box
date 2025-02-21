@@ -78,6 +78,9 @@ final class ChatHistoryItem {
   @HiveField(5)
   @JsonKey(includeIfNull: false)
   final List<ChatCompletionMessageToolCall>? toolCalls;
+  @HiveField(6)
+  @JsonKey(includeIfNull: false)
+  final String? thinkContent;
 
   const ChatHistoryItem({
     required this.role,
@@ -86,6 +89,7 @@ final class ChatHistoryItem {
     required this.id,
     this.toolCallId,
     this.toolCalls,
+    this.thinkContent,
   });
 
   ChatHistoryItem.gen({
@@ -93,6 +97,7 @@ final class ChatHistoryItem {
     required this.content,
     this.toolCallId,
     this.toolCalls,
+    this.thinkContent
   })  : createdAt = DateTime.now(),
         id = shortid.generate();
 
@@ -103,6 +108,7 @@ final class ChatHistoryItem {
     DateTime? createdAt,
     this.toolCallId,
     this.toolCalls,
+    this.thinkContent,
   })  : content = [ChatContent.noid(type: type, raw: raw)],
         createdAt = createdAt ?? DateTime.now(),
         id = shortid.generate();

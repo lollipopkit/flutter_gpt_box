@@ -232,9 +232,10 @@ Future<void> _onCreateText(
       (eve) async {
         final first = eve.choices.firstOrNull;
         final delta = first?.delta.content;
-        if (delta == null) return;
-        assistReply.content.first.raw += delta;
-        _chatItemRNMap[assistReply.id]?.notify();
+        if (delta != null) {
+          assistReply.content.first.raw += delta;
+          _chatItemRNMap[assistReply.id]?.notify();
+        }
 
         _autoScroll(chatId);
       },

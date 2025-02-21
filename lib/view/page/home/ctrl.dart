@@ -402,21 +402,23 @@ Future<void> _onTapImgPick(BuildContext context) async {
 //   );
 // }
 
-void _locateHistoryListener() => Fns.throttle(
-      () {
-        // Calculate _curChatId is visible or not
-        final idx = _allHistories.keys.toList().indexOf(_curChatId.value);
-        final offset = _historyScrollCtrl.offset;
-        final height = _historyScrollCtrl.position.viewportDimension;
-        final visible =
-            offset - _historyLocateTollerance <= idx * _historyItemHeight &&
-                offset + height + _historyLocateTollerance >=
-                    (idx + 1) * _historyItemHeight;
-        _locateHistoryBtn.value = !visible;
-      },
-      id: 'calcChatLocateBtn',
-      duration: 10,
-    );
+void _locateHistoryListener() {
+  Fns.throttle(
+    () {
+      // Calculate _curChatId is visible or not
+      final idx = _allHistories.keys.toList().indexOf(_curChatId.value);
+      final offset = _historyScrollCtrl.offset;
+      final height = _historyScrollCtrl.position.viewportDimension;
+      final visible =
+          offset - _historyLocateTollerance <= idx * _historyItemHeight &&
+              offset + height + _historyLocateTollerance >=
+                  (idx + 1) * _historyItemHeight;
+      _locateHistoryBtn.value = !visible;
+    },
+    id: 'calcChatLocateBtn',
+    duration: 10,
+  );
+}
 
 void _gotoHistory(String chatId) {
   final idx = _allHistories.keys.toList().indexOf(chatId);
@@ -473,9 +475,10 @@ void _autoScroll(String chatId) {
     Fns.throttle(() {
       // Only scroll to bottom when current chat is the working chat
       final isCurrentChat = chatId == _curChatId.value;
-      if (isCurrentChat) {
-        _scrollBottom();
-      }
+      if (!isCurrentChat) return;
+      // If users stop the scroll, then disable auto scroll
+      if (_userStoppedScroll) return;
+      _scrollBottom();
     }, id: 'autoScroll', duration: 100);
   }
 }
@@ -608,8 +611,4 @@ Future<bool> _askToolConfirm(
     Stores.tool.permittedTools.set(permittedTools);
   }
   return permitted == true;
-}
-
-void _onChatScroll() {
-  Fns.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
 }
