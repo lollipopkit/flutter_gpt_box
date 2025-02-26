@@ -1,7 +1,7 @@
 name: gpt_box
 description: "A third-party GPT Client for OpenAI API."
 publish_to: 'none'
-version: 1.0.379+379
+version: 1.0.385+385
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
