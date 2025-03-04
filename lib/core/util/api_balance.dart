@@ -173,10 +173,8 @@ enum ApiBalanceProvider {
   ///}
   /// ```
   Future<String> _refreshSiliconflow() async {
-    final uri = Uri.parse(Cfg.current.url);
-    const path = '/v1/query/balance';
-    final endpoint = 'https://${uri.host}$path';
-    final resp = await myDio.post(
+    final endpoint = 'https://api.siliconflow.cn/v1/user/info';
+    final resp = await myDio.get(
       endpoint,
       options: Options(headers: {'Authorization': Cfg.current.key}),
     );
