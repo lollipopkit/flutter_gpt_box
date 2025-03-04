@@ -85,7 +85,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         theme: _theme,
         textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
         tabSize: 4,
-        selectable: false,
+        selectable: true,
         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
       );
     }
@@ -96,7 +96,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       theme: _theme,
       textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
       tabSize: 4,
-      selectable: false,
+      selectable: true,
       padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
     );
 
@@ -136,7 +136,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
             icon: const Icon(
               MingCute.copy_2_fill,
               size: 15,
-              color: Color.fromARGB(117, 129, 129, 129),
+              color: Color.fromARGB(173, 188, 188, 188),
             ),
             onTap: () {
               onCopy?.call(element.textContent.trim());
