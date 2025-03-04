@@ -34,6 +34,7 @@ enum ApiBalanceProvider {
   chatanywhere,
   oneapi,
   openrouter,
+  siliconflow,
   ;
 
   static ApiBalanceProvider? fromEndpoint(String value) {
@@ -43,6 +44,7 @@ enum ApiBalanceProvider {
       _ when value.startsWith('https://api.deepseek.com') => deepseek,
       _ when value.startsWith('https://api.chatanywhere.') => chatanywhere,
       _ when value.startsWith('https://openrouter.ai') => openrouter,
+      _ when value.startsWith('https://api.siliconflow.cn') => siliconflow,
 
       /// TODO
       /// Change it to [oneapi] after correctly impl the [_refreshOneapi]
@@ -56,9 +58,13 @@ enum ApiBalanceProvider {
       chatanywhere => _refreshChatanywhere(),
       oneapi => _refreshOneapi(),
       openrouter => _refreshOpenrouter(),
+      siliconflow => _refreshSiliconflow(),
     };
   }
 
+  /// ```json
+  /// {"data":{"total_credits":50,"total_usage":0.4743325}}
+  /// ```
   Future<String> _refreshOpenrouter() async {
     final endpoint = 'https://openrouter.ai/api/v1/credits';
     final resp = await myDio.get(
@@ -144,6 +150,38 @@ enum ApiBalanceProvider {
     final data = resp.data as Map<String, dynamic>;
     final quota = data['data']['quota'] as int? ?? 0;
     return '\$${(quota / 500000).toStringAsFixed(2)}';
+  }
+
+  /// ```json
+  /// {
+  ///  "code": 20000,
+  ///  "message": "OK",
+  ///  "status": true,
+  ///  "data": {
+  ///    "id": "userid",
+  ///    "name": "username",
+  ///    "image": "user_avatar_image_url",
+  ///    "email": "user_email_address",
+  ///    "isAdmin": false,
+  ///    "balance": "0.88",
+  ///    "status": "normal",
+  ///    "introduction": "user_introduction",
+  ///    "role": "user_role",
+  ///    "chargeBalance": "88.00",
+  ///    "totalBalance": "88.88"
+  ///  }
+  ///}
+  /// ```
+  Future<String> _refreshSiliconflow() async {
+    final endpoint = 'https://api.siliconflow.cn/v1/user/info';
+    final resp = await myDio.get(
+      endpoint,
+      options: Options(headers: {'Authorization': Cfg.current.key}),
+    );
+    final data = resp.data as Map<String, dynamic>;
+    final balance = data['data']['balance'] as String? ?? '0.00';
+    final total = data['data']['totalBalance'] as String? ?? '0.00';
+    return '$balance / $total';
   }
 
   // {
