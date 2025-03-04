@@ -114,8 +114,8 @@ final class _ProfilePageState extends State<ProfilePage>
                   onTap: () {
                     Stores.config.delete(cfg.id);
                     context.pop();
-                    if (cfg.id == cfg.id) {
-                      Cfg.switchToDefault(context);
+                    if (cfg.id == Cfg.current.id) {
+                      Cfg.switchToDefault();
                     }
                   },
                   red: true,
@@ -139,9 +139,7 @@ final class _ProfilePageState extends State<ProfilePage>
                 onTap: () {
                   final name = ctrl.text;
                   if (name.isEmpty) return;
-                  final newCfg = cfg.copyWith(name: name);
-                  newCfg.save();
-                  Cfg.setTo(cfg: newCfg);
+                  Cfg.setTo(cfg: cfg.copyWith(name: name));
                   context.pop();
                 },
               ).toList,
@@ -177,7 +175,6 @@ final class _ProfilePageState extends State<ProfilePage>
               key: key,
               url: url,
             );
-            newCfg.save();
             Cfg.setTo(cfg: newCfg);
           },
         ),

@@ -157,7 +157,7 @@ abstract final class Cfg {
     Cfg.setTo(cfg: Cfg.current.copyWith(model: model));
   }
 
-  static void switchToDefault(BuildContext context) {
+  static void switchToDefault() {
     final cfg = _store.fetch(ChatConfig.defaultId);
     if (cfg != null) return setTo(cfg: cfg);
 
