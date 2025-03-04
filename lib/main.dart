@@ -39,6 +39,7 @@ void _runInZone(void Function() body) {
 
 Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ProxyHttpOverrides.useSystemProxy();
 
   await Paths.init(BuildData.name);
   await _initDb();

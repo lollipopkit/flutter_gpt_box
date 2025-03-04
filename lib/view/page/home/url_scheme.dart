@@ -118,8 +118,7 @@ extension _AppLink on AppLink {
         if (paramsStr == null) return false;
 
         final cfg = ChatConfig.fromUrlParams(paramsStr);
-        cfg.save();
-        Cfg.setTo(id: cfg.id);
+        Cfg.setTo(cfg: cfg);
 
         return true;
       default:
