@@ -75,113 +75,113 @@ final class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget _buildSwitchCfg(ChatConfig cfg) {
-    return ListTile(
+    final profiles = Stores.config.fetchAll().values.toList();
+    return ExpandTile(
       leading: const Icon(Icons.switch_account),
       title: Text(l10n.profile),
       subtitle: Text(cfg.displayName, style: UIs.textGrey),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Delete
-          if (cfg.id != ChatConfig.defaultId)
-            Btn.icon(
-              icon: const Icon(Icons.delete, size: 19),
-              onTap: () {
-                if (cfg.id == ChatConfig.defaultId) return;
-                context.showRoundDialog(
-                  title: l10n.attention,
-                  child: Text(l10n.delFmt(cfg.name, l10n.profile)),
-                  actions: Btn.ok(
-                    onTap: () {
-                      Stores.config.delete(cfg.id);
-                      context.pop();
-                      if (cfg.id == cfg.id) {
-                        Cfg.switchToDefault(context);
-                      }
-                    },
-                    red: true,
-                  ).toList,
-                );
-              },
-            ),
-          // Rename
+      initiallyExpanded: true,
+      trailing: _buildSwitchCfgActions(cfg),
+      children: [
+        ChoiceWidget(
+          items: profiles,
+          selected: [cfg],
+          display: (p0) => p0.displayName,
+          onChanged: (vals) {
+            final select = vals.firstOrNull;
+            if (select == null) return;
+            Cfg.setTo(cfg: select);
+          },
+        ).paddingOnly(bottom: 7, left: 7, right: 7),
+      ],
+    );
+  }
+
+  Widget _buildSwitchCfgActions(ChatConfig cfg) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Delete
+        if (cfg.id != ChatConfig.defaultId)
           Btn.icon(
-            icon: const Icon(Icons.edit, size: 19),
+            icon: const Icon(Icons.delete, size: 19),
             onTap: () {
-              final ctrl = TextEditingController(text: cfg.name);
+              if (cfg.id == ChatConfig.defaultId) return;
               context.showRoundDialog(
-                title: libL10n.edit,
-                child: Input(
-                  controller: ctrl,
-                  label: libL10n.name,
-                  autoFocus: true,
-                ),
+                title: l10n.attention,
+                child: Text(l10n.delFmt(cfg.name, l10n.profile)),
                 actions: Btn.ok(
                   onTap: () {
-                    final name = ctrl.text;
-                    if (name.isEmpty) return;
-                    final newCfg = cfg.copyWith(name: name);
-                    newCfg.save();
-                    Cfg.setTo(cfg: newCfg);
+                    Stores.config.delete(cfg.id);
                     context.pop();
+                    if (cfg.id == cfg.id) {
+                      Cfg.switchToDefault(context);
+                    }
                   },
+                  red: true,
                 ).toList,
               );
             },
           ),
-          // Switch
-          Btn.icon(
-            icon: const Icon(OctIcons.arrow_switch, size: 19),
-            onTap: () async {
-              final map = await Stores.config
-                  .getAllMapTyped<ChatConfig>(includeInternalKeys: false);
-              final vals = map.values.toList();
-              final newCfg = await context.showPickSingleDialog(
-                items: vals,
-                initial: cfg,
-                title: l10n.profile,
-                display: (p0) => p0.displayName,
-              );
-
-              if (newCfg == null) return;
-              Cfg.setTo(cfg: newCfg);
-            },
-          ),
-          Btn.icon(
-            icon: const Icon(Icons.add, size: 19),
-            onTap: () async {
-              final ctrl = TextEditingController();
-              final ok = await context.showRoundDialog(
-                title: libL10n.add,
-                child: Input(
-                  controller: ctrl,
-                  label: libL10n.name,
-                  autoFocus: true,
-                ),
-                actions: Btnx.oks,
-              );
-              if (ok != true) return;
-              final clipboardData = await Pfs.paste();
-              var (key, url) = ('', ChatConfig.defaultUrl);
-              if (clipboardData != null) {
-                if (clipboardData.startsWith('https://')) {
-                  url = clipboardData;
-                } else if (clipboardData.startsWith('sk-')) {
-                  key = clipboardData;
-                }
+        // Rename
+        Btn.icon(
+          icon: const Icon(Icons.edit, size: 19),
+          onTap: () {
+            final ctrl = TextEditingController(text: cfg.name);
+            context.showRoundDialog(
+              title: libL10n.edit,
+              child: Input(
+                controller: ctrl,
+                label: libL10n.name,
+                autoFocus: true,
+              ),
+              actions: Btn.ok(
+                onTap: () {
+                  final name = ctrl.text;
+                  if (name.isEmpty) return;
+                  final newCfg = cfg.copyWith(name: name);
+                  newCfg.save();
+                  Cfg.setTo(cfg: newCfg);
+                  context.pop();
+                },
+              ).toList,
+            );
+          },
+        ),
+        Btn.icon(
+          icon: const Icon(Icons.add, size: 19),
+          onTap: () async {
+            final ctrl = TextEditingController();
+            final ok = await context.showRoundDialog(
+              title: libL10n.add,
+              child: Input(
+                controller: ctrl,
+                label: libL10n.name,
+                autoFocus: true,
+              ),
+              actions: Btnx.oks,
+            );
+            if (ok != true) return;
+            final clipboardData = await Pfs.paste();
+            var (key, url) = ('', ChatConfig.defaultUrl);
+            if (clipboardData != null) {
+              if (clipboardData.startsWith('https://')) {
+                url = clipboardData;
+              } else if (clipboardData.startsWith('sk-')) {
+                key = clipboardData;
               }
-              final newCfg = Cfg.current.copyWith(
-                id: shortid.generate(),
-                name: ctrl.text,
-                key: key,
-                url: url,
-              );
-              newCfg.save();
-              Cfg.setTo(cfg: newCfg);
-            },
-          ),
-        ],
-      ),
+            }
+            final newCfg = Cfg.current.copyWith(
+              id: shortid.generate(),
+              name: ctrl.text,
+              key: key,
+              url: url,
+            );
+            newCfg.save();
+            Cfg.setTo(cfg: newCfg);
+          },
+        ),
+      ],
     );
   }
 
