@@ -9,18 +9,10 @@ final class ProfilePage extends StatefulWidget {
 
 final class _ProfilePageState extends State<ProfilePage>
     with AutomaticKeepAliveClientMixin {
-  final _cfgRN = Cfg.vn;
-
   @override
   void initState() {
     super.initState();
     ApiBalance.refresh();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _cfgRN.dispose();
   }
 
   @override
@@ -53,10 +45,8 @@ final class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget _buildChat() {
-    return ListenBuilder(
-      listenable: _cfgRN,
-      builder: () {
-        final cfg = Cfg.current;
+    return Cfg.vn.listenVal(
+      (cfg) {
         final children = [
           _buildSwitchCfg(cfg),
           _buildBalance(),
@@ -70,10 +60,8 @@ final class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget _buildMore() {
-    return ListenBuilder(
-      listenable: _cfgRN,
-      builder: () {
-        final cfg = Cfg.current;
+    return Cfg.vn.listenVal(
+      (cfg) {
         final children = [
           _buildQuickShare(),
           _buildPrompt(cfg.prompt),
@@ -106,11 +94,9 @@ final class _ProfilePageState extends State<ProfilePage>
                   actions: Btn.ok(
                     onTap: () {
                       Stores.config.delete(cfg.id);
-                      _cfgRN.notify();
                       context.pop();
                       if (cfg.id == cfg.id) {
                         Cfg.switchToDefault(context);
-                        _cfgRN.notify();
                       }
                     },
                     red: true,
@@ -137,7 +123,6 @@ final class _ProfilePageState extends State<ProfilePage>
                     final newCfg = cfg.copyWith(name: name);
                     newCfg.save();
                     Cfg.setTo(cfg: newCfg);
-                    _cfgRN.notify();
                     context.pop();
                   },
                 ).toList,
@@ -160,7 +145,6 @@ final class _ProfilePageState extends State<ProfilePage>
 
               if (newCfg == null) return;
               Cfg.setTo(cfg: newCfg);
-              _cfgRN.notify();
             },
           ),
           Btn.icon(
@@ -194,7 +178,6 @@ final class _ProfilePageState extends State<ProfilePage>
               );
               newCfg.save();
               Cfg.setTo(cfg: newCfg);
-              _cfgRN.notify();
             },
           ),
         ],
@@ -229,7 +212,6 @@ final class _ProfilePageState extends State<ProfilePage>
         );
         if (result == null) return;
         Cfg.setTo(cfg: Cfg.current.copyWith(key: result));
-        _cfgRN.notify();
       },
     );
   }
@@ -270,7 +252,6 @@ final class _ProfilePageState extends State<ProfilePage>
         }
 
         Cfg.setTo(cfg: Cfg.current.copyWith(url: result));
-        _cfgRN.notify();
       },
     );
   }
@@ -318,8 +299,7 @@ final class _ProfilePageState extends State<ProfilePage>
   //     onTap: () async {
   //       final model = await _showPickModelDialog(l10n.model, val);
   //       if (model != null) {
-  //         OpenAICfg.setTo(OpenAICfg.current.copyWith(imgModel: model));
-  //         _cfgRN.notify();
+  //         Cfg.setTo(Cfg.current.copyWith(imgModel: model));
   //       }
   //     },
   //   );
@@ -336,8 +316,7 @@ final class _ProfilePageState extends State<ProfilePage>
   //     onTap: () async {
   //       final model = await _showPickModelDialog(l10n.model, val);
   //       if (model != null) {
-  //         OpenAICfg.setTo(OpenAICfg.current.copyWith(speechModel: model));
-  //         _cfgRN.notify();
+  //         Cfg.setTo(Cfg.current.copyWith(speechModel: model));
   //       }
   //     },
   //   );
@@ -354,8 +333,8 @@ final class _ProfilePageState extends State<ProfilePage>
   //     onTap: () async {
   // final model = await _showPickModelDialog(l10n.model, val);
   //       if (model != null) {
-  //         OpenAICfg.setTo(OpenAICfg.current.copyWith(transcribeModel: model));
-  //         _cfgRN.notify();
+  //         Cfg.setTo(Cfg.current.copyWith(transcribeModel: model));
+  //         Cfg.vn.notify();
   //       }
   //     },
   //   );
@@ -387,7 +366,6 @@ final class _ProfilePageState extends State<ProfilePage>
         );
         if (result == null) return;
         Cfg.setTo(cfg: Cfg.current.copyWith(prompt: result));
-        _cfgRN.notify();
       },
     );
   }
@@ -410,7 +388,6 @@ final class _ProfilePageState extends State<ProfilePage>
         );
         if (result == null) return;
         Cfg.setTo(cfg: Cfg.current.copyWith(genTitlePrompt: result));
-        _cfgRN.notify();
       },
     );
   }
@@ -439,7 +416,6 @@ final class _ProfilePageState extends State<ProfilePage>
           return;
         }
         Cfg.setTo(cfg: Cfg.current.copyWith(historyLen: newVal));
-        _cfgRN.notify();
       },
     );
   }
