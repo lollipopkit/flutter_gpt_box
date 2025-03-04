@@ -33,6 +33,7 @@ enum ApiBalanceProvider {
   deepseek,
   chatanywhere,
   oneapi,
+  openrouter,
   ;
 
   static ApiBalanceProvider? fromEndpoint(String value) {
@@ -41,6 +42,7 @@ enum ApiBalanceProvider {
       'https://api.openai.com' => null,
       _ when value.startsWith('https://api.deepseek.com') => deepseek,
       _ when value.startsWith('https://api.chatanywhere.') => chatanywhere,
+      _ when value.startsWith('https://openrouter.ai') => openrouter,
 
       /// TODO
       /// Change it to [oneapi] after correctly impl the [_refreshOneapi]
@@ -53,7 +55,22 @@ enum ApiBalanceProvider {
       deepseek => _refreshDeepseek(),
       chatanywhere => _refreshChatanywhere(),
       oneapi => _refreshOneapi(),
+      openrouter => _refreshOpenrouter(),
     };
+  }
+
+  Future<String> _refreshOpenrouter() async {
+    final endpoint = 'https://openrouter.ai/api/v1/credits';
+    final resp = await myDio.get(
+      endpoint,
+      options: Options(headers: {
+        'Authorization': 'Bearer ${Cfg.current.key}',
+      }),
+    );
+    final data = (resp.data as Map<String, dynamic>)['data'];
+    final usage = data['total_usage'] as num? ?? 0;
+    final credit = data['total_credits'] as num? ?? 0;
+    return '${usage.toStringAsFixed(2)} / ${credit.toStringAsFixed(1)}';
   }
 
   // {
