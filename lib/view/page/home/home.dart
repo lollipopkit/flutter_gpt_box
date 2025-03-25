@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:app_links/app_links.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -42,7 +43,6 @@ part 'bottom/settings.dart';
 part 'url_scheme.dart';
 part 'req.dart';
 part 'md_copy.dart';
-part 'file_picked.dart';
 part 'trash.dart';
 
 class HomePage extends StatefulWidget {

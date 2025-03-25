@@ -106,29 +106,25 @@ final class _HomeBottomState extends State<_HomeBottom> {
   }
 
   Widget _buildFileBtn() {
-    return ListenBuilder(
-      listenable: _filePicked,
-      builder: () {
-        return ListenBuilder(
-          listenable: _chatType,
-          builder: () {
-            return switch (_chatType.value) {
-              ChatType.text || ChatType.img => IconButton(
-                  onPressed: () => _onTapImgPick(context),
-                  icon: Badge(
-                    isLabelVisible: _filePicked.value != null,
-                    child: const Icon(Icons.image, size: 19),
-                  ),
+    return _filePicked.listenVal(
+      (file) => _chatType.listenVal(
+        (chatType) {
+          return switch (chatType) {
+            ChatType.text || ChatType.img => IconButton(
+                onPressed: () => _onTapFilePick(context),
+                icon: Badge(
+                  isLabelVisible: file != null,
+                  child: const Icon(MingCute.file_upload_fill, size: 19),
                 ),
-              // ChatType.audio => const IconButton(
-              //   onPressed: _onTapAudioPick,
-              //   icon: Icon(Icons.mic, size: 19),
-              // ),
-              //_ => UIs.placeholder,
-            };
-          },
-        );
-      },
+              ),
+            // ChatType.audio => const IconButton(
+            //   onPressed: _onTapAudioPick,
+            //   icon: Icon(Icons.mic, size: 19),
+            // ),
+            //_ => UIs.placeholder,
+          };
+        },
+      ),
     );
   }
 

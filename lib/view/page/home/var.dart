@@ -13,7 +13,7 @@ final _timeRN = RNode();
 final _chatItemRNMap = <String, RNode>{};
 
 /// Audio / Image / File path
-final _filePicked = nvn<_FilePicked>();
+final _filePicked = nvn<ApiFile>();
 
 final _chatType = ChatType.text.vn;
 

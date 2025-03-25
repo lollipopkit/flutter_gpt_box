@@ -4,7 +4,6 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/ext/file.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -59,6 +58,9 @@ final class ChatHistory {
     }
     return last;
   }
+
+  @override
+  String toString() => 'ChatHistory($id, $name, $lastTime)';
 }
 
 @HiveType(typeId: 0)
@@ -111,6 +113,11 @@ final class ChatHistoryItem {
       _$ChatHistoryItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatHistoryItemToJson(this);
+
+  @override
+  String toString() {
+    return 'ChatHistoryItem($role, $content, $createdAt)';
+  }
 }
 
 /// Handle [audio] and [image] as url (/path & https://) or base64
@@ -123,11 +130,14 @@ enum ChatContentType {
   audio,
   @HiveField(2)
   image,
+  @HiveField(3)
+  file,
   ;
 
   bool get isText => this == text;
   bool get isAudio => this == audio;
   bool get isImage => this == image;
+  bool get isFile => this == file;
 }
 
 @HiveType(typeId: 2)
@@ -156,11 +166,17 @@ final class ChatContent {
   ChatContent.image(this.raw)
       : type = ChatContentType.image,
         id = shortid.generate();
+  ChatContent.file(this.raw)
+      : type = ChatContentType.file,
+        id = shortid.generate();
 
   factory ChatContent.fromJson(Map<String, dynamic> json) =>
       _$ChatContentFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatContentToJson(this);
+
+  @override
+  String toString() => 'ChatContent($type, $raw)';
 }
 
 @HiveType(typeId: 3)

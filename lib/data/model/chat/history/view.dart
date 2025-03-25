@@ -89,9 +89,10 @@ final class ChatHistoryContentView extends StatelessWidget {
       children: chatItem.content
           .map((e) => switch (e.type) {
                 // ChatContentType.audio => _buildAudio(e),
-                ChatContentType.image => _buildImage(e),
-                _ => _buildText(context, e),
-              })
+                ChatContentType.image => _buildImage,
+                ChatContentType.file => _buildFile,
+                _ => _buildText,
+              }(context, e))
           .toList()
           .joinWith(UIs.height13),
     );
@@ -117,11 +118,18 @@ final class ChatHistoryContentView extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(ChatContent content) {
+  Widget _buildImage(BuildContext context, ChatContent content) {
     return ImageCard(
+      key: ValueKey(content.hashCode),
       imageUrl: content.raw,
       heroTag: content.hashCode.toString(),
       onRet: (ret) => _onImgRet(ret, content.raw),
+    );
+  }
+
+  Widget _buildFile(BuildContext context, ChatContent content) {
+    return FileCardView(
+      path: content.raw,
     );
   }
 

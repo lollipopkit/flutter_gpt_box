@@ -115,7 +115,7 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
 
   void onSubmit() async {
     final (_, err) = await context.showLoadingDialog(fn: () async {
-      Webdav.shared.client = WebdavClient(
+      Webdav.shared.client = WebdavClient.basicAuth(
         url: urlCtrl.text,
         user: userCtrl.text,
         pwd: pwdCtrl.text,
