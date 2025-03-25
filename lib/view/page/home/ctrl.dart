@@ -148,16 +148,6 @@ void _onDeleteChat(String chatId) {
 
   if (rmed != null) {
     Stores.trash.addHistory(rmed);
-    // TODO: Only delete related files if the chat history in trash is deleted
-    // for (final item in rmed.items) {
-    //   for (final content in item.content) {
-    //     try {
-    //       content.deleteFile();
-    //     } catch (e, st) {
-    //       Loggers.app.warning('Delete file failed', e, st);
-    //     }
-    //   }
-    // }
   }
 }
 
@@ -245,7 +235,7 @@ void _onShareChat(BuildContext context) async {
   await Pfs.share(bytes: pic, name: '$title.$ext', mime: mime);
 }
 
-Future<void> _onTapImgPick(BuildContext context) async {
+Future<void> _onTapFilePick(BuildContext context) async {
   final val = _filePicked.value;
   if (val != null) {
     void onDelete() async {
@@ -277,13 +267,28 @@ Future<void> _onTapImgPick(BuildContext context) async {
     }
     return;
   }
-  final picker = ImagePicker();
-  final result = await picker.pickImage(
-    source: ImageSource.gallery,
-    requestFullMetadata: false,
+
+  final result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: [
+      'txt',
+      'md',
+      'pdf',
+      'doc',
+      'docx',
+      'xls',
+      'xlsx',
+      'ppt',
+      'pptx',
+      'png',
+      'jpg',
+      'jpeg',
+    ],
   );
-  if (result == null) return;
-  final len = await result.length();
+  final file = result?.files.firstOrNull;
+  final path = file?.path;
+  if (file == null || path == null) return;
+  final len = file.size;
   if (len > 1024 * 1024 * 10) {
     context.showSnackBar(l10n.fileTooLarge(len.bytes2Str));
     return;
@@ -291,8 +296,8 @@ Future<void> _onTapImgPick(BuildContext context) async {
 
   await context.showLoadingDialog(
     fn: () async {
-      final bytes = await result.readAsBytes();
-      final picked = await _FilePicked.fromBytes(bytes, mime: result.mimeType);
+      final bytes = await File(path).readAsBytes();
+      final picked = await ApiFile.fromBytes(bytes);
       _filePicked.value = picked;
     },
   );

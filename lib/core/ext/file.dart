@@ -1,20 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
 
-extension FileX on File? {
+import 'package:fl_lib/fl_lib.dart';
+import 'package:flutter/foundation.dart';
+
+extension FileX on File {
   Future<String?> get base64 async {
-    final format = switch (this?.path.split('.').lastOrNull) {
-      null => null,
-      'png' => 'png',
-      'jpeg' => 'jpeg',
-      'gif' => 'gif',
-      'webp' => 'webp',
-      // default to jpeg
-      _ => 'jpeg',
-    };
-    if (format == null) return null;
-    final bytes = await this?.readAsBytes();
-    if (bytes == null) return null;
-    return 'data:image/$format;base64,${base64Encode(bytes)}';
+    final format = await mimeType;
+    final bytes = await readAsBytes();
+    if (format == null) {
+      if (bytes.length > 1024 * 5) {
+        // Offload large arrays to a separate isolate.
+        return await compute(utf8.decode, bytes);
+      } else {
+        // For smaller arrays, decode directly to avoid overhead.
+        return utf8.decode(bytes);
+      }
+    }
+    return 'data:$format;base64,${base64Encode(bytes)}';
   }
 }

@@ -59,7 +59,11 @@ final class _TrashSheetState extends State<_TrashSheet> {
     return SizedBox(
       width: 200,
       child: ListTile(
-        title: Text(item.name ?? l10n.untitled),
+        title: Text(
+          item.name ?? l10n.untitled,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         subtitle: subtitle,
         onTap: () => _showDialog(item, key),
       ).cardx,

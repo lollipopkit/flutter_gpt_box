@@ -31,7 +31,7 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
 
   final promptStr = config.prompt + Stores.tool.memories.get().join('\n');
   final prompt = promptStr.isNotEmpty
-      ? ChatHistoryItem.single(
+      ? await ChatHistoryItem.single(
           role: ChatRole.system,
           raw: promptStr,
         ).toOpenAI()
@@ -117,11 +117,11 @@ Future<void> _onCreateText(
   }
   final config = Cfg.current;
 
-  final hasImg = fileUrl != null;
+  final hasFile = fileUrl != null;
   final question = ChatHistoryItem.gen(
     content: [
       ChatContent.text(input),
-      if (hasImg) ChatContent.image(fileUrl),
+      if (hasFile) ChatContent.file(fileUrl),
     ],
     role: ChatRole.user,
   );
@@ -129,17 +129,17 @@ Future<void> _onCreateText(
     role: ChatRole.user,
     content: [
       ChatContent.text(input),
-      if (hasImg) await ChatContent.image(fileUrl).toApi,
+      if (hasFile) await ChatContent.file(fileUrl).toApi,
     ],
   );
   final msgs = (await _historyCarried(workingChat)).toList();
-  msgs.add(questionForApi.toOpenAI());
+  msgs.add(await questionForApi.toOpenAI());
 
   workingChat.items.add(question);
   _inputCtrl.clear();
   _chatRN.notify();
   _autoScroll(chatId);
-  final titleCompleter = _genChatTitle(context, chatId, config);
+  final titleCompleter = await _genChatTitle(context, chatId, config);
 
   final toolCompatible = Cfg.isToolCompatible();
 
@@ -180,7 +180,7 @@ Future<void> _onCreateText(
         toolCalls: toolCalls,
       );
       workingChat.items.add(assistReply);
-      msgs.add(assistReply.toOpenAI());
+      msgs.add(await assistReply.toOpenAI());
       void onToolLog(String log) {
         toolReply.content.first.raw = log;
         _chatItemRNMap[toolReply.id]?.notify();
@@ -205,7 +205,7 @@ Future<void> _onCreateText(
             toolCallId: toolCall.id,
           );
           workingChat.items.add(historyItem);
-          msgs.add(historyItem.toOpenAI());
+          msgs.add(await historyItem.toOpenAI());
         }
       }
     }
@@ -460,11 +460,11 @@ Future<void> _onCreateText(
 //   }
 // }
 
-Completer<void>? _genChatTitle(
+Future<Completer<void>?> _genChatTitle(
   BuildContext context,
   String chatId,
   ChatConfig cfg,
-) {
+) async {
   if (!Stores.setting.genTitle.get()) return null;
 
   final entity = _allHistories[chatId];
@@ -485,11 +485,11 @@ Completer<void>? _genChatTitle(
 
   try {
     final msgs = [
-      ChatHistoryItem.single(
+      await ChatHistoryItem.single(
         raw: Cfg.current.genTitlePrompt ?? ChatTitleUtil.titlePrompt,
         role: ChatRole.system,
       ).toOpenAI(),
-      ChatHistoryItem.single(
+      await ChatHistoryItem.single(
         role: ChatRole.user,
         raw: entity.items.first.content
             .firstWhere((p0) => p0.type == ChatContentType.text)
@@ -571,7 +571,7 @@ void _onReplay({
 
   _inputCtrl.text = text;
   await context.showLoadingDialog(fn: () async {
-    _filePicked.value = img != null ? await _FilePicked.fromUrl(img) : null;
+    _filePicked.value = img != null ? await ApiFile.fromUrl(img) : null;
   });
 
   _onCreateRequest(context, chatId);

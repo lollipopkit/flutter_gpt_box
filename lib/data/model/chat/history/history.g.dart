@@ -191,6 +191,8 @@ class ChatContentTypeAdapter extends TypeAdapter<ChatContentType> {
         return ChatContentType.audio;
       case 2:
         return ChatContentType.image;
+      case 3:
+        return ChatContentType.file;
       default:
         return ChatContentType.text;
     }
@@ -207,6 +209,9 @@ class ChatContentTypeAdapter extends TypeAdapter<ChatContentType> {
         break;
       case ChatContentType.image:
         writer.writeByte(2);
+        break;
+      case ChatContentType.file:
+        writer.writeByte(3);
         break;
     }
   }
@@ -343,6 +348,7 @@ const _$ChatContentTypeEnumMap = {
   ChatContentType.text: 'text',
   ChatContentType.audio: 'audio',
   ChatContentType.image: 'image',
+  ChatContentType.file: 'file',
 };
 
 ChatSettings _$ChatSettingsFromJson(Map<String, dynamic> json) => ChatSettings(

@@ -27,10 +27,23 @@ final class TrashStore extends HiveStore {
   /// Remove the history item with the given [key].
   ///
   /// - [key] is the key of the history item to remove. Example: 'history_1234567890'.
-  void removeHistory(String key) {
+  void removeHistory(String key, {bool notify = true}) {
     remove(key);
-    histories.remove(key);
-    historiesVN.notify();
+
+    final history = histories.remove(key);
+    if (notify) historiesVN.notify();
+
+    if (history != null) {
+      for (final item in history.items) {
+        for (final content in item.content) {
+          try {
+            content.deleteFile();
+          } catch (e, st) {
+            Loggers.app.warning('Delete file failed', e, st);
+          }
+        }
+      }
+    }
   }
 
   /// Get all the histories in the trash.
@@ -75,7 +88,7 @@ final class TrashStore extends HiveStore {
         if (item is ChatHistory) {
           final lastTimeTs = item.lastTime?.millisecondsSinceEpoch ?? 0;
           if (lastTimeTs < ts) {
-            remove(key);
+            removeHistory(key, notify: false);
           }
         }
       }
