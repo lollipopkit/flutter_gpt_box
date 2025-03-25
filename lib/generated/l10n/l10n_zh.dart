@@ -9,7 +9,8 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get apiUrlV1Tip => '类似 `https://api.openai.com/v1`（需要最后的 `/v1`）。继续使用该 URL 吗？';
+  String get apiUrlV1Tip =>
+      '类似 `https://api.openai.com/v1`（需要最后的 `/v1`）。继续使用该 URL 吗？';
 
   @override
   String get assistant => '助手';
@@ -149,7 +150,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get headTailMode => '头尾模式';
 
   @override
-  String get headTailModeTip => '仅发送 `提示词+第一条用户信息+当前输入` 作为上下文。\n\n这在用于翻译对话时特别有用（可以节省 tokens）。';
+  String get headTailModeTip =>
+      '仅发送 `提示词+第一条用户信息+当前输入` 作为上下文。\n\n这在用于翻译对话时特别有用（可以节省 tokens）。';
 
   @override
   String get help => '帮助';
@@ -447,10 +449,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
 class AppLocalizationsZhTw extends AppLocalizationsZh {
-  AppLocalizationsZhTw(): super('zh_TW');
+  AppLocalizationsZhTw() : super('zh_TW');
 
   @override
-  String get apiUrlV1Tip => '類似 https://api.openai.com/v1（需要最後的 /v1）。繼續使用該 URL 嗎？';
+  String get apiUrlV1Tip =>
+      '類似 https://api.openai.com/v1（需要最後的 /v1）。繼續使用該 URL 嗎？';
 
   @override
   String get assistant => '助手';
@@ -590,7 +593,8 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get headTailMode => '頭尾模式';
 
   @override
-  String get headTailModeTip => '僅發送 `提示詞+第一條用戶訊息+當前輸入` 作為上下文。\n\n這在用於翻譯對話時特別有用（可以節省 tokens）。';
+  String get headTailModeTip =>
+      '僅發送 `提示詞+第一條用戶訊息+當前輸入` 作為上下文。\n\n這在用於翻譯對話時特別有用（可以節省 tokens）。';
 
   @override
   String get help => '幫助';

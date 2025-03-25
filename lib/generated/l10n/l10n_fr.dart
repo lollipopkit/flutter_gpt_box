@@ -9,7 +9,8 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get apiUrlV1Tip => 'Similaire à https://api.openai.com/v1 (nécessitant le /v1 final). Continuer à utiliser cette URL ?';
+  String get apiUrlV1Tip =>
+      'Similaire à https://api.openai.com/v1 (nécessitant le /v1 final). Continuer à utiliser cette URL ?';
 
   @override
   String get assistant => 'Assistant';
@@ -33,7 +34,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get autoScrollBottom => 'Défilement automatique vers le bas';
 
   @override
-  String get backupTip => 'Assurez-vous que votre fichier de sauvegarde est privé et sécurisé !';
+  String get backupTip =>
+      'Assurez-vous que votre fichier de sauvegarde est privé et sécurisé !';
 
   @override
   String get balance => 'Solde';
@@ -42,7 +44,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calcTokenLen => 'Calculer la longueur des tokens';
 
   @override
-  String get changeModelTip => 'Différentes clés peuvent accéder à différentes listes de modèles. Si vous ne comprenez pas le mécanisme et que des erreurs surviennent, il est recommandé de reconfigurer le modèle.';
+  String get changeModelTip =>
+      'Différentes clés peuvent accéder à différentes listes de modèles. Si vous ne comprenez pas le mécanisme et que des erreurs surviennent, il est recommandé de reconfigurer le modèle.';
 
   @override
   String get chat => 'Chat';
@@ -115,7 +118,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get emptyTrash => 'Vider la corbeille';
 
   @override
-  String get emptyTrashTip => '==0, supprimer au prochain démarrage. <0 ne pas supprimer automatiquement.';
+  String get emptyTrashTip =>
+      '==0, supprimer au prochain démarrage. <0 ne pas supprimer automatiquement.';
 
   @override
   String fileNotFound(Object file) {
@@ -149,7 +153,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get headTailMode => 'Mode tête-queue';
 
   @override
-  String get headTailModeTip => 'Envoie seulement `prompt + premier message utilisateur + entrée actuelle` comme contexte.\n\nCeci est particulièrement utile pour traduire des conversations (économise des tokens).';
+  String get headTailModeTip =>
+      'Envoie seulement `prompt + premier message utilisateur + entrée actuelle` comme contexte.\n\nCeci est particulièrement utile pour traduire des conversations (économise des tokens).';
 
   @override
   String get help => 'Aide';
@@ -169,7 +174,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get hour => 'heure';
 
   @override
-  String get httpToolTip => 'Effectuer une requête HTTP, par exemple : rechercher du contenu';
+  String get httpToolTip =>
+      'Effectuer une requête HTTP, par exemple : rechercher du contenu';
 
   @override
   String get ignoreContextConstraint => 'Ignorer la contrainte de contexte';
@@ -225,7 +231,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get message => 'Message';
 
   @override
-  String get migrationV1UrlTip => 'Faut-il ajouter automatiquement \"/v1\" à la fin de la configuration ?';
+  String get migrationV1UrlTip =>
+      'Faut-il ajouter automatiquement \"/v1\" à la fin de la configuration ?';
 
   @override
   String get minute => 'minute';
@@ -234,7 +241,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get model => 'Modèle';
 
   @override
-  String get modelRegExpTip => 'Si le nom du modèle correspond, les outils seront utilisés';
+  String get modelRegExpTip =>
+      'Si le nom du modèle correspond, les outils seront utilisés';
 
   @override
   String get more => 'Plus';
@@ -269,7 +277,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onSwitchChat => 'Lors du changement de conversation';
 
   @override
-  String get onlyRestoreHistory => 'Restaurer uniquement l\'historique des chats (ne pas restaurer l\'URL de l\'API et la clé secrète)';
+  String get onlyRestoreHistory =>
+      'Restaurer uniquement l\'historique des chats (ne pas restaurer l\'URL de l\'API et la clé secrète)';
 
   @override
   String get onlySyncOnLaunch => 'Synchroniser uniquement au lancement';
@@ -296,7 +305,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get promptsSettingsItem => 'Invites';
 
   @override
-  String get quickShareTip => 'Ouvrez ce lien sur un autre appareil pour importer rapidement la configuration actuelle.';
+  String get quickShareTip =>
+      'Ouvrez ce lien sur un autre appareil pour importer rapidement la configuration actuelle.';
 
   @override
   String get raw => 'Brut';
@@ -317,7 +327,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get replay => 'Rejouer';
 
   @override
-  String get replayTip => 'Les messages rejoués et tous les messages suivants seront effacés.';
+  String get replayTip =>
+      'Les messages rejoués et tous les messages suivants seront effacés.';
 
   @override
   String get res => 'Ressource';
@@ -345,7 +356,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get saveErrChat => 'Enregistrer le chat avec erreur';
 
   @override
-  String get saveErrChatTip => 'Enregistrer après réception/envoi de chaque message, même s\'il y a des erreurs';
+  String get saveErrChatTip =>
+      'Enregistrer après réception/envoi de chaque message, même s\'il y a des erreurs';
 
   @override
   String get scrollSwitchChat => 'Faire défiler pour changer de chat';
@@ -363,7 +375,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shareFrom => 'Partagé depuis';
 
   @override
-  String get skipSameTitle => 'Ignorer les chats avec le même titre que les chats locaux';
+  String get skipSameTitle =>
+      'Ignorer les chats avec le même titre que les chats locaux';
 
   @override
   String get softWrap => 'Retour à la ligne automatique';
