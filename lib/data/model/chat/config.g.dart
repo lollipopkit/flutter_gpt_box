@@ -27,13 +27,14 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       name: fields[9] == null ? '' : fields[9] as String,
       genTitlePrompt: fields[14] as String?,
       genTitleModel: fields[15] as String?,
+      imgModel: fields[16] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ChatConfig obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.prompt)
       ..writeByte(1)
@@ -51,7 +52,9 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
       ..writeByte(14)
       ..write(obj.genTitlePrompt)
       ..writeByte(15)
-      ..write(obj.genTitleModel);
+      ..write(obj.genTitleModel)
+      ..writeByte(16)
+      ..write(obj.imgModel);
   }
 
   @override
@@ -69,7 +72,8 @@ class ChatConfigAdapter extends TypeAdapter<ChatConfig> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-ChatConfig _$ChatConfigFromJson(Map<String, dynamic> json) => ChatConfig(
+_$ChatConfigImpl _$$ChatConfigImplFromJson(Map<String, dynamic> json) =>
+    _$ChatConfigImpl(
       prompt: json['prompt'] as String,
       url: json['url'] as String,
       key: json['key'] as String,
@@ -79,9 +83,10 @@ ChatConfig _$ChatConfigFromJson(Map<String, dynamic> json) => ChatConfig(
       name: json['name'] as String,
       genTitlePrompt: json['genTitlePrompt'] as String?,
       genTitleModel: json['genTitleModel'] as String?,
+      imgModel: json['imgModel'] as String?,
     );
 
-Map<String, dynamic> _$ChatConfigToJson(ChatConfig instance) =>
+Map<String, dynamic> _$$ChatConfigImplToJson(_$ChatConfigImpl instance) =>
     <String, dynamic>{
       'prompt': instance.prompt,
       'url': instance.url,
@@ -92,4 +97,5 @@ Map<String, dynamic> _$ChatConfigToJson(ChatConfig instance) =>
       'name': instance.name,
       'genTitlePrompt': instance.genTitlePrompt,
       'genTitleModel': instance.genTitleModel,
+      'imgModel': instance.imgModel,
     };

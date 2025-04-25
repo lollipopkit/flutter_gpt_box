@@ -83,11 +83,11 @@ final class _ProfilePageState extends State<ProfilePage>
         mainAxisSize: MainAxisSize.min,
         children: [
           // Delete
-          if (cfg.id != ChatConfig.defaultId)
+          if (!cfg.isDefault)
             Btn.icon(
               icon: const Icon(Icons.delete, size: 19),
               onTap: () {
-                if (cfg.id == ChatConfig.defaultId) return;
+                if (cfg.isDefault) return;
                 context.showRoundDialog(
                   title: l10n.attention,
                   child: Text(l10n.delFmt(cfg.name, l10n.profile)),
@@ -132,20 +132,7 @@ final class _ProfilePageState extends State<ProfilePage>
           // Switch
           Btn.icon(
             icon: const Icon(OctIcons.arrow_switch, size: 19),
-            onTap: () async {
-              final map = await Stores.config
-                  .getAllMapTyped<ChatConfig>(includeInternalKeys: false);
-              final vals = map.values.toList();
-              final newCfg = await context.showPickSingleDialog(
-                items: vals,
-                initial: cfg,
-                title: l10n.profile,
-                display: (p0) => p0.displayName,
-              );
-
-              if (newCfg == null) return;
-              Cfg.setTo(cfg: newCfg);
-            },
+            onTap: () => Cfg.showPickProfileDialog(context),
           ),
           Btn.icon(
             icon: const Icon(Icons.add, size: 19),
@@ -162,7 +149,7 @@ final class _ProfilePageState extends State<ProfilePage>
               );
               if (ok != true) return;
               final clipboardData = await Pfs.paste();
-              var (key, url) = ('', ChatConfig.defaultUrl);
+              var (key, url) = ('', ChatConfigX.defaultUrl);
               if (clipboardData != null) {
                 if (clipboardData.startsWith('https://')) {
                   url = clipboardData;
@@ -230,7 +217,7 @@ final class _ProfilePageState extends State<ProfilePage>
           title: libL10n.edit,
           child: Input(
             controller: ctrl,
-            hint: ChatConfig.defaultUrl,
+            hint: ChatConfigX.defaultUrl,
             maxLines: 3,
             autoFocus: true,
           ),
@@ -238,7 +225,7 @@ final class _ProfilePageState extends State<ProfilePage>
         );
         if (result == null) return;
 
-        final isApiUrl = ChatConfig.apiUrlReg.hasMatch(result);
+        final isApiUrl = ChatConfigX.apiUrlReg.hasMatch(result);
         final endsWithV1 = result.endsWith('/v1');
         final isGithubModels = result == Urls.githubModels;
         final showDialog = !isApiUrl || (!endsWithV1 && !isGithubModels);
@@ -257,20 +244,18 @@ final class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget _buildOpenAIModels(ChatConfig cfg) {
-    return ValBuilder(
-      listenable: Cfg.models,
-      builder: (models) {
-        return _buildOpenAIChatModel();
-        // return ExpandTile(
-        //   leading: const Icon(Icons.model_training),
-        //   title: Text(l10n.model),
-        //   children: [
-        //     _buildOpenAIChatModel(),
-        //     _buildOpenAIImgModel(),
-        //     _buildOpenAISpeechModel(),
-        //     // _buildOpenAITranscribeModel(),
-        //   ],
-        // );
+    return Cfg.models.listen(
+      () {
+        return ExpandTile(
+          leading: const Icon(Icons.model_training),
+          title: Text(l10n.model),
+          children: [
+            _buildOpenAIChatModel(),
+            _buildOpenAIImgModel(),
+            // _buildOpenAISpeechModel(),
+            // _buildOpenAITranscribeModel(),
+          ],
+        );
       },
     );
   }
@@ -283,27 +268,37 @@ final class _ProfilePageState extends State<ProfilePage>
       title: Text(l10n.model),
       trailing: Text(val, style: UIs.text13Grey),
       onTap: () {
-        Cfg.showPickModelDialog(context);
+        Cfg.showPickModelDialog(
+          context,
+          initial: val,
+          onSelected: (model) {
+            final newCfg = cfg.copyWith(model: model);
+            Cfg.setTo(cfg: newCfg);
+          },
+        );
       },
     );
   }
 
-  // Widget _buildOpenAIImgModel() {
-  //   final cfg = OpenAICfg.current;
-  //   final val = cfg.imgModel;
-  //   return ListTile(
-  //     leading: const Icon(Icons.photo),
-  //     title: Text(l10n.image),
-  //     trailing: const Icon(Icons.keyboard_arrow_right),
-  //     subtitle: Text(val, style: UIs.text13Grey),
-  //     onTap: () async {
-  //       final model = await _showPickModelDialog(l10n.model, val);
-  //       if (model != null) {
-  //         Cfg.setTo(Cfg.current.copyWith(imgModel: model));
-  //       }
-  //     },
-  //   );
-  // }
+  Widget _buildOpenAIImgModel() {
+    final cfg = Cfg.current;
+    final val = cfg.imgModel ?? libL10n.empty;
+    return ListTile(
+      leading: const Icon(Icons.photo),
+      title: Text(l10n.image),
+      trailing: Text(val, style: UIs.text13Grey),
+      onTap: () async {
+        await Cfg.showPickModelDialog(
+          context,
+          initial: cfg.imgModel ?? '',
+          onSelected: (model) {
+            final newCfg = cfg.copyWith(imgModel: model);
+            Cfg.setTo(cfg: newCfg);
+          },
+        );
+      },
+    );
+  }
 
   // Widget _buildOpenAISpeechModel() {
   //   final cfg = OpenAICfg.current;

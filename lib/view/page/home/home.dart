@@ -22,7 +22,6 @@ import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/migrations.dart';
 import 'package:gpt_box/data/res/openai.dart';
-import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';

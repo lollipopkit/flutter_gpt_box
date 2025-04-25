@@ -518,7 +518,14 @@ void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
     return;
   }
 
-  await Cfg.showPickModelDialog(context);
+  await Cfg.showPickModelDialog(
+    context,
+    initial: Cfg.chatType.value.model,
+    onSelected: (model) {
+      final newCfg = Cfg.chatType.value.copyWithModel(model);
+      Cfg.setTo(cfg: newCfg);
+    },
+  );
 }
 
 // /// The chat type is determined by the following order:

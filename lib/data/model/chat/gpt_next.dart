@@ -27,13 +27,10 @@ abstract final class GPTNextConvertor {
       final role = message['role'] as String;
       final content = message['content'] as String;
       final date = message['date'] as String;
-      final roleEnum = switch (role) {
-        'user' => ChatRole.user,
-        'assistant' => ChatRole.assist,
-        'system' => ChatRole.system,
-        'tool' => ChatRole.tool,
-        final role => throw ArgumentError('role: $role'),
-      };
+      final roleEnum = ChatRole.fromString(role);
+      if (roleEnum == null) {
+        continue;
+      }
       final contentEnum = ChatContent.text(content);
       final dateEnum = parseDate(date);
       if (dateEnum == null) {

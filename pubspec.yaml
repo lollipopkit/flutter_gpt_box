@@ -24,6 +24,7 @@ dependencies:
   shortid: ^0.1.2
   openai_dart: ^0.4.1
   json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
   # flutter_riverpod: ^2.6.1
   # riverpod_annotation: ^2.6.1
   # dart_openai: #^5.1.0
@@ -38,11 +39,11 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.260
+      ref: v1.0.264
 
 dependency_overrides:
-  # fl_lib:
-  #   path: ../fl_lib
+  fl_lib:
+    path: ../fl_lib
   # webdav_client_plus:
   #   path: ../webdav_client
   # fl_build:
@@ -60,11 +61,12 @@ dev_dependencies:
   json_serializable: ^6.8.0
   # riverpod_generator: ^2.6.1
   # riverpod_lint: ^2.6.1
+  freezed: ^2.5.7
+    # path: ../fl_build
   fl_build:
     git:
       url: https://github.com/lppcg/fl_build.git
       ref: v1.0.48
-    # path: ../fl_build
 
 flutter:
   generate: true

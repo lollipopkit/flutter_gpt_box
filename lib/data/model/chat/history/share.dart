@@ -4,7 +4,6 @@ import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/history/view.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/view/widget/code.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';

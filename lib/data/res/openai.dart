@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/github_model.dart';
+import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
@@ -25,7 +26,9 @@ abstract final class Cfg {
 
   static final _store = Stores.config;
 
-  static void setTo({ChatConfig? cfg, String? id}) {
+  static final chatType = ChatType.text.vn;
+
+  static Future<void> setTo({ChatConfig? cfg, String? id}) async {
     if (cfg == null) {
       cfg = _store.fetch(id ?? _store.profileId.get());
       if (cfg == null) {
@@ -42,7 +45,7 @@ abstract final class Cfg {
     _store.profileId.set(cfg.id);
 
     if (cfg.shouldUpdateRelated(old)) {
-      updateModels(diffUrl: old.url != cfg.url);
+      await updateModels(diffUrl: old.url != cfg.url);
       ApiBalance.refresh();
     }
   }
@@ -88,9 +91,15 @@ abstract final class Cfg {
   /// Show the dialog to pick the model.
   ///
   /// - [context] the context to show the dialog.
+  /// - [onSelected] the callback when a model is selected.
+  /// - [initial] the initial model to show.
   ///
   /// Return the model name if any model is picked, otherwise return null.
-  static Future<void> showPickModelDialog(BuildContext context) async {
+  static Future<void> showPickModelDialog(
+    BuildContext context, {
+    required void Function(String model) onSelected,
+    required String? initial,
+  }) async {
     if (Cfg.current.key.isEmpty) {
       context.showRoundDialog(
         title: l10n.attention,
@@ -100,24 +109,9 @@ abstract final class Cfg {
       return;
     }
 
-    final completer = Completer<bool>();
-    void listener() {
-      if (models.value != null) {
-        completer.complete(true);
-      }
-    }
-
-    if (models.value == null) {
-      models.addListener(listener);
-    } else {
-      completer.complete(true);
-    }
-
-    await completer.future;
-
-    final model = await context.showPickSingleDialog(
+    final selected = await context.showPickSingleDialog(
       items: Cfg.models.value ?? [],
-      initial: Cfg.current.model,
+      initial: initial,
       title: l10n.model,
       actions: [
         TextButton(
@@ -126,7 +120,11 @@ abstract final class Cfg {
             await context.showLoadingDialog(
               fn: () => Cfg.updateModels(force: true),
             );
-            await showPickModelDialog(context);
+            await showPickModelDialog(
+              context,
+              onSelected: onSelected,
+              initial: initial,
+            );
           },
           child: Text(l10n.refresh),
         ),
@@ -134,7 +132,11 @@ abstract final class Cfg {
           onPressed: () {
             void onSave(String s) {
               context.pop();
-              Cfg.setTo(cfg: Cfg.current.copyWith(model: s));
+              if (s.isEmpty) {
+                context.showSnackBar(l10n.emptyFields(l10n.model));
+                return;
+              }
+              onSelected(s);
             }
 
             context.pop();
@@ -153,16 +155,39 @@ abstract final class Cfg {
         ),
       ],
     );
-    if (model == null) return;
-    Cfg.setTo(cfg: Cfg.current.copyWith(model: model));
+
+    if (selected == null) return;
+    onSelected(selected);
   }
 
-  static void switchToDefault(BuildContext context) {
-    final cfg = _store.fetch(ChatConfig.defaultId);
+  /// Show the dialog to pick the profile.
+  ///
+  /// - [actions] additional actions
+  static Future<void> showPickProfileDialog(
+    BuildContext context, {
+    List<Widget>? actions,
+  }) async {
+    final map =
+        Stores.config.getAllMapTyped<ChatConfig>(includeInternalKeys: false);
+    final vals = map.values.toList();
+    final newCfg = await context.showPickSingleDialog(
+      items: vals,
+      initial: Cfg.current,
+      title: l10n.profile,
+      display: (p0) => p0.displayName,
+      actions: actions,
+    );
+
+    if (newCfg == null) return;
+    await context.showLoadingDialog(fn: () => Cfg.setTo(cfg: newCfg));
+  }
+
+  static Future<void> switchToDefault(BuildContext context) async {
+    final cfg = _store.fetch(ChatConfigX.defaultId);
     if (cfg != null) return setTo(cfg: cfg);
 
-    setTo(cfg: ChatConfig.defaultOne);
     Loggers.app.warning('Default config not found');
+    return setTo(cfg: ChatConfigX.defaultOne);
   }
 
   static void _initToolRegexp() {
@@ -182,7 +207,7 @@ abstract final class Cfg {
     _initToolRegexp();
     final selectedKey = _store.profileId.fetch();
     final selected = _store.fetch(selectedKey);
-    return selected ?? ChatConfig.defaultOne;
+    return selected ?? ChatConfigX.defaultOne;
   }();
 }
 

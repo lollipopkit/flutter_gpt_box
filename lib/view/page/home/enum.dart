@@ -49,16 +49,7 @@ enum HomePageEnum {
             },
             child: Text(libL10n.add),
           );
-          final profiles = Stores.config.fetchAll().values.toList();
-          final select = await context.showPickSingleDialog(
-            title: l10n.profile,
-            items: profiles,
-            display: (p0) => p0.name.isEmpty ? l10n.defaulT : p0.name,
-            initial: Cfg.current,
-            actions: [addBtn],
-          );
-          if (select == null) return;
-          Cfg.setTo(cfg: select);
+          Cfg.showPickProfileDialog(context, actions: [addBtn]);
         },
         icon: const Icon(Icons.switch_account),
         tooltip: l10n.profile,

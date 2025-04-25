@@ -467,11 +467,9 @@ packages:
   fl_lib:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "v1.0.260"
-      resolved-ref: da0ebeaa0d600d25a766438fb2a8078c6fb6fc6d
-      url: "https://github.com/lppcg/fl_lib"
-    source: git
+      path: "../fl_lib"
+      relative: true
+    source: path
     version: "0.0.1"
   flutter:
     dependency: "direct main"
@@ -630,8 +628,16 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed:
+    dependency: "direct dev"
+    description:
+      name: freezed
+      sha256: "44c19278dd9d89292cf46e97dc0c1e52ce03275f40a97c5a348e802a924bf40e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.7"
   freezed_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: freezed_annotation
       sha256: c2e2d632dd9b8a2b7751117abcfc2b4888ecfe181bd9fca7170d9ef02e595fe2
@@ -1630,12 +1636,11 @@ packages:
   webdav_client_plus:
     dependency: transitive
     description:
-      path: "."
-      ref: "v1.0.87"
-      resolved-ref: f10538a1e073d1a75300986ce141ce9eed1b0f44
-      url: "https://github.com/lollipopkit/webdav_client"
-    source: git
-    version: "1.2.2"
+      name: webdav_client_plus
+      sha256: "0f992fe05a46674a800d9fd8fdc5c54952ff739da155c558776a62ca0c2bed3a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   win32:
     dependency: transitive
     description:

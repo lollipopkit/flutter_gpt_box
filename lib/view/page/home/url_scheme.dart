@@ -107,9 +107,9 @@ extension _AppLink on AppLink {
         }
         Cfg.setTo(
           cfg: Cfg.current.copyWith(
-            url: openAiUrl,
-            key: openAiKey,
-            model: openAiModel,
+            url: openAiUrl ?? Cfg.current.url,
+            key: openAiKey ?? Cfg.current.key,
+            model: openAiModel ?? Cfg.current.model,
           ),
         );
         return true;
@@ -117,7 +117,7 @@ extension _AppLink on AppLink {
         final paramsStr = params['params'];
         if (paramsStr == null) return false;
 
-        final cfg = ChatConfig.fromUrlParams(paramsStr);
+        final cfg = ChatConfigX.fromUrlParams(paramsStr);
         cfg.save();
         Cfg.setTo(id: cfg.id);
 
