@@ -83,39 +83,42 @@ final class ChatHistoryContentView extends StatelessWidget {
       return text;
     }
 
+    final children = chatItem.content.map((e) {
+      final fn = switch (e.type) {
+        // ChatContentType.audio => _buildAudio(e),
+        ChatContentType.image => _buildImage,
+        ChatContentType.file => _buildFile,
+        _ => _buildText,
+      };
+      return fn(context, e);
+    }).toList();
+
+    final reasoningContent = chatItem.reasoning;
+    if (reasoningContent != null) {
+      final reasoning = ExpandTile(
+        title: Text(
+          libL10n.thinking,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 17, vertical: 0),
+        childrenPadding: const EdgeInsets.symmetric(horizontal: 9, vertical: 9),
+        children: [
+          _buildMarkdown(context, reasoningContent),
+        ],
+      ).cardx;
+      children.insert(0, reasoning);
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: chatItem.content
-          .map((e) => switch (e.type) {
-                // ChatContentType.audio => _buildAudio(e),
-                ChatContentType.image => _buildImage,
-                ChatContentType.file => _buildFile,
-                _ => _buildText,
-              }(context, e))
-          .toList()
-          .joinWith(UIs.height13),
+      children: children.joinWith(UIs.height13),
     );
   }
 
   Widget _buildText(BuildContext context, ChatContent content) {
-    return MarkdownBody(
-      data: content.raw,
-      builders: {
-        'code': CodeElementBuilder(onCopy: Pfs.copy),
-        'latex': LatexElementBuilder(),
-      },
-      styleSheet: MarkdownStyleSheet.fromTheme(context.theme).copyWith(
-        a: TextStyle(color: UIs.primaryColor),
-      ),
-      extensionSet: MarkdownUtils.extensionSet,
-      onTapLink: MarkdownUtils.onLinkTap,
-      shrinkWrap: false,
-      // Keep it false, or the ScrollView's height calculation will be wrong.
-      fitContent: false,
-      // User experience is better when this is false.
-      selectable: isDesktop,
-    );
+    return _buildMarkdown(context, content.raw);
   }
 
   Widget _buildImage(BuildContext context, ChatContent content) {
@@ -137,6 +140,28 @@ final class ChatHistoryContentView extends StatelessWidget {
   //   return AudioCard(id: content.id, path: content.raw);
   // }
 
+  Widget _buildMarkdown(BuildContext context, String content) {
+    return MarkdownBody(
+      data: content,
+      builders: {
+        'code': CodeElementBuilder(onCopy: Pfs.copy),
+        'latex': LatexElementBuilder(),
+      },
+      styleSheet: MarkdownStyleSheet.fromTheme(context.theme).copyWith(
+        a: TextStyle(color: UIs.primaryColor),
+      ),
+      extensionSet: MarkdownUtils.extensionSet,
+      onTapLink: MarkdownUtils.onLinkTap,
+      shrinkWrap: false,
+      // Keep it false, or the ScrollView's height calculation will be wrong.
+      fitContent: false,
+      // User experience is better when this is false.
+      selectable: isDesktop,
+    );
+  }
+}
+
+extension on ChatHistoryContentView {
   void _onImgRet(ImagePageRet ret, String raw) async {
     if (ret.isDeleted) {
       FileApi.delete([raw]);

@@ -229,11 +229,23 @@ Future<void> _onCreateText(
   try {
     final sub = chatStream.listen(
       (eve) async {
-        final first = eve.choices.firstOrNull;
-        final delta = first?.delta.content;
+        final delta = eve.choices.firstOrNull?.delta;
         if (delta == null) return;
-        assistReply.content.first.raw += delta;
-        _chatItemRNMap[assistReply.id]?.notify();
+
+        final content = delta.content;
+        if (content != null) {
+          assistReply.content.first.raw += content;
+          _chatItemRNMap[assistReply.id]?.notify();
+        }
+
+        final deltaResoningContent = delta.reasoningContent;
+        if (deltaResoningContent != null) {
+          final originReasoning = assistReply.reasoning ?? '';
+          final newReasoning = '$originReasoning$deltaResoningContent';
+          assistReply.reasoning = newReasoning;
+          _chatItemRNMap[assistReply.id]?.notify();
+        }
+        // print('Reasoning: ${assistReply.reasoning}');
 
         _autoScroll(chatId);
       },

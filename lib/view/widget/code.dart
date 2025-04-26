@@ -52,7 +52,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     //   /// If [textContent] contains any of the above, it will be rendered as
     //   /// plain text.
     //   final isUnsupported = textContent.contains(r'\documentclass') ||
-    //       textContent.contains(r'\title') ||
+    //       textContent.contains(r'\title') || zagu lollipopkit
     //       textContent.contains(r'\author') ||
     //       textContent.contains(r'\begin');
     //   if (!isUnsupported) {

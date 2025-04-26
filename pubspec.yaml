@@ -13,8 +13,8 @@ dependencies:
     sdk: flutter
   app_links: ^6.1.1
   # audioplayers: ^6.0.0
-  extended_image: ^10.0.0
-  file_picker: ^9.1.0
+  extended_image: ^10.0.1
+  file_picker: ^9.2.3
   # flutter_js: ^0.8.1
   google_fonts: ^6.1.0
   html: ^0.15.4
@@ -22,7 +22,11 @@ dependencies:
   image_picker: ^1.0.7
   screenshot: ^3.0.0
   shortid: ^0.1.2
-  openai_dart: ^0.4.1
+  openai_dart:
+    git:
+      url: https://github.com/lollipopkit/langchain_dart
+      ref: v1.0.743
+      path: packages/openai_dart
   json_annotation: ^4.9.0
   freezed_annotation: ^2.4.4
   # flutter_riverpod: ^2.6.1
@@ -31,6 +35,7 @@ dependencies:
   #   git:
   #     url: https://github.com/lollipopkit/dart_openai
   #     ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
+  webdav_client_plus: ^1.0.2
   flutter_highlight: # ^0.7.0
     git:
       ref: master
@@ -39,11 +44,13 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.264
+      ref: v1.0.266
 
 dependency_overrides:
-  fl_lib:
-    path: ../fl_lib
+  # fl_lib:
+  #   path: ../fl_lib
+  # openai_dart:
+  #   path: ../langchain_dart/packages/openai_dart
   # webdav_client_plus:
   #   path: ../webdav_client
   # fl_build:

@@ -75,6 +75,7 @@ extension ChatHistoryItemX on ChatHistoryItem {
     DateTime? createdAt,
     @protected String? id,
     String? toolCallId,
+    String? reasoning,
   }) {
     return ChatHistoryItem(
       role: role ?? this.role,
@@ -82,6 +83,7 @@ extension ChatHistoryItemX on ChatHistoryItem {
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
       toolCallId: toolCallId ?? this.toolCallId,
+      reasoning: reasoning ?? this.reasoning,
     );
   }
 
