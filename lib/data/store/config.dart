@@ -8,7 +8,7 @@ final class ConfigStore extends HiveStore {
 
   static const _SELECTED_KEY = 'selectedKey';
 
-  late final profileId = propertyDefault('profileId', ChatConfig.defaultId);
+  late final profileId = propertyDefault('profileId', ChatConfigX.defaultId);
 
   /// If [ChatHistory.model] is not null, and the saved model ([followModel])
   /// exists in current models list, then set current model to it.
@@ -16,9 +16,9 @@ final class ConfigStore extends HiveStore {
 
   ChatConfig? fetch(String id) {
     final val = box.get(id) as ChatConfig?;
-    if (val == null && id == ChatConfig.defaultId) {
-      put(ChatConfig.defaultOne);
-      return ChatConfig.defaultOne;
+    if (val == null && id == ChatConfigX.defaultId) {
+      put(ChatConfigX.defaultOne);
+      return ChatConfigX.defaultOne;
     }
     return val;
   }
@@ -29,7 +29,7 @@ final class ConfigStore extends HiveStore {
 
   bool delete(String id) {
     /// Cannot delete default config
-    if (id == ChatConfig.defaultId) return false;
+    if (id == ChatConfigX.defaultId) return false;
     box.delete(id);
     return true;
   }

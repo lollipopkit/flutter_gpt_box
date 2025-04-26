@@ -64,6 +64,7 @@ extension ChatHistoryItemX on ChatHistoryItem {
               ChatContentType.text => e.raw,
               ChatContentType.image => '![$id](${e.raw})',
               ChatContentType.audio => '[$id](${e.raw})',
+              ChatContentType.file => '[$id](file://${e.raw})',
             })
         .join('\n');
   }
@@ -84,19 +85,12 @@ extension ChatHistoryItemX on ChatHistoryItem {
     );
   }
 
-  /// - If [asStr], return [ChatCompletionMessage] with [String] content.
-  /// It's for deepseek's api compatibility.
-  OaiHistoryItem toOpenAI({bool? asStr}) {
-    final asStr_ = asStr ?? Cfg.current.model.contains('deepseek');
+  Future<OaiHistoryItem> toOpenAI() async {
     switch (role) {
       case ChatRole.user:
-        final hasImg = content.any((e) => e.isImg);
         return ChatCompletionMessage.user(
-          content: asStr_ && !hasImg
-              ? ChatCompletionUserMessageContent.string(
-                  content.map((e) => e.raw).join('\n'))
-              : ChatCompletionUserMessageContent.parts(
-                  content.map((e) => e.toOpenAI).toList()),
+          content: ChatCompletionUserMessageContent.parts(
+              content.map((e) => e.toOpenAI).toList()),
         );
       case ChatRole.assist:
         return ChatCompletionMessage.assistant(
@@ -115,9 +109,9 @@ extension ChatHistoryItemX on ChatHistoryItem {
     }
   }
 
-  Future<OaiHistoryItem> toApi({bool asStr = true}) async {
+  Future<OaiHistoryItem> toApi() async {
     final contents = await Future.wait(content.map((e) => e.toApi));
-    return copyWith(content: contents).toOpenAI(asStr: asStr);
+    return copyWith(content: contents).toOpenAI();
   }
 }
 
@@ -125,11 +119,13 @@ extension ChatContentX on ChatContent {
   bool get isText => type == ChatContentType.text;
   bool get isImg => type == ChatContentType.image;
   bool get isAudio => type == ChatContentType.audio;
+  bool get isFile => type == ChatContentType.file;
 
   OaiContent get toOpenAI => switch (type) {
         ChatContentType.text => OaiContent.text(text: raw),
         ChatContentType.image =>
           OaiContent.image(imageUrl: ChatCompletionMessageImageUrl(url: raw)),
+        ChatContentType.file => OaiContent.text(text: raw),
         _ => throw UnimplementedError('$type.toOpenAI'),
       };
 
@@ -149,7 +145,7 @@ extension ChatContentX on ChatContent {
   /// Convert local file to base64
   /// {@endtemplate}
   Future<ChatContent> get toApi async {
-    if (!isImg) return this;
+    if (!isImg && !isFile) return this;
     return copyWith(raw: await ChatContentX.contentToApi(raw));
   }
 
@@ -157,7 +153,7 @@ extension ChatContentX on ChatContent {
   ///
   /// Seperate from [toApi] to decouple the logic
   static Future<String> contentToApi(String raw) async {
-    final isLocal = raw.startsWith('/');
+    final isLocal = raw.startsWith('/') || raw.startsWith('file://');
     if (isLocal) {
       final file = File(raw);
       final b64 = await file.base64;
@@ -171,7 +167,11 @@ extension ChatContentX on ChatContent {
     final isLocal = raw.startsWith('/');
     if (isLocal) {
       final file = File(raw);
-      await file.delete();
+      try {
+        await file.delete();
+      } catch (e) {
+        Loggers.app.warning('Delete file failed', e);
+      }
     } else {
       await FileApi.delete([raw]);
     }

@@ -71,11 +71,11 @@ final class _HomeBottomState extends State<_HomeBottom> {
                     ),
                     _buildFileBtn(),
                     _buildSettingsBtn(),
+                    _buildRight(),
                     const Spacer(),
                     // _buildTokenCount(),
                     UIs.width7,
-                    //_buildSwitchChatType(),
-                    _buildRight(),
+                    _buildSwitchChatType(),
                     UIs.width7,
                   ],
                 ),
@@ -106,29 +106,25 @@ final class _HomeBottomState extends State<_HomeBottom> {
   }
 
   Widget _buildFileBtn() {
-    return ListenBuilder(
-      listenable: _filePicked,
-      builder: () {
-        return ListenBuilder(
-          listenable: _chatType,
-          builder: () {
-            return switch (_chatType.value) {
-              ChatType.text || ChatType.img => IconButton(
-                  onPressed: () => _onTapImgPick(context),
-                  icon: Badge(
-                    isLabelVisible: _filePicked.value != null,
-                    child: const Icon(Icons.image, size: 19),
-                  ),
+    return _filePicked.listenVal(
+      (file) => Cfg.chatType.listenVal(
+        (chatType) {
+          return switch (chatType) {
+            ChatType.text || ChatType.img => IconButton(
+                onPressed: () => _onTapFilePick(context),
+                icon: Badge(
+                  isLabelVisible: file != null,
+                  child: const Icon(MingCute.file_upload_fill, size: 19),
                 ),
-              // ChatType.audio => const IconButton(
-              //   onPressed: _onTapAudioPick,
-              //   icon: Icon(Icons.mic, size: 19),
-              // ),
-              //_ => UIs.placeholder,
-            };
-          },
-        );
-      },
+              ),
+            // ChatType.audio => const IconButton(
+            //   onPressed: _onTapAudioPick,
+            //   icon: Icon(Icons.mic, size: 19),
+            // ),
+            //_ => UIs.placeholder,
+          };
+        },
+      ),
     );
   }
 
@@ -200,29 +196,27 @@ final class _HomeBottomState extends State<_HomeBottom> {
     );
   }
 
-  // Widget _buildSwitchChatType() {
-  //   return ValBuilder(
-  //     listenable: _chatType,
-  //     builder: (chatT) {
-  //       return FadeIn(
-  //         key: ValueKey(chatT),
-  //         child: PopupMenu(
-  //           items: ChatType.btns,
-  //           onSelected: (val) => _chatType.value = val,
-  //           initialValue: _chatType.value,
-  //           tooltip: libL10n.select,
-  //           child: _buildRoundRect(Row(
-  //             children: [
-  //               Icon(_chatType.value.icon, size: 15),
-  //               UIs.width7,
-  //               Text(_chatType.value.name, style: UIs.text13),
-  //             ],
-  //           )),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  Widget _buildSwitchChatType() {
+    return Cfg.chatType.listenVal((chatT) {
+      return FadeIn(
+        key: ValueKey(chatT),
+        child: PopupMenu(
+          items: ChatType.btns,
+          onSelected: (val) => Cfg.chatType.value = val,
+          initialValue: chatT,
+          tooltip: libL10n.select,
+          borderRadius: BorderRadius.circular(17),
+          child: _buildRoundRect(Row(
+            children: [
+              Icon(chatT.icon, size: 15),
+              UIs.width7,
+              Text(chatT.name, style: UIs.text13),
+            ],
+          )),
+        ),
+      );
+    });
+  }
 
   // Widget _buildTokenCount() {
   //   return ValueListenableBuilder(
@@ -241,16 +235,16 @@ final class _HomeBottomState extends State<_HomeBottom> {
   //   );
   // }
 
-  // Widget _buildRoundRect(Widget child) {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(17),
-  //       color: const Color.fromARGB(35, 151, 151, 151),
-  //     ),
-  //     padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
-  //     child: child,
-  //   );
-  // }
+  Widget _buildRoundRect(Widget child) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(35, 151, 151, 151),
+        borderRadius: BorderRadius.circular(17),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+      child: child,
+    );
+  }
 
   void _onTapSetting() async {
     final chat = _curChat;

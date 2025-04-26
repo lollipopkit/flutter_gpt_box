@@ -1,6 +1,8 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/res/l10n.dart';
+import 'package:gpt_box/data/res/openai.dart';
 import 'package:hive_flutter/adapters.dart';
 
 part 'type.g.dart';
@@ -53,4 +55,19 @@ enum ChatType {
         ),
       )
       .toList();
+}
+
+extension ChatTypeOfCfg on ChatType {
+  String? get model => switch (this) {
+        ChatType.text => Cfg.current.model,
+        ChatType.img => Cfg.current.imgModel,
+      };
+
+  ChatConfig copyWithModel(String model, {ChatConfig? cfg}) {
+    cfg ??= Cfg.current;
+    return switch (this) {
+      ChatType.text => cfg.copyWith(model: model),
+      ChatType.img => cfg.copyWith(imgModel: model),
+    };
+  }
 }

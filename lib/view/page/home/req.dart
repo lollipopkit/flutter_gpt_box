@@ -31,10 +31,8 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
 
   final promptStr = config.prompt + Stores.tool.memories.get().join('\n');
   final prompt = promptStr.isNotEmpty
-      ? ChatHistoryItem.single(
-          role: ChatRole.system,
-          raw: promptStr,
-        ).toOpenAI()
+      ? await ChatHistoryItem.single(role: ChatRole.system, raw: promptStr)
+          .toOpenAI()
       : null;
 
   // #101
@@ -71,7 +69,7 @@ void _onCreateRequest(BuildContext context, String chatId) async {
     chatId = newId;
   }
 
-  // final chatType = _chatType.value;
+  final chatType = Cfg.chatType.value;
   // final notSupport = switch (chatType) {
   //   // Dart package `openai` uses [io.File], which is not supported on web
   //   ChatType.img || ChatType.audio => isWeb,
@@ -83,13 +81,6 @@ void _onCreateRequest(BuildContext context, String chatId) async {
   //   context.showSnackBar(msg);
   //   return;
   // }
-  // final func = switch ((chatType, _filePicked.value)) {
-  //   (ChatType.text, _) => _onCreateText,
-  //   (ChatType.img, null) => _onCreateImg,
-  //   (ChatType.img, _) => _onCreateImgEdit,
-  //   (ChatType.audio, null) => _onCreateTTS,
-  //   (ChatType.audio, _) => _onCreateSTT,
-  // };
 
   final input = _inputCtrl.text;
   if (input.isEmpty) return;
@@ -99,7 +90,15 @@ void _onCreateRequest(BuildContext context, String chatId) async {
   _loadingChatIds.notify();
   _autoHideCtrl.autoHideEnabled = false;
 
-  return await _onCreateText(context, chatId, input, _filePicked.value?.url);
+  final func = switch ((chatType, _filePicked.value)) {
+    (ChatType.text, _) => _onCreateText,
+    (ChatType.img, _) => _onCreateImg,
+    // (ChatType.img, _) => _onCreateImgEdit,
+    // (ChatType.audio, null) => _onCreateTTS,
+    // (ChatType.audio, _) => _onCreateSTT,
+  };
+
+  return await func(context, chatId, input, _filePicked.value?.url);
 }
 
 Future<void> _onCreateText(
@@ -117,11 +116,11 @@ Future<void> _onCreateText(
   }
   final config = Cfg.current;
 
-  final hasImg = fileUrl != null;
+  final hasFile = fileUrl != null;
   final question = ChatHistoryItem.gen(
     content: [
       ChatContent.text(input),
-      if (hasImg) ChatContent.image(fileUrl),
+      if (hasFile) ChatContent.file(fileUrl),
     ],
     role: ChatRole.user,
   );
@@ -129,17 +128,17 @@ Future<void> _onCreateText(
     role: ChatRole.user,
     content: [
       ChatContent.text(input),
-      if (hasImg) await ChatContent.image(fileUrl).toApi,
+      if (hasFile) await ChatContent.file(fileUrl).toApi,
     ],
   );
   final msgs = (await _historyCarried(workingChat)).toList();
-  msgs.add(questionForApi.toOpenAI());
+  msgs.add(await questionForApi.toOpenAI());
 
   workingChat.items.add(question);
   _inputCtrl.clear();
   _chatRN.notify();
   _autoScroll(chatId);
-  final titleCompleter = _genChatTitle(context, chatId, config);
+  final titleCompleter = await _genChatTitle(context, chatId, config);
 
   final toolCompatible = Cfg.isToolCompatible();
 
@@ -180,7 +179,7 @@ Future<void> _onCreateText(
         toolCalls: toolCalls,
       );
       workingChat.items.add(assistReply);
-      msgs.add(assistReply.toOpenAI());
+      msgs.add(await assistReply.toOpenAI());
       void onToolLog(String log) {
         toolReply.content.first.raw = log;
         _chatItemRNMap[toolReply.id]?.notify();
@@ -205,7 +204,7 @@ Future<void> _onCreateText(
             toolCallId: toolCall.id,
           );
           workingChat.items.add(historyItem);
-          msgs.add(historyItem.toOpenAI());
+          msgs.add(await historyItem.toOpenAI());
         }
       }
     }
@@ -317,53 +316,68 @@ Future<void> _onCreateText(
 //   }
 // }
 
-// Future<void> _onCreateImg(BuildContext context, String chatId) async {
-//   final prompt = _inputCtrl.text;
-//   if (prompt.isEmpty) return;
-//   _imeFocus.unfocus();
-//   _inputCtrl.clear();
+Future<void> _onCreateImg(
+  BuildContext context,
+  String chatId,
+  String input,
+  String? fileUrl,
+) async {
+  final prompt = _inputCtrl.text;
+  if (prompt.isEmpty) return;
+  _imeFocus.unfocus();
+  _inputCtrl.clear();
 
-//   final workingChat = _allHistories[chatId];
-//   if (workingChat == null) {
-//     final msg = 'Chat($chatId) not found';
-//     Loggers.app.warning(msg);
-//     context.showSnackBar(msg);
-//     return;
-//   }
+  final workingChat = _allHistories[chatId];
+  if (workingChat == null) {
+    final msg = 'Chat($chatId) not found';
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
 
-//   final userQuestion = ChatHistoryItem.single(role: ChatRole.user, raw: prompt);
-//   workingChat.items.add(userQuestion);
-//   _chatRN.notify();
+  final userQuestion = ChatHistoryItem.single(role: ChatRole.user, raw: prompt);
+  workingChat.items.add(userQuestion);
+  _chatRN.notify();
 
-//   final cfg = OpenAICfg.current;
-//   try {
-//     final resp = await OpenAI.instance.image.create(
-//       model: cfg.imgModel,
-//       prompt: prompt,
-//     );
-//     final imgs = <String>[];
-//     for (final item in resp.data) {
-//       final url = item.url;
-//       if (url != null) {
-//         imgs.add(url);
-//       }
-//     }
-//     if (imgs.isEmpty) {
-//       const msg = 'Create image: empty resp';
-//       Loggers.app.warning(msg);
-//       context.showSnackBar(msg);
-//       return;
-//     }
-//     workingChat.items.add(ChatHistoryItem.gen(
-//       role: ChatRole.assist,
-//       content: imgs.map((e) => ChatContent.image(e)).toList(),
-//     ));
-//     _storeChat(chatId);
-//     _chatRN.notify();
-//   } catch (e, s) {
-//     _onErr(e, s, chatId, 'Create image');
-//   }
-// }
+  final cfg = Cfg.current;
+  final imgModel = cfg.imgModel;
+  if (imgModel == null) {
+    final msg = l10n.emptyFields('Image Model');
+    Loggers.app.warning(msg);
+    context.showSnackBar(msg);
+    return;
+  }
+
+  try {
+    final resp = await Cfg.client.createImage(
+      request: CreateImageRequest(
+        prompt: prompt,
+        model: CreateImageRequestModel.modelId(imgModel),
+      ),
+    );
+    final imgs = <String>[];
+    for (final item in resp.data) {
+      final url = item.url;
+      if (url != null) {
+        imgs.add(url);
+      }
+    }
+    if (imgs.isEmpty) {
+      const msg = 'Create image: empty resp';
+      Loggers.app.warning(msg);
+      context.showSnackBar(msg);
+      return;
+    }
+    workingChat.items.add(ChatHistoryItem.gen(
+      role: ChatRole.assist,
+      content: imgs.map((e) => ChatContent.image(e)).toList(),
+    ));
+    _storeChat(chatId);
+    _chatRN.notify();
+  } catch (e, s) {
+    _onErr(e, s, chatId, 'Create image');
+  }
+}
 
 // Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
 //   final prompt = _inputCtrl.text;
@@ -383,12 +397,21 @@ Future<void> _onCreateText(
 //   _chatRN.notify();
 //   _filePicked.value = null;
 
-//   final cfg = OpenAICfg.current;
+//   final cfg = Cfg.current;
+//   final imgModel = cfg.imgModel;
+//   if (imgModel == null) {
+//     final msg = l10n.emptyFields('Image Model');
+//     Loggers.app.warning(msg);
+//     context.showSnackBar(msg);
+//     return;
+//   }
+
 //   try {
-//     final resp = await OpenAI.instance.image.edit(
-//       model: cfg.imgModel,
-//       image: val.file,
-//       prompt: prompt,
+//     final resp = await Cfg.client.createImage(
+//       request: CreateImageRequest(
+//         prompt: prompt,
+//         model: CreateImageRequestModel.modelId(imgModel),
+//       ),
 //     );
 
 //     final imgs = <String>[];
@@ -461,11 +484,11 @@ Future<void> _onCreateText(
 //   }
 // }
 
-Completer<void>? _genChatTitle(
+Future<Completer<void>?> _genChatTitle(
   BuildContext context,
   String chatId,
   ChatConfig cfg,
-) {
+) async {
   if (!Stores.setting.genTitle.get()) return null;
 
   final entity = _allHistories[chatId];
@@ -486,11 +509,11 @@ Completer<void>? _genChatTitle(
 
   try {
     final msgs = [
-      ChatHistoryItem.single(
+      await ChatHistoryItem.single(
         raw: Cfg.current.genTitlePrompt ?? ChatTitleUtil.titlePrompt,
         role: ChatRole.system,
       ).toOpenAI(),
-      ChatHistoryItem.single(
+      await ChatHistoryItem.single(
         role: ChatRole.user,
         raw: entity.items.first.content
             .firstWhere((p0) => p0.type == ChatContentType.text)
@@ -572,7 +595,7 @@ void _onReplay({
 
   _inputCtrl.text = text;
   await context.showLoadingDialog(fn: () async {
-    _filePicked.value = img != null ? await _FilePicked.fromUrl(img) : null;
+    _filePicked.value = img != null ? await ApiFile.fromUrl(img) : null;
   });
 
   _onCreateRequest(context, chatId);

@@ -26,7 +26,7 @@ final class _ChatSettingsState extends State<_ChatSettings> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: CustomAppBar(
         title: Text('${libL10n.setting} - ${widget.args.name}'),
       ),
       floatingActionButton: FloatingActionButton(

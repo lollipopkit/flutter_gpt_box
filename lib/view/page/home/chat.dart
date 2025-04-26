@@ -153,43 +153,40 @@ class _ChatPageState extends State<_ChatPage>
 
     final hovers = _buildChatItemHovers(chatItems, chatItem);
     const pad = 7.0;
-    return Hover(
-      builder: (bool isHovered) {
-        final content = InkWell(
-          borderRadius: BorderRadius.circular(13),
-          onLongPress: isHovered
-              ? null
-              : () => _onLongPressChatItem(context, chatItems, chatItem),
-          child: child,
-        );
 
-        if (!isHovered) return content;
+    final content = InkWell(
+      borderRadius: BorderRadius.circular(13),
+      onLongPress: () => _onLongPressChatItem(context, chatItems, chatItem),
+      child: child,
+    );
 
-        final hover = AnimatedContainer(
-          duration: Durations.medium1,
-          curve: Curves.fastEaseInToSlowEaseOut,
-          width: isHovered ? (hovers.length * 33 + 2 * pad) : 0,
-          height: 30,
-          padding: const EdgeInsets.symmetric(horizontal: pad),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: hovers,
-            ),
-          ),
-        );
-        return Stack(
-          children: [
-            content,
-            Align(
+    return Stack(
+      children: [
+        content,
+        Positioned.fill(child: Hover(
+          builder: (isHovered) {
+            final hover = AnimatedContainer(
+              duration: Durations.medium1,
+              curve: Curves.fastEaseInToSlowEaseOut,
+              width: isHovered ? (hovers.length * 33 + 2 * pad) : 0,
+              height: 30,
+              padding: const EdgeInsets.symmetric(horizontal: pad),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: hovers,
+                ),
+              ),
+            );
+            return Align(
               alignment: context.isRTL ? Alignment.topLeft : Alignment.topRight,
               child: hover,
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ))
+      ],
     );
   }
 

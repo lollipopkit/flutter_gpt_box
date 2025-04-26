@@ -1,64 +1,47 @@
 import 'dart:convert';
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gpt_box/core/util/url.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:shortid/shortid.dart';
 
 part 'config.g.dart';
+part 'config.freezed.dart';
 
 @HiveType(typeId: 6)
-@JsonSerializable()
-final class ChatConfig {
-  @HiveField(0, defaultValue: '')
-  final String prompt;
-  @HiveField(1, defaultValue: defaultUrl)
-  final String url;
-  @HiveField(2, defaultValue: '')
-  final String key;
-  @HiveField(3, defaultValue: '')
-  final String model;
-  @HiveField(7, defaultValue: defaultHistoryLen)
-  final int historyLen;
-  @HiveField(8, defaultValue: defaultId)
-  @JsonKey(defaultValue: defaultId)
-  final String id;
-  @HiveField(9, defaultValue: '')
-  final String name;
-  @HiveField(14)
-  final String? genTitlePrompt;
-  @HiveField(15)
-  final String? genTitleModel;
+@freezed
+class ChatConfig with _$ChatConfig {
+  const factory ChatConfig({
+    @HiveField(0, defaultValue: '') required String prompt,
+    @HiveField(1, defaultValue: ChatConfigX.defaultUrl) required String url,
+    @HiveField(2, defaultValue: '') required String key,
+    @HiveField(3, defaultValue: '') required String model,
+    @HiveField(7, defaultValue: ChatConfigX.defaultHistoryLen)
+    required int historyLen,
+    @HiveField(8, defaultValue: ChatConfigX.defaultId)
+    @JsonKey(defaultValue: ChatConfigX.defaultId)
+    required String id,
+    @HiveField(9, defaultValue: '') required String name,
+    @HiveField(14) String? genTitlePrompt,
+    @HiveField(15) String? genTitleModel,
+    @HiveField(16) String? imgModel,
+  }) = _ChatConfig;
 
-  const ChatConfig({
-    required this.prompt,
-    required this.url,
-    required this.key,
-    required this.model,
-    required this.historyLen,
-    required this.id,
-    required this.name,
-    this.genTitlePrompt,
-    this.genTitleModel,
-  });
+  factory ChatConfig.fromJson(Map<String, dynamic> json) =>
+      _$ChatConfigFromJson(json);
 
-  ChatConfig.noid({
-    required this.prompt,
-    required this.url,
-    required this.key,
-    required this.model,
-    required this.historyLen,
-    required this.name,
-    this.genTitlePrompt,
-    this.genTitleModel,
-  }) : id = shortid.generate();
+  @override
+  String toString() => 'ChatConfig($id, $url, $model)';
+}
 
+extension ChatConfigX on ChatConfig {
   static final apiUrlReg = RegExp(r'^https?://[0-9A-Za-z\.]+(:\d+)?$');
   static const defaultId = 'defaultId';
   static const defaultUrl = 'https://api.openai.com/v1';
   static const defaultHistoryLen = 7;
+  static const defaultImgModel = 'dall-e-3';
   static const defaultOne = ChatConfig(
     id: defaultId,
     prompt: '',
@@ -84,33 +67,7 @@ final class ChatConfig {
     return false;
   }
 
-  ChatConfig copyWith({
-    String? id,
-    String? prompt,
-    String? url,
-    String? key,
-    String? model,
-    int? historyLen,
-    String? name,
-    String? imgModel,
-    String? speechModel,
-    String? transcribeModel,
-    String? genTitlePrompt,
-  }) =>
-      ChatConfig(
-        id: id ?? this.id,
-        prompt: prompt ?? this.prompt,
-        url: url ?? this.url,
-        key: key ?? this.key,
-        model: model ?? this.model,
-        historyLen: historyLen ?? this.historyLen,
-        name: name ?? this.name,
-      );
-
-  factory ChatConfig.fromJson(Map<String, dynamic> json) =>
-      _$ChatConfigFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ChatConfigToJson(this);
+  bool get isDefault => id == defaultId;
 
   /// Get share url.
   ///
@@ -124,7 +81,8 @@ final class ChatConfig {
   /// Parse url params to [ChatConfig].
   static ChatConfig fromUrlParams(String params) {
     final params_ = json.decode(params) as Map<String, dynamic>;
-    return ChatConfig.noid(
+    return ChatConfig(
+      id: params_['id'] ?? shortid.generate(),
       url: params_['url'] ?? defaultUrl,
       key: params_['key'] ?? '',
       model: params_['model'] ?? '',
@@ -134,7 +92,4 @@ final class ChatConfig {
       historyLen: params_['historyLen'] ?? defaultHistoryLen,
     );
   }
-
-  @override
-  String toString() => 'ChatConfig($id, $url, $model)';
 }

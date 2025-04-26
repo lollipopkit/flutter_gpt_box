@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:icons_plus/icons_plus.dart';
@@ -85,7 +84,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         theme: _theme,
         textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
         tabSize: 4,
-        selectable: false,
+        selectable: true,
         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
       );
     }
@@ -96,7 +95,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
       theme: _theme,
       textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
       tabSize: 4,
-      selectable: false,
+      selectable: true,
       padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
     );
 
@@ -136,7 +135,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
             icon: const Icon(
               MingCute.copy_2_fill,
               size: 15,
-              color: Color.fromARGB(117, 129, 129, 129),
+              color: Color.fromARGB(173, 188, 188, 188),
             ),
             onTap: () {
               onCopy?.call(element.textContent.trim());

@@ -5,7 +5,6 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/core/util/json.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
-import 'package:gpt_box/data/res/rnode.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:logging/logging.dart';
@@ -80,7 +79,7 @@ class Backup implements Mergeable {
       lastModTime: Stores.lastModTime,
       history: Stores.history.fetchAll().values.toList(),
       configs: Stores.config.fetchAll().values.toList(),
-      tools: await Stores.tool.getAllMap(),
+      tools: Stores.tool.getAllMap(),
       trashes: Stores.trash.histories,
     );
   }
