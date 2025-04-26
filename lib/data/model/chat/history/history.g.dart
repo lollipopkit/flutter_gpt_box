@@ -66,7 +66,7 @@ class ChatHistoryItemAdapter extends TypeAdapter<ChatHistoryItem> {
       id: fields[3] as String,
       toolCallId: fields[4] as String?,
       toolCalls: (fields[5] as List?)?.cast<ChatCompletionMessageToolCall>(),
-      thinkContent: fields[6] as String?,
+      reasoning: fields[6] as String?,
     );
   }
 
@@ -87,7 +87,7 @@ class ChatHistoryItemAdapter extends TypeAdapter<ChatHistoryItem> {
       ..writeByte(5)
       ..write(obj.toolCalls)
       ..writeByte(6)
-      ..write(obj.thinkContent);
+      ..write(obj.reasoning);
   }
 
   @override
@@ -315,7 +315,7 @@ ChatHistoryItem _$ChatHistoryItemFromJson(Map<String, dynamic> json) =>
           ?.map((e) =>
               ChatCompletionMessageToolCall.fromJson(e as Map<String, dynamic>))
           .toList(),
-      thinkContent: json['thinkContent'] as String?,
+      reasoning: json['reasoning'] as String?,
     );
 
 Map<String, dynamic> _$ChatHistoryItemToJson(ChatHistoryItem instance) =>
@@ -326,7 +326,7 @@ Map<String, dynamic> _$ChatHistoryItemToJson(ChatHistoryItem instance) =>
       'id': instance.id,
       if (instance.toolCallId case final value?) 'toolCallId': value,
       if (instance.toolCalls case final value?) 'toolCalls': value,
-      if (instance.thinkContent case final value?) 'thinkContent': value,
+      if (instance.reasoning case final value?) 'reasoning': value,
     };
 
 const _$ChatRoleEnumMap = {
