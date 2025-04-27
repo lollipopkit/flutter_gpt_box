@@ -348,7 +348,13 @@ Future<void> _onCreateImg(
 
   final userQuestion = ChatHistoryItem.single(role: ChatRole.user, raw: prompt);
   workingChat.items.add(userQuestion);
+  final assistReply = ChatHistoryItem.gen(
+    role: ChatRole.assist,
+    content: [],
+  );
+  workingChat.items.add(assistReply);
   _chatRN.notify();
+  _autoScroll(chatId);
 
   final cfg = Cfg.current;
   final imgModel = cfg.imgModel;
@@ -358,6 +364,10 @@ Future<void> _onCreateImg(
     context.showSnackBar(msg);
     return;
   }
+
+  _loadingChatIds.value.add(chatId);
+  _loadingChatIds.notify();
+  _autoHideCtrl.autoHideEnabled = false;
 
   try {
     final resp = await Cfg.client.createImage(
@@ -379,14 +389,23 @@ Future<void> _onCreateImg(
       context.showSnackBar(msg);
       return;
     }
-    workingChat.items.add(ChatHistoryItem.gen(
-      role: ChatRole.assist,
-      content: imgs.map((e) => ChatContent.image(e)).toList(),
-    ));
+
+    final imgContents = imgs.map((e) => ChatContent.image(e)).toList();
+    assistReply.content.addAll(imgContents);
+
     _storeChat(chatId);
     _chatRN.notify();
+    _autoScroll(chatId);
+
+    // Only sync if success
+    BakSync.instance.sync();
   } catch (e, s) {
+    // _onErr handles removing loading state and enabling auto-hide
     _onErr(e, s, chatId, 'Create image');
+  } finally {
+    _loadingChatIds.value.remove(chatId);
+    _loadingChatIds.notify();
+    _autoHideCtrl.autoHideEnabled = true;
   }
 }
 
@@ -615,6 +634,7 @@ void _onReplay({
 void _onErr(Object e, StackTrace s, String chatId, String action) {
   Loggers.app.warning('$action: $e');
   _onStopStreamSub(chatId);
+  // Ensure loading state is removed and auto-hide is enabled on error
   _loadingChatIds.value.remove(chatId);
   _loadingChatIds.notify();
   _autoHideCtrl.autoHideEnabled = true;

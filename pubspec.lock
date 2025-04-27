@@ -452,8 +452,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.0.266"
-      resolved-ref: e871d4378464393276efdca949e471c7bd7c7efb
+      ref: "v1.0.268"
+      resolved-ref: "88908c4e838b15e1bde5b2685ccd016b7578e8a4"
       url: "https://github.com/lppcg/fl_lib"
     source: git
     version: "0.0.1"
@@ -1018,8 +1018,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/openai_dart"
-      ref: "v1.0.743"
-      resolved-ref: b3c98f18e39523805503dc545b7370f5cbeaaf7b
+      ref: "v1.0.744"
+      resolved-ref: ceb38486df0a49fddb4cb5a3283e566d4462f8ac
       url: "https://github.com/lollipopkit/langchain_dart"
     source: git
     version: "0.4.5"
