@@ -1,9 +1,10 @@
 part of 'home.dart';
 
 final _inputCtrl = TextEditingController();
-final _chatScrollCtrl = ScrollController()..addListener(() {
-  Fns.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
-});
+final _chatScrollCtrl = ScrollController()
+  ..addListener(() {
+    Fns.throttle(_chatFabRN.notify, id: 'chat_fab_rn', duration: 30);
+  });
 final _historyScrollCtrl = ScrollController()
   ..addListener(_locateHistoryListener);
 final _pageCtrl = PageController(initialPage: _curPage.value.index);

@@ -123,13 +123,13 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_links: 76b66b60cc809390ca1ad69bfd66b998d2387ac7
-  camera_avfoundation: 04b44aeb14070126c6529e5ab82cc7c9fca107cf
+  camera_avfoundation: be3be85408cd4126f250386828e9b1dfa40ab436
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
-  flutter_native_splash: 6cad9122ea0fad137d23137dd14b937f3e90b145
+  flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
   icloud_storage: e55639f0c0d7cb2b0ba9c0b3d5968ccca9cd9aa2
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
   local_auth_darwin: 553ce4f9b16d3fdfeafce9cf042e7c9f77c1c391

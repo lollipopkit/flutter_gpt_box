@@ -94,13 +94,13 @@ final class ChatHistoryItem {
     this.reasoning,
   });
 
-  ChatHistoryItem.gen({
-    required this.role,
-    required this.content,
-    this.toolCallId,
-    this.toolCalls,
-    this.reasoning
-  })  : createdAt = DateTime.now(),
+  ChatHistoryItem.gen(
+      {required this.role,
+      required this.content,
+      this.toolCallId,
+      this.toolCalls,
+      this.reasoning})
+      : createdAt = DateTime.now(),
         id = shortid.generate();
 
   ChatHistoryItem.single({
