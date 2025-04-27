@@ -266,7 +266,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
     final rs = BakSync.instance.remoteStorage;
     if (rs == null) return UIs.placeholder;
     return IconButton(
-      onPressed: () => _onTapSyncChats(context),
+      onPressed: _onTapSyncChats,
       icon: const Icon(Icons.sync, size: 19),
       tooltip: libL10n.sync,
     );
@@ -301,7 +301,7 @@ $jsonRaw
     );
   }
 
-  void _onTapSyncChats(BuildContext context) async {
+  void _onTapSyncChats() async {
     await BakSync.instance.sync();
   }
 }
