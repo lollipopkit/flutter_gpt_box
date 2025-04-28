@@ -10,7 +10,10 @@ import 'package:icons_plus/icons_plus.dart';
 final _textStyle = GoogleFonts.robotoMono();
 
 class CodeElementBuilder extends MarkdownElementBuilder {
+  /// On copy callback.
   final void Function(String)? onCopy;
+
+  /// Whether the view is for capture.
   final bool isForCapture;
 
   CodeElementBuilder({this.onCopy, this.isForCapture = false});
@@ -41,28 +44,6 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         softWrap: false,
       );
     }
-
-    // if (language == 'latex') {
-    //   /// The following control sequence is unsupported:
-    //   /// - \documentclass
-    //   /// - \title
-    //   /// - \author
-    //   /// - \begin
-    //   /// - more...
-    //   /// If [textContent] contains any of the above, it will be rendered as
-    //   /// plain text.
-    //   final isUnsupported = textContent.contains(r'\documentclass') ||
-    //       textContent.contains(r'\title') || zagu lollipopkit
-    //       textContent.contains(r'\author') ||
-    //       textContent.contains(r'\begin');
-    //   if (!isUnsupported) {
-    //     final String? displayMode = element.attributes['displayMode'];
-    //     return Math.tex(
-    //       textContent,
-    //       mathStyle: displayMode == 'true' ? MathStyle.display : MathStyle.text,
-    //     );
-    //   }
-    // }
 
     if (isForCapture) {
       return HighlightViewSync(

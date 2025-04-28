@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:app_links/app_links.dart';
@@ -39,6 +38,7 @@ part 'search.dart';
 part 'appbar.dart';
 part 'bottom/bottom.dart';
 part 'bottom/settings.dart';
+part 'bottom/picked_files.dart';
 part 'url_scheme.dart';
 part 'req.dart';
 part 'md_copy.dart';

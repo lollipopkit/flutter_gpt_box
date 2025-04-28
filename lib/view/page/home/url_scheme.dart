@@ -15,7 +15,7 @@ extension _AppLink on AppLink {
         if (msg != null) {
           //_inputCtrl.text = msg;
           if (send == 'true' && context != null) {
-            _onCreateText(context, chat.id, msg, null);
+            _onCreateText(context, chat.id, msg, []);
           }
         }
         return true;

@@ -20,73 +20,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
 
   @override
   Widget build(BuildContext context) {
-    final child = ListenBuilder(
-      listenable: _homeBottomRN,
-      builder: () {
-        return Container(
-          padding: isDesktop
-              ? const EdgeInsets.only(left: 11, right: 11, top: 5, bottom: 17)
-              : const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
-            boxShadow: RNodes.dark.value ? _boxShadow : _boxShadowDark,
-          ),
-          child: AnimatedPadding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.viewInsetsOf(context).bottom),
-            curve: Curves.fastEaseInToSlowEaseOut,
-            duration: Durations.short1,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    // IconButton(
-                    //   onPressed: () => _onTapSetting(context),
-                    //   icon: const Icon(Icons.settings, size: 19),
-                    //   tooltip: l10n.settings,
-                    // ),
-                    IconButton(
-                      onPressed: () {
-                        _switchChat(_newChat().id);
-                        _historyRN.notify();
-                        if (_curPage.value == HomePageEnum.history) {
-                          _switchPage(HomePageEnum.chat);
-                        }
-                      },
-                      icon: const Icon(MingCute.add_fill, size: 17),
-                      tooltip: l10n.newChat,
-                    ),
-                    // IconButton(
-                    //   onPressed: () =>
-                    //       _onTapRenameChat(_curChatId.value, context),
-                    //   icon: const Icon(Icons.edit, size: 19),
-                    //   tooltip: l10n.rename,
-                    // ),
-                    IconButton(
-                      onPressed: () =>
-                          _onTapDeleteChat(_curChatId.value, context),
-                      icon: const Icon(Icons.delete, size: 19),
-                      tooltip: l10n.delete,
-                    ),
-                    _buildFileBtn(),
-                    _buildSettingsBtn(),
-                    _buildRight(),
-                    const Spacer(),
-                    // _buildTokenCount(),
-                    UIs.width7,
-                    _buildSwitchChatType(),
-                    UIs.width7,
-                  ],
-                ),
-                _buildTextField(),
-                SizedBox(height: MediaQuery.paddingOf(context).bottom),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    final child = _homeBottomRN.listen(_build);
 
     return ValBuilder(
       listenable: _isWide,
@@ -97,34 +31,88 @@ final class _HomeBottomState extends State<_HomeBottom> {
     );
   }
 
+  Widget _build() {
+    return Container(
+      padding: isDesktop
+          ? const EdgeInsets.only(left: 11, right: 11, top: 5, bottom: 17)
+          : const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
+        boxShadow: RNodes.dark.value ? _boxShadow : _boxShadowDark,
+      ),
+      child: AnimatedPadding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+        curve: Curves.fastEaseInToSlowEaseOut,
+        duration: Durations.short1,
+        child: _buildBottom(),
+      ),
+    );
+  }
+
+  Widget _buildBottom() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const _PickedFilesPreview(),
+        _buildBottomFns(),
+        _buildTextField(),
+        SizedBox(height: MediaQuery.paddingOf(context).bottom),
+      ],
+    );
+  }
+
+  Widget _buildBottomFns() {
+    return Row(
+      children: [
+        Btn.icon(
+          onTap: () {
+            _switchChat(_newChat().id);
+            _historyRN.notify();
+            if (_curPage.value == HomePageEnum.history) {
+              _switchPage(HomePageEnum.chat);
+            }
+          },
+          icon: const Icon(MingCute.add_fill, size: 17),
+        ),
+        Btn.icon(
+          onTap: () => _onTapDeleteChat(_curChatId.value, context),
+          icon: const Icon(Icons.delete, size: 19),
+        ),
+        _buildFileBtn(),
+        _buildSettingsBtn(),
+        _buildRight(),
+        const Spacer(),
+        // _buildTokenCount(),
+        UIs.width7,
+        _buildSwitchChatType(),
+        UIs.width7,
+      ],
+    );
+  }
+
   Widget _buildSettingsBtn() {
-    return IconButton(
-      onPressed: _onTapSetting,
+    return Btn.icon(
+      onTap: _onTapSetting,
       icon: const Icon(Icons.settings, size: 19),
-      tooltip: libL10n.setting,
     );
   }
 
   Widget _buildFileBtn() {
-    return _filePicked.listenVal(
-      (file) => Cfg.chatType.listenVal(
-        (chatType) {
-          return switch (chatType) {
-            ChatType.text || ChatType.img => IconButton(
-                onPressed: () => _onTapFilePick(context),
-                icon: Badge(
-                  isLabelVisible: file != null,
-                  child: const Icon(MingCute.file_upload_fill, size: 19),
-                ),
-              ),
-            // ChatType.audio => const IconButton(
-            //   onPressed: _onTapAudioPick,
-            //   icon: Icon(Icons.mic, size: 19),
-            // ),
-            //_ => UIs.placeholder,
-          };
-        },
-      ),
+    return Cfg.chatType.listenVal(
+      (chatType) {
+        return switch (chatType) {
+          ChatType.text || ChatType.img => Btn.icon(
+              onTap: () => _onTapFilePick(context),
+              icon: const Icon(MingCute.file_upload_fill, size: 19),
+            ),
+          // ChatType.audio => const IconButton(
+          //   onPressed: _onTapAudioPick,
+          //   icon: Icon(Icons.mic, size: 19),
+          // ),
+          //_ => UIs.placeholder,
+        };
+      },
     );
   }
 
@@ -183,12 +171,12 @@ final class _HomeBottomState extends State<_HomeBottom> {
         return _loadingChatIds.listenVal((chats) {
           final isWorking = chats.contains(chatId);
           return isWorking
-              ? IconButton(
-                  onPressed: () => _onStopStreamSub(chatId),
+              ? Btn.icon(
+                  onTap: () => _onStopStreamSub(chatId),
                   icon: const Icon(Icons.stop),
                 )
-              : IconButton(
-                  onPressed: () => _onCreateRequest(context, _curChatId.value),
+              : Btn.icon(
+                  onTap: () => _onCreateRequest(context, _curChatId.value),
                   icon: const Icon(Icons.send, size: 19),
                 );
         });
@@ -265,14 +253,14 @@ final class _HomeBottomState extends State<_HomeBottom> {
   Widget _buildSyncChats() {
     final rs = BakSync.instance.remoteStorage;
     if (rs == null) return UIs.placeholder;
-    return IconButton(
-      onPressed: _onTapSyncChats,
+    return Btn.icon(
+      onTap: _onTapSyncChats,
       icon: const Icon(Icons.sync, size: 19),
-      tooltip: libL10n.sync,
     );
   }
 
   Widget _buildChatMeta() {
+    if (BuildMode.isRelease) return UIs.placeholder;
     return Btn.icon(
       icon: const Icon(Icons.code, size: 19),
       onTap: _onTapMeta,
