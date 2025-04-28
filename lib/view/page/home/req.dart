@@ -124,12 +124,8 @@ Future<void> _onCreateText(
     content: questionContents,
     role: ChatRole.user,
   );
-  final questionForApi = ChatHistoryItem.gen(
-    role: ChatRole.user,
-    content: questionContents,
-  );
   final msgs = (await _historyCarried(workingChat)).toList();
-  msgs.add(await questionForApi.toOpenAI());
+  msgs.add(await question.toOpenAI());
 
   workingChat.items.add(question);
   _inputCtrl.clear();
