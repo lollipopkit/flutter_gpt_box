@@ -256,8 +256,8 @@ Future<void> _onTapFilePick(BuildContext context) async {
   );
   final files = result?.files;
   if (files == null || files.isEmpty) return;
-  _filePicked.value.addAll(files);
-  _filePicked.notify();
+  _filesPicked.value.addAll(files.map((e) => e.path).whereType<String>());
+  _filesPicked.notify();
 }
 
 // Set<String> _findAllDuplicateIds(Map<String, ChatHistory> allHistories) {

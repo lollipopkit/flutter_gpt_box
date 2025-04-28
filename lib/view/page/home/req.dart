@@ -26,7 +26,7 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
   // #106
   final ignoreCtxCons = workingChat.settings?.ignoreContextConstraint == true;
   if (ignoreCtxCons) {
-    return Future.wait(workingChat.items.map((e) async => await e.toApi()));
+    return Future.wait(workingChat.items.map((e) async => await e.toOpenAI()));
   }
 
   final promptStr = config.prompt + Stores.tool.memories.get().join('\n');
@@ -37,7 +37,7 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
 
   // #101
   if (workingChat.settings?.headTailMode == true) {
-    final first = await workingChat.items.firstOrNull?.toApi();
+    final first = await workingChat.items.firstOrNull?.toOpenAI();
     return [
       if (prompt != null) prompt,
       if (first != null) first,
@@ -49,7 +49,7 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
   for (final item in workingChat.items.reversed) {
     if (count > config.historyLen) break;
     if (item.role.isSystem) continue;
-    final msg = await item.toApi();
+    final msg = await item.toOpenAI();
     msgs.add(msg);
     count++;
   }
@@ -90,7 +90,7 @@ void _onCreateRequest(BuildContext context, String chatId) async {
   _loadingChatIds.notify();
   _autoHideCtrl.autoHideEnabled = false;
 
-  final func = switch ((chatType, _filePicked.value)) {
+  final func = switch ((chatType, _filesPicked.value)) {
     (ChatType.text, _) => _onCreateText,
     (ChatType.img, _) => _onCreateImg,
     // (ChatType.img, _) => _onCreateImgEdit,
@@ -98,14 +98,14 @@ void _onCreateRequest(BuildContext context, String chatId) async {
     // (ChatType.audio, _) => _onCreateSTT,
   };
 
-  return await func(context, chatId, input, _filePicked.value);
+  return await func(context, chatId, input, _filesPicked.value);
 }
 
 Future<void> _onCreateText(
   BuildContext context,
   String chatId,
   String input,
-  List<PlatformFile> files,
+  List<String> files,
 ) async {
   final workingChat = _allHistories[chatId];
   if (workingChat == null) {
@@ -118,20 +118,15 @@ Future<void> _onCreateText(
 
   final questionContents = <ChatContent>[ChatContent.text(input)];
   for (final file in files) {
-    final fileUrl = file.path;
-    if (fileUrl != null) {
-      questionContents.add(ChatContent.file(fileUrl));
-    }
+    questionContents.add(ChatContent.file(file));
   }
-  final questionContentForApi =
-      await Future.wait(questionContents.map((e) async => await e.toApi));
   final question = ChatHistoryItem.gen(
     content: questionContents,
     role: ChatRole.user,
   );
   final questionForApi = ChatHistoryItem.gen(
     role: ChatRole.user,
-    content: questionContentForApi,
+    content: questionContents,
   );
   final msgs = (await _historyCarried(workingChat)).toList();
   msgs.add(await questionForApi.toOpenAI());
@@ -226,7 +221,7 @@ Future<void> _onCreateText(
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
   _chatRN.notify();
-  _filePicked.value = [];
+  _filesPicked.value = [];
 
   try {
     final sub = chatStream.listen(
@@ -247,7 +242,6 @@ Future<void> _onCreateText(
           assistReply.reasoning = newReasoning;
           _chatItemRNMap[assistReply.id]?.notify();
         }
-        // print('Reasoning: ${assistReply.reasoning}');
 
         _autoScroll(chatId);
       },
@@ -333,7 +327,7 @@ Future<void> _onCreateImg(
   BuildContext context,
   String chatId,
   String input,
-  List<PlatformFile> files,
+  List<String> files,
 ) async {
   final prompt = _inputCtrl.text;
   if (prompt.isEmpty) return;
@@ -615,20 +609,15 @@ void _onReplay({
   }
   chatHistory.items.removeRange(replayMsgIdx, chatHistory.items.length);
 
+  // Each item has only one text content inputed by user
   final text = item.content.firstWhereOrNull((e) => e.type.isText)?.raw;
-  final img = item.content.firstWhereOrNull((e) => e.type.isImage)?.raw;
-
-  if (text == null) {
-    final msg = 'Replay Chat($chatId) item($item) text is null';
-    Loggers.app.warning(msg);
-    context.showSnackBar('${libL10n.fail}: $msg');
-    return;
+  if (text != null) {
+    _inputCtrl.text = text;
   }
 
-  _inputCtrl.text = text;
-  await context.showLoadingDialog(fn: () async {
-    // TODO: add file replay
-  });
+  final files =
+      item.content.where((e) => !e.type.isText).map((e) => e.raw).toList();
+  _filesPicked.value = files;
 
   _onCreateRequest(context, chatId);
 }

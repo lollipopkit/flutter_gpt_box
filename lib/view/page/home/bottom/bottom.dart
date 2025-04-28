@@ -45,17 +45,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
             EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         curve: Curves.fastEaseInToSlowEaseOut,
         duration: Durations.short1,
-        child: Stack(
-          children: [
-            _buildBottom(),
-            const Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: _PickedFilesPreview(),
-            ),
-          ],
-        ),
+        child: _buildBottom(),
       ),
     );
   }
@@ -64,6 +54,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        const _PickedFilesPreview(),
         _buildBottomFns(),
         _buildTextField(),
         SizedBox(height: MediaQuery.paddingOf(context).bottom),
@@ -269,6 +260,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
   }
 
   Widget _buildChatMeta() {
+    if (BuildMode.isRelease) return UIs.placeholder;
     return Btn.icon(
       icon: const Icon(Icons.code, size: 19),
       onTap: _onTapMeta,

@@ -5,15 +5,15 @@ class _PickedFilesPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _filePicked.listenVal((files) {
-      if (files.isEmpty) {
-        return UIs.placeholder;
-      }
+    return _filesPicked.listenVal((files) {
 
-      return SizedBox(
-        height: 60,
+      return AnimatedContainer(
+        height: files.isEmpty ? 0 : 45,
+        width: MediaQuery.sizeOf(context).width - 22,
+        duration: Durations.long3,
+        curve: Curves.fastEaseInToSlowEaseOut,
         child: ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
           scrollDirection: Axis.horizontal,
           itemCount: files.length,
           separatorBuilder: (_, __) => UIs.width7,
@@ -26,9 +26,10 @@ class _PickedFilesPreview extends StatelessWidget {
     });
   }
 
-  Widget _buildFileItem(BuildContext context, PlatformFile file) {
+  Widget _buildFileItem(BuildContext context, String file) {
+    final fileName = file.fileNameGetter;
     return Tooltip(
-      message: file.name,
+      message: fileName,
       child: Stack(
         alignment: Alignment.topRight,
         children: [
@@ -48,7 +49,7 @@ class _PickedFilesPreview extends StatelessWidget {
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 100),
                   child: Text(
-                    file.name,
+                    fileName ?? libL10n.file,
                     overflow: TextOverflow.ellipsis,
                     style: UIs.text13,
                   ),
@@ -59,8 +60,8 @@ class _PickedFilesPreview extends StatelessWidget {
           // Remove button
           InkWell(
             onTap: () {
-              _filePicked.value =
-                  _filePicked.value.where((f) => f != file).toList();
+              _filesPicked.value.remove(file);
+              _filesPicked.notify();
             },
             borderRadius: BorderRadius.circular(10),
             child: Container(

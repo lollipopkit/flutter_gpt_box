@@ -91,7 +91,8 @@ class _ChatPageState extends State<_ChatPage>
                 : AxisDirection.down,
             child: child,
           ),
-          child: listView,
+          child: Padding(
+              padding: const EdgeInsets.only(bottom: 77), child: listView),
         );
       },
     );
