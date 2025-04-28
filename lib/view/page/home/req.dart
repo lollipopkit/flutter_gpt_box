@@ -98,14 +98,14 @@ void _onCreateRequest(BuildContext context, String chatId) async {
     // (ChatType.audio, _) => _onCreateSTT,
   };
 
-  return await func(context, chatId, input, _filePicked.value?.url);
+  return await func(context, chatId, input, _filePicked.value);
 }
 
 Future<void> _onCreateText(
   BuildContext context,
   String chatId,
   String input,
-  String? fileUrl,
+  List<PlatformFile> files,
 ) async {
   final workingChat = _allHistories[chatId];
   if (workingChat == null) {
@@ -116,20 +116,22 @@ Future<void> _onCreateText(
   }
   final config = Cfg.current;
 
-  final hasFile = fileUrl != null;
+  final questionContents = <ChatContent>[ChatContent.text(input)];
+  for (final file in files) {
+    final fileUrl = file.path;
+    if (fileUrl != null) {
+      questionContents.add(ChatContent.file(fileUrl));
+    }
+  }
+  final questionContentForApi =
+      await Future.wait(questionContents.map((e) async => await e.toApi));
   final question = ChatHistoryItem.gen(
-    content: [
-      ChatContent.text(input),
-      if (hasFile) ChatContent.file(fileUrl),
-    ],
+    content: questionContents,
     role: ChatRole.user,
   );
   final questionForApi = ChatHistoryItem.gen(
     role: ChatRole.user,
-    content: [
-      ChatContent.text(input),
-      if (hasFile) await ChatContent.file(fileUrl).toApi,
-    ],
+    content: questionContentForApi,
   );
   final msgs = (await _historyCarried(workingChat)).toList();
   msgs.add(await questionForApi.toOpenAI());
@@ -224,7 +226,7 @@ Future<void> _onCreateText(
   final assistReply = ChatHistoryItem.single(role: ChatRole.assist);
   workingChat.items.add(assistReply);
   _chatRN.notify();
-  _filePicked.value = null;
+  _filePicked.value = [];
 
   try {
     final sub = chatStream.listen(
@@ -331,7 +333,7 @@ Future<void> _onCreateImg(
   BuildContext context,
   String chatId,
   String input,
-  String? fileUrl,
+  List<PlatformFile> files,
 ) async {
   final prompt = _inputCtrl.text;
   if (prompt.isEmpty) return;
@@ -625,7 +627,7 @@ void _onReplay({
 
   _inputCtrl.text = text;
   await context.showLoadingDialog(fn: () async {
-    _filePicked.value = img != null ? await ApiFile.fromUrl(img) : null;
+    // TODO: add file replay
   });
 
   _onCreateRequest(context, chatId);

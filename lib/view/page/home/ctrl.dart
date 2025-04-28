@@ -236,40 +236,9 @@ void _onShareChat(BuildContext context) async {
 }
 
 Future<void> _onTapFilePick(BuildContext context) async {
-  final val = _filePicked.value;
-  if (val != null) {
-    void onDelete() async {
-      _filePicked.value = null;
-      context.pop();
-      await context.showLoadingDialog(fn: val.delete);
-    }
-
-    final delete = await context.showRoundDialog(
-      title: libL10n.file,
-      child: ImageCard(
-        imageUrl: val.url,
-        heroTag: val.local,
-        onRet: (p0) {
-          if (p0.isDeleted) {
-            onDelete();
-          }
-        },
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => context.pop(true),
-          child: Text(libL10n.clear, style: UIs.textRed),
-        ),
-      ],
-    );
-    if (delete == true) {
-      onDelete();
-    }
-    return;
-  }
-
   final result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
+    allowMultiple: true,
     allowedExtensions: [
       'txt',
       'md',
@@ -285,22 +254,10 @@ Future<void> _onTapFilePick(BuildContext context) async {
       'jpeg',
     ],
   );
-  final file = result?.files.firstOrNull;
-  final path = file?.path;
-  if (file == null || path == null) return;
-  final len = file.size;
-  if (len > 1024 * 1024 * 10) {
-    context.showSnackBar(l10n.fileTooLarge(len.bytes2Str));
-    return;
-  }
-
-  await context.showLoadingDialog(
-    fn: () async {
-      final bytes = await File(path).readAsBytes();
-      final picked = await ApiFile.fromBytes(bytes);
-      _filePicked.value = picked;
-    },
-  );
+  final files = result?.files;
+  if (files == null || files.isEmpty) return;
+  _filePicked.value.addAll(files);
+  _filePicked.notify();
 }
 
 // Set<String> _findAllDuplicateIds(Map<String, ChatHistory> allHistories) {

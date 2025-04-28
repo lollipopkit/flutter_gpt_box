@@ -16,7 +16,7 @@ final _timeRN = RNode();
 final _chatItemRNMap = <String, RNode>{};
 
 /// Audio / Image / File path
-final _filePicked = nvn<ApiFile>();
+final _filePicked = <PlatformFile>[].vn;
 
 /// Body chat view
 final _chatRN = RNode();
