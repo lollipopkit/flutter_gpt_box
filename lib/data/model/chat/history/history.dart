@@ -24,7 +24,9 @@ final class ChatHistory {
   @HiveField(2)
   @JsonKey(includeIfNull: false)
   final String? name;
-  // Fields with id 3/4/5 are deleted
+
+  // Fields with id 3/4/5 are deleted, keep it for backward compatibility
+
   @HiveField(6)
   @JsonKey(includeIfNull: false)
   final ChatSettings? settings;

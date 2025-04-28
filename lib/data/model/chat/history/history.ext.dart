@@ -118,6 +118,10 @@ extension ChatContentX on ChatContent {
   bool get isAudio => type == ChatContentType.audio;
   bool get isFile => type == ChatContentType.file;
 
+  /// Cacher for mime type
+  static final _cachedMimeMap = <String, String>{};
+
+  /// Convert to OpenAI request content
   Future<OaiContent> get toOpenAI async {
     switch (type) {
       case ChatContentType.text:
@@ -127,10 +131,14 @@ extension ChatContentX on ChatContent {
             imageUrl: ChatCompletionMessageImageUrl(url: raw));
       case ChatContentType.file:
         final file = File(raw);
-        final mime = await file.mimeType;
+        final cachedMime = _cachedMimeMap[raw];
+        final mime = cachedMime ?? await file.mimeType;
+        if (mime != null && cachedMime == null) {
+          _cachedMimeMap[raw] = mime;
+        }
         // If imgs, use image url
         if (mime != null && mime.startsWith('image/')) {
-          final b64 = await getBase64(file, mime);
+          final b64 = await _getBase64(file, mime);
           if (b64 != null) {
             return OaiContent.image(
                 imageUrl: ChatCompletionMessageImageUrl(url: b64));
@@ -154,6 +162,7 @@ extension ChatContentX on ChatContent {
     );
   }
 
+  /// Delete the file inside the content.
   void deleteFile() async {
     if (isText) return;
     final isLocal = raw.startsWith('/');
@@ -170,7 +179,7 @@ extension ChatContentX on ChatContent {
   }
 }
 
-Future<String?> getBase64(File file, String format) async {
+Future<String?> _getBase64(File file, String format) async {
   final bytes = await file.readAsBytes();
   return 'data:$format;base64,${base64Encode(bytes)}';
 }
