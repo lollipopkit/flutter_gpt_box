@@ -98,12 +98,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
   Widget build(BuildContext context) {
     return MultiList(
       children: [
-        [
-          const CenterGreyTitle('App'),
-          const UserCard(),
-          UIs.height13,
-          _buildApp()
-        ],
+        [const CenterGreyTitle('App'), _buildApp()],
         [CenterGreyTitle(l10n.chat), _buildAppChat()]
       ],
     );

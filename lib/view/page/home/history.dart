@@ -118,7 +118,7 @@ class _HistoryPageState extends State<_HistoryPage>
         Fns.throttle(
           () {
             _switchChat(chatId);
-            if (!_isWide.value && _curPage.value != HomePageEnum.chat) {
+            if (!_isDesktop.value && _curPage.value != HomePageEnum.chat) {
               _switchPage(HomePageEnum.chat);
             }
           },

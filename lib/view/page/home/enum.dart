@@ -11,7 +11,7 @@ enum HomePageEnum {
       HomePageEnum.values[(index + 1) % HomePageEnum.values.length];
 
   Widget get fab {
-    return switch ((this, _isWide.value)) {
+    return switch ((this, _isDesktop.value)) {
       /// Find current chat in history list
       (HomePageEnum.history, _) || (_, true) => ValueListenableBuilder(
           valueListenable: _locateHistoryBtn,
@@ -72,7 +72,7 @@ enum HomePageEnum {
         onHomePage: [HomePageEnum.chat],
       ),
     ]) {
-      if (!_isWide.value && !item.onHomePage.contains(this)) {
+      if (!_isDesktop.value && !item.onHomePage.contains(this)) {
         continue;
       }
       items.insert(

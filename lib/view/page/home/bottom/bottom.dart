@@ -22,10 +22,9 @@ final class _HomeBottomState extends State<_HomeBottom> {
   Widget build(BuildContext context) {
     final child = _homeBottomRN.listen(_build);
 
-    return ValBuilder(
-      listenable: _isWide,
-      builder: (isWide) {
-        if (isWide != widget.isHome) return child;
+    return _isDesktop.listenVal(
+      (isDesktop) {
+        if (isDesktop != widget.isHome) return child;
         return UIs.placeholder;
       },
     );

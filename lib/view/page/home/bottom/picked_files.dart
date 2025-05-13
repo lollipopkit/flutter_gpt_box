@@ -6,7 +6,6 @@ class _PickedFilesPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _filesPicked.listenVal((files) {
-
       return AnimatedContainer(
         height: files.isEmpty ? 0 : 45,
         width: MediaQuery.sizeOf(context).width - 22,
@@ -36,9 +35,7 @@ class _PickedFilesPreview extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
             decoration: BoxDecoration(
-              color: RNodes.dark.value
-                  ? Colors.grey[800]
-                  : Colors.grey[200],
+              color: RNodes.dark.value ? Colors.grey[800] : Colors.grey[200],
               borderRadius: BorderRadius.circular(11),
             ),
             child: Row(
@@ -83,4 +80,3 @@ class _PickedFilesPreview extends StatelessWidget {
     );
   }
 }
-

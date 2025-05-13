@@ -26,7 +26,7 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
   // #106
   final ignoreCtxCons = workingChat.settings?.ignoreContextConstraint == true;
   if (ignoreCtxCons) {
-    return Future.wait(workingChat.items.map((e) async => await e.toOpenAI()));
+    return Future.wait(workingChat.items.map((e) => e.toOpenAI()));
   }
 
   final promptStr = config.prompt + Stores.tool.memories.get().join('\n');
@@ -401,24 +401,12 @@ Future<void> _onCreateImg(
   }
 }
 
-// Future<void> _onCreateImgEdit(BuildContext context, String chatId) async {
-//   final prompt = _inputCtrl.text;
-//   if (prompt.isEmpty) return;
-//   _imeFocus.unfocus();
-//   _inputCtrl.clear();
-
-//   final val = _filePicked.value;
-//   if (val == null) return;
-//   final workingChat = _allHistories[chatId];
-//   if (workingChat == null) return;
-//   final chatItem = ChatHistoryItem.gen(
-//     role: ChatRole.user,
-//     content: [ChatContent.text(prompt), ChatContent.image(val.url)],
-//   );
-//   workingChat.items.add(chatItem);
-//   _chatRN.notify();
-//   _filePicked.value = null;
-
+// Future<void> _onCreateImgEdit(
+//   BuildContext context,
+//   String chatId,
+//   String input,
+//   List<String> files,
+// ) async {
 //   final cfg = Cfg.current;
 //   final imgModel = cfg.imgModel;
 //   if (imgModel == null) {
@@ -427,6 +415,44 @@ Future<void> _onCreateImg(
 //     context.showSnackBar(msg);
 //     return;
 //   }
+
+//   final prompt = _inputCtrl.text;
+//   if (prompt.isEmpty) return;
+//   _imeFocus.unfocus();
+//   _inputCtrl.clear();
+
+//   // Use the first file if available, assuming image edit takes one image
+//   final imagePath = files.firstOrNull;
+//   if (imagePath == null) {
+//     Loggers.app.warning('Image edit requires an image file.');
+//     context.showSnackBar(l10n.needSelectAnImage);
+//     return;
+//   }
+//   final workingChat = _allHistories[chatId];
+//   if (workingChat == null) {
+//     final msg = 'Chat($chatId) not found';
+//     Loggers.app.warning(msg);
+//     context.showSnackBar(msg);
+//     return;
+//   }
+
+//   final chatItem = ChatHistoryItem.gen(
+//     role: ChatRole.user,
+//     content: [ChatContent.text(prompt), ChatContent.image(imagePath)],
+//   );
+//   workingChat.items.add(chatItem);
+//   final assistReply = ChatHistoryItem.gen(
+//     role: ChatRole.assist,
+//     content: [],
+//   );
+//   workingChat.items.add(assistReply);
+//   _chatRN.notify();
+//   _autoScroll(chatId);
+//   _filesPicked.value = []; // Clear picked files after adding to history
+
+//   _loadingChatIds.value.add(chatId);
+//   _loadingChatIds.notify();
+//   _autoHideCtrl.autoHideEnabled = false;
 
 //   try {
 //     final resp = await Cfg.client.createImage(
@@ -448,14 +474,21 @@ Future<void> _onCreateImg(
 //       throw 'Edit image: empty resp';
 //     }
 
-//     workingChat.items.add(ChatHistoryItem.gen(
-//       role: ChatRole.assist,
-//       content: imgs.map((e) => ChatContent.image(e)).toList(),
-//     ));
+//     final imgContents = imgs.map((e) => ChatContent.image(e)).toList();
+//     assistReply.content.addAll(imgContents);
+
 //     _storeChat(chatId);
 //     _chatRN.notify();
+//     _autoScroll(chatId);
+
+//     // Only sync if success
+//     BakSync.instance.sync();
 //   } catch (e, s) {
 //     _onErr(e, s, chatId, 'Edit image');
+//   } finally {
+//     _loadingChatIds.value.remove(chatId);
+//     _loadingChatIds.notify();
+//     _autoHideCtrl.autoHideEnabled = true;
 //   }
 // }
 

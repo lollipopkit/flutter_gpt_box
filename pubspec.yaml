@@ -1,7 +1,7 @@
 name: gpt_box
 description: "A third-party GPT Client for OpenAI API."
 publish_to: 'none'
-version: 1.0.395+395
+version: 1.0.397+397
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -24,6 +24,7 @@ dependencies:
   shortid: ^0.1.2
   json_annotation: ^4.9.0
   freezed_annotation: ^2.4.4
+  responsive_framework: ^1.5.1
   # flutter_riverpod: ^2.6.1
   # riverpod_annotation: ^2.6.1
   # dart_openai: #^5.1.0
@@ -44,11 +45,11 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.269
+      ref: v1.0.281
 
 dependency_overrides:
-  # fl_lib:
-  #   path: ../fl_lib
+  fl_lib:
+    path: ../fl_lib
   # openai_dart:
   #   path: ../langchain_dart/packages/openai_dart
   # webdav_client_plus:

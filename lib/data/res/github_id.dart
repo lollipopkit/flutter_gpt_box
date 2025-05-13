@@ -12,7 +12,7 @@ abstract final class GithubId {
   };
 
   static const contributors = {
-    'ParperCube',
+    'PaperCube',
     'Integral',
   };
 

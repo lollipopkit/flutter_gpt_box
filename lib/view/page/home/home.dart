@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage>
   @override
   void didChangeDependencies() {
     RNodes.dark.value = context.isDark;
-    _isWide.value = context.isWide;
+    _isDesktop.value = !context.isMobile;
     super.didChangeDependencies();
     _homeBottomRN.notify();
   }
@@ -182,7 +182,7 @@ final class _Body extends StatelessWidget {
     const history = _HistoryPage();
     const chat = _ChatPage();
 
-    return _isWide.listenVal(
+    return _isDesktop.listenVal(
       (isWide) {
         if (isWide) {
           return LayoutBuilder(

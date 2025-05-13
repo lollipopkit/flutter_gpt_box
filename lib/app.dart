@@ -7,6 +7,7 @@ import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 part 'intro.dart';
 
@@ -44,6 +45,14 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         colorSchemeSeed: UIs.colorSeed,
       ).toAmoled.fixWindowsFont,
+      builder: (context, child) => ResponsiveBreakpoints.builder(
+        child: child ?? UIs.placeholder,
+        breakpoints: const [
+          Breakpoint(start: 0, end: 450, name: MOBILE),
+          Breakpoint(start: 451, end: 800, name: TABLET),
+          Breakpoint(start: 801, end: 1920, name: DESKTOP),
+        ],
+      ),
       home: VirtualWindowFrame(
         child: Builder(
           builder: (context) {
