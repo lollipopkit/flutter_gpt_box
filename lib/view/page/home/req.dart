@@ -174,7 +174,12 @@ Future<void> _onCreateText(
       workingChat.items.add(assistReply);
       msgs.add(await assistReply.toOpenAI());
       void onToolLog(String log) {
-        toolReply.content.first.raw = log;
+        final content = ChatContent.text(log);
+        if (toolReply.content.isEmpty) {
+          toolReply.content.add(content);
+        } else {
+          toolReply.content[0] = content;
+        }
         _chatItemRNMap[toolReply.id]?.notify();
       }
 
@@ -227,7 +232,12 @@ Future<void> _onCreateText(
 
         final content = delta.content;
         if (content != null) {
-          assistReply.content.first.raw += content;
+          final newContent = ChatContent.text(assistReply.content.first.raw + content);
+          if (assistReply.content.isEmpty) {
+            assistReply.content.add(newContent);
+          } else {
+            assistReply.content[0] = newContent;
+          }
           _chatItemRNMap[assistReply.id]?.notify();
         }
 

@@ -122,12 +122,15 @@ final class ChatHistoryContentView extends StatelessWidget {
   }
 
   Widget _buildImage(BuildContext context, ChatContent content) {
-    return ImageCard(
-      key: ValueKey(content.hashCode),
-      imageUrl: content.raw,
-      heroTag: content.hashCode.toString(),
-      onRet: (ret) => _onImgRet(ret, content.raw),
-    );
+    return LayoutBuilder(builder: (_, cons) {
+      return ImageCard(
+        key: ValueKey(content.hashCode),
+        imageUrl: content.raw,
+        heroTag: content.hashCode.toString(),
+        onRet: (ret) => _onImgRet(ret, content.raw),
+        size: cons.maxWidth / 3,
+      );
+    });
   }
 
   Widget _buildFile(BuildContext context, ChatContent content) {

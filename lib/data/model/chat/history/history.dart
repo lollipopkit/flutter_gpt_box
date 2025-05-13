@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:equatable/equatable.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/res/l10n.dart';
@@ -150,11 +151,11 @@ enum ChatContentType {
 
 @HiveType(typeId: 2)
 @JsonSerializable()
-final class ChatContent {
+final class ChatContent with EquatableMixin {
   @HiveField(0)
   final ChatContentType type;
   @HiveField(1)
-  String raw;
+  final String raw;
   @HiveField(2, defaultValue: '')
   final String id;
 
@@ -182,9 +183,9 @@ final class ChatContent {
       _$ChatContentFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatContentToJson(this);
-
+  
   @override
-  String toString() => 'ChatContent($type, $raw)';
+  List<Object?> get props => [type, raw, id];
 }
 
 @HiveType(typeId: 3)
