@@ -26,10 +26,6 @@ class SettingStore extends HiveStore {
 
   late final genTitle = propertyDefault('genTitle', true);
 
-  /// Only valid on iOS and macOS
-  late final icloudSync =
-      propertyDefault('icloudSync', false, updateLastModified: false);
-
   late final initHelpShown = propertyDefault('initHelpShown', false);
   //late final imPro = property('imPro', false);
 
@@ -37,9 +33,6 @@ class SettingStore extends HiveStore {
   // late final calcTokenLen = property('calcTokenLen', true);
 
   // late final replay = property('replay', true);
-
-  late final cupertinoRoute =
-      propertyDefault('cupertinoRoute', isIOS || isMacOS);
 
   late final hideTitleBar = propertyDefault('hideTitleBar', isDesktop);
 
@@ -60,9 +53,10 @@ class SettingStore extends HiveStore {
   /// Record the position and size of the window.
   late final windowState = property<WindowState>(
     'windowState',
-    fromStr: (jsonStr) =>
-        WindowState.fromJson(jsonDecode(jsonStr) as Map<String, dynamic>),
-    toStr: (state) => state == null ? null : jsonEncode(state.toJson()),
+    fromObj: (jsonStr) => WindowState.fromJson(
+      jsonDecode(jsonStr as String) as Map<String, dynamic>,
+    ),
+    toObj: (state) => state == null ? null : jsonEncode(state.toJson()),
   );
 
   late final avatar = propertyDefault('avatar', '🧐');

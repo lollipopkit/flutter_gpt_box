@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
-import 'package:gpt_box/data/model/app/backup.dart';
+import 'package:gpt_box/data/model/app/backup2.dart';
+import 'package:gpt_box/data/model/app/utils.dart';
 
 final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
 
@@ -17,12 +18,12 @@ final class BakSync extends SyncIface {
   }
 
   @override
-  Future<void> saveToFile() => Backup.backupToFile();
+  Future<void> saveToFile() => BackupV2.backup();
 
   @override
   Future<Mergeable> fromFile(String path) async {
     final content = await File(path).readAsString();
-    return Backup.fromJsonString(content);
+    return MergeableUtils.fromJsonString(content).$1;
   }
 
   @override

@@ -27,9 +27,11 @@ abstract final class Stores {
   static int get lastModTime {
     var lastModTime = DateTime.now().millisecondsSinceEpoch;
     for (final store in all) {
-      final last = store.lastUpdateTs?.millisecondsSinceEpoch ?? 0;
-      if (last > lastModTime) {
-        lastModTime = last;
+      final last = store.lastUpdateTs ?? {};
+      if (last.isEmpty) continue;
+      final modTime = last.values.reduce((a, b) => a > b ? a : b);
+      if (modTime > lastModTime) {
+        lastModTime = modTime;
       }
     }
     return lastModTime;

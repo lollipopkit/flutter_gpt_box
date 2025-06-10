@@ -16,7 +16,7 @@ Widget _buildWebdav(BuildContext context) {
           trailing: StoreSwitch(
             prop: PrefProps.webdavSync,
             validator: (p0) {
-              if (Stores.setting.icloudSync.get() && p0) {
+              if (PrefProps.icloudSync.get() && p0) {
                 context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
                 return false;
               }

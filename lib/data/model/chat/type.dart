@@ -3,17 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/openai.dart';
-import 'package:hive_flutter/adapters.dart';
 
-part 'type.g.dart';
-
-@HiveType(typeId: 7)
 enum ChatType {
-  @HiveField(0)
   text,
-  @HiveField(1)
   img,
-  // @HiveField(2)
   // audio,
   ;
 

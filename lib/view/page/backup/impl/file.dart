@@ -10,8 +10,8 @@ Widget _buildFile(BuildContext context) {
           title: Text(libL10n.backup),
           trailing: const Icon(Icons.save),
           onTap: () async {
-            await Backup.backupToFile();
-            await Pfs.share(path: Paths.bak);
+            final path = await BackupV2.backup();
+            await Pfs.sharePaths(paths: [path]);
           },
         ),
         ListTile(
@@ -30,24 +30,18 @@ void _onTapFileRestore(BuildContext context) async {
 
   try {
     final (backup, err) = await context.showLoadingDialog(
-      fn: () async => await compute(Backup.fromJsonString, text.trim()),
+      fn: () async => await compute(MergeableUtils.fromJsonString, text.trim()),
     );
     if (err != null || backup == null) return;
 
-    if (Backup.validVer != backup.version) {
-      context.showSnackBar('Backup version not match');
-      return;
-    }
-
-    final time = DateTime.fromMillisecondsSinceEpoch(backup.lastModTime);
     final suc = await context.showRoundDialog(
       title: l10n.attention,
-      child: Text(l10n.sureRestoreFmt(time)),
+      child: Text(l10n.sureRestoreFmt(backup.$2)),
       actions: [
         TextButton(
           onPressed: () async {
             context.pop(true);
-            await backup.merge(force: true);
+            await backup.$1.merge(force: true);
           },
           child: Text(libL10n.restore),
         ),

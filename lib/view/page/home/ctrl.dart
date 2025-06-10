@@ -232,7 +232,7 @@ void _onShareChat(BuildContext context) async {
   final title = _curChat?.name ?? l10n.untitled;
   final ext = compressImg ? 'jpg' : 'png';
   final mime = compressImg ? 'image/jpeg' : 'image/png';
-  await Pfs.share(bytes: pic, name: '$title.$ext', mime: mime);
+  await Pfs.shareBytes(bytes: pic, title: title, fileName: '$title.$ext', mime: mime);
 }
 
 Future<void> _onTapFilePick(BuildContext context) async {

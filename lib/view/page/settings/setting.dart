@@ -15,7 +15,6 @@ import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:shortid/shortid.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

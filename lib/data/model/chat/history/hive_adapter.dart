@@ -1,5 +1,5 @@
 import 'package:openai_dart/openai_dart.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 
 class ChatCompletionMessageToolCallAdapter
     extends TypeAdapter<ChatCompletionMessageToolCall> {

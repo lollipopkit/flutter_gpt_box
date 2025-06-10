@@ -4,7 +4,8 @@ publish_to: 'none'
 version: 1.0.397+397
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: ^3.32.1
 
 dependencies:
   flutter:
@@ -15,7 +16,7 @@ dependencies:
   # audioplayers: ^6.0.0
   equatable: ^2.0.7
   extended_image: ^10.0.1
-  file_picker: ^9.2.3
+  file_picker: ^10.1.9
   # flutter_js: ^0.8.1
   google_fonts: ^6.1.0
   html: ^0.15.4
@@ -24,7 +25,7 @@ dependencies:
   screenshot: ^3.0.0
   shortid: ^0.1.2
   json_annotation: ^4.9.0
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^3.0.0
   responsive_framework: ^1.5.1
   # flutter_riverpod: ^2.6.1
   # riverpod_annotation: ^2.6.1
@@ -33,20 +34,20 @@ dependencies:
   #     url: https://github.com/lollipopkit/dart_openai
   #     ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
   webdav_client_plus: ^1.0.2
-  flutter_highlight: # ^0.7.0
-    git:
-      ref: master
-      url: https://github.com/lollipopkit/highlight.dart
-      path: flutter_highlight
+  # flutter_highlight: # ^0.7.0
+  #   git:
+  #     ref: master
+  #     url: https://github.com/lollipopkit/highlight.dart
+  #     path: flutter_highlight
   openai_dart:
     git:
       url: https://github.com/lollipopkit/langchain_dart
-      ref: v1.0.744
+      ref: v1.0.759
       path: packages/openai_dart
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.283
+      ref: v1.0.321
 
 dependency_overrides:
   # fl_lib:
@@ -59,23 +60,26 @@ dependency_overrides:
   #   path: ../fl_build
   # flutter_highlight:
   #   path: ../highlight.dart/flutter_highlight
+  freezed_annotation: ^3.0.0
+  freezed: ^3.0.0
+  flutter_math_fork: ^0.7.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   build_runner: ^2.4.7
-  hive_generator: ^2.0.1
+  hive_ce_generator: ^1.9.2
   flutter_native_splash: ^2.3.9
   json_serializable: ^6.8.0
   # riverpod_generator: ^2.6.1
   # riverpod_lint: ^2.6.1
-  freezed: ^2.5.7
+  freezed: ^3.0.0
     # path: ../fl_build
   fl_build:
     git:
       url: https://github.com/lppcg/fl_build.git
-      ref: v1.0.48
+      ref: v1.0.49
 
 flutter:
   generate: true

@@ -46,7 +46,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
     }
 
     if (isForCapture) {
-      return HighlightViewSync(
+      return HighlightView(
         textContent,
         language: language,
         theme: _theme,
@@ -58,25 +58,21 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
     final isMultiLine = textContent.contains('\n');
     if (!isMultiLine) {
-      return HighlightViewSync(
+      return HighlightView(
         textContent,
-        key: ValueKey(textContent),
         language: language,
         theme: _theme,
         textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
         tabSize: 4,
-        selectable: true,
         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
       );
     }
-    final child = HighlightViewSync(
+    final child = HighlightView(
       textContent,
-      key: ValueKey(textContent.hashCode),
       language: language,
       theme: _theme,
       textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
       tabSize: 4,
-      selectable: true,
       padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
     );
 

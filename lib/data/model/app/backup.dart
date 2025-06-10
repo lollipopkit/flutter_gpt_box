@@ -63,11 +63,11 @@ class Backup implements Mergeable {
   }
 
   Map<String, dynamic> toJson() => {
-        'version': version,
-        'history': history,
-        'configs': configs,
-        'lastModTime': lastModTime,
-      };
+    'version': version,
+    'history': history,
+    'configs': configs,
+    'lastModTime': lastModTime,
+  };
 
   static Backup fromJsonString(String raw) {
     return Backup.fromJson(json.decode(raw));
@@ -173,5 +173,9 @@ class Backup implements Mergeable {
     RNodes.app.notify();
     HomePage.afterRestore();
     _logger.info('Merge done');
+  }
+
+  String get date {
+    return DateTime.fromMillisecondsSinceEpoch(lastModTime).simple();
   }
 }

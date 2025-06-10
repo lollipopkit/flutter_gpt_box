@@ -423,7 +423,7 @@ final class _ProfilePageState extends State<ProfilePage>
       onTap: () {
         final url = Cfg.current.shareUrl;
         if (url.isEmpty) return;
-        Share.share(url);
+        Pfs.shareStr(url);
       },
     );
   }

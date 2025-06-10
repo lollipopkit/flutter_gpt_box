@@ -11,7 +11,7 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
-    - '**/*.g.dart'
+    # - '**/*.g.dart'
   language:
     # strict-casts: true
     # strict-inference: true

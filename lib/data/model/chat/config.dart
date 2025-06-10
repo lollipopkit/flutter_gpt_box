@@ -4,29 +4,26 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gpt_box/core/util/url.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shortid/shortid.dart';
 
 part 'config.g.dart';
 part 'config.freezed.dart';
 
-@HiveType(typeId: 6)
 @freezed
-class ChatConfig with _$ChatConfig {
+abstract class ChatConfig with _$ChatConfig {
+  const ChatConfig._();
+
   const factory ChatConfig({
-    @HiveField(0, defaultValue: '') required String prompt,
-    @HiveField(1, defaultValue: ChatConfigX.defaultUrl) required String url,
-    @HiveField(2, defaultValue: '') required String key,
-    @HiveField(3, defaultValue: '') required String model,
-    @HiveField(7, defaultValue: ChatConfigX.defaultHistoryLen)
-    required int historyLen,
-    @HiveField(8, defaultValue: ChatConfigX.defaultId)
-    @JsonKey(defaultValue: ChatConfigX.defaultId)
-    required String id,
-    @HiveField(9, defaultValue: '') required String name,
-    @HiveField(14) String? genTitlePrompt,
-    @HiveField(15) String? genTitleModel,
-    @HiveField(16) String? imgModel,
+    @Default('') String prompt,
+    @Default(ChatConfigX.defaultUrl) String url,
+    @Default('') String key,
+    @Default('') String model,
+    @Default(ChatConfigX.defaultHistoryLen) int historyLen,
+    @Default(ChatConfigX.defaultId) String id,
+    @Default('') String name,
+    String? genTitlePrompt,
+    String? genTitleModel,
+    String? imgModel,
   }) = _ChatConfig;
 
   factory ChatConfig.fromJson(Map<String, dynamic> json) =>
@@ -53,10 +50,10 @@ extension ChatConfigX on ChatConfig {
   );
 
   String get displayName => switch (id) {
-        // Corresponding as `id == defaultId && name.isEmpty`
-        defaultId when name.isEmpty => l10n.defaulT,
-        _ => name,
-      };
+    // Corresponding as `id == defaultId && name.isEmpty`
+    defaultId when name.isEmpty => l10n.defaulT,
+    _ => name,
+  };
 
   void save() => Stores.config.put(this);
 

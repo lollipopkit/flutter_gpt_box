@@ -6,7 +6,7 @@ Widget _buildIcloud(BuildContext context) {
       leading: const Icon(Icons.cloud),
       title: const Text('iCloud'),
       trailing: StoreSwitch(
-        prop: Stores.setting.icloudSync,
+        prop: PrefProps.icloudSync,
         validator: (p0) {
           if (PrefProps.webdavSync.get() && p0) {
             context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));

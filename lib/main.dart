@@ -5,17 +5,14 @@ import 'dart:async';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
-import 'package:gpt_box/core/util/datetime.dart';
 import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/core/util/url.dart';
-import 'package:gpt_box/data/model/chat/config.dart';
-import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/model/chat/history/hive_adapter.dart';
-import 'package:gpt_box/data/model/chat/type.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:gpt_box/hive/hive_registrar.g.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
 
 Future<void> main() async {
@@ -49,16 +46,12 @@ Future<void> _initApp() async {
 
 Future<void> _initDb() async {
   await Hive.initFlutter();
-
-  Hive.registerAdapter(ChatHistoryItemAdapter()); // 0
-  Hive.registerAdapter(ChatContentTypeAdapter()); // 1
-  Hive.registerAdapter(ChatContentAdapter()); // 2
-  Hive.registerAdapter(ChatRoleAdapter()); // 3
-  Hive.registerAdapter(DateTimeAdapter()); // 4
-  Hive.registerAdapter(ChatHistoryAdapter()); // 5
-  Hive.registerAdapter(ChatConfigAdapter()); // 6
-  Hive.registerAdapter(ChatTypeAdapter()); // 7
-  Hive.registerAdapter(ChatSettingsAdapter()); // 8
+  Hive.registerAdapters();
+  // You are trying to register DateTimeAdapter (typeId 4) for type DateTime 
+  // but there is already a TypeAdapter for this type: DateTimeWithTimezoneAdapter (typeId 18). 
+  // Note that DateTimeAdapter will have no effect as DateTimeWithTimezoneAdapter takes precedence. 
+  // If you want to override the existing adapter, the typeIds must match.
+  // Hive.registerAdapter(DateTimeAdapter()); // 4
   Hive.registerAdapter(ChatCompletionMessageToolCallAdapter()); // 9
   Hive.registerAdapter(ChatCompletionMessageFunctionCallAdapter()); // 10
 
