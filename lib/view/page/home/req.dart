@@ -139,7 +139,7 @@ Future<void> _onCreateText(
   final chatScopeUseTools = workingChat.settings?.useTools != false;
 
   // #111
-  final availableTools = OpenAIFuncCalls.tools;
+  final availableTools = await OpenAIFuncCalls.tools;
   final isToolsEmpty = availableTools.isEmpty;
 
   if (toolCompatible && chatScopeUseTools && !isToolsEmpty) {
