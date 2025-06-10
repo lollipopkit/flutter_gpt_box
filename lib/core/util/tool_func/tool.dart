@@ -7,6 +7,7 @@ import 'package:flutter/material.dart' hide Element;
 // import 'package:flutter_js/extensions/fetch.dart';
 // import 'package:flutter_js/flutter_js.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
+import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:openai_dart/openai_dart.dart';
@@ -18,7 +19,7 @@ part 'func/http.dart';
 // part 'func/js.dart';
 part 'func/memory.dart';
 part 'func/history.dart';
-part 'func/mcp.dart';
+part 'mcp.dart';
 
 abstract final class OpenAIFuncCalls {
   static const internalTools = [
@@ -28,8 +29,8 @@ abstract final class OpenAIFuncCalls {
     TfHttpReq.instance,
   ];
 
-  static Future<List<ChatCompletionTool>> get tools async {
-    final tools = <ChatCompletionTool>[];
+  static Future<Set<ChatCompletionTool>> get tools async {
+    final tools = <ChatCompletionTool>{};
     if (!Stores.tool.enabled.get()) return tools;
     final disabledTools = Stores.tool.disabledTools.get();
     for (final tool in internalTools) {
@@ -38,7 +39,7 @@ abstract final class OpenAIFuncCalls {
       }
     }
     try {
-      final mcpTools = await McpTools.getTools();
+      final mcpTools = McpTools.tools;
       for (final tool in mcpTools) {
         final name = tool.function.name;
         if (!disabledTools.contains(name)) tools.add(tool);

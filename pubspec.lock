@@ -920,6 +920,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
+  mcp_dart:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: main
+      resolved-ref: a3c602e21d1ed47b181f2a7d7144da3c165f29be
+      url: "https://github.com/leehack/mcp_dart"
+    source: git
+    version: "0.5.1"
   meta:
     dependency: transitive
     description:

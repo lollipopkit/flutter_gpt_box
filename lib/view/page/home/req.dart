@@ -31,17 +31,16 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
 
   final promptStr = config.prompt + Stores.tool.memories.get().join('\n');
   final prompt = promptStr.isNotEmpty
-      ? await ChatHistoryItem.single(role: ChatRole.system, raw: promptStr)
-          .toOpenAI()
+      ? await ChatHistoryItem.single(
+          role: ChatRole.system,
+          raw: promptStr,
+        ).toOpenAI()
       : null;
 
   // #101
   if (workingChat.settings?.headTailMode == true) {
     final first = await workingChat.items.firstOrNull?.toOpenAI();
-    return [
-      if (prompt != null) prompt,
-      if (first != null) first,
-    ];
+    return [if (prompt != null) prompt, if (first != null) first];
   }
 
   var count = 0;
@@ -155,7 +154,7 @@ Future<void> _onCreateText(
         request: CreateChatCompletionRequest(
           messages: msgs,
           model: ChatCompletionModel.modelId(config.model),
-          tools: availableTools,
+          tools: availableTools.toList(),
         ),
       );
     } catch (e, s) {
@@ -232,7 +231,9 @@ Future<void> _onCreateText(
 
         final content = delta.content;
         if (content != null) {
-          final newContent = ChatContent.text(assistReply.content.first.raw + content);
+          final newContent = ChatContent.text(
+            assistReply.content.first.raw + content,
+          );
           if (assistReply.content.isEmpty) {
             assistReply.content.add(newContent);
           } else {
@@ -350,10 +351,7 @@ Future<void> _onCreateImg(
 
   final userQuestion = ChatHistoryItem.single(role: ChatRole.user, raw: prompt);
   workingChat.items.add(userQuestion);
-  final assistReply = ChatHistoryItem.gen(
-    role: ChatRole.assist,
-    content: [],
-  );
+  final assistReply = ChatHistoryItem.gen(role: ChatRole.assist, content: []);
   workingChat.items.add(assistReply);
   _chatRN.notify();
   _autoScroll(chatId);
@@ -590,24 +588,21 @@ Future<Completer<void>?> _genChatTitle(
       model: ChatCompletionModel.modelId(model),
       messages: msgs,
     );
-    Cfg.client.createChatCompletion(request: req).then(
-      (resp) {
-        var title = resp.choices.firstOrNull?.message.content;
-        title = ChatTitleUtil.prettify(title ?? '');
+    Cfg.client.createChatCompletion(request: req).then((resp) {
+      var title = resp.choices.firstOrNull?.message.content;
+      title = ChatTitleUtil.prettify(title ?? '');
 
-        if (title.isNotEmpty) {
-          final ne = entity.copyWith(name: title)..save();
-          _allHistories[chatId] = ne;
-          _historyRN.notify();
-          if (chatId == _curChatId.value) {
-            _appbarTitleVN.value = title;
-          }
+      if (title.isNotEmpty) {
+        final ne = entity.copyWith(name: title)..save();
+        _allHistories[chatId] = ne;
+        _historyRN.notify();
+        if (chatId == _curChatId.value) {
+          _appbarTitleVN.value = title;
         }
+      }
 
-        completer.complete();
-      },
-      onError: onErr,
-    );
+      completer.complete();
+    }, onError: onErr);
 
     return completer;
   } catch (e, s) {
@@ -654,8 +649,10 @@ void _onReplay({
     _inputCtrl.text = text;
   }
 
-  final files =
-      item.content.where((e) => !e.type.isText).map((e) => e.raw).toList();
+  final files = item.content
+      .where((e) => !e.type.isText)
+      .map((e) => e.raw)
+      .toList();
   _filesPicked.value = files;
 
   _onCreateRequest(context, chatId);
@@ -684,11 +681,13 @@ void _onErr(Object e, StackTrace s, String chatId, String action) {
   }
 
   // Add error msg to the chat
-  workingChat.items.add(ChatHistoryItem.single(
-    type: ChatContentType.text,
-    raw: msg,
-    role: ChatRole.system,
-  ));
+  workingChat.items.add(
+    ChatHistoryItem.single(
+      type: ChatContentType.text,
+      raw: msg,
+      role: ChatRole.system,
+    ),
+  );
 
   _chatRN.notify();
 
