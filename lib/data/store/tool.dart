@@ -35,6 +35,8 @@ final class ToolStore extends HiveStore {
     'gpt-4o|gpt-4-turbo|gpt-3.5-turbo|deepseek',
   );
 
+  late final mcpServers = propertyDefault('mcpServers', <String>[]);
+
   static const jsScriptPrefix = '_jsScripts_';
 
   String? getJsScript(String name) {

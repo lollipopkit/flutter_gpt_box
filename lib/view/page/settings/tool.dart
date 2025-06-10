@@ -20,6 +20,7 @@ final class _ToolPageState extends State<ToolPage>
           CenterGreyTitle(l10n.tool),
           _buildUseTool(),
           _buildModelRegExp(),
+          _buildMcpServers(),
         ],
         [
           CenterGreyTitle(l10n.list),
@@ -75,12 +76,14 @@ final class _ToolPageState extends State<ToolPage>
       title: TipText(l10n.regExp, l10n.modelRegExpTip),
       trailing: SizedBox(
         width: 60,
-        child: listenable.listenVal((val) => Text(
-              val,
-              style: UIs.textGrey,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            )),
+        child: listenable.listenVal(
+          (val) => Text(
+            val,
+            style: UIs.textGrey,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
       ),
       onTap: () {
         final ctrl = TextEditingController(text: listenable.value);
@@ -101,6 +104,80 @@ final class _ToolPageState extends State<ToolPage>
         );
       },
     ).cardx;
+  }
+
+  Widget _buildMcpServers() {
+    final prop = _toolStore.mcpServers;
+    return prop.listenable().listenVal((servers) {
+      return ExpandTile(
+        leading: const Icon(MingCute.cloud_line),
+        title: Text('MCP'),
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: servers.length + 1,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (ctx, idx) {
+                      if (idx >= servers.length) {
+                        return ListTile(
+                    title: Text(libL10n.add),
+                    trailing: const Icon(Icons.add),
+                    onTap: () => _onTapAddMcpServer(prop, servers),
+                  );
+                      }
+                      final url = servers[idx];
+                      return Dismissible(
+                        key: ValueKey(url),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        onDismissed: (_) async {
+                          final newList = List<String>.from(servers)
+                            ..removeAt(idx);
+                          prop.set(newList);
+                          await _refreshMcpTools(newList);
+                        },
+                        child: ListTile(
+                          title: Text(
+                            url,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete_outline),
+                            onPressed: () async {
+                              final newList = List<String>.from(servers)
+                                ..removeAt(idx);
+                              prop.set(newList);
+                              await _refreshMcpTools(newList);
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      );
+    }).cardx;
+  }
+
+  Future<void> _refreshMcpTools(List<String> servers) async {
+    McpTools.tools.clear();
+    for (final url in servers) {
+      final transport = await McpTools.initTransport(url);
+      if (transport != null) {
+        await McpTools.addTools();
+      }
+    }
+    setState(() {});
   }
 
   Widget _buildSwitchTile(ToolFunc e, {String? title}) {
@@ -131,4 +208,34 @@ final class _ToolPageState extends State<ToolPage>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+extension on _ToolPageState {
+  void _onTapAddMcpServer(HivePropDefault prop, List<String> servers) async {
+    final ctrl = TextEditingController();
+    final ok = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(libL10n.add),
+        content: Input(
+          controller: ctrl,
+          autoFocus: true,
+          hint: 'https://your-mcp-server',
+          onSubmitted: context.pop,
+        ),
+        actions: [
+          TextButton(onPressed: context.pop, child: Text(libL10n.cancel)),
+          TextButton(
+            onPressed: () => context.pop(ctrl.text),
+            child: Text(libL10n.ok),
+          ),
+        ],
+      ),
+    );
+    if (ok != null && ok.trim().isNotEmpty) {
+      final newList = List<String>.from(servers)..add(ok.trim());
+      prop.set(newList);
+      await _refreshMcpTools(newList);
+    }
+  }
 }

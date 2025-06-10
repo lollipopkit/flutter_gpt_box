@@ -344,17 +344,8 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
       title: Text(l10n.more),
       children: [
         _buildJoinBeta(),
-        _buildCupertinoRoute(),
         if (isDesktop) _buildHideTitleBar(),
       ],
-    );
-  }
-
-  Widget _buildCupertinoRoute() {
-    return ListTile(
-      leading: const Icon(MingCute.route_fill),
-      title: Text('Cupertino ${l10n.route}'),
-      trailing: StoreSwitch(prop: _setStore.cupertinoRoute),
     );
   }
 

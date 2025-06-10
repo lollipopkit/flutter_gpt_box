@@ -44,6 +44,10 @@ dependencies:
       url: https://github.com/lollipopkit/langchain_dart
       ref: v1.0.759
       path: packages/openai_dart
+  mcp_dart:
+    git:
+      url: https://github.com/leehack/mcp_dart
+      ref: main
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
