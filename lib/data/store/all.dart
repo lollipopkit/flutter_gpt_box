@@ -9,14 +9,14 @@ abstract final class Stores {
   static final history = HistoryStore.instance;
   static final setting = SettingStore.instance;
   static final config = ConfigStore.instance;
-  static final tool = ToolStore.instance;
+  static final mcp = McpStore.instance;
   static final trash = TrashStore.instance;
 
   static final List<HiveStore> all = [
     setting,
     history,
     config,
-    tool,
+    mcp,
     trash,
   ];
 

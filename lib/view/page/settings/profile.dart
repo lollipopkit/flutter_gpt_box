@@ -38,7 +38,7 @@ final class _ProfilePageState extends State<ProfilePage>
           leading: const Icon(Icons.account_balance_wallet),
           title: Text(l10n.balance),
           subtitle: Text(val.state ?? l10n.unsupported, style: UIs.text13Grey),
-          trailing: val.loading ? SizedLoading.small : refreshIcon,
+          trailing: val.loading ? CircularProgressIndicator() : refreshIcon,
         );
       },
     );

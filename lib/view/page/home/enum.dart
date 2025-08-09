@@ -15,7 +15,7 @@ enum HomePageEnum {
       /// Find current chat in history list
       (HomePageEnum.history, _) || (_, true) => ValueListenableBuilder(
           valueListenable: _locateHistoryBtn,
-          builder: (_, display, __) {
+          builder: (_, display, _) {
             return AnimatedSwitcher(
               duration: _durationShort,
               transitionBuilder: (child, animation) =>

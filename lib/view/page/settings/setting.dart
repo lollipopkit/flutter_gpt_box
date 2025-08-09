@@ -18,7 +18,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:shortid/shortid.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-part 'tool.dart';
+part 'mcp.dart';
 part 'profile.dart';
 part 'res.dart';
 part 'about.dart';
@@ -132,7 +132,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
   Widget _buildThemeMode() {
     return ValueListenableBuilder(
       valueListenable: _setStore.themeMode.listenable(),
-      builder: (_, val, __) => ListTile(
+      builder: (_, val, _) => ListTile(
         leading: const Icon(Icons.sunny),
         title: Text(l10n.themeMode),
         onTap: () async {
@@ -161,7 +161,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
   Widget _buildColorSeed() {
     return ValueListenableBuilder(
       valueListenable: _setStore.themeColorSeed.listenable(),
-      builder: (_, val, __) {
+      builder: (_, val, _) {
         final primaryColor = Color(val);
         return ListTile(
           leading: const Icon(Icons.colorize),
@@ -196,7 +196,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
   Widget _buildLocale() {
     return ValueListenableBuilder(
       valueListenable: _setStore.locale.listenable(),
-      builder: (_, val, __) => ListTile(
+      builder: (_, val, _) => ListTile(
         leading: const Icon(MingCute.translate_2_line),
         title: Text(libL10n.language),
         trailing: Text(
@@ -225,7 +225,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
       title: Text(l10n.autoCheckUpdate),
       subtitle: ValueListenableBuilder(
         valueListenable: AppUpdateIface.newestBuild,
-        builder: (_, val, __) {
+        builder: (_, val, _) {
           final text = switch (val) {
             null => '${l10n.current} v${BuildData.build}, ${l10n.clickToCheck}',
             > BuildData.build => libL10n.versionHasUpdate(val),
@@ -344,17 +344,8 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
       title: Text(l10n.more),
       children: [
         _buildJoinBeta(),
-        _buildCupertinoRoute(),
         if (isDesktop) _buildHideTitleBar(),
       ],
-    );
-  }
-
-  Widget _buildCupertinoRoute() {
-    return ListTile(
-      leading: const Icon(MingCute.route_fill),
-      title: Text('Cupertino ${l10n.route}'),
-      trailing: StoreSwitch(prop: _setStore.cupertinoRoute),
     );
   }
 

@@ -22,12 +22,10 @@ final class _HomeBottomState extends State<_HomeBottom> {
   Widget build(BuildContext context) {
     final child = _homeBottomRN.listen(_build);
 
-    return _isDesktop.listenVal(
-      (isDesktop) {
-        if (isDesktop != widget.isHome) return child;
-        return UIs.placeholder;
-      },
-    );
+    return _isDesktop.listenVal((isDesktop) {
+      if (isDesktop != widget.isHome) return child;
+      return UIs.placeholder;
+    });
   }
 
   Widget _build() {
@@ -40,8 +38,9 @@ final class _HomeBottomState extends State<_HomeBottom> {
         boxShadow: RNodes.dark.value ? _boxShadow : _boxShadowDark,
       ),
       child: AnimatedPadding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
         curve: Curves.fastEaseInToSlowEaseOut,
         duration: Durations.short1,
         child: _buildBottom(),
@@ -64,8 +63,8 @@ final class _HomeBottomState extends State<_HomeBottom> {
   Widget _buildBottomFns() {
     return Row(
       children: [
-        Btn.icon(
-          onTap: () {
+        IconButton(
+          onPressed: () {
             _switchChat(_newChat().id);
             _historyRN.notify();
             if (_curPage.value == HomePageEnum.history) {
@@ -74,8 +73,8 @@ final class _HomeBottomState extends State<_HomeBottom> {
           },
           icon: const Icon(MingCute.add_fill, size: 17),
         ),
-        Btn.icon(
-          onTap: () => _onTapDeleteChat(_curChatId.value, context),
+        IconButton(
+          onPressed: () => _onTapDeleteChat(_curChatId.value, context),
           icon: const Icon(Icons.delete, size: 19),
         ),
         _buildFileBtn(),
@@ -91,28 +90,26 @@ final class _HomeBottomState extends State<_HomeBottom> {
   }
 
   Widget _buildSettingsBtn() {
-    return Btn.icon(
-      onTap: _onTapSetting,
+    return IconButton(
+      onPressed: _onTapSetting,
       icon: const Icon(Icons.settings, size: 19),
     );
   }
 
   Widget _buildFileBtn() {
-    return Cfg.chatType.listenVal(
-      (chatType) {
-        return switch (chatType) {
-          ChatType.text || ChatType.img => Btn.icon(
-              onTap: () => _onTapFilePick(context),
-              icon: const Icon(MingCute.file_upload_fill, size: 19),
-            ),
-          // ChatType.audio => const IconButton(
-          //   onPressed: _onTapAudioPick,
-          //   icon: Icon(Icons.mic, size: 19),
-          // ),
-          //_ => UIs.placeholder,
-        };
-      },
-    );
+    return Cfg.chatType.listenVal((chatType) {
+      return switch (chatType) {
+        ChatType.text || ChatType.img => IconButton(
+          onPressed: () => _onTapFilePick(context),
+          icon: const Icon(MingCute.file_upload_fill, size: 19),
+        ),
+        // ChatType.audio => const IconButton(
+        //   onPressed: _onTapAudioPick,
+        //   icon: Icon(Icons.mic, size: 19),
+        // ),
+        //_ => UIs.placeholder,
+      };
+    });
   }
 
   Widget _buildTextField() {
@@ -148,12 +145,14 @@ final class _HomeBottomState extends State<_HomeBottom> {
         final List<ContextMenuButtonItem> buttonItems =
             editableTextState.contextMenuButtonItems;
         if (_inputCtrl.text.isNotEmpty) {
-          buttonItems.add(ContextMenuButtonItem(
-            label: libL10n.clear,
-            onPressed: () {
-              _inputCtrl.clear();
-            },
-          ));
+          buttonItems.add(
+            ContextMenuButtonItem(
+              label: libL10n.clear,
+              onPressed: () {
+                _inputCtrl.clear();
+              },
+            ),
+          );
         }
         // buttonItems.add(ContextMenuButtonItem(
         //   label: l10n.wrap,
@@ -193,13 +192,15 @@ final class _HomeBottomState extends State<_HomeBottom> {
           initialValue: chatT,
           tooltip: libL10n.select,
           borderRadius: BorderRadius.circular(17),
-          child: _buildRoundRect(Row(
-            children: [
-              Icon(chatT.icon, size: 15),
-              UIs.width7,
-              Text(chatT.name, style: UIs.text13),
-            ],
-          )),
+          child: _buildRoundRect(
+            Row(
+              children: [
+                Icon(chatT.icon, size: 15),
+                UIs.width7,
+                Text(chatT.name, style: UIs.text13),
+              ],
+            ),
+          ),
         ),
       );
     });
@@ -252,17 +253,17 @@ final class _HomeBottomState extends State<_HomeBottom> {
   Widget _buildSyncChats() {
     final rs = BakSync.instance.remoteStorage;
     if (rs == null) return UIs.placeholder;
-    return Btn.icon(
-      onTap: _onTapSyncChats,
+    return IconButton(
+      onPressed: _onTapSyncChats,
       icon: const Icon(Icons.sync, size: 19),
     );
   }
 
   Widget _buildChatMeta() {
     if (BuildMode.isRelease) return UIs.placeholder;
-    return Btn.icon(
+    return IconButton(
       icon: const Icon(Icons.code, size: 19),
-      onTap: _onTapMeta,
+      onPressed: _onTapMeta,
     );
   }
 
@@ -274,16 +275,15 @@ final class _HomeBottomState extends State<_HomeBottom> {
     }
 
     final jsonRaw = jsonIndentEncoder.convert(chat.toJson());
-    final md = '''
+    final md =
+        '''
 ```json
 $jsonRaw
 ```''';
 
     context.showRoundDialog(
       title: l10n.raw,
-      child: SingleChildScrollView(
-        child: SimpleMarkdown(data: md),
-      ),
+      child: SingleChildScrollView(child: SimpleMarkdown(data: md)),
       actions: Btnx.oks,
     );
   }

@@ -105,7 +105,7 @@ extension ChatHistoryItemX on ChatHistoryItem {
         );
       case ChatRole.tool:
         return ChatCompletionMessage.tool(
-          toolCallId: toolCallId ?? '', // TODO: maybe nullable?
+          toolCallId: toolCallId ?? '',
           content: content.map((e) => e.raw).join('\n'),
         );
     }

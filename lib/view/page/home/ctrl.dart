@@ -556,13 +556,13 @@ Future<void> _switchPage(HomePageEnum page) {
   );
 }
 
-Future<bool> _askToolConfirm(
+Future<bool> _askMcpConfirm(
   BuildContext context,
   ToolFunc func,
   String help,
 ) async {
-  final permittedTools = Stores.tool.permittedTools.get();
-  if (permittedTools.contains(func.name)) return true;
+  final permittedMcp = Stores.mcp.permittedTools.get();
+  if (permittedMcp.contains(func.name)) return true;
 
   final remember = false.vn;
   final permitted = await context.showRoundDialog(
@@ -576,8 +576,8 @@ Future<bool> _askToolConfirm(
     ],
   );
   if (permitted == true && remember.value) {
-    permittedTools.add(func.name);
-    Stores.tool.permittedTools.set(permittedTools);
+    permittedMcp.add(func.name);
+    Stores.mcp.permittedTools.set(permittedMcp);
   }
   return permitted == true;
 }

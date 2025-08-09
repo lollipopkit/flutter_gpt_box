@@ -35,7 +35,7 @@ Only call this func if users explicitly ask to memorise something.''';
     final memory = args['memory'] as String?;
     if (memory == null) return null;
 
-    final prop = Stores.tool.memories;
+    final prop = Stores.mcp.memories;
     final memories = prop.get();
     prop.set(memories..add(memory));
     await Future.delayed(Durations.medium1);
