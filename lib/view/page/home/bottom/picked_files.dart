@@ -15,7 +15,7 @@ class _PickedFilesPreview extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
           scrollDirection: Axis.horizontal,
           itemCount: files.length,
-          separatorBuilder: (_, __) => UIs.width7,
+          separatorBuilder: (_, _) => UIs.width7,
           itemBuilder: (context, index) {
             final file = files[index];
             return _buildFileItem(context, file);

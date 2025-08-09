@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fl_lib/fl_lib.dart';
@@ -20,6 +22,7 @@ part 'func/http.dart';
 part 'func/memory.dart';
 part 'func/history.dart';
 part 'mcp.dart';
+part 'internal_mcp_server.dart';
 
 abstract final class OpenAIFuncCalls {
   static const internalTools = [
@@ -30,24 +33,15 @@ abstract final class OpenAIFuncCalls {
   ];
 
   static Future<Set<ChatCompletionTool>> get tools async {
-    final tools = <ChatCompletionTool>{};
-    if (!Stores.tool.enabled.get()) return tools;
-    final disabledTools = Stores.tool.disabledTools.get();
-    for (final tool in internalTools) {
-      if (!disabledTools.contains(tool.name)) {
-        tools.add(tool.into);
-      }
-    }
+    if (!Stores.mcp.enabled.get()) return {};
+    
     try {
-      final mcpTools = McpTools.tools;
-      for (final tool in mcpTools) {
-        final name = tool.function.name;
-        if (!disabledTools.contains(name)) tools.add(tool);
-      }
+      // All tools are now handled through MCP protocol
+      return McpTools.tools;
     } catch (e, s) {
       Loggers.app.warning('Load MCP tools failed', e, s);
+      return {};
     }
-    return tools;
   }
 
   static Future<_Ret?> handle(
@@ -58,14 +52,19 @@ abstract final class OpenAIFuncCalls {
     switch (resp.type) {
       case ChatCompletionMessageToolCallType.function:
         final targetName = resp.function.name;
-        final func =
-            internalTools.firstWhereOrNull((e) => e.name == targetName);
-        if (func != null) {
-          final args = await _parseMap(resp.function.arguments);
-          if (!await askConfirm(func, func.help(resp, args))) return null;
-          return await func.run(resp, args, onToolLog);
+        final parts = targetName.split('::');
+        
+        // For internal tools, we still need to ask for confirmation
+        if (parts.length == 2 && parts[0] == InternalMcpServer.serverName) {
+          final toolName = parts[1];
+          final func = internalTools.firstWhereOrNull((e) => e.name == toolName);
+          if (func != null) {
+            final args = await _parseMap(resp.function.arguments);
+            if (!await askConfirm(func, func.help(resp, args))) return null;
+          }
         }
-        // Try mcp tools
+        
+        // All tools are now handled through MCP protocol
         return await McpTools.handle(resp, onToolLog);
     }
   }

@@ -40,7 +40,7 @@ abstract class BackupV2 with _$BackupV2 implements Mergeable {
 
     // Merge each store
     await Mergeable.mergeStore(backupData: cfgs, store: Stores.config, force: force);
-    await Mergeable.mergeStore(backupData: tools, store: Stores.tool, force: force);
+    await Mergeable.mergeStore(backupData: tools, store: Stores.mcp, force: force);
     await Mergeable.mergeStore(backupData: histories, store: Stores.history, force: force);
     await Mergeable.mergeStore(backupData: trashes, store: Stores.trash, force: force);
 
@@ -58,7 +58,7 @@ abstract class BackupV2 with _$BackupV2 implements Mergeable {
       version: formatVer,
       date: DateTimeX.timestamp,
       cfgs: Stores.config.getAllMap(includeInternalKeys: true),
-      tools: Stores.tool.getAllMap(includeInternalKeys: true),
+      tools: Stores.mcp.getAllMap(includeInternalKeys: true),
       histories: Stores.history.getAllMap(includeInternalKeys: true),
       trashes: Stores.trash.getAllMap(includeInternalKeys: true),
     );

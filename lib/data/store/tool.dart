@@ -1,27 +1,27 @@
 import 'package:fl_lib/fl_lib.dart';
 
-final class ToolStore extends HiveStore {
-  ToolStore._() : super('tool');
+final class McpStore extends HiveStore {
+  McpStore._() : super('tool');
 
-  static final instance = ToolStore._();
+  static final instance = McpStore._();
 
-  /// Switch for enabling/disabling all tools.
+  /// Switch for enabling/disabling all MCP tools.
   ///
   /// It will slow down the resp, so disabled by default.
   late final enabled = propertyDefault('enabled', false);
 
-  /// All enabled tools will be added to the chat req's tool list.
-  /// By default, all tools are enabled.
+  /// All enabled MCP tools will be added to the chat req's tool list.
+  /// By default, all MCP tools are enabled.
   // late final enabledTools = property(
   //   'enabledTools',
   //   OpenAIFuncCalls.internalTools.map((e) => e.name).toList(),
   // );
 
-  /// Disabled tools
+  /// Disabled MCP tools
   late final disabledTools = propertyDefault('disabledTools', <String>[]);
 
-  /// Tools that are permitted to be used by the user.
-  /// A dialog will be shown if the tool has not been permitted.
+  /// MCP tools that are permitted to be used by the user.
+  /// A dialog will be shown if the MCP tool has not been permitted.
   late final permittedTools = propertyDefault('permittedTools', <String>[]);
 
   /// Memories that are saved by the user.
@@ -30,7 +30,7 @@ final class ToolStore extends HiveStore {
   late final memories = propertyDefault('memories', <String>[]);
 
   /// Models regexp list, split by ','
-  late final toolsRegExp = propertyDefault(
+  late final mcpRegExp = propertyDefault(
     'toolsRegExp',
     'gpt-4o|gpt-4-turbo|gpt-3.5-turbo|deepseek',
   );

@@ -46,8 +46,7 @@ enum ApiBalanceProvider {
       _ when value.startsWith('https://openrouter.ai') => openrouter,
       _ when value.startsWith('https://api.siliconflow.cn') => siliconflow,
 
-      /// TODO
-      /// Change it to [oneapi] after correctly impl the [_refreshOneapi]
+      /// TODO: Change it to [oneapi] after correctly impl the [_refreshOneapi]
       _ => null,
     };
   }

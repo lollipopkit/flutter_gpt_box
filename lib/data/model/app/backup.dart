@@ -79,7 +79,7 @@ class Backup implements Mergeable {
       lastModTime: Stores.lastModTime,
       history: Stores.history.fetchAll().values.toList(),
       configs: Stores.config.fetchAll().values.toList(),
-      tools: Stores.tool.getAllMap(),
+      tools: Stores.mcp.getAllMap(),
       trashes: Stores.trash.histories,
     );
   }
@@ -135,20 +135,20 @@ class Backup implements Mergeable {
       Stores.config.put(configs.firstWhere((e) => e.id == id));
     }
 
-    // Tool
-    final nowToolKeys = Stores.tool.box.keys.toSet();
-    final bakToolKeys = tools.keys.toSet();
-    final toolNew = bakToolKeys.difference(nowToolKeys);
-    for (final key in toolNew) {
-      Stores.tool.box.put(key, tools[key]);
+    // MCP
+    final nowMcpKeys = Stores.mcp.box.keys.toSet();
+    final bakMcpKeys = tools.keys.toSet();
+    final mcpNew = bakMcpKeys.difference(nowMcpKeys);
+    for (final key in mcpNew) {
+      Stores.mcp.box.put(key, tools[key]);
     }
-    final toolDelete = nowToolKeys.difference(bakToolKeys);
-    final toolUpdate = nowToolKeys.intersection(bakToolKeys);
-    for (final key in toolDelete) {
-      Stores.tool.box.delete(key);
+    final mcpDelete = nowMcpKeys.difference(bakMcpKeys);
+    final mcpUpdate = nowMcpKeys.intersection(bakMcpKeys);
+    for (final key in mcpDelete) {
+      Stores.mcp.box.delete(key);
     }
-    for (final key in toolUpdate) {
-      Stores.tool.box.put(key, tools[key]);
+    for (final key in mcpUpdate) {
+      Stores.mcp.box.put(key, tools[key]);
     }
 
     // Trash

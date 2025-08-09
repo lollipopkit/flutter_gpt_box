@@ -50,11 +50,11 @@ abstract final class Cfg {
     }
   }
 
-  static RegExp? _modelsUseToolReExp;
-  static bool isToolCompatible({String? model}) {
+  static RegExp? _modelsUseMcpReExp;
+  static bool isMcpCompatible({String? model}) {
     model ??= current.model;
     if (model.isEmpty) return false;
-    return _modelsUseToolReExp?.hasMatch(model) ?? false;
+    return _modelsUseMcpReExp?.hasMatch(model) ?? false;
   }
 
   /// Update models list
@@ -190,12 +190,12 @@ abstract final class Cfg {
     return setTo(cfg: ChatConfigX.defaultOne);
   }
 
-  static void _initToolRegexp() {
-    final prop = Stores.tool.toolsRegExp;
+  static void _initMcpRegexp() {
+    final prop = Stores.mcp.mcpRegExp;
 
     void setExp() {
       final val = prop.get();
-      _modelsUseToolReExp = RegExp(val);
+      _modelsUseMcpReExp = RegExp(val);
     }
 
     setExp();
@@ -204,7 +204,7 @@ abstract final class Cfg {
 
   @Deprecated('Mark it as deprecated to avoid using it directly')
   static final _init = () {
-    _initToolRegexp();
+    _initMcpRegexp();
     final selectedKey = _store.profileId.fetch();
     final selected = _store.fetch(selectedKey);
     return selected ?? ChatConfigX.defaultOne;

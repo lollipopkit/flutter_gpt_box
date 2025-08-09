@@ -31,7 +31,7 @@ enum SettingsTab {
   Widget get page => switch (this) {
         app => const AppSettingsPage(),
         profile => const ProfilePage(),
-        tool => const ToolPage(),
+        tool => const McpPage(),
         bak => const BackupPage(),
         res => const ResPage(),
         about => const AboutPage(),

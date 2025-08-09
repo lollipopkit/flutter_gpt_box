@@ -29,7 +29,7 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
     return Future.wait(workingChat.items.map((e) => e.toOpenAI()));
   }
 
-  final promptStr = config.prompt + Stores.tool.memories.get().join('\n');
+  final promptStr = config.prompt + Stores.mcp.memories.get().join('\n');
   final prompt = promptStr.isNotEmpty
       ? await ChatHistoryItem.single(
           role: ChatRole.system,
@@ -132,19 +132,19 @@ Future<void> _onCreateText(
   _autoScroll(chatId);
   final titleCompleter = await _genChatTitle(context, chatId, config);
 
-  final toolCompatible = Cfg.isToolCompatible();
+  final mcpCompatible = Cfg.isMcpCompatible();
 
   // #104
-  final chatScopeUseTools = workingChat.settings?.useTools != false;
+  final chatScopeUseMcp = workingChat.settings?.useTools != false;
 
   // #111
-  final availableTools = await OpenAIFuncCalls.tools;
-  final isToolsEmpty = availableTools.isEmpty;
+  final availableMcp = await OpenAIFuncCalls.tools;
+  final isMcpEmpty = availableMcp.isEmpty;
 
-  if (toolCompatible && chatScopeUseTools && !isToolsEmpty) {
-    // Used for logging tool call resp
-    final toolReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
-    workingChat.items.add(toolReply);
+  if (mcpCompatible && chatScopeUseMcp && !isMcpEmpty) {
+    // Used for logging mcp call resp
+    final mcpReply = ChatHistoryItem.single(role: ChatRole.tool, raw: '');
+    workingChat.items.add(mcpReply);
     _chatRN.notify();
     _autoScroll(chatId);
 
@@ -154,51 +154,51 @@ Future<void> _onCreateText(
         request: CreateChatCompletionRequest(
           messages: msgs,
           model: ChatCompletionModel.modelId(config.model),
-          tools: availableTools.toList(),
+          tools: availableMcp.toList(),
         ),
       );
     } catch (e, s) {
-      _onErr(e, s, chatId, 'Tool');
+      _onErr(e, s, chatId, 'MCP');
       return;
     }
 
-    final firstToolReply = resp.choices.firstOrNull;
-    final toolCalls = firstToolReply?.message.toolCalls;
-    if (toolCalls != null && toolCalls.isNotEmpty) {
+    final firstMcpReply = resp.choices.firstOrNull;
+    final mcpCalls = firstMcpReply?.message.toolCalls;
+    if (mcpCalls != null && mcpCalls.isNotEmpty) {
       final assistReply = ChatHistoryItem.gen(
         role: ChatRole.assist,
         content: [],
-        toolCalls: toolCalls,
+        toolCalls: mcpCalls,
       );
       workingChat.items.add(assistReply);
       msgs.add(await assistReply.toOpenAI());
-      void onToolLog(String log) {
+      void onMcpLog(String log) {
         final content = ChatContent.text(log);
-        if (toolReply.content.isEmpty) {
-          toolReply.content.add(content);
+        if (mcpReply.content.isEmpty) {
+          mcpReply.content.add(content);
         } else {
-          toolReply.content[0] = content;
+          mcpReply.content[0] = content;
         }
-        _chatItemRNMap[toolReply.id]?.notify();
+        _chatItemRNMap[mcpReply.id]?.notify();
       }
 
-      for (final toolCall in toolCalls) {
+      for (final mcpCall in mcpCalls) {
         final contents = <ChatContent>[];
         try {
           final msg = await OpenAIFuncCalls.handle(
-            toolCall,
-            (e, s) => _askToolConfirm(context, e, s),
-            onToolLog,
+            mcpCall,
+            (e, s) => _askMcpConfirm(context, e, s),
+            onMcpLog,
           );
           if (msg != null) contents.addAll(msg);
         } catch (e, s) {
-          _onErr(e, s, chatId, 'Tool call');
+          _onErr(e, s, chatId, 'MCP call');
         }
         if (contents.isNotEmpty && contents.every((e) => e.raw.isNotEmpty)) {
           final historyItem = ChatHistoryItem.gen(
             role: ChatRole.tool,
             content: contents,
-            toolCallId: toolCall.id,
+            toolCallId: mcpCall.id,
           );
           workingChat.items.add(historyItem);
           msgs.add(await historyItem.toOpenAI());
@@ -206,10 +206,10 @@ Future<void> _onCreateText(
       }
     }
 
-    _chatItemRNMap[toolReply.id]?.notify();
-    workingChat.items.remove(toolReply);
+    _chatItemRNMap[mcpReply.id]?.notify();
+    workingChat.items.remove(mcpReply);
     _chatRN.notify();
-    _chatItemRNMap.remove(toolReply.id)?.dispose();
+    _chatItemRNMap.remove(mcpReply.id)?.dispose();
   }
 
   final chatStream = Cfg.client.createChatCompletionStream(

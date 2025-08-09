@@ -51,7 +51,7 @@ dependencies:
   fl_lib:
     git:
       url: https://github.com/lppcg/fl_lib
-      ref: v1.0.321
+      ref: v1.0.327
 
 dependency_overrides:
   # fl_lib:
@@ -71,7 +71,7 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   build_runner: ^2.4.7
   hive_ce_generator: ^1.9.2
   flutter_native_splash: ^2.3.9
@@ -83,7 +83,7 @@ dev_dependencies:
   fl_build:
     git:
       url: https://github.com/lppcg/fl_build.git
-      ref: v1.0.49
+      ref: v1.0.51
 
 flutter:
   generate: true

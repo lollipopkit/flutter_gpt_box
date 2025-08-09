@@ -16,7 +16,7 @@ class _HistoryPageState extends State<_HistoryPage>
       body: _buildBody,
       floatingActionButton: ValueListenableBuilder(
         valueListenable: _curPage,
-        builder: (_, page, __) => page.fab,
+        builder: (_, page, _) => page.fab,
       ),
     );
   }
