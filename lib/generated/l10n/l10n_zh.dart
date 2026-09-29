@@ -52,15 +52,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get genChatTitle => '生成聊天标题';
 
   @override
-  String get history => '历史';
-
-  @override
-  String get historyToolTip => '搜索和读取其他对话,无需确认';
-
-  @override
-  String get httpToolTip => '获取网页和 API';
-
-  @override
   String get image => '图片';
 
   @override
@@ -79,15 +70,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get manual => '手动';
-
-  @override
-  String get memory => '记忆';
-
-  @override
-  String get message => '消息';
-
-  @override
-  String get model => '模型';
 
   @override
   String get more => '更多';
@@ -139,12 +121,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get themeMode => '主题模式';
 
   @override
-  String get tool => '工具';
-
-  @override
-  String get toolHttpReqName => 'Http 请求';
-
-  @override
   String get untitled => '未命名';
 
   @override
@@ -154,25 +130,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get user => '用户';
 
   @override
-  String get deny => '拒绝';
-
-  @override
-  String get allow => '允许';
-
-  @override
-  String get allowAlways => '始终允许';
-
-  @override
   String get trash => '回收站';
 
   @override
   String get startChatTip => '在下方选择模型，然后开始对话。';
-
-  @override
-  String get camera => '相机';
-
-  @override
-  String get send => '发送';
 
   @override
   String get noProviderKey => '还没有任何服务商配置了 key，添加一个即可开始对话。';
@@ -181,58 +142,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get providers => '服务商';
 
   @override
-  String get regenerate => '重新生成';
-
-  @override
-  String get compacted => '较早的消息已被总结';
-
-  @override
-  String get favorite => '收藏';
-
-  @override
-  String get defaultModel => '默认模型';
-
-  @override
-  String get titleModel => '生成标题的模型';
-
-  @override
-  String get systemPrompt => '系统提示词';
-
-  @override
-  String get compaction => '压缩长对话';
-
-  @override
-  String get compactionTip => '对话超出模型上下文时，较早的消息会被总结后发给模型；你仍然能看到全部消息。';
-
-  @override
-  String get customProvider => '自定义服务商';
-
-  @override
-  String get refreshModels => '刷新模型';
-
-  @override
-  String get modelsListedTip => '可选：会自动获取端点 /models 的模型列表，此处补充其中没有的 ID。';
-
-  @override
-  String get modelsRequired => '该 API 无法获取模型列表，请至少填写一个模型 ID。';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n 个模型';
-  }
-
-  @override
-  String get sameAsChat => '与对话相同';
-
-  @override
   String get keyInKeychain => '保存在系统钥匙串中，不会进入备份。';
-
-  @override
-  String get extraVars => '额外变量';
-
-  @override
-  String get extraVarsTip =>
-      '每行一个 KEY=VALUE，用于需要不止一个 key 的服务商（如 Azure 资源、Cloudflare 账号）。';
 
   @override
   String providersCountFmt(int n) {
@@ -264,83 +174,10 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get thought => '已思考';
-
-  @override
-  String tokensFmt(String n) {
-    return '$n tokens';
-  }
-
-  @override
-  String allowToolFmt(String tool) {
-    return '允许$tool？';
-  }
-
-  @override
-  String get replyWaits => '回复会等待你的决定。';
-
-  @override
-  String usableModelsFmt(int n, int m) {
-    return '$n 个可用 · $m 个服务商';
-  }
-
-  @override
-  String get searchModels => '搜索模型';
-
-  @override
   String get version => '版本';
 
   @override
-  String get endpoint => '端点';
-
-  @override
-  String get key => '密钥';
-
-  @override
   String get toolsAndMcp => '工具与 MCP';
-
-  @override
-  String get useTools => '使用工具';
-
-  @override
-  String get useToolsTip => '每次调用都会先询问，除非已在下方允许';
-
-  @override
-  String get builtIn => '内置';
-
-  @override
-  String get allowedWithoutAsking => '无需询问即可使用';
-
-  @override
-  String get mcpServers => 'MCP 服务器';
-
-  @override
-  String get addServer => '添加服务器';
-
-  @override
-  String connectedFmt(int n) {
-    return '已连接 · $n 个工具';
-  }
-
-  @override
-  String get disconnected => '未连接';
-
-  @override
-  String get deleteKey => '删除密钥';
-
-  @override
-  String moreFmt(int n) {
-    return '还有 $n 个';
-  }
-
-  @override
-  String get back => '返回';
-
-  @override
-  String get allProviders => '全部服务商';
-
-  @override
-  String get searchProviders => '搜索服务商';
 
   @override
   String get backToChats => '返回对话';
@@ -369,24 +206,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String daysFmt(int n) {
     return '$n 天';
   }
-
-  @override
-  String thoughtForFmt(String time) {
-    return '思考了 $time';
-  }
-
-  @override
-  String secondsFmt(String n) {
-    return '$n 秒';
-  }
-
-  @override
-  String minutesSecondsFmt(int m, int s) {
-    return '$m 分 $s 秒';
-  }
-
-  @override
-  String get attachment => '附件';
 
   @override
   String get sync => '同步';
@@ -449,60 +268,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pasteBackup => '从剪贴板恢复';
-
-  @override
-  String get memoryView => '读取记忆';
-
-  @override
-  String get memorySearch => '搜索记忆';
-
-  @override
-  String get memoryWrite => '保存记忆';
-
-  @override
-  String get memoryEdit => '编辑记忆';
-
-  @override
-  String get memoryDelete => '删除记忆';
-
-  @override
-  String get memoryMove => '移动记忆';
-
-  @override
-  String get memoryToolTip => '模型跨对话保存的文件,读写无需确认';
-
-  @override
-  String charsFmt(int n) {
-    return '$n 字符';
-  }
-
-  @override
-  String alreadyExists(String path) {
-    return '$path 已存在';
-  }
-
-  @override
-  String get unsavedChanges => '离开前保存更改?';
-
-  @override
-  String get discard => '放弃';
-
-  @override
-  String get chatSearch => '搜索对话';
-
-  @override
-  String get chatRead => '读取对话';
-
-  @override
-  String attachUnsupported(String name) {
-    return '无法附加 $name:仅支持图片和 512 KB 以内的文本文件';
-  }
-
-  @override
-  String get replyInterrupted => '回复被中断';
-
-  @override
-  String get resumeReply => '继续';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -553,15 +318,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get genChatTitle => '生成聊天標題';
 
   @override
-  String get history => '歷史';
-
-  @override
-  String get historyToolTip => '搜尋和讀取其他對話,無需確認';
-
-  @override
-  String get httpToolTip => '取得網頁和 API';
-
-  @override
   String get image => '圖片';
 
   @override
@@ -580,15 +336,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get manual => '手動';
-
-  @override
-  String get memory => '記憶';
-
-  @override
-  String get message => '訊息';
-
-  @override
-  String get model => '模型';
 
   @override
   String get more => '更多';
@@ -640,12 +387,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get themeMode => '主題模式';
 
   @override
-  String get tool => '工具';
-
-  @override
-  String get toolHttpReqName => 'Http 請求';
-
-  @override
   String get untitled => '未命名';
 
   @override
@@ -655,25 +396,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get user => '使用者';
 
   @override
-  String get deny => '拒絕';
-
-  @override
-  String get allow => '允許';
-
-  @override
-  String get allowAlways => '一律允許';
-
-  @override
   String get trash => '垃圾桶';
 
   @override
   String get startChatTip => '在下方選擇模型，然後開始對話。';
-
-  @override
-  String get camera => '相機';
-
-  @override
-  String get send => '傳送';
 
   @override
   String get noProviderKey => '還沒有服務商設定了金鑰。新增一個即可開始聊天。';
@@ -682,58 +408,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get providers => '服務商';
 
   @override
-  String get regenerate => '重新生成';
-
-  @override
-  String get compacted => '較早的訊息已被摘要';
-
-  @override
-  String get favorite => '收藏';
-
-  @override
-  String get defaultModel => '預設模型';
-
-  @override
-  String get titleModel => '標題模型';
-
-  @override
-  String get systemPrompt => '系統提示詞';
-
-  @override
-  String get compaction => '壓縮長對話';
-
-  @override
-  String get compactionTip => '當對話超出模型的上下文時，較早的訊息會為模型摘要。你仍可看到全部訊息。';
-
-  @override
-  String get customProvider => '自訂服務商';
-
-  @override
-  String get refreshModels => '重新整理模型';
-
-  @override
-  String get modelsListedTip => '可選：會自動取得端點 /models 的模型清單，此處補充其中沒有的 ID。';
-
-  @override
-  String get modelsRequired => '此 API 無法取得模型清單，請至少填寫一個模型 ID。';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n 個模型';
-  }
-
-  @override
-  String get sameAsChat => '與對話相同';
-
-  @override
   String get keyInKeychain => '儲存在系統鑰匙圈中，不會進入備份。';
-
-  @override
-  String get extraVars => '額外變數';
-
-  @override
-  String get extraVarsTip =>
-      '每行一個 KEY=VALUE，用於除金鑰外還需要其他設定的服務商（Azure 資源、Cloudflare 帳號）。';
 
   @override
   String providersCountFmt(int n) {
@@ -765,83 +440,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   }
 
   @override
-  String get thought => '已思考';
-
-  @override
-  String tokensFmt(String n) {
-    return '$n tokens';
-  }
-
-  @override
-  String allowToolFmt(String tool) {
-    return '允許$tool？';
-  }
-
-  @override
-  String get replyWaits => '回覆會等待你的決定。';
-
-  @override
-  String usableModelsFmt(int n, int m) {
-    return '$n 個可用 · $m 個服務商';
-  }
-
-  @override
-  String get searchModels => '搜尋模型';
-
-  @override
   String get version => '版本';
 
   @override
-  String get endpoint => '端點';
-
-  @override
-  String get key => '金鑰';
-
-  @override
   String get toolsAndMcp => '工具與 MCP';
-
-  @override
-  String get useTools => '使用工具';
-
-  @override
-  String get useToolsTip => '每次呼叫都會先詢問，除非已在下方允許';
-
-  @override
-  String get builtIn => '內建';
-
-  @override
-  String get allowedWithoutAsking => '無需詢問即可使用';
-
-  @override
-  String get mcpServers => 'MCP 伺服器';
-
-  @override
-  String get addServer => '新增伺服器';
-
-  @override
-  String connectedFmt(int n) {
-    return '已連線 · $n 個工具';
-  }
-
-  @override
-  String get disconnected => '未連線';
-
-  @override
-  String get deleteKey => '刪除金鑰';
-
-  @override
-  String moreFmt(int n) {
-    return '還有 $n 個';
-  }
-
-  @override
-  String get back => '返回';
-
-  @override
-  String get allProviders => '全部服務商';
-
-  @override
-  String get searchProviders => '搜尋服務商';
 
   @override
   String get backToChats => '返回對話';
@@ -870,24 +472,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String daysFmt(int n) {
     return '$n 天';
   }
-
-  @override
-  String thoughtForFmt(String time) {
-    return '思考了 $time';
-  }
-
-  @override
-  String secondsFmt(String n) {
-    return '$n 秒';
-  }
-
-  @override
-  String minutesSecondsFmt(int m, int s) {
-    return '$m 分 $s 秒';
-  }
-
-  @override
-  String get attachment => '附件';
 
   @override
   String get sync => '同步';
@@ -950,58 +534,4 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get pasteBackup => '從剪貼簿還原';
-
-  @override
-  String get memoryView => '讀取記憶';
-
-  @override
-  String get memorySearch => '搜尋記憶';
-
-  @override
-  String get memoryWrite => '儲存記憶';
-
-  @override
-  String get memoryEdit => '編輯記憶';
-
-  @override
-  String get memoryDelete => '刪除記憶';
-
-  @override
-  String get memoryMove => '移動記憶';
-
-  @override
-  String get memoryToolTip => '模型跨對話保存的檔案,讀寫無需確認';
-
-  @override
-  String charsFmt(int n) {
-    return '$n 字元';
-  }
-
-  @override
-  String alreadyExists(String path) {
-    return '$path 已存在';
-  }
-
-  @override
-  String get unsavedChanges => '離開前儲存變更?';
-
-  @override
-  String get discard => '捨棄';
-
-  @override
-  String get chatSearch => '搜尋對話';
-
-  @override
-  String get chatRead => '讀取對話';
-
-  @override
-  String attachUnsupported(String name) {
-    return '無法附加 $name:僅支援圖片和 512 KB 以內的文字檔';
-  }
-
-  @override
-  String get replyInterrupted => '回覆被中斷';
-
-  @override
-  String get resumeReply => '繼續';
 }

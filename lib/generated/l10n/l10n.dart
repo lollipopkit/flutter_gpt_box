@@ -197,24 +197,6 @@ abstract class AppLocalizations {
   /// **'Chat title generator'**
   String get genChatTitle;
 
-  /// No description provided for @history.
-  ///
-  /// In en, this message translates to:
-  /// **'History'**
-  String get history;
-
-  /// No description provided for @historyToolTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Search and read your other chats, without asking'**
-  String get historyToolTip;
-
-  /// No description provided for @httpToolTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Fetch web pages and APIs'**
-  String get httpToolTip;
-
   /// No description provided for @image.
   ///
   /// In en, this message translates to:
@@ -250,24 +232,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manual'**
   String get manual;
-
-  /// No description provided for @memory.
-  ///
-  /// In en, this message translates to:
-  /// **'Memory'**
-  String get memory;
-
-  /// No description provided for @message.
-  ///
-  /// In en, this message translates to:
-  /// **'Message'**
-  String get message;
-
-  /// No description provided for @model.
-  ///
-  /// In en, this message translates to:
-  /// **'Model'**
-  String get model;
 
   /// No description provided for @more.
   ///
@@ -359,18 +323,6 @@ abstract class AppLocalizations {
   /// **'Theme mode'**
   String get themeMode;
 
-  /// No description provided for @tool.
-  ///
-  /// In en, this message translates to:
-  /// **'Tool'**
-  String get tool;
-
-  /// No description provided for @toolHttpReqName.
-  ///
-  /// In en, this message translates to:
-  /// **'HTTP request'**
-  String get toolHttpReqName;
-
   /// No description provided for @untitled.
   ///
   /// In en, this message translates to:
@@ -389,24 +341,6 @@ abstract class AppLocalizations {
   /// **'User'**
   String get user;
 
-  /// No description provided for @deny.
-  ///
-  /// In en, this message translates to:
-  /// **'Deny'**
-  String get deny;
-
-  /// No description provided for @allow.
-  ///
-  /// In en, this message translates to:
-  /// **'Allow'**
-  String get allow;
-
-  /// No description provided for @allowAlways.
-  ///
-  /// In en, this message translates to:
-  /// **'Always allow'**
-  String get allowAlways;
-
   /// No description provided for @trash.
   ///
   /// In en, this message translates to:
@@ -418,18 +352,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a model below and say something.'**
   String get startChatTip;
-
-  /// No description provided for @camera.
-  ///
-  /// In en, this message translates to:
-  /// **'Camera'**
-  String get camera;
-
-  /// No description provided for @send.
-  ///
-  /// In en, this message translates to:
-  /// **'Send'**
-  String get send;
 
   /// No description provided for @noProviderKey.
   ///
@@ -443,107 +365,11 @@ abstract class AppLocalizations {
   /// **'Providers'**
   String get providers;
 
-  /// No description provided for @regenerate.
-  ///
-  /// In en, this message translates to:
-  /// **'Regenerate'**
-  String get regenerate;
-
-  /// No description provided for @compacted.
-  ///
-  /// In en, this message translates to:
-  /// **'Earlier messages were summarised'**
-  String get compacted;
-
-  /// No description provided for @favorite.
-  ///
-  /// In en, this message translates to:
-  /// **'Favorites'**
-  String get favorite;
-
-  /// No description provided for @defaultModel.
-  ///
-  /// In en, this message translates to:
-  /// **'Default model'**
-  String get defaultModel;
-
-  /// No description provided for @titleModel.
-  ///
-  /// In en, this message translates to:
-  /// **'Model for titles'**
-  String get titleModel;
-
-  /// No description provided for @systemPrompt.
-  ///
-  /// In en, this message translates to:
-  /// **'System prompt'**
-  String get systemPrompt;
-
-  /// No description provided for @compaction.
-  ///
-  /// In en, this message translates to:
-  /// **'Compact long chats'**
-  String get compaction;
-
-  /// No description provided for @compactionTip.
-  ///
-  /// In en, this message translates to:
-  /// **'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.'**
-  String get compactionTip;
-
-  /// No description provided for @customProvider.
-  ///
-  /// In en, this message translates to:
-  /// **'Custom provider'**
-  String get customProvider;
-
-  /// No description provided for @refreshModels.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh models'**
-  String get refreshModels;
-
-  /// No description provided for @modelsListedTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.'**
-  String get modelsListedTip;
-
-  /// No description provided for @modelsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'This API cannot list its models: enter at least one model id.'**
-  String get modelsRequired;
-
-  /// No description provided for @modelsCountFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{n, plural, =1{1 model} other{{n} models}}'**
-  String modelsCountFmt(int n);
-
-  /// No description provided for @sameAsChat.
-  ///
-  /// In en, this message translates to:
-  /// **'Same as the chat'**
-  String get sameAsChat;
-
   /// No description provided for @keyInKeychain.
   ///
   /// In en, this message translates to:
   /// **'Stored in the system keychain, never in backups.'**
   String get keyInKeychain;
-
-  /// No description provided for @extraVars.
-  ///
-  /// In en, this message translates to:
-  /// **'Extra variables'**
-  String get extraVars;
-
-  /// No description provided for @extraVarsTip.
-  ///
-  /// In en, this message translates to:
-  /// **'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).'**
-  String get extraVarsTip;
 
   /// No description provided for @providersCountFmt.
   ///
@@ -587,143 +413,17 @@ abstract class AppLocalizations {
   /// **'{n, plural, =1{1 message} other{{n} messages}}'**
   String messagesCountFmt(int n);
 
-  /// No description provided for @thought.
-  ///
-  /// In en, this message translates to:
-  /// **'Thought'**
-  String get thought;
-
-  /// No description provided for @tokensFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{n} tokens'**
-  String tokensFmt(String n);
-
-  /// No description provided for @allowToolFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'Allow {tool}?'**
-  String allowToolFmt(String tool);
-
-  /// No description provided for @replyWaits.
-  ///
-  /// In en, this message translates to:
-  /// **'The reply waits for your answer.'**
-  String get replyWaits;
-
-  /// No description provided for @usableModelsFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{n} usable · {m, plural, =1{1 provider} other{{m} providers}}'**
-  String usableModelsFmt(int n, int m);
-
-  /// No description provided for @searchModels.
-  ///
-  /// In en, this message translates to:
-  /// **'Search models'**
-  String get searchModels;
-
   /// No description provided for @version.
   ///
   /// In en, this message translates to:
   /// **'Version'**
   String get version;
 
-  /// No description provided for @endpoint.
-  ///
-  /// In en, this message translates to:
-  /// **'Endpoint'**
-  String get endpoint;
-
-  /// No description provided for @key.
-  ///
-  /// In en, this message translates to:
-  /// **'Key'**
-  String get key;
-
   /// No description provided for @toolsAndMcp.
   ///
   /// In en, this message translates to:
   /// **'Tools & MCP'**
   String get toolsAndMcp;
-
-  /// No description provided for @useTools.
-  ///
-  /// In en, this message translates to:
-  /// **'Use tools'**
-  String get useTools;
-
-  /// No description provided for @useToolsTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Each call asks first unless it is allowed below'**
-  String get useToolsTip;
-
-  /// No description provided for @builtIn.
-  ///
-  /// In en, this message translates to:
-  /// **'Built-in'**
-  String get builtIn;
-
-  /// No description provided for @allowedWithoutAsking.
-  ///
-  /// In en, this message translates to:
-  /// **'Allowed without asking'**
-  String get allowedWithoutAsking;
-
-  /// No description provided for @mcpServers.
-  ///
-  /// In en, this message translates to:
-  /// **'MCP servers'**
-  String get mcpServers;
-
-  /// No description provided for @addServer.
-  ///
-  /// In en, this message translates to:
-  /// **'Add server'**
-  String get addServer;
-
-  /// No description provided for @connectedFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'Connected · {n} tools'**
-  String connectedFmt(int n);
-
-  /// No description provided for @disconnected.
-  ///
-  /// In en, this message translates to:
-  /// **'Disconnected'**
-  String get disconnected;
-
-  /// No description provided for @deleteKey.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete key'**
-  String get deleteKey;
-
-  /// No description provided for @moreFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{n} more'**
-  String moreFmt(int n);
-
-  /// No description provided for @back.
-  ///
-  /// In en, this message translates to:
-  /// **'Back'**
-  String get back;
-
-  /// No description provided for @allProviders.
-  ///
-  /// In en, this message translates to:
-  /// **'All providers'**
-  String get allProviders;
-
-  /// No description provided for @searchProviders.
-  ///
-  /// In en, this message translates to:
-  /// **'Search providers'**
-  String get searchProviders;
 
   /// No description provided for @backToChats.
   ///
@@ -772,30 +472,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{n, plural, =1{1 day} other{{n} days}}'**
   String daysFmt(int n);
-
-  /// No description provided for @thoughtForFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'Thought for {time}'**
-  String thoughtForFmt(String time);
-
-  /// No description provided for @secondsFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{n} s'**
-  String secondsFmt(String n);
-
-  /// No description provided for @minutesSecondsFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{m} min {s} s'**
-  String minutesSecondsFmt(int m, int s);
-
-  /// No description provided for @attachment.
-  ///
-  /// In en, this message translates to:
-  /// **'Attachment'**
-  String get attachment;
 
   /// No description provided for @sync.
   ///
@@ -916,102 +592,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore from clipboard'**
   String get pasteBackup;
-
-  /// No description provided for @memoryView.
-  ///
-  /// In en, this message translates to:
-  /// **'Read memory'**
-  String get memoryView;
-
-  /// No description provided for @memorySearch.
-  ///
-  /// In en, this message translates to:
-  /// **'Search memory'**
-  String get memorySearch;
-
-  /// No description provided for @memoryWrite.
-  ///
-  /// In en, this message translates to:
-  /// **'Save memory'**
-  String get memoryWrite;
-
-  /// No description provided for @memoryEdit.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit memory'**
-  String get memoryEdit;
-
-  /// No description provided for @memoryDelete.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete memory'**
-  String get memoryDelete;
-
-  /// No description provided for @memoryMove.
-  ///
-  /// In en, this message translates to:
-  /// **'Move memory'**
-  String get memoryMove;
-
-  /// No description provided for @memoryToolTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Files the model keeps across chats, read and written without asking'**
-  String get memoryToolTip;
-
-  /// No description provided for @charsFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{n, plural, =1{1 character} other{{n} characters}}'**
-  String charsFmt(int n);
-
-  /// No description provided for @alreadyExists.
-  ///
-  /// In en, this message translates to:
-  /// **'{path} already exists'**
-  String alreadyExists(String path);
-
-  /// No description provided for @unsavedChanges.
-  ///
-  /// In en, this message translates to:
-  /// **'Save your changes before leaving?'**
-  String get unsavedChanges;
-
-  /// No description provided for @discard.
-  ///
-  /// In en, this message translates to:
-  /// **'Discard'**
-  String get discard;
-
-  /// No description provided for @chatSearch.
-  ///
-  /// In en, this message translates to:
-  /// **'Search chats'**
-  String get chatSearch;
-
-  /// No description provided for @chatRead.
-  ///
-  /// In en, this message translates to:
-  /// **'Read chat'**
-  String get chatRead;
-
-  /// No description provided for @attachUnsupported.
-  ///
-  /// In en, this message translates to:
-  /// **'Cannot attach {name}: only images and text files up to 512 KB'**
-  String attachUnsupported(String name);
-
-  /// No description provided for @replyInterrupted.
-  ///
-  /// In en, this message translates to:
-  /// **'The reply was interrupted'**
-  String get replyInterrupted;
-
-  /// No description provided for @resumeReply.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get resumeReply;
 }
 
 class _AppLocalizationsDelegate

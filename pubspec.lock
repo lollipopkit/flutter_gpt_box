@@ -395,7 +395,7 @@ packages:
     source: hosted
     version: "7.0.1"
   file_picker:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: file_picker
       sha256: "9be6aac79508dbcf8dac80a4fb20f27ce6f910837ca27e3670b9295995cc0110"
@@ -497,13 +497,20 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  fl_pi_llm_ui:
+    dependency: "direct main"
+    description:
+      path: "packages/fl_pi_llm/ui"
+      relative: true
+    source: path
+    version: "0.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
   flutter_highlight:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_highlight
       sha256: "7b96333867aa07e122e245c033b8ad622e4e3a42a1a2372cbb098a2541d8782c"
@@ -524,7 +531,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_markdown_plus:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_markdown_plus
       sha256: fce641d6c2106cc495de1cd603f97a4f9d615a97a64011928ded380dbdade935
@@ -532,7 +539,7 @@ packages:
     source: hosted
     version: "1.0.12"
   flutter_markdown_plus_latex:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_markdown_plus_latex
       sha256: "2e7698b291f0657ca445efab730bb25a8c5851037e882cb7bf47d16a5c218de7"
@@ -726,7 +733,7 @@ packages:
     source: hosted
     version: "2.2.0"
   html:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: html
       sha256: "43b67b8f43321ab066817dfac5619596c98bb1b61624e77203bb4351785f9699"
@@ -791,7 +798,7 @@ packages:
     source: hosted
     version: "4.10.1"
   image_picker:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: image_picker
       sha256: d8402284df184bc05f4a2210c6c23983b0720f4cd87cbd05c5390a78af602667
@@ -1031,7 +1038,7 @@ packages:
     source: hosted
     version: "1.3.0"
   markdown:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: markdown
       sha256: ee85086ad7698b42522c6ad42fe195f1b9898e4d974a1af4576c1a3a176cada9
@@ -1063,7 +1070,7 @@ packages:
     source: hosted
     version: "1.5.0"
   mcp_dart:
-    dependency: "direct main"
+    dependency: transitive
     description:
       path: "."
       ref: main
@@ -1481,7 +1488,7 @@ packages:
     source: hosted
     version: "3.0.0"
   shortid:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shortid
       sha256: d0b40e3dbb50497dad107e19c54ca7de0d1a274eb9b4404991e443dadb9ebedb

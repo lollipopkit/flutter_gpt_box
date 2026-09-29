@@ -54,15 +54,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get genChatTitle => 'Сгенерировать заголовок чата';
 
   @override
-  String get history => 'История';
-
-  @override
-  String get historyToolTip => 'Искать и читать другие чаты без запроса';
-
-  @override
-  String get httpToolTip => 'Загружать веб-страницы и API';
-
-  @override
   String get image => 'Изображение';
 
   @override
@@ -81,15 +72,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get manual => 'Ручной';
-
-  @override
-  String get memory => 'Память';
-
-  @override
-  String get message => 'Сообщение';
-
-  @override
-  String get model => 'Модель';
 
   @override
   String get more => 'Больше';
@@ -141,12 +123,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get themeMode => 'Режим темы';
 
   @override
-  String get tool => 'Инструмент';
-
-  @override
-  String get toolHttpReqName => 'HTTP-запрос';
-
-  @override
   String get untitled => 'Без названия';
 
   @override
@@ -156,25 +132,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get user => 'Пользователь';
 
   @override
-  String get deny => 'Запретить';
-
-  @override
-  String get allow => 'Разрешить';
-
-  @override
-  String get allowAlways => 'Всегда разрешать';
-
-  @override
   String get trash => 'Корзина';
 
   @override
   String get startChatTip => 'Выберите модель ниже и напишите что-нибудь.';
-
-  @override
-  String get camera => 'Камера';
-
-  @override
-  String get send => 'Отправить';
 
   @override
   String get noProviderKey =>
@@ -184,62 +145,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get providers => 'Провайдеры';
 
   @override
-  String get regenerate => 'Сгенерировать заново';
-
-  @override
-  String get compacted => 'Ранние сообщения были сжаты в резюме';
-
-  @override
-  String get favorite => 'Избранное';
-
-  @override
-  String get defaultModel => 'Модель по умолчанию';
-
-  @override
-  String get titleModel => 'Модель для заголовков';
-
-  @override
-  String get systemPrompt => 'Системный промпт';
-
-  @override
-  String get compaction => 'Сжимать длинные чаты';
-
-  @override
-  String get compactionTip =>
-      'Когда чат перестаёт помещаться в контекст модели, ранние сообщения пересказываются для модели. Вы по-прежнему видите их все.';
-
-  @override
-  String get customProvider => 'Свой провайдер';
-
-  @override
-  String get refreshModels => 'Обновить модели';
-
-  @override
-  String get modelsListedTip =>
-      'Необязательно: список /models эндпоинта загружается автоматически. Добавьте ID, которых в нём нет.';
-
-  @override
-  String get modelsRequired =>
-      'Этот API не умеет перечислять модели: укажите хотя бы один ID модели.';
-
-  @override
-  String modelsCountFmt(int n) {
-    return 'Моделей: $n';
-  }
-
-  @override
-  String get sameAsChat => 'Как в чате';
-
-  @override
   String get keyInKeychain =>
       'Хранится в системной связке ключей, никогда не попадает в резервные копии.';
-
-  @override
-  String get extraVars => 'Дополнительные переменные';
-
-  @override
-  String get extraVarsTip =>
-      'По одной KEY=VALUE в строке — для провайдеров, которым нужно больше, чем ключ (ресурс Azure, аккаунт Cloudflare).';
 
   @override
   String providersCountFmt(int n) {
@@ -271,84 +178,10 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get thought => 'Размышления';
-
-  @override
-  String tokensFmt(String n) {
-    return 'Токенов: $n';
-  }
-
-  @override
-  String allowToolFmt(String tool) {
-    return 'Разрешить $tool?';
-  }
-
-  @override
-  String get replyWaits => 'Ответ ждёт вашего решения.';
-
-  @override
-  String usableModelsFmt(int n, int m) {
-    return 'Доступно: $n · провайдеров: $m';
-  }
-
-  @override
-  String get searchModels => 'Поиск моделей';
-
-  @override
   String get version => 'Версия';
 
   @override
-  String get endpoint => 'Эндпоинт';
-
-  @override
-  String get key => 'Ключ';
-
-  @override
   String get toolsAndMcp => 'Инструменты и MCP';
-
-  @override
-  String get useTools => 'Использовать инструменты';
-
-  @override
-  String get useToolsTip =>
-      'Каждый вызов сначала спрашивает, если он не разрешён ниже';
-
-  @override
-  String get builtIn => 'Встроенные';
-
-  @override
-  String get allowedWithoutAsking => 'Разрешены без запроса';
-
-  @override
-  String get mcpServers => 'Серверы MCP';
-
-  @override
-  String get addServer => 'Добавить сервер';
-
-  @override
-  String connectedFmt(int n) {
-    return 'Подключён · инструментов: $n';
-  }
-
-  @override
-  String get disconnected => 'Отключён';
-
-  @override
-  String get deleteKey => 'Удалить ключ';
-
-  @override
-  String moreFmt(int n) {
-    return 'Ещё $n';
-  }
-
-  @override
-  String get back => 'Назад';
-
-  @override
-  String get allProviders => 'Все провайдеры';
-
-  @override
-  String get searchProviders => 'Поиск провайдеров';
 
   @override
   String get backToChats => 'Назад к чатам';
@@ -377,24 +210,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String daysFmt(int n) {
     return 'Дней: $n';
   }
-
-  @override
-  String thoughtForFmt(String time) {
-    return 'Размышлял $time';
-  }
-
-  @override
-  String secondsFmt(String n) {
-    return '$n с';
-  }
-
-  @override
-  String minutesSecondsFmt(int m, int s) {
-    return '$m мин $s с';
-  }
-
-  @override
-  String get attachment => 'Вложение';
 
   @override
   String get sync => 'Синхронизация';
@@ -462,59 +277,4 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Восстановить из буфера обмена';
-
-  @override
-  String get memoryView => 'Прочитать память';
-
-  @override
-  String get memorySearch => 'Поиск в памяти';
-
-  @override
-  String get memoryWrite => 'Сохранить в память';
-
-  @override
-  String get memoryEdit => 'Изменить память';
-
-  @override
-  String get memoryDelete => 'Удалить из памяти';
-
-  @override
-  String get memoryMove => 'Переместить в памяти';
-
-  @override
-  String get memoryToolTip =>
-      'Файлы, которые модель хранит между чатами; читает и пишет их без запроса';
-
-  @override
-  String charsFmt(int n) {
-    return 'Символов: $n';
-  }
-
-  @override
-  String alreadyExists(String path) {
-    return '$path уже существует';
-  }
-
-  @override
-  String get unsavedChanges => 'Сохранить изменения перед выходом?';
-
-  @override
-  String get discard => 'Отменить изменения';
-
-  @override
-  String get chatSearch => 'Поиск по чатам';
-
-  @override
-  String get chatRead => 'Прочитать чат';
-
-  @override
-  String attachUnsupported(String name) {
-    return 'Не удалось прикрепить $name: только изображения и текстовые файлы до 512 КБ';
-  }
-
-  @override
-  String get replyInterrupted => 'Ответ был прерван';
-
-  @override
-  String get resumeReply => 'Продолжить';
 }

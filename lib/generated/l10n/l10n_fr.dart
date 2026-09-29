@@ -54,16 +54,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get genChatTitle => 'Générer un titre de chat';
 
   @override
-  String get history => 'Historique';
-
-  @override
-  String get historyToolTip =>
-      'Rechercher et lire vos autres chats, sans demander';
-
-  @override
-  String get httpToolTip => 'Récupérer des pages web et des API';
-
-  @override
   String get image => 'Image';
 
   @override
@@ -82,15 +72,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get manual => 'Manuel';
-
-  @override
-  String get memory => 'Mémoire';
-
-  @override
-  String get message => 'Message';
-
-  @override
-  String get model => 'Modèle';
 
   @override
   String get more => 'Plus';
@@ -142,12 +123,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get themeMode => 'Mode de thème';
 
   @override
-  String get tool => 'Outil';
-
-  @override
-  String get toolHttpReqName => 'Requête HTTP';
-
-  @override
   String get untitled => 'Sans titre';
 
   @override
@@ -157,26 +132,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get user => 'Utilisateur';
 
   @override
-  String get deny => 'Refuser';
-
-  @override
-  String get allow => 'Autoriser';
-
-  @override
-  String get allowAlways => 'Toujours autoriser';
-
-  @override
   String get trash => 'Corbeille';
 
   @override
   String get startChatTip =>
       'Choisissez un modèle ci-dessous et écrivez quelque chose.';
-
-  @override
-  String get camera => 'Appareil photo';
-
-  @override
-  String get send => 'Envoyer';
 
   @override
   String get noProviderKey =>
@@ -186,68 +146,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get providers => 'Fournisseurs';
 
   @override
-  String get regenerate => 'Régénérer';
-
-  @override
-  String get compacted => 'Les messages précédents ont été résumés';
-
-  @override
-  String get favorite => 'Favoris';
-
-  @override
-  String get defaultModel => 'Modèle par défaut';
-
-  @override
-  String get titleModel => 'Modèle pour les titres';
-
-  @override
-  String get systemPrompt => 'Prompt système';
-
-  @override
-  String get compaction => 'Compacter les longues discussions';
-
-  @override
-  String get compactionTip =>
-      'Quand une discussion ne tient plus dans le contexte du modèle, les messages précédents sont résumés pour le modèle. Vous les voyez toujours tous.';
-
-  @override
-  String get customProvider => 'Fournisseur personnalisé';
-
-  @override
-  String get refreshModels => 'Actualiser les modèles';
-
-  @override
-  String get modelsListedTip =>
-      'Facultatif : la liste /models du point d\'accès est récupérée. Ajoutez les identifiants qu\'elle ne contient pas.';
-
-  @override
-  String get modelsRequired =>
-      'Cette API ne peut pas lister ses modèles : saisissez au moins un identifiant de modèle.';
-
-  @override
-  String modelsCountFmt(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n modèles',
-      one: '1 modèle',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get sameAsChat => 'Comme la discussion';
-
-  @override
   String get keyInKeychain =>
       'Stockée dans le trousseau du système, jamais dans les sauvegardes.';
-
-  @override
-  String get extraVars => 'Variables supplémentaires';
-
-  @override
-  String get extraVarsTip =>
-      'Une KEY=VALUE par ligne, pour les fournisseurs qui demandent plus qu\'une clé (ressource Azure, compte Cloudflare).';
 
   @override
   String providersCountFmt(int n) {
@@ -291,84 +191,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get thought => 'Réflexion';
-
-  @override
-  String tokensFmt(String n) {
-    return '$n jetons';
-  }
-
-  @override
-  String allowToolFmt(String tool) {
-    return 'Autoriser $tool ?';
-  }
-
-  @override
-  String get replyWaits => 'La réponse attend votre décision.';
-
-  @override
-  String usableModelsFmt(int n, int m) {
-    return '$n utilisables · $m fournisseurs';
-  }
-
-  @override
-  String get searchModels => 'Rechercher des modèles';
-
-  @override
   String get version => 'Version';
 
   @override
-  String get endpoint => 'Point d\'accès';
-
-  @override
-  String get key => 'Clé';
-
-  @override
   String get toolsAndMcp => 'Outils et MCP';
-
-  @override
-  String get useTools => 'Utiliser les outils';
-
-  @override
-  String get useToolsTip =>
-      'Chaque appel demande d\'abord, sauf s\'il est autorisé ci-dessous';
-
-  @override
-  String get builtIn => 'Intégrés';
-
-  @override
-  String get allowedWithoutAsking => 'Autorisés sans demander';
-
-  @override
-  String get mcpServers => 'Serveurs MCP';
-
-  @override
-  String get addServer => 'Ajouter un serveur';
-
-  @override
-  String connectedFmt(int n) {
-    return 'Connecté · $n outils';
-  }
-
-  @override
-  String get disconnected => 'Déconnecté';
-
-  @override
-  String get deleteKey => 'Supprimer la clé';
-
-  @override
-  String moreFmt(int n) {
-    return '$n de plus';
-  }
-
-  @override
-  String get back => 'Retour';
-
-  @override
-  String get allProviders => 'Tous les fournisseurs';
-
-  @override
-  String get searchProviders => 'Rechercher des fournisseurs';
 
   @override
   String get backToChats => 'Retour aux discussions';
@@ -410,24 +236,6 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String thoughtForFmt(String time) {
-    return 'Réflexion : $time';
-  }
-
-  @override
-  String secondsFmt(String n) {
-    return '$n s';
-  }
-
-  @override
-  String minutesSecondsFmt(int m, int s) {
-    return '$m min $s s';
-  }
-
-  @override
-  String get attachment => 'Pièce jointe';
 
   @override
   String get sync => 'Synchronisation';
@@ -495,66 +303,4 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Restaurer depuis le presse-papiers';
-
-  @override
-  String get memoryView => 'Lire la mémoire';
-
-  @override
-  String get memorySearch => 'Rechercher dans la mémoire';
-
-  @override
-  String get memoryWrite => 'Enregistrer en mémoire';
-
-  @override
-  String get memoryEdit => 'Modifier la mémoire';
-
-  @override
-  String get memoryDelete => 'Supprimer de la mémoire';
-
-  @override
-  String get memoryMove => 'Déplacer en mémoire';
-
-  @override
-  String get memoryToolTip =>
-      'Fichiers que le modèle conserve d\'un chat à l\'autre ; il les lit et les écrit sans demander';
-
-  @override
-  String charsFmt(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n caractères',
-      one: '1 caractère',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String alreadyExists(String path) {
-    return '$path existe déjà';
-  }
-
-  @override
-  String get unsavedChanges =>
-      'Enregistrer les modifications avant de quitter ?';
-
-  @override
-  String get discard => 'Abandonner';
-
-  @override
-  String get chatSearch => 'Rechercher des chats';
-
-  @override
-  String get chatRead => 'Lire un chat';
-
-  @override
-  String attachUnsupported(String name) {
-    return 'Impossible de joindre $name : seulement des images et des fichiers texte jusqu\'à 512 Ko';
-  }
-
-  @override
-  String get replyInterrupted => 'La réponse a été interrompue';
-
-  @override
-  String get resumeReply => 'Continuer';
 }

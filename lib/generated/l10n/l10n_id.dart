@@ -54,15 +54,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get genChatTitle => 'Buat judul obrolan';
 
   @override
-  String get history => 'Riwayat';
-
-  @override
-  String get historyToolTip => 'Cari dan baca chat lain, tanpa bertanya';
-
-  @override
-  String get httpToolTip => 'Ambil halaman web dan API';
-
-  @override
   String get image => 'Gambar';
 
   @override
@@ -81,15 +72,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get manual => 'Manual';
-
-  @override
-  String get memory => 'Memori';
-
-  @override
-  String get message => 'Pesan';
-
-  @override
-  String get model => 'Model';
 
   @override
   String get more => 'Lainnya';
@@ -141,12 +123,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get themeMode => 'Mode tema';
 
   @override
-  String get tool => 'Alat';
-
-  @override
-  String get toolHttpReqName => 'Permintaan Http';
-
-  @override
   String get untitled => 'Tanpa judul';
 
   @override
@@ -156,25 +132,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get user => 'Pengguna';
 
   @override
-  String get deny => 'Tolak';
-
-  @override
-  String get allow => 'Izinkan';
-
-  @override
-  String get allowAlways => 'Selalu izinkan';
-
-  @override
   String get trash => 'Sampah';
 
   @override
   String get startChatTip => 'Pilih model di bawah lalu tulis sesuatu.';
-
-  @override
-  String get camera => 'Kamera';
-
-  @override
-  String get send => 'Kirim';
 
   @override
   String get noProviderKey =>
@@ -184,62 +145,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get providers => 'Penyedia';
 
   @override
-  String get regenerate => 'Buat ulang';
-
-  @override
-  String get compacted => 'Pesan sebelumnya telah diringkas';
-
-  @override
-  String get favorite => 'Favorit';
-
-  @override
-  String get defaultModel => 'Model bawaan';
-
-  @override
-  String get titleModel => 'Model untuk judul';
-
-  @override
-  String get systemPrompt => 'Prompt sistem';
-
-  @override
-  String get compaction => 'Padatkan obrolan panjang';
-
-  @override
-  String get compactionTip =>
-      'Saat obrolan tidak lagi muat dalam konteks model, pesan sebelumnya diringkas untuk model. Anda tetap melihat semuanya.';
-
-  @override
-  String get customProvider => 'Penyedia kustom';
-
-  @override
-  String get refreshModels => 'Muat ulang model';
-
-  @override
-  String get modelsListedTip =>
-      'Opsional: daftar /models dari endpoint akan diambil. Tambahkan ID yang tidak tercantum.';
-
-  @override
-  String get modelsRequired =>
-      'API ini tidak dapat mencantumkan modelnya: masukkan setidaknya satu ID model.';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n model';
-  }
-
-  @override
-  String get sameAsChat => 'Sama seperti obrolan';
-
-  @override
   String get keyInKeychain =>
       'Disimpan di keychain sistem, tidak pernah di cadangan.';
-
-  @override
-  String get extraVars => 'Variabel tambahan';
-
-  @override
-  String get extraVarsTip =>
-      'Satu KEY=VALUE per baris, untuk penyedia yang butuh lebih dari kunci (resource Azure, akun Cloudflare).';
 
   @override
   String providersCountFmt(int n) {
@@ -271,84 +178,10 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get thought => 'Pemikiran';
-
-  @override
-  String tokensFmt(String n) {
-    return '$n token';
-  }
-
-  @override
-  String allowToolFmt(String tool) {
-    return 'Izinkan $tool?';
-  }
-
-  @override
-  String get replyWaits => 'Balasan menunggu jawaban Anda.';
-
-  @override
-  String usableModelsFmt(int n, int m) {
-    return '$n tersedia · $m penyedia';
-  }
-
-  @override
-  String get searchModels => 'Cari model';
-
-  @override
   String get version => 'Versi';
 
   @override
-  String get endpoint => 'Endpoint';
-
-  @override
-  String get key => 'Kunci';
-
-  @override
   String get toolsAndMcp => 'Alat & MCP';
-
-  @override
-  String get useTools => 'Gunakan alat';
-
-  @override
-  String get useToolsTip =>
-      'Setiap panggilan bertanya dulu kecuali diizinkan di bawah';
-
-  @override
-  String get builtIn => 'Bawaan';
-
-  @override
-  String get allowedWithoutAsking => 'Diizinkan tanpa bertanya';
-
-  @override
-  String get mcpServers => 'Server MCP';
-
-  @override
-  String get addServer => 'Tambah server';
-
-  @override
-  String connectedFmt(int n) {
-    return 'Terhubung · $n alat';
-  }
-
-  @override
-  String get disconnected => 'Terputus';
-
-  @override
-  String get deleteKey => 'Hapus kunci';
-
-  @override
-  String moreFmt(int n) {
-    return '$n lainnya';
-  }
-
-  @override
-  String get back => 'Kembali';
-
-  @override
-  String get allProviders => 'Semua penyedia';
-
-  @override
-  String get searchProviders => 'Cari penyedia';
 
   @override
   String get backToChats => 'Kembali ke obrolan';
@@ -377,24 +210,6 @@ class AppLocalizationsId extends AppLocalizations {
   String daysFmt(int n) {
     return '$n hari';
   }
-
-  @override
-  String thoughtForFmt(String time) {
-    return 'Berpikir $time';
-  }
-
-  @override
-  String secondsFmt(String n) {
-    return '$n dtk';
-  }
-
-  @override
-  String minutesSecondsFmt(int m, int s) {
-    return '$m mnt $s dtk';
-  }
-
-  @override
-  String get attachment => 'Lampiran';
 
   @override
   String get sync => 'Sinkronisasi';
@@ -463,59 +278,4 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Pulihkan dari papan klip';
-
-  @override
-  String get memoryView => 'Baca memori';
-
-  @override
-  String get memorySearch => 'Cari di memori';
-
-  @override
-  String get memoryWrite => 'Simpan memori';
-
-  @override
-  String get memoryEdit => 'Edit memori';
-
-  @override
-  String get memoryDelete => 'Hapus memori';
-
-  @override
-  String get memoryMove => 'Pindahkan memori';
-
-  @override
-  String get memoryToolTip =>
-      'File yang disimpan model antar chat; dibaca dan ditulis tanpa bertanya';
-
-  @override
-  String charsFmt(int n) {
-    return '$n karakter';
-  }
-
-  @override
-  String alreadyExists(String path) {
-    return '$path sudah ada';
-  }
-
-  @override
-  String get unsavedChanges => 'Simpan perubahan sebelum keluar?';
-
-  @override
-  String get discard => 'Buang';
-
-  @override
-  String get chatSearch => 'Cari chat';
-
-  @override
-  String get chatRead => 'Baca chat';
-
-  @override
-  String attachUnsupported(String name) {
-    return 'Tidak dapat melampirkan $name: hanya gambar dan file teks hingga 512 KB';
-  }
-
-  @override
-  String get replyInterrupted => 'Balasan terputus';
-
-  @override
-  String get resumeReply => 'Lanjutkan';
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/core/llm/store.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 void main() {
   late SqlitePiSessionStore store;

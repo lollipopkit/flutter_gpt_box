@@ -1,11 +1,9 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/llm/chats.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/page/home/message.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 final _screenshot = ScreenshotController();
 
@@ -18,7 +16,7 @@ Future<void> shareChat(BuildContext context, String chatId) async {
   );
   if (type == null || !context.mounted) return;
 
-  final title = Stores.chat.fetch(chatId)?.title ?? l10n.untitled;
+  final title = LlmStores.chat.fetch(chatId)?.title ?? l10n.untitled;
   await Chats.borrow(chatId, (chat) async {
     if (type == 'md') {
       await Pfs.shareStr('# $title\n\n${Chats.toMarkdown(chat.entries.value)}', title: title);

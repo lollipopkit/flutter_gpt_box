@@ -4,30 +4,26 @@ import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_lib/generated/l10n/lib_l10n.dart';
-import 'package:fl_pi_llm/fl_pi_llm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/core/llm/chats.dart';
-import 'package:gpt_box/core/llm/llm.dart';
-import 'package:gpt_box/core/llm/store.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/home/chat_list.dart';
 import 'package:gpt_box/view/page/home/home.dart';
-import 'package:gpt_box/view/page/settings/custom_provider.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
-import 'package:gpt_box/view/widget/section_list.dart';
 
 import '../core/chats_test.dart' show mockServer, nativeLib;
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 Widget _app() => MaterialApp(
-  localizationsDelegates: const [LibLocalizations.delegate, ...AppLocalizations.localizationsDelegates],
+  localizationsDelegates: const [LibLocalizations.delegate, LlmLocalizations.delegate, ...AppLocalizations.localizationsDelegates],
   supportedLocales: AppLocalizations.supportedLocales,
   home: Builder(
     builder: (context) {
       context.setLibL10n();
+      context.setLlmL10n();
       l10n = AppLocalizations.of(context)!;
       return ToastHost(child: ResponsivePoints.builder(context, const HomePage()));
     },
@@ -54,7 +50,7 @@ void main() {
     SqlitePiSessionStore();
     Stores.setting.autoCheckUpdate.set(false);
     Stores.setting.genTitle.set(false);
-    Stores.llm.customProviders.set([
+    LlmStores.llm.customProviders.set([
       LlmCustomProvider(
         id: 'mock',
         name: 'Mock',
@@ -107,7 +103,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(SideBarTile, SettingsTab.providers.i18n));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(l10n.customProvider));
+    await tester.tap(find.text(llmL10n.customProvider));
     await tester.pumpAndSettle();
     expect(find.byType(CustomProviderPage), findsOneWidget);
 
@@ -132,7 +128,7 @@ void main() {
     }
     await tester.pumpAndSettle();
     expect(find.byType(CustomProviderPage), findsNothing);
-    final saved = Stores.llm.customProviders.get()!.last;
+    final saved = LlmStores.llm.customProviders.get()!.last;
     expect(saved.name, 'Local');
     expect((await tester.runAsync(() => _credentials.read(saved.id)))?.key, 'sk-local');
 

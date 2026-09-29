@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/core/llm/store.dart';
 import 'package:gpt_box/data/model/backup.dart';
-import 'package:gpt_box/data/model/chat.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 void main() {
   late SqlitePiSessionStore files;
@@ -22,7 +21,7 @@ void main() {
   /// A session file of chat [id], as pi names it.
   String sessionOf(String id) => '/sessions/-/1_$id.jsonl';
 
-  void chat(String id) => Stores.chat.put(ChatMeta(id: id, updatedAt: DateTime(2026)));
+  void chat(String id) => LlmStores.chat.put(ChatMeta(id: id, updatedAt: DateTime(2026)));
 
   Backup backupWith({
     Map<String, Object?> chats = const {},
@@ -34,7 +33,7 @@ void main() {
   /// Store data as a backup carries it: values, and their times.
   Map<String, Object?> data(Map<String, Object?> values, Map<String, int> ts) => {
     ...values,
-    Stores.chat.lastUpdateTsKey: ts,
+    LlmStores.chat.lastUpdateTsKey: ts,
   };
 
   group('format', () {
@@ -80,30 +79,30 @@ void main() {
   group('stores', () {
     test('a key only the backup has is added', () async {
       await backupWith(chats: data({'a': ChatMeta(id: 'a', updatedAt: DateTime(2026)).toJson()}, {'a': 5})).merge();
-      expect(Stores.chat.fetch('a'), isNotNull);
+      expect(LlmStores.chat.fetch('a'), isNotNull);
     });
 
     test('the newer write wins; force takes the backup', () async {
       chat('a');
-      final local = Stores.chat.lastUpdateTs!['a']!;
+      final local = LlmStores.chat.lastUpdateTs!['a']!;
       final old = data({'a': ChatMeta(id: 'a', title: 'old', updatedAt: DateTime(2020)).toJson()}, {'a': local - 1000});
       await backupWith(chats: old).merge();
-      expect(Stores.chat.fetch('a')!.title, isNull);
+      expect(LlmStores.chat.fetch('a')!.title, isNull);
       await backupWith(chats: old).merge(force: true);
-      expect(Stores.chat.fetch('a')!.title, 'old');
+      expect(LlmStores.chat.fetch('a')!.title, 'old');
     });
 
     test('a deletion there after the last write here deletes here', () async {
       chat('a');
-      final local = Stores.chat.lastUpdateTs!['a']!;
+      final local = LlmStores.chat.lastUpdateTs!['a']!;
       await backupWith(chats: data({}, {'a': local + 1000})).merge();
-      expect(Stores.chat.fetch('a'), isNull);
+      expect(LlmStores.chat.fetch('a'), isNull);
     });
 
     test('what only this device has is kept, even forced', () async {
       chat('mine');
       await backupWith(chats: data({}, {})).merge(force: true);
-      expect(Stores.chat.fetch('mine'), isNotNull);
+      expect(LlmStores.chat.fetch('mine'), isNotNull);
     });
 
     test("this device's own settings are never set by a backup", () async {
@@ -152,7 +151,7 @@ void main() {
     test('a chat deleted by the merge takes its session with it', () async {
       chat('a');
       await files.write(sessionOf('a'), 'a\n');
-      final local = Stores.chat.lastUpdateTs!['a']!;
+      final local = LlmStores.chat.lastUpdateTs!['a']!;
       await backupWith(chats: data({}, {'a': local + 1000})).merge();
       expect(await files.read(sessionOf('a')), isNull);
     });
@@ -167,7 +166,7 @@ void main() {
     test('are joined: remote-only entries after local ones, renumbered', () {
       final local = log([e('a', 1), e('l', 2, 'a'), '{"kind":"value","key":"leaf","seq":3}']);
       final remote = log([e('a', 1), e('r', 2, 'a'), e('r2', 3, 'r')]);
-      final joined = Backup.unionLogs(local, remote)!;
+      final joined = PiSessionLog.union(local, remote)!;
       final lines = joined.trim().split('\n');
       expect(lines.take(4), local.trim().split('\n'));
       expect(lines.skip(4).map((l) => json.decode(l)['id']), ['r', 'r2']);
@@ -177,15 +176,15 @@ void main() {
     test('settle: joining twice adds nothing', () {
       final a = log([e('a', 1), e('l', 2, 'a')]);
       final b = log([e('a', 1), e('r', 2, 'a')]);
-      final ab = Backup.unionLogs(a, b)!;
-      final ba = Backup.unionLogs(b, a)!;
-      expect(Backup.unionLogs(ab, ba), ab);
-      expect(Backup.unionLogs(ba, ab), ba);
+      final ab = PiSessionLog.union(a, b)!;
+      final ba = PiSessionLog.union(b, a)!;
+      expect(PiSessionLog.union(ab, ba), ab);
+      expect(PiSessionLog.union(ba, ab), ba);
     });
 
     test('of different sessions, or not v4, are not joined', () {
-      expect(Backup.unionLogs(log([e('a', 1)]), '{"kind":"header","id":"other"}\n'), isNull);
-      expect(Backup.unionLogs('a\nlocal\n', 'a\nremote\n'), isNull);
+      expect(PiSessionLog.union(log([e('a', 1)]), '{"kind":"header","id":"other"}\n'), isNull);
+      expect(PiSessionLog.union('a\nlocal\n', 'a\nremote\n'), isNull);
     });
   });
 

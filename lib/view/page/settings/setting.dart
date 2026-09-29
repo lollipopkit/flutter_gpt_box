@@ -1,25 +1,18 @@
-import 'dart:async';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/llm/chats.dart';
-import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/core/util/update.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/github_id.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/data/store/memory.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
-import 'package:gpt_box/view/page/settings/providers.dart';
-import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:gpt_box/view/widget/transitions.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
-part 'mcp.dart';
-part 'memory.dart';
 part 'about.dart';
 part 'def.dart';
 
@@ -267,8 +260,8 @@ final class AppSettingsPage extends StatelessWidget {
               trailing: StoreSwitch(prop: _set.confrimDel),
             ),
             _trashDays(context),
-            Stores.chat.changes.listen(() {
-              final n = Stores.chat.all(trashed: true).length;
+            LlmStores.chat.changes.listen(() {
+              final n = LlmStores.chat.all(trashed: true).length;
               return SettingsRow(
                 icon: Icons.restore_from_trash_outlined,
                 title: l10n.trash,
@@ -409,8 +402,8 @@ class TrashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: Text(l10n.trash)),
-      body: Stores.chat.changes.listen(() {
-        final chats = Stores.chat.all(trashed: true);
+      body: LlmStores.chat.changes.listen(() {
+        final chats = LlmStores.chat.all(trashed: true);
         if (chats.isEmpty) return EmptyPane(icon: Icons.delete_outline, label: libL10n.empty);
         return SectionList(
           children: [

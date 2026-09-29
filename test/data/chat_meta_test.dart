@@ -1,6 +1,5 @@
-import 'package:fl_pi_llm/fl_pi_llm.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/data/model/chat.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 void main() {
   test('ChatMeta survives JSON', () {

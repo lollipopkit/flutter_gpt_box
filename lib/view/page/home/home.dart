@@ -5,20 +5,16 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gpt_box/core/llm/chats.dart';
-import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/core/util/update.dart';
 import 'package:gpt_box/core/util/url.dart';
-import 'package:gpt_box/data/model/chat.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/chat_list.dart';
 import 'package:gpt_box/view/page/home/chat_view.dart';
-import 'package:gpt_box/view/page/home/composer.dart';
 import 'package:gpt_box/view/page/home/share.dart';
-import 'package:gpt_box/view/page/settings/providers.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 part 'desktop.dart';
 part 'url_scheme.dart';
@@ -74,7 +70,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) async {
-    Chats.current.value ??= Stores.chat.all().firstOrNull?.id;
+    Chats.current.value ??= LlmStores.chat.all().firstOrNull?.id;
     unawaited(Chats.purgeTrash());
     _initLinks();
     if (Stores.setting.autoCheckUpdate.get()) {
@@ -124,7 +120,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   }
 
   void _step(int delta) {
-    final chats = Stores.chat.all();
+    final chats = LlmStores.chat.all();
     if (chats.isEmpty) return;
     final i = chats.indexWhere((c) => c.id == Chats.current.value);
     final next = (i < 0 ? 0 : i + delta).clamp(0, chats.length - 1);

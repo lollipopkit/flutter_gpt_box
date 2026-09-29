@@ -4,15 +4,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
-import 'package:fl_pi_llm/fl_pi_llm.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/core/llm/chats.dart';
-import 'package:gpt_box/core/llm/llm.dart';
-import 'package:gpt_box/core/llm/store.dart';
-import 'package:gpt_box/core/util/tool_func/tool.dart';
-import 'package:gpt_box/data/model/backup.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/data/store/memory.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 /// Streams `Echo: <last user text>` one word at a time.
 Future<(HttpServer, List<Map<String, Object?>>)> mockServer() async {
@@ -99,7 +93,7 @@ void main() {
     SqliteDb.openInMemory();
     await Stores.init();
     SqlitePiSessionStore();
-    Stores.llm.customProviders.set([
+    LlmStores.llm.customProviders.set([
       LlmCustomProvider(
         id: 'mock',
         name: 'Mock',
@@ -144,7 +138,7 @@ void main() {
     expect(chat.entries.value.last.message!.text.trim(), 'Echo: hello there');
     expect(seenText.length, greaterThan(1), reason: 'the reply should arrive in pieces');
     expect(chat.running.value, isFalse);
-    expect(Stores.chat.fetch(id)!.updatedAt.isAfter(DateTime.now().subtract(const Duration(minutes: 1))), isTrue);
+    expect(LlmStores.chat.fetch(id)!.updatedAt.isAfter(DateTime.now().subtract(const Duration(minutes: 1))), isTrue);
 
     // Closed and reopened, the conversation is still there.
     await Chats.close(id);
@@ -196,20 +190,20 @@ void main() {
     final id = Chats.create();
     await Chats.send(id, 'bye');
     await Chats.trash(id);
-    expect(Stores.chat.all().map((m) => m.id), isNot(contains(id)));
-    expect(Stores.chat.all(trashed: true).map((m) => m.id), contains(id));
+    expect(LlmStores.chat.all().map((m) => m.id), isNot(contains(id)));
+    expect(LlmStores.chat.all(trashed: true).map((m) => m.id), contains(id));
     Chats.restore(id);
-    expect(Stores.chat.all().map((m) => m.id), contains(id));
+    expect(LlmStores.chat.all().map((m) => m.id), contains(id));
     await Chats.deleteForever(id);
-    expect(Stores.chat.fetch(id), isNull);
+    expect(LlmStores.chat.fetch(id), isNull);
     expect((await Llm.rt.sessions()).map((s) => s.id), isNot(contains(id)));
   });
 
   test('the system prompt carries the memory index, and reaches open chats', () async {
     final id = Chats.create();
     await Chats.open(id);
-    Stores.llm.systemPrompt.set('Be brief.');
-    Stores.memory.write(MemoryStore.index, '- likes tea');
+    LlmStores.llm.systemPrompt.set('Be brief.');
+    LlmStores.memory.write(MemoryStore.index, '- likes tea');
     await Chats.reconfigure();
     await Chats.send(id, 'hi');
     final sys = jsonEncode(seen.last['messages']);
@@ -218,13 +212,13 @@ void main() {
   });
 
   test('the model saves to memory without asking', () async {
-    Stores.mcp.enabled.set(true);
-    addTearDown(() => Stores.mcp.enabled.set(false));
+    LlmStores.tool.enabled.set(true);
+    addTearDown(() => LlmStores.tool.enabled.set(false));
     final id = Chats.create();
     await Chats.open(id);
     await Chats.reconfigure();
     await Chats.send(id, 'remember likes green tea');
-    expect(Stores.memory.read('user.md'), 'likes green tea');
+    expect(LlmStores.memory.read('user.md'), 'likes green tea');
     expect(Chats.openOf(id)!.approvals.value, isEmpty);
   });
 
@@ -268,7 +262,7 @@ void main() {
     await Chats.rewrite(id, () => files.write(path, base));
     await Chats.send(id, 'there');
     final remote = (await files.read(path))!;
-    final joined = Backup.unionLogs(local, remote);
+    final joined = PiSessionLog.union(local, remote);
     expect(joined, isNotNull);
     await Chats.rewrite(id, () => files.write(path, joined!));
     final chat = Chats.openOf(id)!;
@@ -316,11 +310,11 @@ void main() {
   });
 
   test('switched off, the memory tools and prompt are gone', () {
-    Stores.mcp.enabled.set(true);
-    Stores.mcp.disabledTools.set([TfMemory.groupName]);
+    LlmStores.tool.enabled.set(true);
+    LlmStores.tool.disabledTools.set([TfMemory.groupName]);
     addTearDown(() {
-      Stores.mcp.enabled.set(false);
-      Stores.mcp.disabledTools.set([]);
+      LlmStores.tool.enabled.set(false);
+      LlmStores.tool.disabledTools.set([]);
     });
     expect(Tools.enabled.map((t) => t.name), isNot(contains('memory_view')));
     expect(Chats.systemPromptFor(null), isNot(contains('# Memory')));

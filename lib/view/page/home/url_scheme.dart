@@ -24,7 +24,7 @@ extension on _HomePageState {
         }
       case AppLink.openChatPath:
         final id = p['chatId'] ?? _byTitle(p['title'])?.id;
-        if (id != null && Stores.chat.fetch(id) != null) Chats.current.value = id;
+        if (id != null && LlmStores.chat.fetch(id) != null) Chats.current.value = id;
       case AppLink.searchPath:
         _search();
       case AppLink.shareChatPath:
@@ -55,6 +55,6 @@ extension on _HomePageState {
 
   ChatMeta? _byTitle(String? title) {
     if (title == null) return null;
-    return Stores.chat.all().firstWhereOrNull((m) => m.title?.contains(title) ?? false);
+    return LlmStores.chat.all().firstWhereOrNull((m) => m.title?.contains(title) ?? false);
   }
 }

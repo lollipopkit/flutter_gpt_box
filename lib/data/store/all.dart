@@ -1,18 +1,13 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:gpt_box/data/store/chat.dart';
-import 'package:gpt_box/data/store/llm.dart';
-import 'package:gpt_box/data/store/memory.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 import 'package:gpt_box/data/store/setting.dart';
-import 'package:gpt_box/data/store/tool.dart';
 
+/// The app's settings; the chats, providers, tools and memory are
+/// [LlmStores], fl_pi_llm_ui's.
 abstract final class Stores {
   static final setting = SettingStore.instance;
-  static final chat = ChatStore.instance;
-  static final llm = LlmStore.instance;
-  static final mcp = McpStore.instance;
-  static final memory = MemoryStore.instance;
 
-  static final List<SqliteStore> all = [setting, chat, llm, mcp, memory];
+  static final List<SqliteStore> all = [setting, ...LlmStores.all];
 
   /// Opens the shared database before any store reads it.
   static Future<void> init() async {
@@ -23,12 +18,14 @@ abstract final class Stores {
     if (setting.keys().contains('joinBeta')) setting.remove('joinBeta');
   }
 
-  /// TODO: remove with [McpStore.memories], once no device has the old list.
-  /// The list of things to remember, from before the memory was files: into
-  /// `notes.md`, listed in the index.
+  /// TODO: remove once no device has the old list: the things to remember,
+  /// from before the memory was files, into `notes.md`, listed in the index.
   static void _migrateMemories() {
-    final old = mcp.memories.get();
+    const key = 'memories';
+    final tool = LlmStores.tool;
+    final old = [...?tool.get<List>(key)?.whereType<String>()];
     if (old.isEmpty) return;
+    final memory = LlmStores.memory;
     const file = 'notes.md';
     final notes = memory.read(file);
     memory.write(file, [if (notes != null && notes.isNotEmpty) notes.trimRight(), ...old.map((m) => '- $m')].join('\n'));
@@ -39,6 +36,6 @@ abstract final class Stores {
         [if (index.isNotEmpty) index.trimRight(), '- [Notes]($file) — things the user asked to remember'].join('\n'),
       );
     }
-    mcp.memories.remove();
+    tool.remove(key);
   }
 }

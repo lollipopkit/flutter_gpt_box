@@ -1,5 +1,6 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_lib/generated/l10n/lib_l10n.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/res/build_data.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: const [
         ...AppLocalizations.localizationsDelegates,
         LibLocalizations.delegate,
+        LlmLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       localeListResolutionCallback: LocaleUtil.resolve,
@@ -51,6 +53,7 @@ class MyApp extends StatelessWidget {
           final l10n_ = AppLocalizations.of(context);
           if (l10n_ != null) l10n = l10n_;
           context.setLibL10n();
+          context.setLlmL10n();
           UIs.primaryColor = Theme.of(context).colorScheme.primary;
 
           // The frame goes on each page that fills the window, as fl_lib's

@@ -54,16 +54,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get genChatTitle => 'Gerar título do chat';
 
   @override
-  String get history => 'Histórico';
-
-  @override
-  String get historyToolTip =>
-      'Pesquisar e ler seus outros chats, sem perguntar';
-
-  @override
-  String get httpToolTip => 'Buscar páginas web e APIs';
-
-  @override
   String get image => 'Imagem';
 
   @override
@@ -82,15 +72,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get manual => 'Manual';
-
-  @override
-  String get memory => 'Memória';
-
-  @override
-  String get message => 'Mensagem';
-
-  @override
-  String get model => 'Modelo';
 
   @override
   String get more => 'Mais';
@@ -142,12 +123,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get themeMode => 'Modo de tema';
 
   @override
-  String get tool => 'Ferramenta';
-
-  @override
-  String get toolHttpReqName => 'Solicitação HTTP';
-
-  @override
   String get untitled => 'Sem título';
 
   @override
@@ -157,25 +132,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get user => 'Usuário';
 
   @override
-  String get deny => 'Negar';
-
-  @override
-  String get allow => 'Permitir';
-
-  @override
-  String get allowAlways => 'Sempre permitir';
-
-  @override
   String get trash => 'Lixeira';
 
   @override
   String get startChatTip => 'Escolha um modelo abaixo e diga algo.';
-
-  @override
-  String get camera => 'Câmera';
-
-  @override
-  String get send => 'Enviar';
 
   @override
   String get noProviderKey =>
@@ -185,68 +145,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get providers => 'Provedores';
 
   @override
-  String get regenerate => 'Gerar novamente';
-
-  @override
-  String get compacted => 'As mensagens anteriores foram resumidas';
-
-  @override
-  String get favorite => 'Favoritos';
-
-  @override
-  String get defaultModel => 'Modelo padrão';
-
-  @override
-  String get titleModel => 'Modelo para títulos';
-
-  @override
-  String get systemPrompt => 'Prompt do sistema';
-
-  @override
-  String get compaction => 'Compactar conversas longas';
-
-  @override
-  String get compactionTip =>
-      'Quando uma conversa não cabe mais no contexto do modelo, as mensagens anteriores são resumidas para o modelo. Você continua vendo todas.';
-
-  @override
-  String get customProvider => 'Provedor personalizado';
-
-  @override
-  String get refreshModels => 'Atualizar modelos';
-
-  @override
-  String get modelsListedTip =>
-      'Opcional: a lista /models do endpoint é obtida. Adicione os IDs que não estiverem nela.';
-
-  @override
-  String get modelsRequired =>
-      'Esta API não consegue listar seus modelos: informe pelo menos um ID de modelo.';
-
-  @override
-  String modelsCountFmt(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n modelos',
-      one: '1 modelo',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String get sameAsChat => 'Igual à conversa';
-
-  @override
   String get keyInKeychain =>
       'Guardada no chaveiro do sistema, nunca nos backups.';
-
-  @override
-  String get extraVars => 'Variáveis extras';
-
-  @override
-  String get extraVarsTip =>
-      'Uma KEY=VALUE por linha, para provedores que precisam de mais que uma chave (recurso do Azure, conta do Cloudflare).';
 
   @override
   String providersCountFmt(int n) {
@@ -290,84 +190,10 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get thought => 'Raciocínio';
-
-  @override
-  String tokensFmt(String n) {
-    return '$n tokens';
-  }
-
-  @override
-  String allowToolFmt(String tool) {
-    return 'Permitir $tool?';
-  }
-
-  @override
-  String get replyWaits => 'A resposta aguarda sua decisão.';
-
-  @override
-  String usableModelsFmt(int n, int m) {
-    return '$n disponíveis · $m provedores';
-  }
-
-  @override
-  String get searchModels => 'Buscar modelos';
-
-  @override
   String get version => 'Versão';
 
   @override
-  String get endpoint => 'Endpoint';
-
-  @override
-  String get key => 'Chave';
-
-  @override
   String get toolsAndMcp => 'Ferramentas e MCP';
-
-  @override
-  String get useTools => 'Usar ferramentas';
-
-  @override
-  String get useToolsTip =>
-      'Cada chamada pergunta antes, a menos que esteja permitida abaixo';
-
-  @override
-  String get builtIn => 'Integradas';
-
-  @override
-  String get allowedWithoutAsking => 'Permitidas sem perguntar';
-
-  @override
-  String get mcpServers => 'Servidores MCP';
-
-  @override
-  String get addServer => 'Adicionar servidor';
-
-  @override
-  String connectedFmt(int n) {
-    return 'Conectado · $n ferramentas';
-  }
-
-  @override
-  String get disconnected => 'Desconectado';
-
-  @override
-  String get deleteKey => 'Excluir chave';
-
-  @override
-  String moreFmt(int n) {
-    return 'mais $n';
-  }
-
-  @override
-  String get back => 'Voltar';
-
-  @override
-  String get allProviders => 'Todos os provedores';
-
-  @override
-  String get searchProviders => 'Buscar provedores';
 
   @override
   String get backToChats => 'Voltar às conversas';
@@ -408,24 +234,6 @@ class AppLocalizationsPt extends AppLocalizations {
     );
     return '$_temp0';
   }
-
-  @override
-  String thoughtForFmt(String time) {
-    return 'Pensou por $time';
-  }
-
-  @override
-  String secondsFmt(String n) {
-    return '$n s';
-  }
-
-  @override
-  String minutesSecondsFmt(int m, int s) {
-    return '$m min $s s';
-  }
-
-  @override
-  String get attachment => 'Anexo';
 
   @override
   String get sync => 'Sincronização';
@@ -493,65 +301,4 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Restaurar da área de transferência';
-
-  @override
-  String get memoryView => 'Ler memória';
-
-  @override
-  String get memorySearch => 'Pesquisar na memória';
-
-  @override
-  String get memoryWrite => 'Guardar memória';
-
-  @override
-  String get memoryEdit => 'Editar memória';
-
-  @override
-  String get memoryDelete => 'Excluir memória';
-
-  @override
-  String get memoryMove => 'Mover memória';
-
-  @override
-  String get memoryToolTip =>
-      'Arquivos que o modelo mantém entre chats; lê e escreve sem perguntar';
-
-  @override
-  String charsFmt(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n caracteres',
-      one: '1 caractere',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String alreadyExists(String path) {
-    return '$path já existe';
-  }
-
-  @override
-  String get unsavedChanges => 'Salvar as alterações antes de sair?';
-
-  @override
-  String get discard => 'Descartar';
-
-  @override
-  String get chatSearch => 'Pesquisar chats';
-
-  @override
-  String get chatRead => 'Ler chat';
-
-  @override
-  String attachUnsupported(String name) {
-    return 'Não é possível anexar $name: apenas imagens e arquivos de texto até 512 KB';
-  }
-
-  @override
-  String get replyInterrupted => 'A resposta foi interrompida';
-
-  @override
-  String get resumeReply => 'Continuar';
 }

@@ -1,10 +1,8 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:fl_pi_llm/fl_pi_llm.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/model/backup.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/data/store/memory.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 void main() {
   late MemoryStore mem;
@@ -12,7 +10,7 @@ void main() {
   setUp(() async {
     SqliteDb.openInMemory();
     await Stores.init();
-    mem = Stores.memory;
+    mem = LlmStores.memory;
   });
   tearDown(() => SqliteDb.close());
 

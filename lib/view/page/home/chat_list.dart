@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/core/llm/chats.dart';
-import 'package:gpt_box/core/llm/llm.dart';
-import 'package:gpt_box/data/model/chat.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/share.dart';
 import 'package:intl/intl.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 /// The sidebar while chatting: the app's name and a new chat, search, the
 /// chats grouped by day, and the settings at the foot.
@@ -56,13 +54,13 @@ class _ChatSidebarState extends State<ChatSidebar> {
       ChatSidebar._searchPending = false;
       WidgetsBinding.instance.addPostFrameCallback((_) => _queryFocus.requestFocus());
     }
-    Stores.chat.changes.addListener(_searchSoon);
+    LlmStores.chat.changes.addListener(_searchSoon);
   }
 
   @override
   void dispose() {
     if (ChatSidebar._mounted == this) ChatSidebar._mounted = null;
-    Stores.chat.changes.removeListener(_searchSoon);
+    LlmStores.chat.changes.removeListener(_searchSoon);
     _debounce?.cancel();
     _query.dispose();
     _queryFocus.dispose();
@@ -121,11 +119,11 @@ class _ChatSidebarState extends State<ChatSidebar> {
         ),
         Expanded(
           child: ListenableBuilder(
-            listenable: Listenable.merge([Stores.chat.changes, Chats.current, _found]),
+            listenable: Listenable.merge([LlmStores.chat.changes, Chats.current, _found]),
             builder: (context, _) {
               final found = _found.value;
               final q = found != null;
-              final chats = found ?? Stores.chat.all();
+              final chats = found ?? LlmStores.chat.all();
               if (chats.isEmpty) return Center(child: Text(libL10n.empty, style: UIs.textGrey));
               final rows = <Widget>[];
               String? group;

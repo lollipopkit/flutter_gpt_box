@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
 import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/res/build_data.dart';
-import 'package:gpt_box/core/llm/chats.dart';
-import 'package:gpt_box/core/llm/llm.dart';
-import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/page/settings/setting.dart';
 import 'package:logging/logging.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 Future<void> main() async {
   await _runInZone(() async {
@@ -88,13 +87,34 @@ Future<void> _initWindow() async {
 }
 
 Future<void> _initAppComponents() async {
+  _configLlmUi();
   await Llm.init();
   // Open chats follow the tool settings and the MCP servers.
-  Stores.mcp.watch().listen((_) => Chats.reconfigureSoon());
+  LlmStores.tool.watch().listen((_) => Chats.reconfigureSoon());
   McpTools.changes.addListener(Chats.reconfigureSoon);
-  if (Stores.mcp.enabled.get()) unawaited(McpTools.connectStored());
+  if (LlmStores.tool.enabled.get()) unawaited(McpTools.connectStored());
 
   BakSync.instance.init();
   // Only when sync is on, and never without a password: see BakSync.
   BakSync.instance.syncSoon();
+}
+
+/// What fl_pi_llm_ui takes from this app: its name, its settings, and where
+/// the provider settings are.
+void _configLlmUi() {
+  final set = Stores.setting;
+  LlmUi.appName = BuildData.name;
+  LlmUi.appVersion = '1.0.${BuildData.build}';
+  LlmUi.genTitle = set.genTitle.get;
+  LlmUi.trashDays = set.trashDays.get;
+  LlmUi.softWrap = set.softWrap.listenable();
+  LlmUi.scrollBottom = set.scrollBottom.get;
+  LlmUi.scrollAfterSwitch = set.scrollAfterSwitch.get;
+  LlmUi.showProvider = (_, id) {
+    // Beside the provider list, in the settings of a wide window.
+    if (!SettingsNav.inShell) return false;
+    SettingsNav.provider.value = id;
+    return true;
+  };
+  LlmUi.openProviders = (context) => SettingsNav.open(context, SettingsTab.providers);
 }

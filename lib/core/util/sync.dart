@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 import 'package:gpt_box/data/model/backup.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
@@ -67,7 +68,7 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
     _watches
       ..clear()
       ..addAll([
-        for (final s in [Stores.chat.watch(), Stores.llm.watch(), Stores.mcp.watch(), Stores.memory.watch()]) s.listen((_) => syncSoon()),
+        for (final s in [LlmStores.chat.watch(), LlmStores.llm.watch(), LlmStores.tool.watch(), LlmStores.memory.watch()]) s.listen((_) => syncSoon()),
         Stores.setting.watch().where((k) => !SettingStore.deviceLocalKeys.contains(k)).listen((_) => syncSoon()),
       ]);
   }
