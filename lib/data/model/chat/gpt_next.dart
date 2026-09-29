@@ -53,22 +53,21 @@ abstract final class GPTNextConvertor {
 
   /// 2023/11/6 15:57:22
   static DateTime? parseDate(String date) {
-    final parts = date.split(' ');
-    final dateParts = parts[0].split('/');
-    final timeParts = parts[1].split(':');
+    final parts = date.trim().split(' ');
+    if (parts.length != 2) return null;
+    final dateParts = parts[0].split('/').map(int.tryParse).toList();
+    final timeParts = parts[1].split(':').map(int.tryParse).toList();
+    if (dateParts.length != 3 || timeParts.length != 3) return null;
+    if (dateParts.contains(null) || timeParts.contains(null)) return null;
 
-    if (dateParts.length != 3 || timeParts.length != 3) {
-      return null;
-    }
-
-    final year = int.parse(dateParts[0]);
-    final month = int.parse(dateParts[1]);
-    final day = int.parse(dateParts[2]);
-    final hour = int.parse(timeParts[0]);
-    final minute = int.parse(timeParts[1]);
-    final second = int.parse(timeParts[2]);
-
-    return DateTime(year, month, day, hour, minute, second);
+    return DateTime(
+      dateParts[0]!,
+      dateParts[1]!,
+      dateParts[2]!,
+      timeParts[0]!,
+      timeParts[1]!,
+      timeParts[2]!,
+    );
   }
 
   static ChatConfig parseConfig(Map map, ChatConfig cfg) {

@@ -7,7 +7,6 @@ import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 part 'intro.dart';
 
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
     final locale = Stores.setting.locale.get();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'GPT Box',
+      title: BuildData.name,
       locale: locale.toLocale,
       localizationsDelegates: const [
         ...AppLocalizations.localizationsDelegates,
@@ -45,29 +44,31 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         colorSchemeSeed: UIs.colorSeed,
       ).toAmoled.fixWindowsFont,
-      builder: (context, child) => ResponsiveBreakpoints.builder(
-        child: child ?? UIs.placeholder,
-        breakpoints: const [
-          Breakpoint(start: 0, end: 450, name: MOBILE),
-          Breakpoint(start: 451, end: 800, name: TABLET),
-          Breakpoint(start: 801, end: 1920, name: DESKTOP),
-        ],
-      ),
-      home: VirtualWindowFrame(
-        child: Builder(
-          builder: (context) {
-            final l10n_ = AppLocalizations.of(context);
-            if (l10n_ != null) l10n = l10n_;
-            context.setLibL10n();
-            UIs.primaryColor = Theme.of(context).colorScheme.primary;
-
-            final intros = _IntroPage.builders;
-            if (intros.isNotEmpty) {
-              return _IntroPage(intros);
-            }
-            return const HomePage();
-          },
+      // Outside the breakpoints builder: a toast is sized against the window.
+      //
+      // The frame wraps the navigator rather than `home`, so every route —
+      // pushed pages, and the home page the intro replaces itself with — sits
+      // below the caption row instead of under the window's buttons.
+      builder: (context, child) => ToastHost(
+        child: VirtualWindowFrame(
+          title: BuildData.name,
+          child: ResponsivePoints.builder(context, child),
         ),
+      ),
+      navigatorObservers: [AppRouteObserver.instance],
+      home: Builder(
+        builder: (context) {
+          final l10n_ = AppLocalizations.of(context);
+          if (l10n_ != null) l10n = l10n_;
+          context.setLibL10n();
+          UIs.primaryColor = Theme.of(context).colorScheme.primary;
+
+          final intros = _IntroPage.builders;
+          if (intros.isNotEmpty) {
+            return _IntroPage(intros);
+          }
+          return const HomePage();
+        },
       ),
     );
   }

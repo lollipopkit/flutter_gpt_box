@@ -2,7 +2,7 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/data/store/all.dart';
 
-final class TrashStore extends HiveStore {
+final class TrashStore extends SqliteStore {
   TrashStore._() : super('trash');
 
   static final instance = TrashStore._();
@@ -51,19 +51,13 @@ final class TrashStore extends HiveStore {
     final map = <String, ChatHistory>{};
     var errCount = 0;
     for (final key in keys()) {
-      if (key.startsWith(historyKeyPrefix)) {
-        final item = box.get(key);
-        if (item != null) {
-          if (item is ChatHistory) {
-            map[key] = item;
-          } else if (item is Map) {
-            try {
-              map[key] = ChatHistory.fromJson(item.cast<String, dynamic>());
-            } catch (e) {
-              errCount++;
-            }
-          }
-        }
+      if (!key.startsWith(historyKeyPrefix)) continue;
+      final item = get<Object>(key);
+      if (item is! Map) continue;
+      try {
+        map[key] = ChatHistory.fromJson(item.cast<String, dynamic>());
+      } catch (e) {
+        errCount++;
       }
     }
 
@@ -82,16 +76,9 @@ final class TrashStore extends HiveStore {
 
     final now = DateTime.now();
     final ts = now.subtract(Duration(days: days)).millisecondsSinceEpoch;
-    for (final key in keys()) {
-      if (key.startsWith(historyKeyPrefix)) {
-        final item = box.get(key);
-        if (item is ChatHistory) {
-          final lastTimeTs = item.lastTime?.millisecondsSinceEpoch ?? 0;
-          if (lastTimeTs < ts) {
-            removeHistory(key, notify: false);
-          }
-        }
-      }
+    for (final MapEntry(:key, :value) in _histories.entries) {
+      final lastTimeTs = value.lastTime?.millisecondsSinceEpoch ?? 0;
+      if (lastTimeTs < ts) removeHistory(key, notify: false);
     }
 
     if (refresh) historiesVN.value = _histories;

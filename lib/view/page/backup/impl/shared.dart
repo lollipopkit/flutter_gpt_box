@@ -26,7 +26,7 @@ void _askConfirm(BuildContext context, List<ChatHistory> chats) {
     actions: [
       TextButton(
         onPressed: () async {
-          final keys = Stores.history.box.keys;
+          final keys = Stores.history.keys();
           for (final chat in chats) {
             if (skipSameTitle && keys.contains(chat.id)) continue;
             Stores.history.put(chat);

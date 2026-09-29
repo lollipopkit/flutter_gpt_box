@@ -32,13 +32,15 @@ $userCotentLocator''';
     title = title.replaceAll(_punctionsRm, '');
     title = title.replaceAll('\n', ' ');
 
-    if (title.length > _maxLen) {
-      title = title.substring(0, _maxLen);
-    }
-
+    // Before truncating, or a cut through the suffix leaves a fragment the
+    // pattern no longer matches.
     final claudeMatch = claudeEndReg.firstMatch(title);
     if (claudeMatch != null) {
       title = title.substring(0, claudeMatch.start);
+    }
+
+    if (title.length > _maxLen) {
+      title = title.substring(0, _maxLen);
     }
 
     return title;

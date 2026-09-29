@@ -7,7 +7,7 @@ bool _validChatCfg(BuildContext context) {
   if (urlEmpty && config.key.isEmpty) {
     final msg = l10n.emptyFields('${l10n.secretKey} | Api Url');
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return false;
   }
   return true;
@@ -40,7 +40,7 @@ Future<Iterable<ChatCompletionMessage>> _historyCarried(
   // #101
   if (workingChat.settings?.headTailMode == true) {
     final first = await workingChat.items.firstOrNull?.toOpenAI();
-    return [if (prompt != null) prompt, if (first != null) first];
+    return [?prompt, ?first];
   }
 
   var count = 0;
@@ -77,7 +77,7 @@ void _onCreateRequest(BuildContext context, String chatId) async {
   // if (notSupport) {
   //   final msg = l10n.notSupported('Web ${chatType.name}');
   //   Loggers.app.warning(msg);
-  //   context.showSnackBar(msg);
+  //   Toast.show(msg);
   //   return;
   // }
 
@@ -110,7 +110,7 @@ Future<void> _onCreateText(
   if (workingChat == null) {
     final msg = 'Chat($chatId) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return;
   }
   final config = Cfg.current;
@@ -281,7 +281,7 @@ Future<void> _onCreateText(
 //   if (isWeb) {
 //     final msg = l10n.notSupported('TTS Web');
 //     Loggers.app.warning(msg);
-//     context.showSnackBar(msg);
+//     Toast.show(msg);
 //     return;
 //   }
 //   if (_inputCtrl.text.isEmpty) return;
@@ -290,7 +290,7 @@ Future<void> _onCreateText(
 //   if (workingChat == null) {
 //     final msg = 'Chat($chatId) not found';
 //     Loggers.app.warning(msg);
-//     context.showSnackBar(msg);
+//     Toast.show(msg);
 //     return;
 //   }
 //   final config = OpenAICfg.current;
@@ -345,7 +345,7 @@ Future<void> _onCreateImg(
   if (workingChat == null) {
     final msg = 'Chat($chatId) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return;
   }
 
@@ -361,7 +361,7 @@ Future<void> _onCreateImg(
   if (imgModel == null) {
     final msg = l10n.emptyFields('Image Model');
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return;
   }
 
@@ -386,7 +386,7 @@ Future<void> _onCreateImg(
     if (imgs.isEmpty) {
       const msg = 'Create image: empty resp';
       Loggers.app.warning(msg);
-      context.showSnackBar(msg);
+      Toast.show(msg);
       return;
     }
 
@@ -420,7 +420,7 @@ Future<void> _onCreateImg(
 //   if (imgModel == null) {
 //     final msg = l10n.emptyFields('Image Model');
 //     Loggers.app.warning(msg);
-//     context.showSnackBar(msg);
+//     Toast.show(msg);
 //     return;
 //   }
 
@@ -433,14 +433,14 @@ Future<void> _onCreateImg(
 //   final imagePath = files.firstOrNull;
 //   if (imagePath == null) {
 //     Loggers.app.warning('Image edit requires an image file.');
-//     context.showSnackBar(l10n.needSelectAnImage);
+//     Toast.show(l10n.needSelectAnImage);
 //     return;
 //   }
 //   final workingChat = _allHistories[chatId];
 //   if (workingChat == null) {
 //     final msg = 'Chat($chatId) not found';
 //     Loggers.app.warning(msg);
-//     context.showSnackBar(msg);
+//     Toast.show(msg);
 //     return;
 //   }
 
@@ -504,7 +504,7 @@ Future<void> _onCreateImg(
 //   if (isWeb) {
 //     final msg = l10n.notSupported('Audio to Text Web');
 //     Loggers.app.warning(msg);
-//     context.showSnackBar(msg);
+//     Toast.show(msg);
 //     return;
 //   }
 //   final val = _filePicked.value;
@@ -532,7 +532,7 @@ Future<void> _onCreateImg(
 //     if (text.isEmpty) {
 //       const msg = 'Audio to Text: empty resp';
 //       Loggers.app.warning(msg);
-//       context.showSnackBar(msg);
+//       Toast.show(msg);
 //       return;
 //     }
 //     workingChat.items.add(ChatHistoryItem.single(
@@ -558,7 +558,7 @@ Future<Completer<void>?> _genChatTitle(
   if (entity == null) {
     final msg = 'Gen Chat($chatId) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return null;
   }
   if (entity.items.where((e) => e.role.isUser).length > 1) return null;
@@ -629,7 +629,7 @@ void _onReplay({
   if (chatHistory == null) {
     final msg = 'Replay Chat($chatId) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return;
   }
 
@@ -638,7 +638,7 @@ void _onReplay({
   if (replayMsgIdx == -1) {
     final msg = 'Replay Chat($chatId) item($item) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar('${libL10n.fail}: $msg');
+    Toast.show('${libL10n.fail}: $msg');
     return;
   }
   chatHistory.items.removeRange(replayMsgIdx, chatHistory.items.length);

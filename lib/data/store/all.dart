@@ -12,7 +12,7 @@ abstract final class Stores {
   static final mcp = McpStore.instance;
   static final trash = TrashStore.instance;
 
-  static final List<HiveStore> all = [
+  static final List<SqliteStore> all = [
     setting,
     history,
     config,
@@ -20,7 +20,9 @@ abstract final class Stores {
     trash,
   ];
 
+  /// Opens the shared database before any store reads it.
   static Future<void> init() async {
+    await SqliteStore.openDatabase();
     await Future.wait(all.map((e) => e.init()));
   }
 

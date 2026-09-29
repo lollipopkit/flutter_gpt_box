@@ -2,8 +2,8 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 import 'package:gpt_box/view/widget/code.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter_markdown_plus_latex/flutter_markdown_plus_latex.dart';
 
 final class ChatRoleTitle extends StatelessWidget {
   final ChatRole role;
@@ -127,7 +127,9 @@ final class ChatHistoryContentView extends StatelessWidget {
         key: ValueKey(content.hashCode),
         imageUrl: content.raw,
         heroTag: content.hashCode.toString(),
-        onRet: (ret) => _onImgRet(ret, content.raw),
+        onRet: (ret) {
+          if (ret.isDeleted) content.deleteFile();
+        },
         size: cons.maxWidth / 3,
       );
     });
@@ -161,13 +163,5 @@ final class ChatHistoryContentView extends StatelessWidget {
       // User experience is better when this is false.
       selectable: isDesktop,
     );
-  }
-}
-
-extension on ChatHistoryContentView {
-  void _onImgRet(ImagePageRet ret, String raw) async {
-    if (ret.isDeleted) {
-      FileApi.delete([raw]);
-    }
   }
 }

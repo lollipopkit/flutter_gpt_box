@@ -24,6 +24,8 @@ abstract class ChatConfig with _$ChatConfig {
     String? genTitlePrompt,
     String? genTitleModel,
     String? imgModel,
+    String? azureApiVersion,
+    String? azureDeploymentName,
   }) = _ChatConfig;
 
   factory ChatConfig.fromJson(Map<String, dynamic> json) =>
@@ -87,6 +89,8 @@ extension ChatConfigX on ChatConfig {
       name: params_['name'] ?? '',
       genTitlePrompt: params_['genTitlePrompt'],
       historyLen: params_['historyLen'] ?? defaultHistoryLen,
+      azureApiVersion: params_['azureApiVersion'],
+      azureDeploymentName: params_['azureDeploymentName'],
     );
   }
 }

@@ -82,10 +82,21 @@ abstract final class Cfg {
 
   /// Apply the current profile to the openai client.
   static void applyClient() {
-    client = OpenAIClient(
-      apiKey: vn.value.key,
-      baseUrl: vn.value.url,
-    );
+    final cfg = vn.value;
+    if (cfg.url.contains('azure.com')) {
+      client = OpenAIClient(
+        apiKey: cfg.key,
+        baseUrl: '${cfg.url}/openai/deployments/${cfg.azureDeploymentName}',
+        queryParams: {
+          'api-version': cfg.azureApiVersion,
+        },
+      );
+    } else {
+      client = OpenAIClient(
+        apiKey: cfg.key,
+        baseUrl: cfg.url,
+      );
+    }
   }
 
   /// Show the dialog to pick the model.
@@ -133,7 +144,7 @@ abstract final class Cfg {
             void onSave(String s) {
               context.pop();
               if (s.isEmpty) {
-                context.showSnackBar(l10n.emptyFields(l10n.model));
+                Toast.show(l10n.emptyFields(l10n.model));
                 return;
               }
               onSelected(s);
@@ -167,9 +178,7 @@ abstract final class Cfg {
     BuildContext context, {
     List<Widget>? actions,
   }) async {
-    final map =
-        Stores.config.getAllMapTyped<ChatConfig>(includeInternalKeys: false);
-    final vals = map.values.toList();
+    final vals = Stores.config.fetchAll().values.toList();
     final newCfg = await context.showPickSingleDialog(
       items: vals,
       initial: Cfg.current,

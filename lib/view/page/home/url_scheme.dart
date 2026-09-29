@@ -86,13 +86,13 @@ extension _AppLink on AppLink {
               return true;
             default:
               final msg = l10n.invalidLinkFmt(page);
-              context.showSnackBar(msg);
+              Toast.show(msg);
               Loggers.app.warning(msg);
               return true;
           }
         }
         final msg = l10n.invalidLinkFmt('${libL10n.empty} page');
-        context.showSnackBar(msg);
+        Toast.show(msg);
         Loggers.app.warning(msg);
         return true;
       case AppLink.setPath:
@@ -101,7 +101,7 @@ extension _AppLink on AppLink {
         final openAiModel = params['openAiModel'];
         if (openAiKey == null && openAiUrl == null && openAiModel == null) {
           final msg = l10n.invalidLinkFmt('${libL10n.empty} config');
-          context?.showSnackBar(msg);
+          Toast.show(msg);
           Loggers.app.warning(msg);
           return true;
         }

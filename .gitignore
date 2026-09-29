@@ -53,3 +53,4 @@ a.txt
 curl.sh
 android/app/.cxx
 a.sh
+.env

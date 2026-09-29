@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
+import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
@@ -95,10 +96,12 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiList(
+    return SectionList(
       children: [
-        [const CenterGreyTitle('App'), _buildApp()],
-        [CenterGreyTitle(l10n.chat), _buildAppChat()]
+        const CenterGreyTitle('App'),
+        _buildApp(),
+        CenterGreyTitle(l10n.chat),
+        _buildAppChat(),
       ],
     );
   }
@@ -236,7 +239,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
       ),
       onTap: () => Fns.throttle(
         () => AppUpdateIface.doUpdate(
-          url: Urls.appUpdateCfg,
+          githubReleasesUrl: Urls.githubReleasesApi,
           context: context,
           build: BuildData.build,
         ),
@@ -271,7 +274,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
   //         if (result == null) return;
   //         final newVal = double.tryParse(result);
   //         if (newVal == null) {
-  //           context.showSnackBar('Invalid number: $result');
+  //           Toast.show('Invalid number: $result');
   //           return;
   //         }
   //         _store.fontSize.put(newVal);
@@ -371,7 +374,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
           }
           await AppUpdateIface.doUpdate(
             context: context,
-            url: Urls.appUpdateCfg,
+            githubReleasesUrl: Urls.githubReleasesApi,
             build: BuildData.build,
           );
         },
@@ -452,7 +455,10 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
     return ListTile(
       leading: const Icon(Bootstrap.window_sidebar, size: 20),
       title: Text(libL10n.hideTitleBar),
-      trailing: StoreSwitch(prop: _setStore.hideTitleBar),
+      trailing: StoreSwitch(
+        prop: _setStore.hideTitleBar,
+        callback: (value) => SystemUIs.updateTitleBarStyle(hideTitleBar: value),
+      ),
     );
   }
 
@@ -467,7 +473,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
     void onSave(String s) {
       final days = int.tryParse(s);
       if (days == null) {
-        context.showSnackBar(libL10n.fail);
+        Toast.show(libL10n.fail);
         return;
       }
       _setStore.trashDays.put(days);

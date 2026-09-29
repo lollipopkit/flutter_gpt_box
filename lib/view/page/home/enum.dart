@@ -55,10 +55,7 @@ enum HomePageEnum {
         tooltip: l10n.profile,
       ),
       IconButton(
-        onPressed: () => showSearch(
-          context: context,
-          delegate: _ChatSearchDelegate(),
-        ),
+        onPressed: () => _onTapSearch(context),
         icon: const Icon(Icons.search),
       )
     ];

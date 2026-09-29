@@ -4,41 +4,36 @@ publish_to: 'none'
 version: 1.0.397+397
 
 environment:
-  sdk: '>=3.8.0 <4.0.0'
-  flutter: ^3.32.1
+  sdk: ">=3.11.0"
+  flutter: ">=3.44.9"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  app_links: ^6.1.1
-  # audioplayers: ^6.0.0
-  equatable: ^2.0.7
-  extended_image: ^10.0.1
-  file_picker: ^10.1.9
-  # flutter_js: ^0.8.1
-  google_fonts: ^6.1.0
-  html: ^0.15.4
-  image: ^4.2.0
-  image_picker: ^1.0.7
+  app_links: ^7.0.0
+  equatable: ^2.1.0
+  file_picker: ^12.3.0
+  flutter_highlight: ^0.7.0
+  flutter_markdown_plus: ^1.0.12
+  flutter_markdown_plus_latex: ^1.0.5
+  freezed_annotation: ^3.0.0
+  google_fonts: ^9.0.0
+  icons_plus:
+    git:
+      url: https://github.com/lollipopkit/icons_plus
+      ref: main
+  image_picker: ^1.2.0
+  json_annotation: ^4.9.0
+  logging: ^1.3.0
+  markdown: ^7.3.0
   screenshot: ^3.0.0
   shortid: ^0.1.2
-  json_annotation: ^4.9.0
-  freezed_annotation: ^3.0.0
-  responsive_framework: ^1.5.1
-  # flutter_riverpod: ^2.6.1
-  # riverpod_annotation: ^2.6.1
-  # dart_openai: #^5.1.0
-  #   git:
-  #     url: https://github.com/lollipopkit/dart_openai
-  #     ref: a2f5f0dc8aea25530bbd38b3004f656b85e730b6
-  webdav_client_plus: ^1.0.2
-  # flutter_highlight: # ^0.7.0
-  #   git:
-  #     ref: master
-  #     url: https://github.com/lollipopkit/highlight.dart
-  #     path: flutter_highlight
+  # Direct, though `SqliteStore` lives in fl_lib: `hooks.user_defines` below is
+  # only honoured for this package's own dependencies.
+  sqlite3: ^3.6.0
+  webdav_client_plus: ^2.0.0
   openai_dart:
     git:
       url: https://github.com/lollipopkit/langchain_dart
@@ -49,21 +44,11 @@ dependencies:
       url: https://github.com/leehack/mcp_dart
       ref: main
   fl_lib:
-    git:
-      url: https://github.com/lppcg/fl_lib
-      ref: v1.0.327
+    path: packages/fl_lib
 
 dependency_overrides:
-  # fl_lib:
-  #   path: ../fl_lib
-  # openai_dart:
-  #   path: ../langchain_dart/packages/openai_dart
-  # webdav_client_plus:
-  #   path: ../webdav_client
-  # fl_build:
-  #   path: ../fl_build
-  # flutter_highlight:
-  #   path: ../highlight.dart/flutter_highlight
+  # openai_dart (lollipopkit fork) still pins freezed_annotation ^2.
+  # TODO: drop once the fork moves to freezed v3.
   freezed_annotation: ^3.0.0
   freezed: ^3.0.0
   flutter_math_fork: ^0.7.4
@@ -72,21 +57,29 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  build_runner: ^2.4.7
-  hive_ce_generator: ^1.9.2
-  flutter_native_splash: ^2.3.9
-  json_serializable: ^6.8.0
-  # riverpod_generator: ^2.6.1
-  # riverpod_lint: ^2.6.1
+  build_runner: ^2.15.0
+  flutter_native_splash: ^2.4.0
+  json_serializable: ^6.13.0
   freezed: ^3.0.0
-    # path: ../fl_build
+  test: ^1.29.0
+  mocktail: ^1.0.5
   fl_build:
     git:
       url: https://github.com/lppcg/fl_build.git
-      ref: v1.0.51
+      ref: 0449e5e66d9631fb6ced8c4d080d51648327887b
+
+# Which SQLite gets compiled into the app. Only the root package can set this.
+# `SqliteDb` keys the database with `PRAGMA key`, which needs SQLite3MultipleCiphers.
+hooks:
+  user_defines:
+    sqlite3:
+      source: sqlite3mc
 
 flutter:
   generate: true
   uses-material-design: true
   assets:
     - assets/
+
+fl_build:
+  appName: GPTBox

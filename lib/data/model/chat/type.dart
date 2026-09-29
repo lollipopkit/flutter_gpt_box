@@ -28,7 +28,8 @@ enum ChatType {
         //audio => Icons.mic,
       };
 
-  String get name => switch (this) {
+  /// Localized label. Not [name], which [fromString] and serialization use.
+  String get l10nName => switch (this) {
         text => l10n.text,
         img => l10n.image,
         //audio => l10n.audio,
@@ -42,7 +43,7 @@ enum ChatType {
             children: [
               Icon(e.icon, size: 19),
               UIs.width13,
-              Text(e.name, style: UIs.text13),
+              Text(e.l10nName, style: UIs.text13),
             ],
           ),
         ),

@@ -1,93 +1,95 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
 import 'package:gpt_box/core/util/sync.dart';
-import 'package:gpt_box/core/util/url.dart';
-import 'package:gpt_box/data/model/chat/history/hive_adapter.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/hive/hive_registrar.g.dart';
-import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:logging/logging.dart';
 
 Future<void> main() async {
-  _runInZone(() async {
+  await _runInZone(() async {
     await _initApp();
     runApp(const MyApp());
   });
 }
 
-void _runInZone(void Function() body) {
+Future<void> _runInZone(Future<void> Function() body) async {
   final zoneSpec = ZoneSpecification(
     print: (_, parent, zone, line) => parent.print(zone, line),
   );
 
-  runZonedGuarded(
-    body,
-    (e, s) => print('[ZONE] $e\n$s'),
-    zoneSpecification: zoneSpec,
-  );
+  await runZonedGuarded(body, (e, s) {
+    // The zone takes uncaught async errors before `PlatformDispatcher.onError`,
+    // so this is the only place they are seen.
+    if (Diag.enabled) {
+      Diag.error(e, s, 'Zone error');
+    } else {
+      Loggers.app.severe('Zone error', e, s);
+    }
+    CrashLog.markUnhandled(e, s);
+  }, zoneSpecification: zoneSpec);
 }
 
 Future<void> _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Before anything that can fail, so a failure during startup is recorded.
+  _setupDebug();
 
-  await Paths.init(BuildData.name);
-  await _initDb();
+  await Paths.init(
+    BuildData.name,
+    dirs: const {PathDir.img, PathDir.audio},
+    fileInUserDocuments: false,
+  );
+  await CrashLog.attach(Paths.doc.joinPath('logs'));
 
-  _setupLogger();
+  await _initData();
+  await _initWindow();
   _initAppComponents();
 }
 
-Future<void> _initDb() async {
-  await Hive.initFlutter();
-  Hive.registerAdapters();
-  // You are trying to register DateTimeAdapter (typeId 4) for type DateTime 
-  // but there is already a TypeAdapter for this type: DateTimeWithTimezoneAdapter (typeId 18). 
-  // Note that DateTimeAdapter will have no effect as DateTimeWithTimezoneAdapter takes precedence. 
-  // If you want to override the existing adapter, the typeIds must match.
-  // Hive.registerAdapter(DateTimeAdapter()); // 4
-  Hive.registerAdapter(ChatCompletionMessageToolCallAdapter()); // 9
-  Hive.registerAdapter(ChatCompletionMessageFunctionCallAdapter()); // 10
-
-  await PrefStore.shared.init();
+Future<void> _initData() async {
+  await PrefStore.shared.init(); // Call this before accessing any store
+  await SecureStoreProps.migrateLegacyPrefs();
+  await Webdav.initShared();
   await Stores.init();
 }
 
-void _setupLogger() {
+void _setupDebug() {
   Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen((record) {
-    DebugProvider.addLog(record);
-    print(record);
-    if (record.error != null) print(record.error);
-    if (record.stackTrace != null) print(record.stackTrace);
-  });
+  Logger.root.onRecord.listen(DebugProvider.addLog);
+  CrashLog.handleErrors();
+  // Local only: nothing is sent anywhere.
+  Diag.install(LocalDiagnosticsSink());
+  AppLifecycleListener(
+    onPause: () => unawaited(Diag.flush()),
+    onDetach: () => unawaited(Diag.flush()),
+  );
 }
 
-Future<void> _initAppComponents() async {
-  DeepLinks.appId = AppLink.host;
-  UserApi.init();
-
+Future<void> _initWindow() async {
+  if (!isDesktop) return;
   final sets = Stores.setting;
   final windowStateProp = sets.windowState;
-  final windowState = windowStateProp.fetch();
+  final windowState = windowStateProp.get();
+  final hideTitleBar = sets.hideTitleBar.get();
+  WindowFrameConfig.setShowCaption(hideTitleBar);
   await SystemUIs.initDesktopWindow(
-    hideTitleBar: sets.hideTitleBar.get(),
-    size: windowState?.size,
+    hideTitleBar: hideTitleBar,
+    size: windowState?.size ?? const Size(1100, 760),
     position: windowState?.position,
     listener: WindowStateListener(windowStateProp),
   );
+}
 
+void _initAppComponents() {
   Cfg.applyClient();
   Cfg.updateModels();
 
   BakSync.instance.init();
-  BakSync.instance.sync();
+  unawaited(BakSync.instance.sync());
 
   if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;
 

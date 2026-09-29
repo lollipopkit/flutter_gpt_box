@@ -15,16 +15,16 @@ Widget _buildWebdav(BuildContext context) {
           title: Text(l10n.auto),
           trailing: StoreSwitch(
             prop: PrefProps.webdavSync,
-            validator: (p0) {
+            validator: (p0) async {
               if (PrefProps.icloudSync.get() && p0) {
-                context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
+                Toast.show(l10n.syncConflict('iCloud', 'WebDAV'));
                 return false;
               }
               if (p0) {
                 if (PrefProps.webdavUrl.get() == null ||
                     PrefProps.webdavUser.get() == null ||
-                    PrefProps.webdavPwd.get() == null) {
-                  context.showSnackBar(l10n.emptyFields(libL10n.setting));
+                    await SecureStoreProps.webdavPwd.read() == null) {
+                  Toast.show(l10n.emptyFields(libL10n.setting));
                   return false;
                 }
               }
@@ -66,7 +66,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
   _webdavLoading.value = true;
   try {
     final files = await Webdav.shared.list();
-    if (files.isEmpty) return context.showSnackBar(libL10n.empty);
+    if (files.isEmpty) return Toast.show(libL10n.empty);
 
     final fileName = await context.showPickSingleDialog(
       title: libL10n.select,
@@ -78,7 +78,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     final dlFile = await File('${Paths.doc}/$fileName').readAsString();
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak.merge(force: true);
-    context.showSnackBar(libL10n.success);
+    Toast.success(libL10n.success);
 
     context.pop(const SettingsPageRet(restored: true));
   } catch (e, s) {
@@ -94,7 +94,7 @@ Future<void> _onTapWebdavUp(BuildContext context) async {
     final content = await Backup.backup();
     await File(Paths.bak).writeAsString(content);
     await Webdav.shared.upload(relativePath: Paths.bakName);
-    context.showSnackBar(libL10n.success);
+    Toast.success(libL10n.success);
   } catch (e, s) {
     context.showErrDialog(e, s, 'Upload webdav backup');
   } finally {
@@ -110,11 +110,12 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
     text: PrefProps.webdavUser.get(),
   );
   final pwdCtrl = TextEditingController(
-    text: PrefProps.webdavPwd.get(),
+    text: await SecureStoreProps.webdavPwd.read(),
   );
 
   void onSubmit() async {
     final (_, err) = await context.showLoadingDialog(fn: () async {
+      await Webdav.test(urlCtrl.text, userCtrl.text, pwdCtrl.text);
       Webdav.shared.client = WebdavClient.basicAuth(
         url: urlCtrl.text,
         user: userCtrl.text,
@@ -124,10 +125,10 @@ Future<void> _onTapWebdavSetting(BuildContext context) async {
     if (err != null) return;
     PrefProps.webdavUrl.set(urlCtrl.text);
     PrefProps.webdavUser.set(userCtrl.text);
-    PrefProps.webdavPwd.set(pwdCtrl.text);
+    await SecureStoreProps.webdavPwd.write(pwdCtrl.text);
 
     context.pop();
-    context.showSnackBar(libL10n.success);
+    Toast.success(libL10n.success);
   }
 
   final userNode = FocusNode();

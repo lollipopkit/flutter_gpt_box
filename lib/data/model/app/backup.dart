@@ -51,7 +51,11 @@ class Backup implements Mergeable {
       final Map map => map.cast<String, dynamic>(),
       _ => <String, dynamic>{},
     };
-    final trashes = fromJsonMap(json['trashes'], ChatHistory.fromJson);
+    // Null when absent: an older backup without trashes must not empty them.
+    final trashes = switch (json['trashes']) {
+      final Map map => fromJsonMap(map, ChatHistory.fromJson),
+      _ => null,
+    };
     return Backup(
       version: version,
       lastModTime: lastModTime,
@@ -66,6 +70,8 @@ class Backup implements Mergeable {
     'version': version,
     'history': history,
     'configs': configs,
+    'tools': tools,
+    'trashes': ?trashes,
     'lastModTime': lastModTime,
   };
 
@@ -103,76 +109,35 @@ class Backup implements Mergeable {
       return;
     }
 
-    // History
-    final nowHistoryKeys = Stores.history.box.keys.toSet();
-    final bakHistoryKeys = history.map((e) => e.id).toSet();
-    final historyNew = bakHistoryKeys.difference(nowHistoryKeys);
-    for (final id in historyNew) {
-      Stores.history.put(history.firstWhere((e) => e.id == id));
-    }
-    final historyDelete = nowHistoryKeys.difference(bakHistoryKeys);
-    final historyUpdate = nowHistoryKeys.intersection(bakHistoryKeys);
-    for (final id in historyDelete) {
-      Stores.history.delete(id);
-    }
-    for (final id in historyUpdate) {
-      Stores.history.put(history.firstWhere((e) => e.id == id));
-    }
-
-    // Config
-    final nowConfigKeys = Stores.config.box.keys.toSet();
-    final bakConfigKeys = configs.map((e) => e.id).toSet();
-    final configNew = bakConfigKeys.difference(nowConfigKeys);
-    for (final id in configNew) {
-      Stores.config.put(configs.firstWhere((e) => e.id == id));
-    }
-    final configDelete = nowConfigKeys.difference(bakConfigKeys);
-    final configUpdate = nowConfigKeys.intersection(bakConfigKeys);
-    for (final id in configDelete) {
-      Stores.config.delete(id);
-    }
-    for (final id in configUpdate) {
-      Stores.config.put(configs.firstWhere((e) => e.id == id));
-    }
-
-    // MCP
-    final nowMcpKeys = Stores.mcp.box.keys.toSet();
-    final bakMcpKeys = tools.keys.toSet();
-    final mcpNew = bakMcpKeys.difference(nowMcpKeys);
-    for (final key in mcpNew) {
-      Stores.mcp.box.put(key, tools[key]);
-    }
-    final mcpDelete = nowMcpKeys.difference(bakMcpKeys);
-    final mcpUpdate = nowMcpKeys.intersection(bakMcpKeys);
-    for (final key in mcpDelete) {
-      Stores.mcp.box.delete(key);
-    }
-    for (final key in mcpUpdate) {
-      Stores.mcp.box.put(key, tools[key]);
-    }
-
-    // Trash
+    _sync(Stores.history, {for (final e in history) e.id: e});
+    _sync(
+      Stores.config,
+      {for (final e in configs) e.id: e},
+      keep: Stores.config.nonProfileKeys,
+    );
+    _sync(Stores.mcp, tools);
     final trashes_ = trashes;
-    if (trashes_ != null) {
-      final nowTrashKeys = Stores.trash.box.keys.toSet();
-      final bakTrashKeys = trashes_.keys.toSet();
-      final trashNew = bakTrashKeys.difference(nowTrashKeys);
-      for (final key in trashNew) {
-        Stores.trash.box.put(key, trashes_[key]);
-      }
-      final trashDelete = nowTrashKeys.difference(bakTrashKeys);
-      final trashUpdate = nowTrashKeys.intersection(bakTrashKeys);
-      for (final key in trashDelete) {
-        Stores.trash.box.delete(key);
-      }
-      for (final key in trashUpdate) {
-        Stores.trash.box.put(key, trashes_[key]);
-      }
-    }
+    if (trashes_ != null) _sync(Stores.trash, trashes_);
 
     RNodes.app.notify();
     HomePage.afterRestore();
     _logger.info('Merge done');
+  }
+
+  /// Makes [store] hold exactly [data]: adds and updates every entry in it,
+  /// removes every key not in it except those in [keep].
+  static void _sync(
+    SqliteStore store,
+    Map<String, Object?> data, {
+    Set<String> keep = const {},
+  }) {
+    for (final key in store.keys().difference(data.keys.toSet())) {
+      if (keep.contains(key)) continue;
+      store.remove(key);
+    }
+    for (final MapEntry(:key, :value) in data.entries) {
+      if (value != null) store.set(key, value);
+    }
   }
 
   String get date {

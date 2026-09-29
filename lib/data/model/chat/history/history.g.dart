@@ -21,8 +21,8 @@ Map<String, dynamic> _$ChatHistoryToJson(ChatHistory instance) =>
     <String, dynamic>{
       'id': instance.id,
       'items': instance.items,
-      if (instance.name case final value?) 'name': value,
-      if (instance.settings case final value?) 'settings': value,
+      'name': ?instance.name,
+      'settings': ?instance.settings,
     };
 
 ChatHistoryItem _$ChatHistoryItemFromJson(Map<String, dynamic> json) =>
@@ -50,9 +50,9 @@ Map<String, dynamic> _$ChatHistoryItemToJson(ChatHistoryItem instance) =>
       'content': instance.content,
       'createdAt': instance.createdAt.toIso8601String(),
       'id': instance.id,
-      if (instance.toolCallId case final value?) 'toolCallId': value,
-      if (instance.toolCalls case final value?) 'toolCalls': value,
-      if (instance.reasoning case final value?) 'reasoning': value,
+      'toolCallId': ?instance.toolCallId,
+      'toolCalls': ?instance.toolCalls,
+      'reasoning': ?instance.reasoning,
     };
 
 const _$ChatRoleEnumMap = {

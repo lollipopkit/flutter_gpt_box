@@ -162,19 +162,14 @@ extension ChatContentX on ChatContent {
     );
   }
 
-  /// Delete the file inside the content.
+  /// Delete the local file inside the content.
   void deleteFile() async {
     if (isText) return;
-    final isLocal = raw.startsWith('/');
-    if (isLocal) {
-      final file = File(raw);
-      try {
-        await file.delete();
-      } catch (e) {
-        Loggers.app.warning('Delete file failed', e);
-      }
-    } else {
-      await FileApi.delete([raw]);
+    if (UrlType.from(raw) != UrlType.file) return;
+    try {
+      await File(raw).delete();
+    } catch (e) {
+      Loggers.app.warning('Delete file failed', e);
     }
   }
 }

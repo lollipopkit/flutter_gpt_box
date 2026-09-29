@@ -7,8 +7,8 @@ abstract final class Urls {
   static const unilinkDoc = '$repoBase/blob/main/doc/uni_link.md';
   static const openaiRestoreDoc = '$repoBase/blob/main/doc/openai_restore.md';
 
-  static const backendBase = 'https://cdn.lpkt.cn/gptbox/';
-  static const appUpdateCfg = '${backendBase}update2.json';
+  static const githubReleasesApi =
+      'https://api.github.com/repos/lollipopkit/flutter_gpt_box/releases';
 
   /// Github models url has no '/v1' suffix
   static const githubModels = 'https://models.inference.ai.azure.com';

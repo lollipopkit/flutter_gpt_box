@@ -64,13 +64,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
     return Row(
       children: [
         IconButton(
-          onPressed: () {
-            _switchChat(_newChat().id);
-            _historyRN.notify();
-            if (_curPage.value == HomePageEnum.history) {
-              _switchPage(HomePageEnum.chat);
-            }
-          },
+          onPressed: _onTapNewChat,
           icon: const Icon(MingCute.add_fill, size: 17),
         ),
         IconButton(
@@ -197,7 +191,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
               children: [
                 Icon(chatT.icon, size: 15),
                 UIs.width7,
-                Text(chatT.name, style: UIs.text13),
+                Text(chatT.l10nName, style: UIs.text13),
               ],
             ),
           ),
@@ -237,7 +231,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
   void _onTapSetting() async {
     final chat = _curChat;
     if (chat == null) {
-      context.showSnackBar(libL10n.empty);
+      Toast.show(libL10n.empty);
       return;
     }
 
@@ -270,7 +264,7 @@ final class _HomeBottomState extends State<_HomeBottom> {
   void _onTapMeta() {
     final chat = _curChat;
     if (chat == null) {
-      context.showSnackBar(libL10n.empty);
+      Toast.show(libL10n.empty);
       return;
     }
 

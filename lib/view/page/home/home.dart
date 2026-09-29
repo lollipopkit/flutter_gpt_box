@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:app_links/app_links.dart';
 import 'package:file_picker/file_picker.dart';
@@ -43,6 +42,7 @@ part 'url_scheme.dart';
 part 'req.dart';
 part 'md_copy.dart';
 part 'trash.dart';
+part 'desktop.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -81,20 +81,29 @@ class _HomePageState extends State<HomePage>
   @override
   void didChangeDependencies() {
     RNodes.dark.value = context.isDark;
-    _isDesktop.value = !context.isMobile;
+    // The same width [AdaptivePanes] splits at, so the input bar follows the
+    // column the chat is in.
+    _isDesktop.value =
+        MediaQuery.sizeOf(context).width >= AdaptivePanes.kSplitWidth;
     super.didChangeDependencies();
     _homeBottomRN.notify();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ExitConfirm(
-      onPop: (_) => ExitConfirm.exitApp(),
+    final scaffold = CallbackShortcuts(
+      bindings: _desktopShortcuts(context),
       child: const Scaffold(
         appBar: _CustomAppBar(),
         body: _Body(),
         bottomNavigationBar: _HomeBottom(isHome: true),
       ),
+    );
+    return ExitConfirm(
+      onPop: (_) => ExitConfirm.exitApp(),
+      child: isMacOS
+          ? PlatformMenuBar(menus: _macosMenus(context), child: scaffold)
+          : scaffold,
     );
   }
 
@@ -122,7 +131,7 @@ class _HomePageState extends State<HomePage>
 
     if (Stores.setting.autoCheckUpdate.get()) {
       AppUpdateIface.doUpdate(
-        url: Urls.appUpdateCfg,
+        githubReleasesUrl: Urls.githubReleasesApi,
         context: context,
         build: BuildData.build,
       );
@@ -182,30 +191,27 @@ final class _Body extends StatelessWidget {
     const history = _HistoryPage();
     const chat = _ChatPage();
 
-    return _isDesktop.listenVal(
-      (isWide) {
-        if (isWide) {
-          return LayoutBuilder(
-            builder: (context, cons) {
-              final w = math.max(200.0, math.min(400.0, cons.maxWidth * 0.3));
-              return Row(
-                children: [
-                  SizedBox(width: w, height: cons.maxHeight, child: history),
-                  const Expanded(child: chat),
-                ],
-              );
-            },
-          );
-        }
-
-        return PageView(
-          controller: _pageCtrl,
-          onPageChanged: (value) {
-            _curPage.value = HomePageEnum.fromIdx(value);
+    final sets = Stores.setting;
+    return sets.paneListWidth.listenable().listenVal(
+      (width) => sets.paneListCollapsed.listenable().listenVal(
+        (collapsed) => AdaptivePanes.surface(
+          listWidth: width,
+          onListWidthChanged: sets.paneListWidth.set,
+          collapsed: collapsed,
+          onCollapsedChanged: sets.paneListCollapsed.set,
+          listBuilder: (_, _) => history,
+          surfaceBuilder: (_, split) {
+            if (split) return chat;
+            return PageView(
+              controller: _pageCtrl,
+              onPageChanged: (value) {
+                _curPage.value = HomePageEnum.fromIdx(value);
+              },
+              children: const [history, chat],
+            );
           },
-          children: const [history, chat],
-        );
-      },
+        ),
+      ),
     );
   }
 }

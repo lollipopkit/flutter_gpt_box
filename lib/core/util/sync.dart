@@ -8,9 +8,9 @@ import 'package:gpt_box/data/model/app/utils.dart';
 final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
 
 final class BakSync extends SyncIface {
-  const BakSync._() : super();
+  BakSync._();
 
-  static const instance = BakSync._();
+  static final instance = BakSync._();
 
   @override
   void init() {

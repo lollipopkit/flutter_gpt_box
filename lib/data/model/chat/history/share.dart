@@ -5,8 +5,8 @@ import 'package:gpt_box/data/model/chat/history/view.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/view/widget/code.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter_markdown_plus_latex/flutter_markdown_plus_latex.dart';
 
 extension ChatHistoryShare on ChatHistory {
   Widget gen4Share(BuildContext context) {

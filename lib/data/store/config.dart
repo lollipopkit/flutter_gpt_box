@@ -1,7 +1,7 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/config.dart';
 
-final class ConfigStore extends HiveStore {
+final class ConfigStore extends SqliteStore {
   ConfigStore._() : super('config');
 
   static final instance = ConfigStore._();
@@ -14,8 +14,11 @@ final class ConfigStore extends HiveStore {
   /// exists in current models list, then set current model to it.
   // late final followModel = property('followModel', true);
 
+  /// Keys in this store that are not a [ChatConfig].
+  late final nonProfileKeys = {_SELECTED_KEY, profileId.key};
+
   ChatConfig? fetch(String id) {
-    final val = box.get(id) as ChatConfig?;
+    final val = get(id, fromObj: _fromObj);
     if (val == null && id == ChatConfigX.defaultId) {
       put(ChatConfigX.defaultOne);
       return ChatConfigX.defaultOne;
@@ -24,32 +27,27 @@ final class ConfigStore extends HiveStore {
   }
 
   void put(ChatConfig config) {
-    box.put(config.id, config);
+    set(config.id, config);
   }
 
   bool delete(String id) {
     /// Cannot delete default config
     if (id == ChatConfigX.defaultId) return false;
-    box.delete(id);
+    remove(id);
     return true;
   }
 
   Map<String, ChatConfig> fetchAll() {
     final map = <String, ChatConfig>{};
     var errCount = 0;
-    for (final key in box.keys) {
-      if (key == _SELECTED_KEY) continue;
-      final item = box.get(key);
-      if (item != null) {
-        if (item is ChatConfig) {
-          map[key] = item;
-        } else if (item is Map) {
-          try {
-            map[key] = ChatConfig.fromJson(item.cast<String, dynamic>());
-          } catch (e) {
-            errCount++;
-          }
-        }
+    for (final key in keys()) {
+      if (nonProfileKeys.contains(key)) continue;
+      final item = get<Object>(key);
+      if (item is! Map) continue;
+      try {
+        map[key] = ChatConfig.fromJson(item.cast<String, dynamic>());
+      } catch (e) {
+        errCount++;
       }
     }
     if (errCount > 0) {
@@ -57,4 +55,9 @@ final class ConfigStore extends HiveStore {
     }
     return map;
   }
+
+  static ChatConfig? _fromObj(Object? obj) => switch (obj) {
+    final Map map => ChatConfig.fromJson(map.cast<String, dynamic>()),
+    _ => null,
+  };
 }

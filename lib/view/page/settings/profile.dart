@@ -18,10 +18,12 @@ final class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return MultiList(
+    return SectionList(
       children: [
-        [CenterGreyTitle(l10n.chat), _buildChat()],
-        [CenterGreyTitle(l10n.more), _buildMore()],
+        CenterGreyTitle(l10n.chat),
+        _buildChat(),
+        CenterGreyTitle(l10n.more),
+        _buildMore(),
       ],
     );
   }
@@ -52,6 +54,10 @@ final class _ProfilePageState extends State<ProfilePage>
           _buildBalance(),
           _buildOpenAIKey(cfg.key),
           _buildOpenAIUrl(cfg.url),
+          if (cfg.url.contains('azure.com')) ...[
+            _buildAzureApiVersion(cfg.azureApiVersion),
+            _buildAzureDeploymentName(cfg.azureDeploymentName),
+          ],
           _buildOpenAIModels(cfg),
         ];
         return Column(children: children.map((e) => e.cardx).toList());
@@ -300,6 +306,56 @@ final class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Widget _buildAzureApiVersion(String? val) {
+    return ListTile(
+      leading: const Icon(Icons.api),
+      title: const Text('Azure API Version'),
+      trailing: Text(
+        val ?? libL10n.empty,
+        style: UIs.text13Grey,
+      ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val);
+        final result = await context.showRoundDialog<String>(
+          title: libL10n.edit,
+          child: Input(
+            controller: ctrl,
+            hint: '2023-12-01-preview',
+            autoFocus: true,
+          ),
+          actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
+        );
+        if (result == null) return;
+        Cfg.setTo(cfg: Cfg.current.copyWith(azureApiVersion: result));
+      },
+    );
+  }
+
+  Widget _buildAzureDeploymentName(String? val) {
+    return ListTile(
+      leading: const Icon(Icons.cloud_queue),
+      title: const Text('Azure Deployment Name'),
+      trailing: Text(
+        val ?? libL10n.empty,
+        style: UIs.text13Grey,
+      ),
+      onTap: () async {
+        final ctrl = TextEditingController(text: val);
+        final result = await context.showRoundDialog<String>(
+          title: libL10n.edit,
+          child: Input(
+            controller: ctrl,
+            hint: 'gpt-35-turbo',
+            autoFocus: true,
+          ),
+          actions: Btn.ok(onTap: () => context.pop(ctrl.text)).toList,
+        );
+        if (result == null) return;
+        Cfg.setTo(cfg: Cfg.current.copyWith(azureDeploymentName: result));
+      },
+    );
+  }
+
   // Widget _buildOpenAISpeechModel() {
   //   final cfg = OpenAICfg.current;
   //   final val = cfg.speechModel;
@@ -407,7 +463,7 @@ final class _ProfilePageState extends State<ProfilePage>
         if (result == null) return;
         final newVal = int.tryParse(result);
         if (newVal == null) {
-          context.showSnackBar('Invalid number: $result');
+          Toast.show('Invalid number: $result');
           return;
         }
         Cfg.setTo(cfg: Cfg.current.copyWith(historyLen: newVal));

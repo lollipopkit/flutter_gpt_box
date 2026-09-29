@@ -1,7 +1,7 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:gpt_box/data/model/chat/history/history.dart';
 
-class HistoryStore extends HiveStore {
+class HistoryStore extends SqliteStore {
   HistoryStore._() : super('history');
 
   static final instance = HistoryStore._();
@@ -9,18 +9,13 @@ class HistoryStore extends HiveStore {
   Map<String, ChatHistory> fetchAll() {
     final map = <String, ChatHistory>{};
     var errCount = 0;
-    for (final key in box.keys) {
-      final item = box.get(key);
-      if (item != null) {
-        if (item is ChatHistory) {
-          map[key] = item;
-        } else if (item is Map) {
-          try {
-            map[key] = ChatHistory.fromJson(item.cast<String, dynamic>());
-          } catch (e) {
-            errCount++;
-          }
-        }
+    for (final key in keys()) {
+      final item = get<Object>(key);
+      if (item is! Map) continue;
+      try {
+        map[key] = ChatHistory.fromJson(item.cast<String, dynamic>());
+      } catch (e) {
+        errCount++;
       }
     }
     if (errCount > 0) Loggers.app.warning('Init history: $errCount error(s)');
@@ -63,11 +58,11 @@ class HistoryStore extends HiveStore {
     return list;
   }
 
-  void put(ChatHistory history, [bool update = true]) {
-    box.put(history.id, history);
+  void put(ChatHistory history) {
+    set(history.id, history);
   }
 
   void delete(String id) {
-    box.delete(id);
+    remove(id);
   }
 }

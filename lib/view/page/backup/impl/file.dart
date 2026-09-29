@@ -52,6 +52,6 @@ void _onTapFileRestore(BuildContext context) async {
     }
   } catch (e, trace) {
     Loggers.app.warning('Import backup failed', e, trace);
-    context.showSnackBar(e.toString());
+    Toast.show(e.toString());
   }
 }

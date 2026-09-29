@@ -48,12 +48,7 @@ final class _CustomAppBar extends CustomAppBar {
       centerTitle: false,
       leading: Btn.icon(
         icon: const Icon(Icons.settings),
-        onTap: () async {
-          final ret = await SettingsPage.route.go(context);
-          if (ret?.restored == true) {
-            HomePage.afterRestore();
-          }
-        },
+        onTap: () => _onTapSettings(context),
       ),
       title: GestureDetector(
         onLongPress: () => DebugPage.route.go(context),
@@ -90,34 +85,3 @@ final class _CustomAppBar extends CustomAppBar {
     );
   }
 }
-
-// Future<void> _onLongTapSetting(
-//   BuildContext context,
-//   HiveStore store,
-// ) async {
-//   final map = store.box.toJson(includeInternal: false);
-//   final keys = map.keys;
-
-//   /// Encode [map] to String with indent `\t`
-//   final text = const JsonEncoder.withIndent('  ').convert(map);
-//   final result = await PlainEditPage.route.go(
-//     context,
-//     args: PlainEditPageArgs(
-//       initialText: text,
-//       title: store.box.name,
-//     ),
-//   );
-//   if (result == null) return;
-
-//   try {
-//     final newSettings = json.decode(result) as Map<String, dynamic>;
-//     store.box.putAll(newSettings);
-//     final newKeys = newSettings.keys;
-//     final removedKeys = keys.where((e) => !newKeys.contains(e));
-//     for (final key in removedKeys) {
-//       Stores.setting.box.delete(key);
-//     }
-//   } catch (e, s) {
-//     context.showErrDialog(e, s);
-//   }
-// }

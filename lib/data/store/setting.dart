@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:fl_lib/fl_lib.dart';
 
-class SettingStore extends HiveStore {
+class SettingStore extends SqliteStore {
   SettingStore._() : super('setting');
 
   static final instance = SettingStore._();
@@ -53,10 +51,11 @@ class SettingStore extends HiveStore {
   /// Record the position and size of the window.
   late final windowState = property<WindowState>(
     'windowState',
-    fromObj: (jsonStr) => WindowState.fromJson(
-      jsonDecode(jsonStr as String) as Map<String, dynamic>,
-    ),
-    toObj: (state) => state == null ? null : jsonEncode(state.toJson()),
+    fromObj: (obj) => switch (obj) {
+      final Map map => WindowState.fromJson(map.cast<String, dynamic>()),
+      _ => null,
+    },
+    toObj: (state) => state?.toJson(),
   );
 
   late final avatar = propertyDefault('avatar', '🧐');
@@ -71,4 +70,10 @@ class SettingStore extends HiveStore {
 
   /// Days to keep the chat history trashes.
   late final trashDays = propertyDefault('trashDays', 7);
+
+  /// Width of the history list beside the chat, in the two-column layout.
+  late final paneListWidth = propertyDefault('paneListWidth', 280.0);
+
+  /// Whether the history list beside the chat is folded away.
+  late final paneListCollapsed = propertyDefault('paneListCollapsed', false);
 }

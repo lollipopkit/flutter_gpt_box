@@ -2,7 +2,7 @@ part of 'tool.dart';
 
 /// MCP Tools util class.
 abstract class McpTools {
-  static final _clients = <String, Client>{};
+  static final _clients = <String, McpClient>{};
   static final _transports = <String, Transport>{};
   static final _toolsByServer = <String, Set<ChatCompletionTool>>{};
   static final _serverNames = <Transport, String>{};
@@ -68,7 +68,7 @@ abstract class McpTools {
   /// Add a transport with unique server name and retry mechanism.
   static Future<Transport?> addTs(Transport transport, String serverName, {int retryCount = 0}) async {
     try {
-      final client = Client(
+      final client = McpClient(
         Implementation(name: BuildData.name, version: '1.0.${BuildData.build}'),
       );
       
@@ -140,7 +140,7 @@ abstract class McpTools {
               function: FunctionObject(
                 name: '$serverName::${e.name}',
                 description: '[$serverName] ${e.description}',
-                parameters: e.inputSchema.properties,
+                parameters: e.inputSchema.toJson(),
               ),
             ),
           )
@@ -250,7 +250,7 @@ abstract class McpTools {
     try {
       onToolLog('Calling [$serverName] $toolName...');
       final res = await client.callTool(
-        CallToolRequestParams(name: toolName, arguments: args),
+        CallToolRequest(name: toolName, arguments: args),
       );
       
       String resultText = '';

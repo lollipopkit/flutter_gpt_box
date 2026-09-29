@@ -9,7 +9,7 @@ Widget _buildIcloud(BuildContext context) {
         prop: PrefProps.icloudSync,
         validator: (p0) {
           if (PrefProps.webdavSync.get() && p0) {
-            context.showSnackBar(l10n.syncConflict('iCloud', 'WebDAV'));
+            Toast.show(l10n.syncConflict('iCloud', 'WebDAV'));
             return false;
           }
           BakSync.instance.sync(rs: icloud);

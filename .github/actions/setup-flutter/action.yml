@@ -1,0 +1,11 @@
+name: Set up Flutter
+description: The Flutter this project is built with, in the one place that says so.
+
+# Requires the repository to be checked out first.
+runs:
+  using: composite
+  steps:
+    - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+      with:
+        channel: stable
+        flutter-version: 3.47.5

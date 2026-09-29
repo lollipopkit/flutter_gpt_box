@@ -100,7 +100,7 @@ void _onTapDeleteChat(String chatId, BuildContext context) {
   if (entity == null) {
     final msg = 'Delete Chat($chatId) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return;
   }
 
@@ -156,7 +156,7 @@ void _onTapRenameChat(String chatId, BuildContext context) async {
   if (entity == null) {
     final msg = 'Rename Chat($chatId) not found';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return;
   }
   final ctrl = TextEditingController(text: entity.name);
@@ -190,7 +190,7 @@ void _onShareChat(BuildContext context) async {
   if (curChat == null) {
     final msg = 'Share Chat($_curChatId): null';
     Loggers.app.warning(msg);
-    context.showSnackBar(msg);
+    Toast.show(msg);
     return;
   }
 
@@ -207,7 +207,7 @@ void _onShareChat(BuildContext context) async {
   if (type == 'txt') {
     final md = curChat.toMarkdown;
     Pfs.copy(md);
-    context.showSnackBar(l10n.copied);
+    Toast.show(l10n.copied);
     return;
   }
 
@@ -236,9 +236,8 @@ void _onShareChat(BuildContext context) async {
 }
 
 Future<void> _onTapFilePick(BuildContext context) async {
-  final result = await FilePicker.platform.pickFiles(
+  final result = await FilePicker.pickFiles(
     type: FileType.custom,
-    allowMultiple: true,
     allowedExtensions: [
       'txt',
       'md',
@@ -254,8 +253,8 @@ Future<void> _onTapFilePick(BuildContext context) async {
       'jpeg',
     ],
   );
-  final files = result?.files;
-  if (files == null || files.isEmpty) return;
+  if (result.isEmpty) return;
+  final files = result;
   _filesPicked.value.addAll(files.map((e) => e.path).whereType<String>());
   _filesPicked.notify();
 }
@@ -548,6 +547,23 @@ void _onSwitchModel(BuildContext context, {bool notifyKey = false}) async {
 //   return ChatType.fromString(type);
 // }
 
+void _onTapNewChat() {
+  _switchChat(_newChat().id);
+  _historyRN.notify();
+  if (_curPage.value == HomePageEnum.history) {
+    _switchPage(HomePageEnum.chat);
+  }
+}
+
+Future<void> _onTapSettings(BuildContext context) async {
+  final ret = await SettingsPage.route.go(context);
+  if (ret?.restored == true) HomePage.afterRestore();
+}
+
+void _onTapSearch(BuildContext context) {
+  showSearch(context: context, delegate: _ChatSearchDelegate());
+}
+
 Future<void> _switchPage(HomePageEnum page) {
   return _pageCtrl.animateToPage(
     page.index,
@@ -576,8 +592,7 @@ Future<bool> _askMcpConfirm(
     ],
   );
   if (permitted == true && remember.value) {
-    permittedMcp.add(func.name);
-    Stores.mcp.permittedTools.set(permittedMcp);
+    Stores.mcp.permittedTools.set([...permittedMcp, func.name]);
   }
   return permitted == true;
 }

@@ -18,6 +18,8 @@ _ChatConfig _$ChatConfigFromJson(Map<String, dynamic> json) => _ChatConfig(
   genTitlePrompt: json['genTitlePrompt'] as String?,
   genTitleModel: json['genTitleModel'] as String?,
   imgModel: json['imgModel'] as String?,
+  azureApiVersion: json['azureApiVersion'] as String?,
+  azureDeploymentName: json['azureDeploymentName'] as String?,
 );
 
 Map<String, dynamic> _$ChatConfigToJson(_ChatConfig instance) =>
@@ -32,4 +34,6 @@ Map<String, dynamic> _$ChatConfigToJson(_ChatConfig instance) =>
       'genTitlePrompt': instance.genTitlePrompt,
       'genTitleModel': instance.genTitleModel,
       'imgModel': instance.imgModel,
+      'azureApiVersion': instance.azureApiVersion,
+      'azureDeploymentName': instance.azureDeploymentName,
     };

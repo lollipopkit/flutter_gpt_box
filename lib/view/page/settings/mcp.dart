@@ -14,7 +14,7 @@ final class _McpPageState extends State<McpPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return AutoMultiList(children: [_buildTools, _buildMcps, _buildList]);
+    return SectionList(children: [_buildTools, _buildMcps, _buildList]);
   }
 
   Widget get _buildTools {
@@ -67,7 +67,7 @@ final class _McpPageState extends State<McpPage>
             );
             if (res != null) {
               _mcpStore.memories.set(res.values.toList());
-              context.showSnackBar(libL10n.success);
+              Toast.success(libL10n.success);
             }
           },
           trailing: const Icon(Icons.keyboard_arrow_right),
@@ -222,8 +222,8 @@ final class _McpPageState extends State<McpPage>
             value: !vals.contains(name),
             onChanged: (val) {
               final _ = switch (val) {
-                true => prop.set(vals..remove(name)),
-                false => prop.set(vals..add(name)),
+                true => prop.set([...vals.where((e) => e != name)]),
+                false => prop.set([...vals, name]),
               };
             },
           ),
@@ -237,7 +237,7 @@ final class _McpPageState extends State<McpPage>
 }
 
 extension on _McpPageState {
-  void _onTapAddMcpServer(HivePropDefault prop, List<String> servers) async {
+  void _onTapAddMcpServer(StorePropDefault<List<String>> prop, List<String> servers) async {
     final ctrl = TextEditingController();
     final ok = await showDialog<String>(
       context: context,
@@ -295,10 +295,10 @@ extension on _McpPageState {
   Future<void> _onRetryMcpServer(String serverName) async {
     try {
       await McpTools.retryConnection(serverName);
-      context.showSnackBar('Retrying connection...');
+      Toast.show('Retrying connection...');
     } catch (e, s) {
       Loggers.app.warning('Retry MCP server failed', e, s);
-      context.showSnackBar('Retry failed: $e');
+      Toast.show('Retry failed: $e');
     }
   }
 }
