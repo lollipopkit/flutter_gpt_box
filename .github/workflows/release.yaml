@@ -87,3 +87,108 @@ jobs:
             ${{ env.APP_NAME }}_${{ env.BUILD_NUMBER }}_windows_amd64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Unsigned DMGs, one per architecture, for looking at: macOS refuses to open
+  # them without the user overriding Gatekeeper, and the name says so. The
+  # signed, notarized DMGs the app updates to are uploaded to the same release
+  # by scripts/release/release-macos-dmg.sh.
+  releaseMacOS:
+    name: Release macOS (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            xcarch: arm64
+          - arch: amd64
+            xcarch: x86_64
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - name: Install Flutter
+        uses: ./.github/actions/setup-flutter
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Sign locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          project=macos/Runner.xcodeproj/project.pbxproj
+          sed -i '' \
+            -e 's/CODE_SIGN_IDENTITY = "Apple Development";/CODE_SIGN_IDENTITY = "-";/' \
+            -e 's/"CODE_SIGN_IDENTITY\[sdk=macosx\*\]" = "Apple Development";/"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";/' \
+            -e 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/' \
+            -e 's/DEVELOPMENT_TEAM = BA88US33G6;/DEVELOPMENT_TEAM = "";/' \
+            "$project"
+          # iCloud needs a provisioning profile, which an ad-hoc signature
+          # cannot carry: without this the app is killed at launch.
+          cat > macos/Runner/Release.entitlements <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>com.apple.security.app-sandbox</key>
+            <false/>
+          </dict>
+          </plist>
+          PLIST
+      - name: Build number
+        shell: bash
+        # From the tag (`v1.0.<build>`), which is what the app's update check
+        # reads a release's build from.
+        run: echo "BUILD_NUMBER=${GITHUB_REF_NAME##*.}" >> "$GITHUB_ENV"
+      - name: Build
+        env:
+          FLUTTER_XCODE_ARCHS: ${{ matrix.xcarch }}
+        run: |
+          flutter build macos --release \
+            --build-number="${BUILD_NUMBER}" \
+            --build-name="1.0.${BUILD_NUMBER}"
+      # `native_toolchain_rust` falls back to the host target when the
+      # requested one is missing: an Intel app could carry an arm64 fl_pi_llm.
+      - name: Check the architecture
+        shell: bash
+        env:
+          EXPECTED_ARCH: ${{ matrix.xcarch }}
+        run: |
+          set -euo pipefail
+          app="build/macos/Build/Products/Release/GPT Box.app"
+          checked=0
+          bad=()
+          while IFS= read -r -d '' binary; do
+            archs="$(lipo -archs "$binary" 2>/dev/null)" || continue
+            checked=$((checked + 1))
+            case "${binary##*/}" in
+              libswift*.dylib)
+                [[ " $archs " == *" $EXPECTED_ARCH "* ]] || bad+=("${binary#"$app/"}: $archs") ;;
+              *)
+                [[ "$archs" == "$EXPECTED_ARCH" ]] || bad+=("${binary#"$app/"}: $archs") ;;
+            esac
+          done < <(find "$app/Contents/MacOS" "$app/Contents/Frameworks" -type f -print0)
+          if (( checked == 0 )); then
+            echo "::error::no Mach-O binary found in $app"
+            exit 1
+          fi
+          if (( ${#bad[@]} )); then
+            echo "::error::${#bad[@]} binary/binaries are not $EXPECTED_ARCH alone:"
+            printf '  %s\n' "${bad[@]}"
+            exit 1
+          fi
+          echo "$checked binaries, all $EXPECTED_ARCH"
+      - name: Package dmg
+        shell: bash
+        env:
+          APP_PATH: build/macos/Build/Products/Release/GPT Box.app
+          DMG_BASENAME: GPTBox_v1.0.${{ env.BUILD_NUMBER }}_NoSign_${{ matrix.arch }}
+        run: bash scripts/release/package-dmg.sh
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/artifacts/GPTBox_v1.0.${{ env.BUILD_NUMBER }}_NoSign_${{ matrix.arch }}.dmg
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

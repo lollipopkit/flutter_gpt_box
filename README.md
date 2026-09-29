@@ -49,7 +49,8 @@ Please refrain from using it in production environments or for critical data.
 
 Platform | From
 --- | ---
-iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
+iOS | [AppStore](https://apps.apple.com/app/id6476033062)
+macOS | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) (`GPTBox-<version>-arm64.dmg` for Apple silicon, `-amd64.dmg` for Intel)
 Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lpkt.cn/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
 Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lpkt.cn/gptbox/pkg/?order=desc)
 

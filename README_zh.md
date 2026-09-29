@@ -49,7 +49,8 @@
 
 平台 | 下载
 --- | ---
-iOS & macOS | [AppStore](https://apps.apple.com/app/id6476033062)
+iOS | [AppStore](https://apps.apple.com/app/id6476033062)
+macOS | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases)（Apple silicon 用 `GPTBox-<版本>-arm64.dmg`，Intel 用 `-amd64.dmg`）
 Android | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lpkt.cn/gptbox/pkg/?order=desc) / [OpenAPK](https://www.openapk.net/gptbox/flutter.gpt.box/)
 Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releases) / [CDN](https://cdn.lpkt.cn/gptbox/pkg/?order=desc)
 

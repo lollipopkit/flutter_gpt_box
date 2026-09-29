@@ -54,3 +54,4 @@ curl.sh
 android/app/.cxx
 a.sh
 .env
+.env.release
