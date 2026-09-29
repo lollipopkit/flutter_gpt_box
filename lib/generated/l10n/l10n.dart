@@ -227,12 +227,6 @@ abstract class AppLocalizations {
   /// **'Invalid link: {uri}'**
   String invalidLinkFmt(Object uri);
 
-  /// No description provided for @joinBeta.
-  ///
-  /// In en, this message translates to:
-  /// **'Join Beta Program'**
-  String get joinBeta;
-
   /// No description provided for @languageName.
   ///
   /// In en, this message translates to:

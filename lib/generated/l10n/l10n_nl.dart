@@ -72,9 +72,6 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
-  String get joinBeta => 'Deelnemen aan bètatest';
-
-  @override
   String get languageName => 'Nederlands';
 
   @override

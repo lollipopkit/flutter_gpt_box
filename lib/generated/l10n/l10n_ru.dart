@@ -71,9 +71,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get joinBeta => 'Присоединиться к бета-тестированию';
-
-  @override
   String get languageName => 'Русский';
 
   @override

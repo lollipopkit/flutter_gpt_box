@@ -4,6 +4,7 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/llm/chats.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
+import 'package:gpt_box/core/util/update.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/github_id.dart';
 import 'package:gpt_box/data/res/l10n.dart';
@@ -233,16 +234,6 @@ final class AppSettingsPage extends StatelessWidget {
             _colorSeed(context),
             _themeMode(context),
             _checkUpdate(context),
-            _joinBeta(context),
-            if (isDesktop)
-              SettingsRow(
-                icon: Icons.web_asset,
-                title: libL10n.hideTitleBar,
-                trailing: StoreSwitch(
-                  prop: _set.hideTitleBar,
-                  callback: (value) => SystemUIs.updateTitleBarStyle(hideTitleBar: value),
-                ),
-              ),
           ],
         ),
         SettingsGroup(
@@ -371,33 +362,9 @@ final class AppSettingsPage extends StatelessWidget {
         title: l10n.autoCheckUpdate,
         subtitle: text,
         trailing: StoreSwitch(prop: _set.autoCheckUpdate),
-        onTap: () => Fns.throttle(
-          () => AppUpdateIface.doUpdate(
-            githubReleasesUrl: Urls.githubReleasesApi,
-            context: context,
-            build: BuildData.build,
-          ),
-        ),
+        onTap: () => Fns.throttle(() => checkAppUpdate(context)),
       );
     });
-  }
-
-  Widget _joinBeta(BuildContext context) {
-    return SettingsRow(
-      icon: Icons.science_outlined,
-      title: l10n.joinBeta,
-      trailing: StoreSwitch(
-        prop: _set.joinBeta,
-        callback: (val) async {
-          AppUpdate.chan = val ? AppUpdateChan.beta : AppUpdateChan.stable;
-          await AppUpdateIface.doUpdate(
-            context: context,
-            githubReleasesUrl: Urls.githubReleasesApi,
-            build: BuildData.build,
-          );
-        },
-      ),
-    );
   }
 
   Widget _trashDays(BuildContext context) {

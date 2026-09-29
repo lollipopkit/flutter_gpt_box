@@ -77,10 +77,10 @@ Future<void> _initWindow() async {
   final sets = Stores.setting;
   final windowStateProp = sets.windowState;
   final windowState = windowStateProp.get();
-  final hideTitleBar = sets.hideTitleBar.get();
-  WindowFrameConfig.setShowCaption(hideTitleBar);
+  // The app draws its own title bar: the design has no system one.
+  WindowFrameConfig.setShowCaption(true);
   await SystemUIs.initDesktopWindow(
-    hideTitleBar: hideTitleBar,
+    hideTitleBar: true,
     size: windowState?.size ?? const Size(1100, 760),
     position: windowState?.position,
     listener: WindowStateListener(windowStateProp),
@@ -97,6 +97,4 @@ Future<void> _initAppComponents() async {
   BakSync.instance.init();
   // Only when sync is on, and never without a password: see BakSync.
   BakSync.instance.syncSoon();
-
-  if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;
 }

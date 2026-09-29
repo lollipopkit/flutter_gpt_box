@@ -69,9 +69,6 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get joinBeta => 'ベータテストに参加';
-
-  @override
   String get languageName => '日本語';
 
   @override

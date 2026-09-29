@@ -71,9 +71,6 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get joinBeta => 'Bergabung dengan pengujian Beta';
-
-  @override
   String get languageName => 'Bahasa Indonesia';
 
   @override

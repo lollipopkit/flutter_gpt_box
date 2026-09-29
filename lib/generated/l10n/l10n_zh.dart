@@ -69,9 +69,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get joinBeta => '参与Beta版测试';
-
-  @override
   String get languageName => '简体中文';
 
   @override
@@ -571,9 +568,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String invalidLinkFmt(Object uri) {
     return '未知連結：$uri';
   }
-
-  @override
-  String get joinBeta => '參與Beta版測試';
 
   @override
   String get languageName => '繁體中文';

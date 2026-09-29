@@ -19,6 +19,8 @@ abstract final class Stores {
     await SqliteStore.openDatabase();
     await Future.wait(all.map((e) => e.init()));
     _migrateMemories();
+    // TODO: remove once no device has it: the beta channel is gone.
+    if (setting.keys().contains('joinBeta')) setting.remove('joinBeta');
   }
 
   /// TODO: remove with [McpStore.memories], once no device has the old list.

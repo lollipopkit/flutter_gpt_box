@@ -71,9 +71,6 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get joinBeta => 'Приєднатися до бета-тестування';
-
-  @override
   String get languageName => 'Українська';
 
   @override

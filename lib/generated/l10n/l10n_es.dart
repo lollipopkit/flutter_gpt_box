@@ -71,9 +71,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get joinBeta => 'Unirse a la prueba Beta';
-
-  @override
   String get languageName => 'Español';
 
   @override

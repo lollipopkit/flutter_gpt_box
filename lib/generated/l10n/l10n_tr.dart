@@ -71,9 +71,6 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get joinBeta => 'Beta testine katıl';
-
-  @override
   String get languageName => 'Türkçe';
 
   @override

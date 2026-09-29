@@ -7,7 +7,10 @@ class SettingStore extends SqliteStore {
 
   /// This device's own: never in a backup, never set by one. A window's size
   /// and where the sidebar was dragged to are about this screen, and the
-  /// title bar and intro about this install.
+  /// intro about this install.
+  ///
+  /// TODO: drop `hideTitleBar` once no install has it: the setting is gone
+  /// (the title bar is always hidden), and its stored value must not sync.
   static const deviceLocalKeys = {'windowState', 'paneListWidth', 'hideTitleBar', 'introVer'};
 
   late final themeMode = propertyDefault('themeMode', 0);
@@ -26,12 +29,8 @@ class SettingStore extends SqliteStore {
   /// Name a chat from its first exchange.
   late final genTitle = propertyDefault('genTitle', true);
 
-  late final hideTitleBar = propertyDefault('hideTitleBar', isDesktop);
-
   /// Whether deleting a chat asks first.
   late final confrimDel = propertyDefault('confrimDel', true);
-
-  late final joinBeta = propertyDefault('joinBeta', false);
 
   /// For desktop only.
   /// Record the position and size of the window.

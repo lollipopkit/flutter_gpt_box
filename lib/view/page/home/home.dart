@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gpt_box/core/llm/chats.dart';
 import 'package:gpt_box/core/llm/llm.dart';
+import 'package:gpt_box/core/util/update.dart';
 import 'package:gpt_box/core/util/url.dart';
 import 'package:gpt_box/data/model/chat.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/chat_list.dart';
 import 'package:gpt_box/view/page/home/chat_view.dart';
@@ -78,13 +78,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     unawaited(Chats.purgeTrash());
     _initLinks();
     if (Stores.setting.autoCheckUpdate.get()) {
-      unawaited(
-        AppUpdateIface.doUpdate(
-          githubReleasesUrl: Urls.githubReleasesApi,
-          context: context,
-          build: BuildData.build,
-        ),
-      );
+      unawaited(checkAppUpdate(context));
     }
     if (Llm.configured.value.isEmpty && context.mounted) {
       // Nothing can be sent without a key; say so up front.
