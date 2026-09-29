@@ -32,27 +32,21 @@ class ToolsPage extends StatelessWidget {
           return SettingsGroup(
             title: l10n.builtIn,
             rows: [
+              SettingsRow(
+                icon: Icons.psychology_alt_outlined,
+                title: l10n.memory,
+                subtitle: l10n.memoryToolTip,
+                trailing: _switch(disabled, TfMemory.groupName),
+                onTap: () => MemoryPage.route.go(context),
+              ),
               for (final t in Tools.internalTools)
-                SettingsRow(
-                  icon: _iconOf(t),
-                  title: t.l10nName,
-                  subtitle: t.l10nTip,
-                  trailing: SwitchX(
-                    value: !disabled.contains(t.name),
-                    onChanged: (on) {
-                      _store.disabledTools.set(on ? [...disabled.where((e) => e != t.name)] : [...disabled, t.name]);
-                      Chats.reconfigureSoon();
-                    },
+                if (t is! TfMemory)
+                  SettingsRow(
+                    icon: _iconOf(t),
+                    title: t.l10nName,
+                    subtitle: t.l10nTip,
+                    trailing: _switch(disabled, t.group),
                   ),
-                ),
-              _store.memories.listenable().listenVal((list) {
-                return SettingsRow(
-                  icon: Icons.edit_note,
-                  title: l10n.memories,
-                  trailing: RowValue(l10n.entriesFmt(list.length)),
-                  onTap: () => _editMemories(context, list),
-                );
-              }),
               _store.permittedTools.listenable().listenVal((list) {
                 return SettingsRow(
                   icon: Icons.verified_user_outlined,
@@ -85,6 +79,15 @@ class ToolsPage extends StatelessWidget {
       ],
     );
   }
+
+  /// The switch of the built-in tools under [group].
+  static Widget _switch(List<String> disabled, String group) => SwitchX(
+    value: !disabled.contains(group),
+    onChanged: (on) {
+      _store.disabledTools.set(on ? [...disabled.where((e) => e != group)] : [...disabled, group]);
+      Chats.reconfigureSoon();
+    },
+  );
 
   Widget _server(BuildContext context, String url) {
     final name = McpTools.nameFor(url);
@@ -150,13 +153,6 @@ class ToolsPage extends StatelessWidget {
     } catch (e, s) {
       Loggers.app.warning('Remove MCP server', e, s);
     }
-    Chats.reconfigureSoon();
-  }
-
-  Future<void> _editMemories(BuildContext context, List<String> list) async {
-    final res = await KvEditor.route.go(context, KvEditorArgs(data: {for (final (i, m) in list.indexed) '$i': m}));
-    if (res == null) return;
-    _store.memories.set(res.values.toList());
     Chats.reconfigureSoon();
   }
 

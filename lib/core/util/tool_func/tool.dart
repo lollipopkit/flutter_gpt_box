@@ -10,6 +10,8 @@ import 'package:gpt_box/core/llm/chats.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/data/store/memory.dart';
+import 'package:gpt_box/data/store/tool.dart';
 import 'package:mcp_dart/mcp_dart.dart';
 
 part 'type.dart';
@@ -23,7 +25,7 @@ part 'mcp.dart';
 /// every connected MCP server.
 abstract final class Tools {
   static const internalTools = <ToolFunc>[
-    TfMemory.instance,
+    ...TfMemory.all,
     TfHistory.instance,
     TfHttpReq.instance,
   ];
@@ -34,10 +36,14 @@ abstract final class Tools {
     final disabled = Stores.mcp.disabledTools.get().toSet();
     return [
       for (final t in internalTools)
-        if (!disabled.contains(t.name)) t.llmTool,
+        if (!disabled.contains(t.group)) t.llmTool,
       ...McpTools.llmTools,
     ];
   }
+
+  /// Whether the memory tools are switched on; the memory is in the system
+  /// prompt only then.
+  static bool get memoryOn => !Stores.mcp.disabledTools.get().contains(TfMemory.groupName);
 
   static ToolFunc? internal(String name) => internalTools.firstWhereOrNull((e) => e.name == name);
 

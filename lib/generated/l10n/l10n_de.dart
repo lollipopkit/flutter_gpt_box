@@ -97,16 +97,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get memory => 'Gedächtnis';
 
   @override
-  String memoryAdded(Object str) {
-    return 'Gedächtnis hinzugefügt: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return '[$txt] merken?';
-  }
-
-  @override
   String get message => 'Nachricht';
 
   @override
@@ -355,20 +345,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get builtIn => 'Integriert';
 
   @override
-  String get memories => 'Erinnerungen';
-
-  @override
-  String entriesFmt(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: '$n Einträge',
-      one: '1 Eintrag',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get allowedWithoutAsking => 'Ohne Nachfrage erlaubt';
 
   @override
@@ -521,4 +497,48 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Aus der Zwischenablage wiederherstellen';
+
+  @override
+  String get memoryView => 'Erinnerung lesen';
+
+  @override
+  String get memorySearch => 'Erinnerung durchsuchen';
+
+  @override
+  String get memoryWrite => 'Erinnerung speichern';
+
+  @override
+  String get memoryEdit => 'Erinnerung bearbeiten';
+
+  @override
+  String get memoryDelete => 'Erinnerung löschen';
+
+  @override
+  String get memoryMove => 'Erinnerung verschieben';
+
+  @override
+  String get memoryToolTip =>
+      'Dateien, die das Modell über Chats hinweg behält; es liest und schreibt sie ohne Rückfrage';
+
+  @override
+  String charsFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n Zeichen',
+      one: '1 Zeichen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path existiert bereits';
+  }
+
+  @override
+  String get unsavedChanges => 'Änderungen vor dem Verlassen speichern?';
+
+  @override
+  String get discard => 'Verwerfen';
 }

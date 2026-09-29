@@ -97,16 +97,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get memory => 'Memori';
 
   @override
-  String memoryAdded(Object str) {
-    return 'Memori ditambahkan: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return 'Ingat [$txt]?';
-  }
-
-  @override
   String get message => 'Pesan';
 
   @override
@@ -343,14 +333,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get builtIn => 'Bawaan';
 
   @override
-  String get memories => 'Ingatan';
-
-  @override
-  String entriesFmt(int n) {
-    return '$n entri';
-  }
-
-  @override
   String get allowedWithoutAsking => 'Diizinkan tanpa bertanya';
 
   @override
@@ -497,4 +479,42 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Pulihkan dari papan klip';
+
+  @override
+  String get memoryView => 'Baca memori';
+
+  @override
+  String get memorySearch => 'Cari di memori';
+
+  @override
+  String get memoryWrite => 'Simpan memori';
+
+  @override
+  String get memoryEdit => 'Edit memori';
+
+  @override
+  String get memoryDelete => 'Hapus memori';
+
+  @override
+  String get memoryMove => 'Pindahkan memori';
+
+  @override
+  String get memoryToolTip =>
+      'File yang disimpan model antar chat; dibaca dan ditulis tanpa bertanya';
+
+  @override
+  String charsFmt(int n) {
+    return '$n karakter';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path sudah ada';
+  }
+
+  @override
+  String get unsavedChanges => 'Simpan perubahan sebelum keluar?';
+
+  @override
+  String get discard => 'Buang';
 }

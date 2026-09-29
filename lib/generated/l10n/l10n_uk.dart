@@ -97,16 +97,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get memory => 'Пам\'ять';
 
   @override
-  String memoryAdded(Object str) {
-    return 'Пам\'ять додано: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return 'Запам\'ятати [$txt]?';
-  }
-
-  @override
   String get message => 'Повідомлення';
 
   @override
@@ -343,14 +333,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get builtIn => 'Вбудовані';
 
   @override
-  String get memories => 'Спогади';
-
-  @override
-  String entriesFmt(int n) {
-    return 'Записів: $n';
-  }
-
-  @override
   String get allowedWithoutAsking => 'Дозволені без запиту';
 
   @override
@@ -496,4 +478,42 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Відновити з буфера обміну';
+
+  @override
+  String get memoryView => 'Прочитати пам\'ять';
+
+  @override
+  String get memorySearch => 'Пошук у пам\'яті';
+
+  @override
+  String get memoryWrite => 'Зберегти в пам\'ять';
+
+  @override
+  String get memoryEdit => 'Змінити пам\'ять';
+
+  @override
+  String get memoryDelete => 'Видалити з пам\'яті';
+
+  @override
+  String get memoryMove => 'Перемістити в пам\'яті';
+
+  @override
+  String get memoryToolTip =>
+      'Файли, які модель зберігає між чатами; читає й пише їх без запиту';
+
+  @override
+  String charsFmt(int n) {
+    return 'Символів: $n';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path вже існує';
+  }
+
+  @override
+  String get unsavedChanges => 'Зберегти зміни перед виходом?';
+
+  @override
+  String get discard => 'Скасувати зміни';
 }

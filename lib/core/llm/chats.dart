@@ -189,7 +189,7 @@ abstract final class Chats {
     final session = await Llm.rt.openSession(
       id: id,
       model: model,
-      systemPrompt: systemPrompt,
+      systemPrompt: systemPromptFor(meta),
       tools: _toolsFor(meta),
       thinkingLevel: _thinkingFor(model),
       compaction: Stores.llm.compaction.get() ? const CompactionSettings() : CompactionSettings.disabled,
@@ -397,12 +397,15 @@ abstract final class Chats {
   // ---------------------------------------------------------------------------
   // Settings applied to open sessions
 
-  /// The system prompt: the user's, and what they asked the model to keep.
-  static String get systemPrompt {
-    final memories = Stores.mcp.memories.get();
+  /// The system prompt of [meta]'s chat: the user's, and the memory.
+  ///
+  /// Read when a chat opens or is reconfigured, not on every memory write:
+  /// what the model saves mid-chat it already knows, and a prompt that stays
+  /// put keeps the provider's prompt cache.
+  static String systemPromptFor(ChatMeta? meta) {
     return [
       Stores.llm.systemPrompt.get(),
-      if (memories.isNotEmpty) 'Things the user asked you to remember:\n${memories.map((m) => '- $m').join('\n')}',
+      if (Tools.memoryOn) ?TfMemory.prompt(tools: _toolsFor(meta).isNotEmpty),
     ].where((e) => e.isNotEmpty).join('\n\n');
   }
 
@@ -418,8 +421,9 @@ abstract final class Chats {
   static Future<void> reconfigure() async {
     for (final c in [..._open.values]) {
       try {
-        await c.session.setSystemPrompt(systemPrompt);
-        await c.session.setTools(_toolsFor(Stores.chat.fetch(c.id)));
+        final meta = Stores.chat.fetch(c.id);
+        await c.session.setSystemPrompt(systemPromptFor(meta));
+        await c.session.setTools(_toolsFor(meta));
         await c.session.setCompaction(
           Stores.llm.compaction.get() ? const CompactionSettings() : CompactionSettings.disabled,
         );
@@ -449,6 +453,7 @@ abstract final class Chats {
   }
 
   static Future<LlmApproval> _approve(LlmToolCall call) async {
+    if (Tools.internal(call.name)?.trusted ?? false) return const LlmApproval.allow();
     if (Stores.mcp.permittedTools.get().contains(call.name)) return const LlmApproval.allow();
     // A chat's id is its session's: the question goes where the run is.
     final chat = _open[call.sessionId];

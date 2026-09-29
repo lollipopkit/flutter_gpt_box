@@ -97,16 +97,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get memory => 'Память';
 
   @override
-  String memoryAdded(Object str) {
-    return 'Память добавлена: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return 'Запомнить [$txt]?';
-  }
-
-  @override
   String get message => 'Сообщение';
 
   @override
@@ -343,14 +333,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get builtIn => 'Встроенные';
 
   @override
-  String get memories => 'Воспоминания';
-
-  @override
-  String entriesFmt(int n) {
-    return 'Записей: $n';
-  }
-
-  @override
   String get allowedWithoutAsking => 'Разрешены без запроса';
 
   @override
@@ -496,4 +478,42 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Восстановить из буфера обмена';
+
+  @override
+  String get memoryView => 'Прочитать память';
+
+  @override
+  String get memorySearch => 'Поиск в памяти';
+
+  @override
+  String get memoryWrite => 'Сохранить в память';
+
+  @override
+  String get memoryEdit => 'Изменить память';
+
+  @override
+  String get memoryDelete => 'Удалить из памяти';
+
+  @override
+  String get memoryMove => 'Переместить в памяти';
+
+  @override
+  String get memoryToolTip =>
+      'Файлы, которые модель хранит между чатами; читает и пишет их без запроса';
+
+  @override
+  String charsFmt(int n) {
+    return 'Символов: $n';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path уже существует';
+  }
+
+  @override
+  String get unsavedChanges => 'Сохранить изменения перед выходом?';
+
+  @override
+  String get discard => 'Отменить изменения';
 }

@@ -24,9 +24,10 @@ void main() {
 
   Backup backupWith({
     Map<String, Object?> chats = const {},
+    Map<String, Object?> memory = const {},
     Map<String, Object?> settings = const {},
     Map<String, ({String text, int mtime})> sessions = const {},
-  }) => Backup(date: 1, chats: chats, llm: const {}, tools: const {}, settings: settings, sessions: sessions);
+  }) => Backup(date: 1, chats: chats, llm: const {}, tools: const {}, memory: memory, settings: settings, sessions: sessions);
 
   /// Store data as a backup carries it: values, and their times.
   Map<String, Object?> data(Map<String, Object?> values, Map<String, int> ts) => {

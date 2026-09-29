@@ -67,7 +67,7 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
     _watches
       ..clear()
       ..addAll([
-        for (final s in [Stores.chat.watch(), Stores.llm.watch(), Stores.mcp.watch()]) s.listen((_) => syncSoon()),
+        for (final s in [Stores.chat.watch(), Stores.llm.watch(), Stores.mcp.watch(), Stores.memory.watch()]) s.listen((_) => syncSoon()),
         Stores.setting.watch().where((k) => !SettingStore.deviceLocalKeys.contains(k)).listen((_) => syncSoon()),
       ]);
   }

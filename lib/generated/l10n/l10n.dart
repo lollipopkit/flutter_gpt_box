@@ -275,18 +275,6 @@ abstract class AppLocalizations {
   /// **'Memory'**
   String get memory;
 
-  /// No description provided for @memoryAdded.
-  ///
-  /// In en, this message translates to:
-  /// **'Memory added: {str}'**
-  String memoryAdded(Object str);
-
-  /// No description provided for @memoryTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Memorise [{txt}]?'**
-  String memoryTip(Object txt);
-
   /// No description provided for @message.
   ///
   /// In en, this message translates to:
@@ -701,18 +689,6 @@ abstract class AppLocalizations {
   /// **'Built-in'**
   String get builtIn;
 
-  /// No description provided for @memories.
-  ///
-  /// In en, this message translates to:
-  /// **'Memories'**
-  String get memories;
-
-  /// No description provided for @entriesFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{n, plural, =1{1 entry} other{{n} entries}}'**
-  String entriesFmt(int n);
-
   /// No description provided for @allowedWithoutAsking.
   ///
   /// In en, this message translates to:
@@ -964,6 +940,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore from clipboard'**
   String get pasteBackup;
+
+  /// No description provided for @memoryView.
+  ///
+  /// In en, this message translates to:
+  /// **'Read memory'**
+  String get memoryView;
+
+  /// No description provided for @memorySearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search memory'**
+  String get memorySearch;
+
+  /// No description provided for @memoryWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Save memory'**
+  String get memoryWrite;
+
+  /// No description provided for @memoryEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit memory'**
+  String get memoryEdit;
+
+  /// No description provided for @memoryDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete memory'**
+  String get memoryDelete;
+
+  /// No description provided for @memoryMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Move memory'**
+  String get memoryMove;
+
+  /// No description provided for @memoryToolTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Files the model keeps across chats, read and written without asking'**
+  String get memoryToolTip;
+
+  /// No description provided for @charsFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 character} other{{n} characters}}'**
+  String charsFmt(int n);
+
+  /// No description provided for @alreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'{path} already exists'**
+  String alreadyExists(String path);
+
+  /// No description provided for @unsavedChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your changes before leaving?'**
+  String get unsavedChanges;
+
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
 }
 
 class _AppLocalizationsDelegate

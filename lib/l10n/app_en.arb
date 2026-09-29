@@ -26,8 +26,6 @@
   "licenseMenuItem": "Open-source licenses",
   "manual": "Manual",
   "memory": "Memory",
-  "memoryAdded": "Memory added: {str}",
-  "memoryTip": "Memorise [{txt}]?",
   "message": "Message",
   "model": "Model",
   "more": "More",
@@ -156,15 +154,6 @@
   "useTools": "Use tools",
   "useToolsTip": "Each call asks first unless it is allowed below",
   "builtIn": "Built-in",
-  "memories": "Memories",
-  "entriesFmt": "{n, plural, =1{1 entry} other{{n} entries}}",
-  "@entriesFmt": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      }
-    }
-  },
   "allowedWithoutAsking": "Allowed without asking",
   "mcpServers": "MCP servers",
   "addServer": "Add server",
@@ -265,5 +254,30 @@
   "exportFile": "Export to a file",
   "importFile": "Restore from a file",
   "copyBackup": "Copy to clipboard",
-  "pasteBackup": "Restore from clipboard"
+  "pasteBackup": "Restore from clipboard",
+  "memoryView": "Read memory",
+  "memorySearch": "Search memory",
+  "memoryWrite": "Save memory",
+  "memoryEdit": "Edit memory",
+  "memoryDelete": "Delete memory",
+  "memoryMove": "Move memory",
+  "memoryToolTip": "Files the model keeps across chats, read and written without asking",
+  "charsFmt": "{n, plural, =1{1 character} other{{n} characters}}",
+  "alreadyExists": "{path} already exists",
+  "unsavedChanges": "Save your changes before leaving?",
+  "discard": "Discard",
+  "@charsFmt": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "@alreadyExists": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  }
 }

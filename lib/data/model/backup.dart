@@ -40,6 +40,7 @@ final class Backup implements Mergeable {
     required this.chats,
     required this.llm,
     required this.tools,
+    required this.memory,
     required this.settings,
     required this.sessions,
   });
@@ -50,6 +51,9 @@ final class Backup implements Mergeable {
   final Map<String, Object?> chats;
   final Map<String, Object?> llm;
   final Map<String, Object?> tools;
+
+  /// The memory's files, as [MemoryStore] keeps them.
+  final Map<String, Object?> memory;
 
   /// Empty when the backup leaves the settings out (sync without "sync app
   /// settings"): then they are not touched on merge either.
@@ -70,6 +74,7 @@ final class Backup implements Mergeable {
       chats: Stores.chat.getAllMap(includeInternalKeys: true),
       llm: Stores.llm.getAllMap(includeInternalKeys: true),
       tools: Stores.mcp.getAllMap(includeInternalKeys: true),
+      memory: Stores.memory.getAllMap(includeInternalKeys: true),
       settings: includeSettings ? _withoutDeviceLocal(Stores.setting.getAllMap(includeInternalKeys: true)) : const {},
       sessions: sessions,
     );
@@ -97,6 +102,7 @@ final class Backup implements Mergeable {
       newest(Stores.chat.lastUpdateTs),
       newest(Stores.llm.lastUpdateTs),
       newest(Stores.mcp.lastUpdateTs),
+      newest(Stores.memory.lastUpdateTs),
       if (includeSettings)
         newest({
           for (final MapEntry(:key, :value) in (Stores.setting.lastUpdateTs ?? const <String, int>{}).entries)
@@ -107,7 +113,7 @@ final class Backup implements Mergeable {
   }
 
   Backup withoutSettings() =>
-      Backup(date: date, chats: chats, llm: llm, tools: tools, settings: const {}, sessions: sessions);
+      Backup(date: date, chats: chats, llm: llm, tools: tools, memory: memory, settings: const {}, sessions: sessions);
 
   Map<String, Object?> toJson() => {
     'version': formatVersion,
@@ -115,6 +121,7 @@ final class Backup implements Mergeable {
     'chats': chats,
     'llm': llm,
     'tools': tools,
+    'memory': memory,
     'settings': settings,
     'sessions': {
       for (final MapEntry(:key, :value) in sessions.entries) key: {'text': value.text, 'mtime': value.mtime},
@@ -131,6 +138,7 @@ final class Backup implements Mergeable {
       chats: map('chats'),
       llm: map('llm'),
       tools: map('tools'),
+      memory: map('memory'),
       settings: map('settings'),
       sessions: {
         for (final MapEntry(:key, :value) in map('sessions').entries)
@@ -204,6 +212,7 @@ final class Backup implements Mergeable {
     _mergeStore(Stores.chat, chats, force: force);
     _mergeStore(Stores.llm, llm, force: force);
     _mergeStore(Stores.mcp, tools, force: force);
+    _mergeStore(Stores.memory, memory, force: force);
     if (settings.isNotEmpty) {
       _mergeStore(Stores.setting, _withoutDeviceLocal(settings), force: force, keep: SettingStore.deviceLocalKeys);
     }

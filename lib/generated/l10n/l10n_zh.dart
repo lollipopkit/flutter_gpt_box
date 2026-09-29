@@ -95,16 +95,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memory => '记忆';
 
   @override
-  String memoryAdded(Object str) {
-    return '记忆已添加: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return '记住 [$txt]?';
-  }
-
-  @override
   String get message => '消息';
 
   @override
@@ -335,14 +325,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get builtIn => '内置';
 
   @override
-  String get memories => '记忆';
-
-  @override
-  String entriesFmt(int n) {
-    return '$n 条';
-  }
-
-  @override
   String get allowedWithoutAsking => '无需询问即可使用';
 
   @override
@@ -483,6 +465,43 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pasteBackup => '从剪贴板恢复';
+
+  @override
+  String get memoryView => '读取记忆';
+
+  @override
+  String get memorySearch => '搜索记忆';
+
+  @override
+  String get memoryWrite => '保存记忆';
+
+  @override
+  String get memoryEdit => '编辑记忆';
+
+  @override
+  String get memoryDelete => '删除记忆';
+
+  @override
+  String get memoryMove => '移动记忆';
+
+  @override
+  String get memoryToolTip => '模型跨对话保存的文件,读写无需确认';
+
+  @override
+  String charsFmt(int n) {
+    return '$n 字符';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path 已存在';
+  }
+
+  @override
+  String get unsavedChanges => '离开前保存更改?';
+
+  @override
+  String get discard => '放弃';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -574,16 +593,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get memory => '記憶';
-
-  @override
-  String memoryAdded(Object str) {
-    return '記憶已添加: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return '記住 [$txt]?';
-  }
 
   @override
   String get message => '訊息';
@@ -816,14 +825,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get builtIn => '內建';
 
   @override
-  String get memories => '記憶';
-
-  @override
-  String entriesFmt(int n) {
-    return '$n 則';
-  }
-
-  @override
   String get allowedWithoutAsking => '無需詢問即可使用';
 
   @override
@@ -964,4 +965,41 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get pasteBackup => '從剪貼簿還原';
+
+  @override
+  String get memoryView => '讀取記憶';
+
+  @override
+  String get memorySearch => '搜尋記憶';
+
+  @override
+  String get memoryWrite => '儲存記憶';
+
+  @override
+  String get memoryEdit => '編輯記憶';
+
+  @override
+  String get memoryDelete => '刪除記憶';
+
+  @override
+  String get memoryMove => '移動記憶';
+
+  @override
+  String get memoryToolTip => '模型跨對話保存的檔案,讀寫無需確認';
+
+  @override
+  String charsFmt(int n) {
+    return '$n 字元';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path 已存在';
+  }
+
+  @override
+  String get unsavedChanges => '離開前儲存變更?';
+
+  @override
+  String get discard => '捨棄';
 }

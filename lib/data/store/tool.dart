@@ -1,4 +1,5 @@
 import 'package:fl_lib/fl_lib.dart';
+import 'package:gpt_box/data/store/memory.dart';
 
 final class McpStore extends SqliteStore {
   McpStore._() : super('tool');
@@ -14,7 +15,8 @@ final class McpStore extends SqliteStore {
   /// Tools the user allowed to run without asking every time.
   late final permittedTools = listProperty<String>('permittedTools');
 
-  /// What the user asked the model to remember. Part of every system prompt.
+  /// TODO: remove after the migration to files in `Stores._migrateMemories`.
+  /// What the user asked the model to remember, before [MemoryStore].
   late final memories = listProperty<String>('memories');
 
   /// MCP server URLs.

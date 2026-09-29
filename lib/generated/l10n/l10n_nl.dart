@@ -98,16 +98,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get memory => 'Geheugen';
 
   @override
-  String memoryAdded(Object str) {
-    return 'Geheugen toegevoegd: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return 'Onthouden [$txt]?';
-  }
-
-  @override
   String get message => 'Bericht';
 
   @override
@@ -362,14 +352,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get builtIn => 'Ingebouwd';
 
   @override
-  String get memories => 'Herinneringen';
-
-  @override
-  String entriesFmt(int n) {
-    return '$n items';
-  }
-
-  @override
   String get allowedWithoutAsking => 'Toegestaan zonder te vragen';
 
   @override
@@ -523,4 +505,48 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Herstellen vanaf klembord';
+
+  @override
+  String get memoryView => 'Geheugen lezen';
+
+  @override
+  String get memorySearch => 'Geheugen doorzoeken';
+
+  @override
+  String get memoryWrite => 'Geheugen opslaan';
+
+  @override
+  String get memoryEdit => 'Geheugen bewerken';
+
+  @override
+  String get memoryDelete => 'Geheugen verwijderen';
+
+  @override
+  String get memoryMove => 'Geheugen verplaatsen';
+
+  @override
+  String get memoryToolTip =>
+      'Bestanden die het model tussen chats bewaart; het leest en schrijft ze zonder te vragen';
+
+  @override
+  String charsFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n tekens',
+      one: '1 teken',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path bestaat al';
+  }
+
+  @override
+  String get unsavedChanges => 'Wijzigingen opslaan voor het verlaten?';
+
+  @override
+  String get discard => 'Verwerpen';
 }

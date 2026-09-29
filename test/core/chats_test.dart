@@ -9,7 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gpt_box/core/llm/chats.dart';
 import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/core/llm/store.dart';
+import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/data/store/memory.dart';
 
 /// Streams `Echo: <last user text>` one word at a time.
 Future<(HttpServer, List<Map<String, Object?>>)> mockServer() async {
@@ -45,6 +47,31 @@ Future<(HttpServer, List<Map<String, Object?>>)> mockServer() async {
       'model': body['model'],
       'choices': [{'index': 0, 'delta': delta, 'finish_reason': finish}],
     })}\n\n');
+    if (msgs.last['role'] == 'tool') {
+      send({'content': 'Done.'}, 'stop');
+      res.write('data: [DONE]\n\n');
+      await res.close();
+      return;
+    }
+    // `remember X`: saves X with the memory tool.
+    if (text.startsWith('remember ')) {
+      send({
+        'tool_calls': [
+          {
+            'index': 0,
+            'id': 'call_1',
+            'type': 'function',
+            'function': {
+              'name': 'memory_write',
+              'arguments': jsonEncode({'path': '/memories/user.md', 'content': text.substring(9)}),
+            },
+          },
+        ],
+      }, 'tool_calls');
+      res.write('data: [DONE]\n\n');
+      await res.close();
+      return;
+    }
     for (final w in ['Echo: ', ...text.split(' ').map((w) => '$w ')]) {
       send({'content': w});
       await res.flush();
@@ -175,15 +202,37 @@ void main() {
     expect((await Llm.rt.sessions()).map((s) => s.id), isNot(contains(id)));
   });
 
-  test('the system prompt carries the memories, and reaches open chats', () async {
+  test('the system prompt carries the memory index, and reaches open chats', () async {
     final id = Chats.create();
     await Chats.open(id);
     Stores.llm.systemPrompt.set('Be brief.');
-    Stores.mcp.memories.set(['likes tea']);
+    Stores.memory.write(MemoryStore.index, '- likes tea');
     await Chats.reconfigure();
     await Chats.send(id, 'hi');
     final sys = jsonEncode(seen.last['messages']);
     expect(sys, contains('Be brief.'));
     expect(sys, contains('likes tea'));
+  });
+
+  test('the model saves to memory without asking', () async {
+    Stores.mcp.enabled.set(true);
+    addTearDown(() => Stores.mcp.enabled.set(false));
+    final id = Chats.create();
+    await Chats.open(id);
+    await Chats.reconfigure();
+    await Chats.send(id, 'remember likes green tea');
+    expect(Stores.memory.read('user.md'), 'likes green tea');
+    expect(Chats.openOf(id)!.approvals.value, isEmpty);
+  });
+
+  test('switched off, the memory tools and prompt are gone', () {
+    Stores.mcp.enabled.set(true);
+    Stores.mcp.disabledTools.set([TfMemory.groupName]);
+    addTearDown(() {
+      Stores.mcp.enabled.set(false);
+      Stores.mcp.disabledTools.set([]);
+    });
+    expect(Tools.enabled.map((t) => t.name), isNot(contains('memory_view')));
+    expect(Chats.systemPromptFor(null), isNot(contains('# Memory')));
   });
 }

@@ -95,16 +95,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get memory => 'メモリ';
 
   @override
-  String memoryAdded(Object str) {
-    return 'メモリに追加しました：$str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return '[$txt]を記憶しますか？';
-  }
-
-  @override
   String get message => 'メッセージ';
 
   @override
@@ -337,14 +327,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get builtIn => '組み込み';
 
   @override
-  String get memories => '記憶';
-
-  @override
-  String entriesFmt(int n) {
-    return '$n 件';
-  }
-
-  @override
   String get allowedWithoutAsking => '確認なしで許可';
 
   @override
@@ -486,4 +468,41 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get pasteBackup => 'クリップボードから復元';
+
+  @override
+  String get memoryView => 'メモリを読む';
+
+  @override
+  String get memorySearch => 'メモリを検索';
+
+  @override
+  String get memoryWrite => 'メモリを保存';
+
+  @override
+  String get memoryEdit => 'メモリを編集';
+
+  @override
+  String get memoryDelete => 'メモリを削除';
+
+  @override
+  String get memoryMove => 'メモリを移動';
+
+  @override
+  String get memoryToolTip => 'モデルがチャットをまたいで保持するファイル。確認なしで読み書きします';
+
+  @override
+  String charsFmt(int n) {
+    return '$n 文字';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path は既に存在します';
+  }
+
+  @override
+  String get unsavedChanges => '離れる前に変更を保存しますか?';
+
+  @override
+  String get discard => '破棄';
 }

@@ -97,16 +97,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get memory => 'Hafıza';
 
   @override
-  String memoryAdded(Object str) {
-    return 'Hafıza eklendi: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return '[$txt] hatırlansın mı?';
-  }
-
-  @override
   String get message => 'Mesaj';
 
   @override
@@ -342,14 +332,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get builtIn => 'Yerleşik';
 
   @override
-  String get memories => 'Anılar';
-
-  @override
-  String entriesFmt(int n) {
-    return '$n kayıt';
-  }
-
-  @override
   String get allowedWithoutAsking => 'Sormadan izin verilenler';
 
   @override
@@ -495,4 +477,42 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Panodan geri yükle';
+
+  @override
+  String get memoryView => 'Belleği oku';
+
+  @override
+  String get memorySearch => 'Bellekte ara';
+
+  @override
+  String get memoryWrite => 'Belleğe kaydet';
+
+  @override
+  String get memoryEdit => 'Belleği düzenle';
+
+  @override
+  String get memoryDelete => 'Bellekten sil';
+
+  @override
+  String get memoryMove => 'Belleği taşı';
+
+  @override
+  String get memoryToolTip =>
+      'Modelin sohbetler arasında sakladığı dosyalar; sormadan okur ve yazar';
+
+  @override
+  String charsFmt(int n) {
+    return '$n karakter';
+  }
+
+  @override
+  String alreadyExists(String path) {
+    return '$path zaten var';
+  }
+
+  @override
+  String get unsavedChanges => 'Çıkmadan önce değişiklikler kaydedilsin mi?';
+
+  @override
+  String get discard => 'Vazgeç';
 }

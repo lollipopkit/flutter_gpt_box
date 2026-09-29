@@ -13,6 +13,14 @@ abstract class ToolFunc {
 
   bool get defaultEnabled => true;
 
+  /// The switch in [McpStore.disabledTools] this tool is under: its own, or
+  /// its family's.
+  String get group => name;
+
+  /// Runs without asking: it touches only the app's own data, which the user
+  /// can see and undo.
+  bool get trusted => false;
+
   /// For users to understand what a call does. Shown when asking for approval.
   String help(_Map args) => '```json\n${const JsonEncoder.withIndent('  ').convert(args)}\n```';
 
