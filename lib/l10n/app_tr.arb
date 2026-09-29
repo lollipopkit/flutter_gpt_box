@@ -15,9 +15,8 @@
   "emptyTrashTip": "==0, bir sonraki başlangıçta sil. <0 otomatik olarak silme.",
   "genChatTitle": "Sohbet başlığı oluştur",
   "history": "Geçmiş",
-  "historyToolHelp": "{keywords} anahtar kelimelerini içeren sohbetler bağlam olarak yüklensin mi?",
-  "historyToolTip": "Geçmiş sohbetleri bağlam olarak yükle",
-  "httpToolTip": "HTTP isteği gerçekleştir, örneğin: içerik ara",
+  "historyToolTip": "Diğer sohbetlerinizde sormadan arar ve okur",
+  "httpToolTip": "Web sayfalarını ve API'leri getir",
   "image": "Resim",
   "invalidLinkFmt": "Bilinmeyen bağlantı: {uri}",
   "joinBeta": "Beta testine katıl",
@@ -44,7 +43,6 @@
   "themeColorSeed": "Tema renk tohumu",
   "themeMode": "Tema modu",
   "tool": "Araç",
-  "toolHttpReqHelp": "Ağdan veri alınacak, bu sefer {host} ile iletişim kurulacak",
   "toolHttpReqName": "HTTP isteği",
   "untitled": "Başlıksız",
   "usage": "Kullanım",
@@ -147,5 +145,7 @@
   "charsFmt": "{n} karakter",
   "alreadyExists": "{path} zaten var",
   "unsavedChanges": "Çıkmadan önce değişiklikler kaydedilsin mi?",
-  "discard": "Vazgeç"
+  "discard": "Vazgeç",
+  "chatSearch": "Sohbetlerde ara",
+  "chatRead": "Sohbeti oku"
 }

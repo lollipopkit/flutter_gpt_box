@@ -15,9 +15,8 @@
   "emptyTrashTip": "==0, bij de volgende start verwijderen. <0 niet automatisch verwijderen.",
   "genChatTitle": "Chattitel genereren",
   "history": "Geschiedenis",
-  "historyToolHelp": "Chats laden met trefwoorden {keywords} als context?",
-  "historyToolTip": "Historische chats laden als context",
-  "httpToolTip": "HTTP-verzoek uitvoeren, bijvoorbeeld: inhoud zoeken",
+  "historyToolTip": "Je andere chats doorzoeken en lezen, zonder te vragen",
+  "httpToolTip": "Webpagina's en API's ophalen",
   "image": "Afbeelding",
   "invalidLinkFmt": "Onbekende link: {uri}",
   "joinBeta": "Deelnemen aan bètatest",
@@ -44,7 +43,6 @@
   "themeColorSeed": "Themakleurzaad",
   "themeMode": "Thema-modus",
   "tool": "Tool",
-  "toolHttpReqHelp": "Er zullen gegevens van het netwerk worden opgehaald, deze keer zal er contact worden opgenomen met {host}",
   "toolHttpReqName": "HTTP-verzoek",
   "untitled": "Naamloos",
   "usage": "Gebruik",
@@ -147,5 +145,7 @@
   "charsFmt": "{n, plural, =1{1 teken} other{{n} tekens}}",
   "alreadyExists": "{path} bestaat al",
   "unsavedChanges": "Wijzigingen opslaan voor het verlaten?",
-  "discard": "Verwerpen"
+  "discard": "Verwerpen",
+  "chatSearch": "Chats doorzoeken",
+  "chatRead": "Chat lezen"
 }

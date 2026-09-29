@@ -60,15 +60,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get history => 'История';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return 'Загрузить чаты, содержащие ключевые слова $keywords, как контекст?';
-  }
+  String get historyToolTip => 'Искать и читать другие чаты без запроса';
 
   @override
-  String get historyToolTip => 'Загрузить исторические чаты как контекст';
-
-  @override
-  String get httpToolTip => 'Выполнить HTTP-запрос, например: поиск контента';
+  String get httpToolTip => 'Загружать веб-страницы и API';
 
   @override
   String get image => 'Изображение';
@@ -153,11 +148,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tool => 'Инструмент';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Будут получены данные из сети, на этот раз будет установлен контакт с $host';
-  }
 
   @override
   String get toolHttpReqName => 'HTTP-запрос';
@@ -516,4 +506,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get discard => 'Отменить изменения';
+
+  @override
+  String get chatSearch => 'Поиск по чатам';
+
+  @override
+  String get chatRead => 'Прочитать чат';
 }

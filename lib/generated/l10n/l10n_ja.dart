@@ -58,15 +58,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get history => '履歴';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return 'キーワード$keywordsを含むチャットをコンテキストとして読み込みますか？';
-  }
+  String get historyToolTip => '確認なしで他のチャットを検索・閲覧';
 
   @override
-  String get historyToolTip => '履歴チャットをコンテキストとして読み込む';
-
-  @override
-  String get httpToolTip => 'HTTP要求を送信、例：コンテンツを検索';
+  String get httpToolTip => 'Web ページと API を取得';
 
   @override
   String get image => '画像';
@@ -151,11 +146,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get tool => 'ツール';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'ネットワークからデータを取得します。今回は$hostに接続します';
-  }
 
   @override
   String get toolHttpReqName => 'HTTP要求';
@@ -505,4 +495,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get discard => '破棄';
+
+  @override
+  String get chatSearch => 'チャットを検索';
+
+  @override
+  String get chatRead => 'チャットを読む';
 }

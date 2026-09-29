@@ -1,4 +1,5 @@
 import 'package:fl_lib/fl_lib.dart';
+import 'package:fl_pi_llm/fl_pi_llm.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/model/backup.dart';
@@ -16,7 +17,7 @@ void main() {
   tearDown(() => SqliteDb.close());
 
   Future<String> run(ToolFunc t, Map<String, Object?> args) async {
-    final r = await t.run(args, (_) {});
+    final r = await t.run(args, ToolCtx('test', LlmCancelToken()));
     return r.content.map((e) => e['text'] ?? '').join();
   }
 

@@ -28,25 +28,21 @@ class ToolsPage extends StatelessWidget {
             ),
           ],
         ),
-        _store.disabledTools.listenable().listenVal((disabled) {
-          return SettingsGroup(
+        ListenableBuilder(
+          listenable: Listenable.merge([_store.disabledTools.listenable(), _store.enabledTools.listenable()]),
+          builder: (context, _) => SettingsGroup(
             title: l10n.builtIn,
             rows: [
               SettingsRow(
                 icon: Icons.psychology_alt_outlined,
                 title: l10n.memory,
                 subtitle: l10n.memoryToolTip,
-                trailing: _switch(disabled, TfMemory.groupName),
+                trailing: _switch(TfMemory.all.first),
                 onTap: () => MemoryPage.route.go(context),
               ),
-              for (final t in Tools.internalTools)
+              for (final t in Tools.groups)
                 if (t is! TfMemory)
-                  SettingsRow(
-                    icon: _iconOf(t),
-                    title: t.l10nName,
-                    subtitle: t.l10nTip,
-                    trailing: _switch(disabled, t.group),
-                  ),
+                  SettingsRow(icon: _iconOf(t), title: t.groupLabel, subtitle: t.l10nTip, trailing: _switch(t)),
               _store.permittedTools.listenable().listenVal((list) {
                 return SettingsRow(
                   icon: Icons.verified_user_outlined,
@@ -61,8 +57,8 @@ class ToolsPage extends StatelessWidget {
                 );
               }),
             ],
-          );
-        }),
+          ),
+        ),
         ListenableBuilder(
           listenable: Listenable.merge([_store.mcpServers.listenable(), McpTools.changes]),
           builder: (context, _) {
@@ -80,11 +76,11 @@ class ToolsPage extends StatelessWidget {
     );
   }
 
-  /// The switch of the built-in tools under [group].
-  static Widget _switch(List<String> disabled, String group) => SwitchX(
-    value: !disabled.contains(group),
+  /// The switch of the built-in tools in [t]'s group.
+  static Widget _switch(ToolFunc t) => SwitchX(
+    value: Tools.isOn(t),
     onChanged: (on) {
-      _store.disabledTools.set(on ? [...disabled.where((e) => e != group)] : [...disabled, group]);
+      Tools.setOn(t, on);
       Chats.reconfigureSoon();
     },
   );
@@ -107,7 +103,7 @@ class ToolsPage extends StatelessWidget {
       title: url.replaceFirst(RegExp(r'^https?://'), ''),
       mono: true,
       subtitle: on
-          ? l10n.connectedFmt(McpTools.toolCounts[name] ?? 0)
+          ? [?McpTools.labelOf(name), l10n.connectedFmt(McpTools.toolCounts[name] ?? 0)].join(' · ')
           : [l10n.disconnected, ?err].join(' · '),
       trailing: on
           ? null
@@ -136,7 +132,7 @@ class ToolsPage extends StatelessWidget {
     // Stored first: a server that is down now is still one the user added,
     // and it shows as disconnected with a retry.
     _store.mcpServers.set([..._store.mcpServers.get(), u]);
-    await context.showLoadingDialog(fn: () => McpTools.addTs(McpTools.newHttpTs(url: u), McpTools.nameFor(u)));
+    await context.showLoadingDialog(fn: () => McpTools.connect(u));
     Chats.reconfigureSoon();
   }
 

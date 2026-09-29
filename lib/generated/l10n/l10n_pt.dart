@@ -60,16 +60,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get history => 'Histórico';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return 'Carregar chats contendo as palavras-chave $keywords como contexto?';
-  }
+  String get historyToolTip =>
+      'Pesquisar e ler seus outros chats, sem perguntar';
 
   @override
-  String get historyToolTip => 'Carregar chats históricos como contexto';
-
-  @override
-  String get httpToolTip =>
-      'Realizar uma solicitação HTTP, por exemplo: pesquisar conteúdo';
+  String get httpToolTip => 'Buscar páginas web e APIs';
 
   @override
   String get image => 'Imagem';
@@ -154,11 +149,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get tool => 'Ferramenta';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Serão obtidos dados da rede, desta vez entrando em contato com $host';
-  }
 
   @override
   String get toolHttpReqName => 'Solicitação HTTP';
@@ -553,4 +543,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get discard => 'Descartar';
+
+  @override
+  String get chatSearch => 'Pesquisar chats';
+
+  @override
+  String get chatRead => 'Ler chat';
 }

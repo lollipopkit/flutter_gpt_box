@@ -15,9 +15,8 @@
   "emptyTrashTip": "==0，下次启动时删除。<0 不自动删除。",
   "genChatTitle": "生成聊天标题",
   "history": "历史",
-  "historyToolHelp": "加载包含关键字 {keywords} 的聊天作为上下文？",
-  "historyToolTip": "加载历史聊天作为上下文",
-  "httpToolTip": "发起 Http 请求，例如：搜索内容",
+  "historyToolTip": "搜索和读取其他对话,无需确认",
+  "httpToolTip": "获取网页和 API",
   "image": "图片",
   "invalidLinkFmt": "未知链接：{uri}",
   "joinBeta": "参与Beta版测试",
@@ -44,7 +43,6 @@
   "themeColorSeed": "主题颜色种子",
   "themeMode": "主题模式",
   "tool": "工具",
-  "toolHttpReqHelp": "将会与从网络获取数据，本次将会联系 {host}",
   "toolHttpReqName": "Http 请求",
   "untitled": "未命名",
   "usage": "用法",
@@ -147,5 +145,7 @@
   "charsFmt": "{n} 字符",
   "alreadyExists": "{path} 已存在",
   "unsavedChanges": "离开前保存更改?",
-  "discard": "放弃"
+  "discard": "放弃",
+  "chatSearch": "搜索对话",
+  "chatRead": "读取对话"
 }

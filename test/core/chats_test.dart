@@ -225,6 +225,21 @@ void main() {
     expect(Chats.openOf(id)!.approvals.value, isEmpty);
   });
 
+  test('other chats are found and read, the calling one left out', () async {
+    final a = Chats.create();
+    await Chats.open(a);
+    await Chats.send(a, 'the quokka code is 42');
+    final b = Chats.create();
+    String text(LlmToolResult r) => r.content.map((e) => e['text'] ?? '').join();
+    final found = text(await TfChatSearch.instance.run({'query': 'quokka'}, ToolCtx(b, LlmCancelToken())));
+    expect(found, contains('id: $a'));
+    expect(found, contains('the quokka code is 42'));
+    expect(text(await TfChatSearch.instance.run({'query': 'quokka'}, ToolCtx(a, LlmCancelToken()))), 'No chats found.');
+    final read = text(await TfChatRead.instance.run({'id': a}, ToolCtx(b, LlmCancelToken())));
+    expect(read, contains('Echo: the quokka code is 42'));
+    await expectLater(TfChatRead.instance.run({'id': 'nope'}, ToolCtx(b, LlmCancelToken())), throwsArgumentError);
+  });
+
   test('switched off, the memory tools and prompt are gone', () {
     Stores.mcp.enabled.set(true);
     Stores.mcp.disabledTools.set([TfMemory.groupName]);

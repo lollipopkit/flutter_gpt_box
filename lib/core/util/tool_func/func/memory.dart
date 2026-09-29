@@ -31,6 +31,9 @@ sealed class TfMemory extends ToolFunc {
   String get group => groupName;
 
   @override
+  String get groupLabel => l10n.memory;
+
+  @override
   bool get trusted => true;
 
   @override
@@ -132,7 +135,7 @@ final class TfMemoryView extends TfMemory {
   String get l10nName => l10n.memoryView;
 
   @override
-  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
+  Future<LlmToolResult> run(_Map args, ToolCtx ctx) async {
     final key = args['path'] == null ? '' : TfMemory._key(args);
     final store = TfMemory._store;
     final text = store.read(key);
@@ -193,7 +196,7 @@ final class TfMemorySearch extends TfMemory {
   String summary(_Map args) => '${args['query'] ?? ''}';
 
   @override
-  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
+  Future<LlmToolResult> run(_Map args, ToolCtx ctx) async {
     final query = TfMemory._str(args, 'query');
     if (query.isEmpty) throw ArgumentError('query is empty');
     final key = args['path'] == null ? '' : TfMemory._key(args);
@@ -249,7 +252,7 @@ final class TfMemoryWrite extends TfMemory {
   String get l10nName => l10n.memoryWrite;
 
   @override
-  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
+  Future<LlmToolResult> run(_Map args, ToolCtx ctx) async {
     final key = TfMemory._key(args);
     final content = TfMemory._str(args, 'content');
     final existed = TfMemory._store.read(key) != null;
@@ -287,7 +290,7 @@ final class TfMemoryEdit extends TfMemory {
   String get l10nName => l10n.memoryEdit;
 
   @override
-  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
+  Future<LlmToolResult> run(_Map args, ToolCtx ctx) async {
     final key = TfMemory._key(args);
     final oldStr = TfMemory._str(args, 'old_str');
     final newStr = TfMemory._str(args, 'new_str');
@@ -326,7 +329,7 @@ final class TfMemoryDelete extends TfMemory {
   String get l10nName => l10n.memoryDelete;
 
   @override
-  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
+  Future<LlmToolResult> run(_Map args, ToolCtx ctx) async {
     final key = TfMemory._key(args);
     if (key.isEmpty) throw const MemoryPathError('Cannot delete the whole memory');
     final n = TfMemory._store.delete(key);
@@ -361,7 +364,7 @@ final class TfMemoryMove extends TfMemory {
   String summary(_Map args) => '${args['from'] ?? ''} → ${args['to'] ?? ''}';
 
   @override
-  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
+  Future<LlmToolResult> run(_Map args, ToolCtx ctx) async {
     final from = TfMemory._key(args, 'from');
     final to = TfMemory._key(args, 'to');
     final n = TfMemory._store.move(from, to);

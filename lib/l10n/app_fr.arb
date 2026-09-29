@@ -15,9 +15,8 @@
   "emptyTrashTip": "==0, supprimer au prochain démarrage. <0 ne pas supprimer automatiquement.",
   "genChatTitle": "Générer un titre de chat",
   "history": "Historique",
-  "historyToolHelp": "Charger les chats contenant les mots-clés {keywords} comme contexte ?",
-  "historyToolTip": "Charger les chats historiques comme contexte",
-  "httpToolTip": "Effectuer une requête HTTP, par exemple : rechercher du contenu",
+  "historyToolTip": "Rechercher et lire vos autres chats, sans demander",
+  "httpToolTip": "Récupérer des pages web et des API",
   "image": "Image",
   "invalidLinkFmt": "Lien inconnu : {uri}",
   "joinBeta": "Rejoindre le test bêta",
@@ -44,7 +43,6 @@
   "themeColorSeed": "Graine de couleur du thème",
   "themeMode": "Mode de thème",
   "tool": "Outil",
-  "toolHttpReqHelp": "Des données seront obtenues du réseau, cette fois en contactant {host}",
   "toolHttpReqName": "Requête HTTP",
   "untitled": "Sans titre",
   "usage": "Utilisation",
@@ -147,5 +145,7 @@
   "charsFmt": "{n, plural, =1{1 caractère} other{{n} caractères}}",
   "alreadyExists": "{path} existe déjà",
   "unsavedChanges": "Enregistrer les modifications avant de quitter ?",
-  "discard": "Abandonner"
+  "discard": "Abandonner",
+  "chatSearch": "Rechercher des chats",
+  "chatRead": "Lire un chat"
 }

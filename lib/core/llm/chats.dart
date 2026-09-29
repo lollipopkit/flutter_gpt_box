@@ -403,9 +403,11 @@ abstract final class Chats {
   /// what the model saves mid-chat it already knows, and a prompt that stays
   /// put keeps the provider's prompt cache.
   static String systemPromptFor(ChatMeta? meta) {
+    final tools = _toolsFor(meta).isNotEmpty;
     return [
       Stores.llm.systemPrompt.get(),
-      if (Tools.memoryOn) ?TfMemory.prompt(tools: _toolsFor(meta).isNotEmpty),
+      if (Tools.memoryOn) ?TfMemory.prompt(tools: tools),
+      if (tools) ?McpTools.instructions,
     ].where((e) => e.isNotEmpty).join('\n\n');
   }
 

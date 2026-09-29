@@ -209,22 +209,16 @@ abstract class AppLocalizations {
   /// **'History'**
   String get history;
 
-  /// No description provided for @historyToolHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'Load chats containing keywords {keywords} as context?'**
-  String historyToolHelp(Object keywords);
-
   /// No description provided for @historyToolTip.
   ///
   /// In en, this message translates to:
-  /// **'Load history chats as context'**
+  /// **'Search and read your other chats, without asking'**
   String get historyToolTip;
 
   /// No description provided for @httpToolTip.
   ///
   /// In en, this message translates to:
-  /// **'Send Http request, eg. search web content'**
+  /// **'Fetch web pages and APIs'**
   String get httpToolTip;
 
   /// No description provided for @image.
@@ -382,12 +376,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tool'**
   String get tool;
-
-  /// No description provided for @toolHttpReqHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'It will fetch data from network. In this time, it will communicate with {host}.'**
-  String toolHttpReqHelp(Object host);
 
   /// No description provided for @toolHttpReqName.
   ///
@@ -1006,6 +994,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discard'**
   String get discard;
+
+  /// No description provided for @chatSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search chats'**
+  String get chatSearch;
+
+  /// No description provided for @chatRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read chat'**
+  String get chatRead;
 }
 
 class _AppLocalizationsDelegate

@@ -15,9 +15,8 @@
   "emptyTrashTip": "==0, delete on next startup. <0 do not delete automatically.",
   "genChatTitle": "Chat title generator",
   "history": "History",
-  "historyToolHelp": "Load chats containing keywords {keywords} as context?",
-  "historyToolTip": "Load history chats as context",
-  "httpToolTip": "Send Http request, eg. search web content",
+  "historyToolTip": "Search and read your other chats, without asking",
+  "httpToolTip": "Fetch web pages and APIs",
   "image": "Image",
   "invalidLinkFmt": "Invalid link: {uri}",
   "joinBeta": "Join Beta Program",
@@ -44,7 +43,6 @@
   "themeColorSeed": "Theme color seed",
   "themeMode": "Theme mode",
   "tool": "Tool",
-  "toolHttpReqHelp": "It will fetch data from network. In this time, it will communicate with {host}.",
   "toolHttpReqName": "HTTP request",
   "untitled": "Untitled",
   "usage": "Usage",
@@ -279,5 +277,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "chatSearch": "Search chats",
+  "chatRead": "Read chat"
 }

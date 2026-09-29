@@ -60,15 +60,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get history => 'Riwayat';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return 'Muat obrolan yang berisi kata kunci $keywords sebagai konteks?';
-  }
+  String get historyToolTip => 'Cari dan baca chat lain, tanpa bertanya';
 
   @override
-  String get historyToolTip => 'Muat riwayat obrolan sebagai konteks';
-
-  @override
-  String get httpToolTip => 'Lakukan permintaan Http, contoh: cari konten';
+  String get httpToolTip => 'Ambil halaman web dan API';
 
   @override
   String get image => 'Gambar';
@@ -153,11 +148,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get tool => 'Alat';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Akan mengambil data dari jaringan, kali ini akan menghubungi $host';
-  }
 
   @override
   String get toolHttpReqName => 'Permintaan Http';
@@ -517,4 +507,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get discard => 'Buang';
+
+  @override
+  String get chatSearch => 'Cari chat';
+
+  @override
+  String get chatRead => 'Baca chat';
 }

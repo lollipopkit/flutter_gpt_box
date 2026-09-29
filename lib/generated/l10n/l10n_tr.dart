@@ -60,15 +60,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get history => 'Geçmiş';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return '$keywords anahtar kelimelerini içeren sohbetler bağlam olarak yüklensin mi?';
-  }
+  String get historyToolTip => 'Diğer sohbetlerinizde sormadan arar ve okur';
 
   @override
-  String get historyToolTip => 'Geçmiş sohbetleri bağlam olarak yükle';
-
-  @override
-  String get httpToolTip => 'HTTP isteği gerçekleştir, örneğin: içerik ara';
+  String get httpToolTip => 'Web sayfalarını ve API\'leri getir';
 
   @override
   String get image => 'Resim';
@@ -153,11 +148,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tool => 'Araç';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Ağdan veri alınacak, bu sefer $host ile iletişim kurulacak';
-  }
 
   @override
   String get toolHttpReqName => 'HTTP isteği';
@@ -515,4 +505,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get discard => 'Vazgeç';
+
+  @override
+  String get chatSearch => 'Sohbetlerde ara';
+
+  @override
+  String get chatRead => 'Sohbeti oku';
 }

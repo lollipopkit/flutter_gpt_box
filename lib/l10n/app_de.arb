@@ -15,9 +15,8 @@
   "emptyTrashTip": "==0, beim nächsten Start löschen. <0 nicht automatisch löschen.",
   "genChatTitle": "Chat-Titel generieren",
   "history": "Verlauf",
-  "historyToolHelp": "Chats mit den Schlüsselwörtern {keywords} als Kontext laden?",
-  "historyToolTip": "Lade historische Chats als Kontext",
-  "httpToolTip": "HTTP-Anfrage senden, z.B.: Inhalte suchen",
+  "historyToolTip": "Andere Chats durchsuchen und lesen, ohne Rückfrage",
+  "httpToolTip": "Webseiten und APIs abrufen",
   "image": "Bild",
   "invalidLinkFmt": "Unbekannter Link: {uri}",
   "joinBeta": "An Beta-Tests teilnehmen",
@@ -44,7 +43,6 @@
   "themeColorSeed": "Farbsamen für das Theme",
   "themeMode": "Theme-Modus",
   "tool": "Werkzeug",
-  "toolHttpReqHelp": "Es werden Daten aus dem Netzwerk abgerufen, diesmal wird {host} kontaktiert",
   "toolHttpReqName": "HTTP-Anfrage",
   "untitled": "Unbenannt",
   "usage": "Verwendung",
@@ -147,5 +145,7 @@
   "charsFmt": "{n, plural, =1{1 Zeichen} other{{n} Zeichen}}",
   "alreadyExists": "{path} existiert bereits",
   "unsavedChanges": "Änderungen vor dem Verlassen speichern?",
-  "discard": "Verwerfen"
+  "discard": "Verwerfen",
+  "chatSearch": "Chats durchsuchen",
+  "chatRead": "Chat lesen"
 }

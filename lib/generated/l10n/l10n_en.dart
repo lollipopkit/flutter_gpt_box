@@ -59,15 +59,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get history => 'History';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return 'Load chats containing keywords $keywords as context?';
-  }
+  String get historyToolTip =>
+      'Search and read your other chats, without asking';
 
   @override
-  String get historyToolTip => 'Load history chats as context';
-
-  @override
-  String get httpToolTip => 'Send Http request, eg. search web content';
+  String get httpToolTip => 'Fetch web pages and APIs';
 
   @override
   String get image => 'Image';
@@ -152,11 +148,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tool => 'Tool';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'It will fetch data from network. In this time, it will communicate with $host.';
-  }
 
   @override
   String get toolHttpReqName => 'HTTP request';
@@ -555,4 +546,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discard => 'Discard';
+
+  @override
+  String get chatSearch => 'Search chats';
+
+  @override
+  String get chatRead => 'Read chat';
 }

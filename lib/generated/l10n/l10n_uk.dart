@@ -60,15 +60,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get history => 'Історія';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return 'Завантажити чат, що містить ключові слова $keywords, як контекст?';
-  }
+  String get historyToolTip => 'Шукати й читати інші чати без запиту';
 
   @override
-  String get historyToolTip => 'Завантажити історію чату як контекст';
-
-  @override
-  String get httpToolTip => 'Зробити HTTP-запит, наприклад: пошук вмісту';
+  String get httpToolTip => 'Завантажувати вебсторінки та API';
 
   @override
   String get image => 'Зображення';
@@ -153,11 +148,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get tool => 'Інструмент';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Буде отримано дані з мережі, цього разу буде зв\'язок з $host';
-  }
 
   @override
   String get toolHttpReqName => 'HTTP-запит';
@@ -516,4 +506,10 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get discard => 'Скасувати зміни';
+
+  @override
+  String get chatSearch => 'Пошук у чатах';
+
+  @override
+  String get chatRead => 'Прочитати чат';
 }

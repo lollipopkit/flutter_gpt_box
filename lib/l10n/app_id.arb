@@ -15,9 +15,8 @@
   "emptyTrashTip": "==0, hapus saat mulai berikutnya. <0 jangan hapus secara otomatis.",
   "genChatTitle": "Buat judul obrolan",
   "history": "Riwayat",
-  "historyToolHelp": "Muat obrolan yang berisi kata kunci {keywords} sebagai konteks?",
-  "historyToolTip": "Muat riwayat obrolan sebagai konteks",
-  "httpToolTip": "Lakukan permintaan Http, contoh: cari konten",
+  "historyToolTip": "Cari dan baca chat lain, tanpa bertanya",
+  "httpToolTip": "Ambil halaman web dan API",
   "image": "Gambar",
   "invalidLinkFmt": "Tautan tidak dikenal: {uri}",
   "joinBeta": "Bergabung dengan pengujian Beta",
@@ -44,7 +43,6 @@
   "themeColorSeed": "Seed warna tema",
   "themeMode": "Mode tema",
   "tool": "Alat",
-  "toolHttpReqHelp": "Akan mengambil data dari jaringan, kali ini akan menghubungi {host}",
   "toolHttpReqName": "Permintaan Http",
   "untitled": "Tanpa judul",
   "usage": "Penggunaan",
@@ -147,5 +145,7 @@
   "charsFmt": "{n} karakter",
   "alreadyExists": "{path} sudah ada",
   "unsavedChanges": "Simpan perubahan sebelum keluar?",
-  "discard": "Buang"
+  "discard": "Buang",
+  "chatSearch": "Cari chat",
+  "chatRead": "Baca chat"
 }

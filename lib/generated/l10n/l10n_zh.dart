@@ -58,15 +58,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get history => '历史';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return '加载包含关键字 $keywords 的聊天作为上下文？';
-  }
+  String get historyToolTip => '搜索和读取其他对话,无需确认';
 
   @override
-  String get historyToolTip => '加载历史聊天作为上下文';
-
-  @override
-  String get httpToolTip => '发起 Http 请求，例如：搜索内容';
+  String get httpToolTip => '获取网页和 API';
 
   @override
   String get image => '图片';
@@ -151,11 +146,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tool => '工具';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return '将会与从网络获取数据，本次将会联系 $host';
-  }
 
   @override
   String get toolHttpReqName => 'Http 请求';
@@ -502,6 +492,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get discard => '放弃';
+
+  @override
+  String get chatSearch => '搜索对话';
+
+  @override
+  String get chatRead => '读取对话';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -558,15 +554,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get history => '歷史';
 
   @override
-  String historyToolHelp(Object keywords) {
-    return '載入包含關鍵字 $keywords 的聊天作為上下文？';
-  }
+  String get historyToolTip => '搜尋和讀取其他對話,無需確認';
 
   @override
-  String get historyToolTip => '載入歷史聊天作為上下文';
-
-  @override
-  String get httpToolTip => '發起 Http 請求，例如：搜索內容';
+  String get httpToolTip => '取得網頁和 API';
 
   @override
   String get image => '圖片';
@@ -651,11 +642,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get tool => '工具';
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return '將會與從網路獲取數據，本次將會聯絡 $host';
-  }
 
   @override
   String get toolHttpReqName => 'Http 請求';
@@ -1002,4 +988,10 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get discard => '捨棄';
+
+  @override
+  String get chatSearch => '搜尋對話';
+
+  @override
+  String get chatRead => '讀取對話';
 }

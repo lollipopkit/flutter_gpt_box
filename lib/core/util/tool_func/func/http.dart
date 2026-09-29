@@ -1,53 +1,67 @@
 part of '../tool.dart';
 
+/// Fetches a URL for the model: a page as Markdown, text as it is, an image
+/// as an image, paged so a long one does not fill the context.
 final class TfHttpReq extends ToolFunc {
   static const instance = TfHttpReq._();
 
+  // The name predates what the tool became; kept, as permissions and old
+  // chats refer to it.
   const TfHttpReq._()
-      : super(
-          name: 'httpReq',
-          parametersSchema: const {
-            'type': 'object',
-            'properties': {
-              'method': {
-                'type': 'string',
-                'description': 'HTTP method, default GET',
-              },
-              'url': {
-                'type': 'string',
-                'description': 'URL',
-              },
-              'headers': {
-                'type': 'object',
-                'description': 'Headers map',
-              },
-              'body': {
-                'type': 'string',
-                'description': 'Request body',
-              },
-              'followRedirects': {
-                'type': 'integer',
-                'description': 'Max redirects to follow',
-              },
-              'truncateSize': {
-                'type': 'integer',
-                'description':
-                    'If user wants to save tokens, set it to the max size of the response body',
-              },
+    : super(
+        name: 'httpReq',
+        parametersSchema: const {
+          'type': 'object',
+          'properties': {
+            'url': {'type': 'string', 'description': 'http(s) URL'},
+            'method': {'type': 'string', 'description': 'HTTP method. Default GET.'},
+            'headers': {
+              'type': 'object',
+              'additionalProperties': {'type': 'string'},
+              'description': 'Request headers',
             },
-            'required': ['url'],
+            'body': {'type': 'string', 'description': 'Request body; JSON as a string.'},
+            'raw': {'type': 'boolean', 'description': 'Return HTML as it is instead of as Markdown. Default false.'},
+            'start_index': {
+              'type': 'integer',
+              'description': 'Return the text from this character on, to read past a truncated response. Default 0.',
+            },
+            'max_length': {
+              'type': 'integer',
+              'description': 'At most this many characters. Default $_defaultLength, at most $_maxLength.',
+            },
           },
-        );
+          'required': ['url'],
+        },
+      );
+
+  static const _defaultLength = 20000;
+  static const _maxLength = 100000;
+
+  /// Bytes read at most; the rest of a response is not downloaded.
+  static const _maxBytes = 5 * 1024 * 1024;
+
+  /// Image types models take.
+  static const _imageTypes = {'image/png', 'image/jpeg', 'image/gif', 'image/webp'};
+
+  /// Its own client: nothing of the app's own requests (headers, base
+  /// options) goes to the sites the model visits.
+  static final _dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 30),
+      validateStatus: (_) => true,
+      responseType: ResponseType.stream,
+      maxRedirects: 5,
+      headers: {'user-agent': 'Mozilla/5.0 (compatible; ${BuildData.name}/1.0)'},
+    ),
+  );
 
   @override
   String get description => '''
-Send an HTTP request. It can be used for searching, downloading, etc.
-
-If user want to access some content having an json API, use the API directly.
-You can use all the APIs that you(AI model) know. Such as api.github.com, wikipedia, github, stackoverflow and etc.
-
-Both request/response body is String. If json, encode it into String.
-If blob, encode it into base64 String.''';
+Fetch a URL. HTML pages come back as Markdown (links kept), text and JSON as they are, images as images.
+Use it to read pages and call public APIs (prefer a JSON API when one exists). The response starts with the status, type and final URL.
+A long response is cut at max_length; read on with start_index.''';
 
   @override
   String get l10nName => l10n.toolHttpReqName;
@@ -59,179 +73,85 @@ If blob, encode it into base64 String.''';
   String summary(_Map args) => '${(args['method'] as String? ?? 'GET').toUpperCase()} ${args['url'] ?? ''}';
 
   @override
-  String help(_Map args) {
-    return l10n.toolHttpReqHelp(args['url'] as String? ?? '<?>');
-  }
+  Future<LlmToolResult> run(_Map args, ToolCtx ctx) async {
+    final url = Uri.tryParse(args['url'] as String? ?? '');
+    if (url == null || !(url.isScheme('http') || url.isScheme('https')) || url.host.isEmpty) {
+      throw ArgumentError('An http(s) URL is required');
+    }
+    final method = (args['method'] as String? ?? 'GET').toUpperCase();
+    final raw = args['raw'] == true;
+    final start = (args['start_index'] as num? ?? 0).toInt().clamp(0, 1 << 30);
+    final max = (args['max_length'] as num? ?? _defaultLength).toInt().clamp(1, _maxLength);
 
-  @override
-  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
-    final method = args['method'] as String? ?? 'GET';
-    final url = args['url'] as String;
-    final headers = (args['headers'] as Map? ?? {}).cast<String, dynamic>();
-    final body = args['body'] as String?;
-    //final forSearch = args['forSearch'] as bool? ?? false;
-    final truncateSize = args['truncateSize'] as int?;
-    final followRedirects = args['followRedirects'] as int?;
-
-    log('Http $method -> $url');
-    final resp = await myDio.request(
+    final ct = CancelToken();
+    unawaited(ctx.cancel.whenCancelled.then((_) => ct.cancel()));
+    _log('$method $url');
+    final resp = await _dio.requestUri<ResponseBody>(
       url,
+      data: args['body'] as String?,
       options: Options(
         method: method,
-        headers: headers,
-        maxRedirects: followRedirects,
-        validateStatus: (_) => true,
+        headers: {for (final MapEntry(:key, :value) in ((args['headers'] as Map?) ?? const {}).entries) '$key': '$value'},
       ),
-      data: body,
+      cancelToken: ct,
     );
 
-    const mimesBin = [
-      'application/octet-stream',
-      'image/',
-      'video/',
-      'audio/',
-    ];
-
-    const mimesString = [
-      'text/',
-      'application/json',
-      'application/xml',
-      'application/javascript',
-      'application/x-www-form-urlencoded',
-    ];
-
-    final contentType = resp.headers['content-type']?.join(';');
-
-    String tryConvertStr(raw) {
-      try {
-        return raw.toString();
-      } catch (e) {
-        return '';
+    final bytes = BytesBuilder(copy: false);
+    var cut = false;
+    await for (final chunk in resp.data!.stream) {
+      bytes.add(chunk);
+      if (bytes.length > _maxBytes) {
+        cut = true;
+        break;
       }
     }
+    final data = bytes.takeBytes();
+    final type = resp.headers.value('content-type') ?? '';
+    final mime = type.split(';').first.trim().toLowerCase();
+    final head = 'HTTP ${resp.statusCode} ${resp.statusMessage ?? ''}'.trim();
+    final info = '$head · ${mime.isEmpty ? 'unknown type' : mime} · ${resp.realUri}';
+    final details = {'status': resp.statusCode};
 
-    log('Http $method -> ${resp.statusCode} ${resp.statusMessage}');
-    var respBody = switch ((contentType, resp.data)) {
-      (_, final String raw) => raw,
-      (final typ, final List<int> raw) when mimesString.contains(typ) =>
-        await compute(utf8.decode, raw),
-      (final String typ, final List<int> raw)
-          when mimesBin.any((e) => typ.startsWith(e)) =>
-        await compute(base64.encode, raw),
-      (_, final List<int> raw) => await compute(utf8.decode, raw),
-      _ => tryConvertStr(resp.data),
-    };
-
-    // if (forSearch) {
-    //   final urlMap = await compute(_filterHtmlUrls, respBody);
-    //   if (urlMap.isNotEmpty) {
-    //     respBody = '';
-
-    //     final idxes = <int>{};
-    //     for (;idxes.length < 10;) {
-    //       final idx = Random().nextInt(urlMap.length);
-    //       if (idxes.contains(idx)) continue;
-    //       idxes.add(idx);
-    //     }
-
-    //     final futures = List.generate(idxes.length, (idx) async {
-    //       final entry = urlMap.entries.elementAt(idx);
-    //       final url = entry.value;
-    //       log('Http $method -> $url');
-    //       try {
-    //         final resp = await myDio.get(
-    //           entry.value,
-    //           options: Options(
-    //             maxRedirects: followRedirects,
-    //             headers: headers,
-    //             validateStatus: (_) => true,
-    //             responseType: ResponseType.plain,
-    //           ),
-    //         );
-
-    //         final data = resp.data;
-    //         if (data is! String) return null;
-    //         final html = await compute(_filterRespBody, data);
-    //         return html;
-    //       } catch (e, s) {
-    //         Loggers.app.warning(e, null, s);
-    //         log('Http $method -> ${libL10n.error}: $e');
-    //       }
-    //     });
-
-    //     final res = await Future.wait(futures);
-    //     for (final html in res) {
-    //       if (html != null) {
-    //         respBody += html;
-    //       }
-    //     }
-    //   }
-    // }
-
-    if (truncateSize != null && respBody.length > truncateSize) {
-      respBody = respBody.substring(0, truncateSize);
+    if (_imageTypes.contains(mime) && !cut) {
+      return LlmToolResult(
+        content: [LlmContent.text('$info · ${data.length} bytes'), LlmContent.image(base64.encode(data), mime)],
+        details: details,
+      );
+    }
+    if (!_isText(mime, data)) {
+      return LlmToolResult.text('$info\n\nBinary content, ${data.length}${cut ? '+' : ''} bytes: not shown.', details: details);
     }
 
-    log('Http $method -> ${libL10n.success}');
-    return LlmToolResult.text(respBody, details: {'status': resp.statusCode});
+    var text = _decode(data, type);
+    if (!raw && (mime == 'text/html' || mime == 'application/xhtml+xml')) {
+      text = await compute(htmlToMarkdown, (text, resp.realUri.toString()));
+    }
+    final end = (start + max).clamp(0, text.length);
+    final page = start >= text.length ? '' : text.substring(start, end);
+    final notes = [
+      if (start > 0) 'Showing characters $start–$end of ${text.length}.',
+      if (end < text.length) 'Truncated: ${text.length - end} more characters; call again with start_index $end.',
+      if (cut) 'The response was larger than ${_maxBytes ~/ 1024 ~/ 1024} MB; only the start was downloaded.',
+    ];
+    return LlmToolResult.text(
+      [info, if (page.isNotEmpty) page else '(empty)', ...notes].join('\n\n'),
+      details: details,
+    );
+  }
+
+  static bool _isText(String mime, List<int> data) {
+    if (mime.startsWith('text/')) return true;
+    if (RegExp(r'json|xml|javascript|yaml|csv|x-www-form-urlencoded|graphql').hasMatch(mime)) return true;
+    if (mime.startsWith('image/') || mime.startsWith('audio/') || mime.startsWith('video/')) return false;
+    // Untyped or generic: text if the start has no NUL byte.
+    return !data.take(1024).contains(0);
+  }
+
+  static String _decode(List<int> data, String contentType) {
+    final charset = RegExp(r'charset=([\w-]+)', caseSensitive: false).firstMatch(contentType)?.group(1)?.toLowerCase();
+    return switch (charset) {
+      'iso-8859-1' || 'latin1' || 'us-ascii' || 'ascii' => latin1.decode(data, allowInvalid: true),
+      _ => utf8.decode(data, allowMalformed: true),
+    };
   }
 }
-
-/// Only return the content insides body tag as a <title: url> map.
-// Map<String, String> _filterHtmlUrls(String html) {
-//   // Remove the first line of <!DOCTYPE html>
-//   if (html.startsWith('<!')) {
-//     html = html.substring(html.indexOf('>') + 1);
-//   }
-//   final doc = html_parser.parse(html);
-//   final aInBody = doc.querySelectorAll('body a');
-//   final map = <String, String>{};
-//   // Find all <a> tag with href.
-//   for (final a in aInBody) {
-//     var href = a.attributes['href'];
-//     if (href == null) continue;
-//     final title = a.text.trim();
-//     if (title.isEmpty) continue;
-//     if (!href.startsWith('http')) {
-//       // `//duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.sportingnews.com%2Fus%2Folympics%2Fnews`
-//       if (href.startsWith('//duckduckgo.com')) {
-//         href = Uri.decodeFull(href.replaceFirst('//duckduckgo.com/l/?uddg=', ''));
-//       }
-//       // `/url?q=` is the query string for google search result.
-//       else if (href.startsWith('/url?q=')) {
-//         final uri = Uri.parse(href);
-//         href = uri.queryParameters['q'] ?? href;
-//       }
-//     }
-//     map[title] = href;
-//   }
-//   return map;
-// }
-
-// /// Return all text content insides body tag.
-// String _filterRespBody(String raw) {
-//   try {
-//     final doc = html_parser.parse(raw);
-//     final body = doc.querySelector('body');
-//     final text = body?.text;
-//     if (text == null || text.isEmpty) return raw;
-
-//     final lines = text.split('\n');
-//     final rmIdxs = <int>[];
-//     for (var i = 0; i < lines.length; i++) {
-//       final line = lines[i];
-//       if (line.trim().isEmpty) {
-//         rmIdxs.add(i);
-//       }
-//     }
-
-//     for (var i = rmIdxs.length - 1; i >= 0; i--) {
-//       lines.removeAt(rmIdxs[i]);
-//     }
-
-//     return lines.join('\n');
-//   } catch (_) {
-//     // May not html?
-//     return raw;
-//   }
-// }
