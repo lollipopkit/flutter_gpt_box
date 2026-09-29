@@ -78,5 +78,9 @@
   "exportFile": "Naar een bestand exporteren",
   "importFile": "Herstellen uit een bestand",
   "copyBackup": "Naar klembord kopiëren",
-  "pasteBackup": "Herstellen vanaf klembord"
+  "pasteBackup": "Herstellen vanaf klembord",
+  "pullNewChat": "Omlaag trekken voor een nieuwe chat",
+  "releaseNewChat": "Loslaten voor een nieuwe chat",
+  "pullOlderChat": "Omhoog trekken en vasthouden voor de vorige chat",
+  "holdOlderChatFmt": "Blijf vasthouden: {title}"
 }

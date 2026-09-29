@@ -78,5 +78,9 @@
   "exportFile": "导出到文件",
   "importFile": "从文件恢复",
   "copyBackup": "复制到剪贴板",
-  "pasteBackup": "从剪贴板恢复"
+  "pasteBackup": "从剪贴板恢复",
+  "pullNewChat": "下拉新建对话",
+  "releaseNewChat": "松开新建对话",
+  "pullOlderChat": "上拉并按住,切换到上一个对话",
+  "holdOlderChatFmt": "继续按住:{title}"
 }

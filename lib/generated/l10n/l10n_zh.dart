@@ -269,6 +269,20 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pasteBackup => '从剪贴板恢复';
+
+  @override
+  String get pullNewChat => '下拉新建对话';
+
+  @override
+  String get releaseNewChat => '松开新建对话';
+
+  @override
+  String get pullOlderChat => '上拉并按住,切换到上一个对话';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return '继续按住:$title';
+  }
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -535,4 +549,18 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get pasteBackup => '從剪貼簿還原';
+
+  @override
+  String get pullNewChat => '下拉新建對話';
+
+  @override
+  String get releaseNewChat => '放開新建對話';
+
+  @override
+  String get pullOlderChat => '上拉並按住,切換到上一個對話';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return '繼續按住:$title';
+  }
 }

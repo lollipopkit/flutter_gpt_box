@@ -173,29 +173,67 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     );
   }
 
+  /// A chat's share and menu, the settings in it; the settings alone
+  /// without a chat.
+  List<Widget> _narrowActions() {
+    Widget settingsBtn() =>
+        Btn.icon(icon: const Icon(Icons.settings_outlined, size: 20), text: libL10n.setting, onTap: _openSettings);
+    return [
+      ListenableBuilder(
+        listenable: Listenable.merge([Chats.current, LlmStores.chat.changes]),
+        builder: (context, _) {
+          final id = Chats.current.value;
+          final meta = id == null ? null : LlmStores.chat.fetch(id);
+          if (id == null || meta == null) return settingsBtn();
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Btn.icon(
+                icon: const Icon(Icons.ios_share, size: 20),
+                text: l10n.share,
+                onTap: () => shareChat(context, id),
+              ),
+              MenuBtn(
+                actions: [
+                  ...chatActions(context, meta),
+                  ContextMenuAction(text: libL10n.setting, icon: Icons.settings_outlined, onTap: _openSettings),
+                ],
+                builder: (toggle) =>
+                    Btn.icon(icon: const Icon(Icons.more_vert, size: 20), text: l10n.more, onTap: toggle),
+              ),
+            ],
+          );
+        },
+      ),
+    ];
+  }
+
   Widget _narrow() {
     return SafeArea(
       bottom: false,
       child: Column(
         children: [
           SizedBox(
-            height: 52,
+            height: CustomAppBar.appBarHeight,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 7),
-              child: Row(
+              // The title in the middle of the bar, whatever is either side.
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Btn.icon(
-                    icon: const Icon(Icons.menu, size: 22),
-                    text: l10n.chat,
-                    onTap: () => _scaffold.currentState?.openDrawer(),
+                  const Padding(padding: EdgeInsets.symmetric(horizontal: 90), child: ChatTitle(center: true)),
+                  Row(
+                    children: [
+                      Btn.icon(
+                        icon: const Icon(Icons.menu, size: 22),
+                        text: l10n.chat,
+                        onTap: () => _scaffold.currentState?.openDrawer(),
+                      ),
+                      const Spacer(),
+                      ..._narrowActions(),
+                    ],
                   ),
-                  const Expanded(child: ChatTitle(center: true)),
-                  Btn.icon(
-                    icon: const Icon(Icons.settings_outlined, size: 22),
-                    text: libL10n.setting,
-                    onTap: _openSettings,
-                  ),
-                ].joinWith(const SizedBox(width: 3)),
+                ],
               ),
             ),
           ),

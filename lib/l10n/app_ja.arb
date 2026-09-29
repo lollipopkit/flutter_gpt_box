@@ -78,5 +78,9 @@
   "exportFile": "ファイルに書き出す",
   "importFile": "ファイルから復元",
   "copyBackup": "クリップボードにコピー",
-  "pasteBackup": "クリップボードから復元"
+  "pasteBackup": "クリップボードから復元",
+  "pullNewChat": "下に引いて新しいチャット",
+  "releaseNewChat": "離すと新しいチャット",
+  "pullOlderChat": "上に引いて長押しで前のチャット",
+  "holdOlderChatFmt": "そのまま押し続ける: {title}"
 }

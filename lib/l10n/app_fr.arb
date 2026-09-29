@@ -78,5 +78,9 @@
   "exportFile": "Exporter dans un fichier",
   "importFile": "Restaurer depuis un fichier",
   "copyBackup": "Copier dans le presse-papiers",
-  "pasteBackup": "Restaurer depuis le presse-papiers"
+  "pasteBackup": "Restaurer depuis le presse-papiers",
+  "pullNewChat": "Tirez vers le bas pour un nouveau chat",
+  "releaseNewChat": "Relâchez pour un nouveau chat",
+  "pullOlderChat": "Tirez vers le haut et maintenez pour le chat précédent",
+  "holdOlderChatFmt": "Maintenez : {title}"
 }

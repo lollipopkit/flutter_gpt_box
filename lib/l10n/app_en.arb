@@ -127,5 +127,16 @@
   "exportFile": "Export to a file",
   "importFile": "Restore from a file",
   "copyBackup": "Copy to clipboard",
-  "pasteBackup": "Restore from clipboard"
+  "pasteBackup": "Restore from clipboard",
+  "pullNewChat": "Pull down for a new chat",
+  "releaseNewChat": "Release for a new chat",
+  "pullOlderChat": "Pull up and hold for the previous chat",
+  "holdOlderChatFmt": "Keep holding: {title}",
+  "@holdOlderChatFmt": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
 }

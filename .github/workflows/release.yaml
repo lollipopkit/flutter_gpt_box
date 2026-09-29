@@ -163,7 +163,7 @@ jobs:
           EXPECTED_ARCH: ${{ matrix.xcarch }}
         run: |
           set -euo pipefail
-          app="build/macos/Build/Products/Release/GPT Box.app"
+          app="build/macos/Build/Products/Release/LLMBox.app"
           checked=0
           bad=()
           while IFS= read -r -d '' binary; do
@@ -189,13 +189,13 @@ jobs:
       - name: Package dmg
         shell: bash
         env:
-          APP_PATH: build/macos/Build/Products/Release/GPT Box.app
-          DMG_BASENAME: GPTBox_v1.0.${{ env.BUILD_NUMBER }}_NoSign_${{ matrix.arch }}
+          APP_PATH: build/macos/Build/Products/Release/LLMBox.app
+          DMG_BASENAME: LLMBox_v1.0.${{ env.BUILD_NUMBER }}_NoSign_${{ matrix.arch }}
         run: bash scripts/release/package-dmg.sh
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/artifacts/GPTBox_v1.0.${{ env.BUILD_NUMBER }}_NoSign_${{ matrix.arch }}.dmg
+          files: build/artifacts/LLMBox_v1.0.${{ env.BUILD_NUMBER }}_NoSign_${{ matrix.arch }}.dmg
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -101,11 +101,13 @@ ThemeData appTheme(ThemeData base) {
       labelMedium: flat(t.labelMedium),
       labelSmall: flat(t.labelSmall),
     ),
-    // Material's push — in from the right — everywhere, iOS included.
+    // Material's push, in from the right. On a phone the back gesture is
+    // Android's predictive back: the system's there, a swipe from the left
+    // edge on iOS.
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
-        TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
-        TargetPlatform.iOS: FadeForwardsPageTransitionsBuilder(),
+        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        TargetPlatform.iOS: SwipeBackPageTransitionsBuilder(),
         TargetPlatform.macOS: FadeForwardsPageTransitionsBuilder(),
         TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(),
         TargetPlatform.windows: FadeForwardsPageTransitionsBuilder(),

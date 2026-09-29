@@ -270,4 +270,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get pasteBackup => 'クリップボードから復元';
+
+  @override
+  String get pullNewChat => '下に引いて新しいチャット';
+
+  @override
+  String get releaseNewChat => '離すと新しいチャット';
+
+  @override
+  String get pullOlderChat => '上に引いて長押しで前のチャット';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'そのまま押し続ける: $title';
+  }
 }

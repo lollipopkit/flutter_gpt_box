@@ -300,4 +300,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Restore from clipboard';
+
+  @override
+  String get pullNewChat => 'Pull down for a new chat';
+
+  @override
+  String get releaseNewChat => 'Release for a new chat';
+
+  @override
+  String get pullOlderChat => 'Pull up and hold for the previous chat';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Keep holding: $title';
+  }
 }

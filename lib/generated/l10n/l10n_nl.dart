@@ -298,4 +298,19 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Herstellen vanaf klembord';
+
+  @override
+  String get pullNewChat => 'Omlaag trekken voor een nieuwe chat';
+
+  @override
+  String get releaseNewChat => 'Loslaten voor een nieuwe chat';
+
+  @override
+  String get pullOlderChat =>
+      'Omhoog trekken en vasthouden voor de vorige chat';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Blijf vasthouden: $title';
+  }
 }

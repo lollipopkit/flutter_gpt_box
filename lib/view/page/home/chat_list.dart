@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/share.dart';
@@ -98,9 +99,9 @@ class _ChatSidebarState extends State<ChatSidebar> {
           padding: const EdgeInsets.fromLTRB(17, 3, 7, 7),
           child: Row(
             children: [
-              const Expanded(child: Text('GPT Box', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500))),
+              const Expanded(child: Text(BuildData.name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500))),
               Btn.icon(
-                icon: const Icon(Icons.edit_square, size: 20),
+                icon: const Icon(Icons.add_comment_outlined, size: 20),
                 text: l10n.newChat,
                 onTap: widget.onNewChat,
               ),

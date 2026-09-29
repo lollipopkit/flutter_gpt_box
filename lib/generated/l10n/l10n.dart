@@ -592,6 +592,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore from clipboard'**
   String get pasteBackup;
+
+  /// No description provided for @pullNewChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down for a new chat'**
+  String get pullNewChat;
+
+  /// No description provided for @releaseNewChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Release for a new chat'**
+  String get releaseNewChat;
+
+  /// No description provided for @pullOlderChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull up and hold for the previous chat'**
+  String get pullOlderChat;
+
+  /// No description provided for @holdOlderChatFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep holding: {title}'**
+  String holdOlderChatFmt(String title);
 }
 
 class _AppLocalizationsDelegate

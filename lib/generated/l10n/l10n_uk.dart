@@ -278,4 +278,19 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Відновити з буфера обміну';
+
+  @override
+  String get pullNewChat => 'Потягніть униз для нового чату';
+
+  @override
+  String get releaseNewChat => 'Відпустіть для нового чату';
+
+  @override
+  String get pullOlderChat =>
+      'Потягніть угору й утримуйте для попереднього чату';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Утримуйте: $title';
+  }
 }

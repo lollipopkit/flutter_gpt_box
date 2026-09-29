@@ -302,4 +302,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Restaurar da área de transferência';
+
+  @override
+  String get pullNewChat => 'Puxe para baixo para um novo chat';
+
+  @override
+  String get releaseNewChat => 'Solte para um novo chat';
+
+  @override
+  String get pullOlderChat => 'Puxe para cima e segure para o chat anterior';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Continue segurando: $title';
+  }
 }

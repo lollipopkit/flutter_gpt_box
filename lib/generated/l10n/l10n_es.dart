@@ -296,4 +296,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Restaurar desde el portapapeles';
+
+  @override
+  String get pullNewChat => 'Desliza hacia abajo para un nuevo chat';
+
+  @override
+  String get releaseNewChat => 'Suelta para un nuevo chat';
+
+  @override
+  String get pullOlderChat =>
+      'Desliza hacia arriba y mantén para el chat anterior';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Sigue manteniendo: $title';
+  }
 }

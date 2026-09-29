@@ -78,5 +78,9 @@
   "exportFile": "Exportar a un archivo",
   "importFile": "Restaurar desde un archivo",
   "copyBackup": "Copiar al portapapeles",
-  "pasteBackup": "Restaurar desde el portapapeles"
+  "pasteBackup": "Restaurar desde el portapapeles",
+  "pullNewChat": "Desliza hacia abajo para un nuevo chat",
+  "releaseNewChat": "Suelta para un nuevo chat",
+  "pullOlderChat": "Desliza hacia arriba y mantén para el chat anterior",
+  "holdOlderChatFmt": "Sigue manteniendo: {title}"
 }

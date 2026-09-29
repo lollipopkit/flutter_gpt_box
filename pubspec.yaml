@@ -66,4 +66,4 @@ flutter:
     - assets/
 
 fl_build:
-  appName: GPTBox
+  appName: LLMBox

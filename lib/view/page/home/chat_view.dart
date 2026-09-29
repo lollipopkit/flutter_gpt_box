@@ -29,7 +29,12 @@ class ChatPane extends StatelessWidget {
                       title: l10n.newChat,
                       label: l10n.startChatTip,
                     )
-                  : LlmConversation(key: ValueKey(id), chatId: id),
+                  : LlmConversation(
+                      key: ValueKey(id),
+                      chatId: id,
+                      pullDown: isMobile ? _newChatPull() : null,
+                      pullUp: isMobile ? _olderChatPull(id) : null,
+                    ),
             ),
           ),
           LayoutBuilder(
@@ -56,6 +61,30 @@ class ChatPane extends StatelessWidget {
       );
     });
   }
+}
+
+/// Pulling down past the top of a chat starts a new one.
+PullAction _newChatPull() => PullAction(
+  icon: Icons.add_comment_outlined,
+  label: l10n.pullNewChat,
+  readyLabel: l10n.releaseNewChat,
+  onTrigger: () => Chats.current.value = null,
+);
+
+/// Pulling up past the end of chat [id], and holding, opens the one before
+/// it in the list — older; none past the last.
+PullAction? _olderChatPull(String id) {
+  final chats = LlmStores.chat.all();
+  final i = chats.indexWhere((c) => c.id == id);
+  if (i < 0 || i + 1 >= chats.length) return null;
+  final older = chats[i + 1];
+  return PullAction(
+    icon: Icons.history,
+    label: l10n.pullOlderChat,
+    readyLabel: l10n.holdOlderChatFmt(older.title ?? l10n.untitled),
+    hold: const Duration(seconds: 1),
+    onTrigger: () => Chats.current.value = older.id,
+  );
 }
 
 class _Header extends StatelessWidget {

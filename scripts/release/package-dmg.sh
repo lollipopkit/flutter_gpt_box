@@ -4,9 +4,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-APP_NAME="${APP_NAME:-GPT Box}"
-APP_ASSET_NAME="${APP_ASSET_NAME:-GPTBox}"
-VOLUME_NAME="${VOLUME_NAME:-GPTBox}"
+APP_NAME="${APP_NAME:-LLMBox}"
+APP_ASSET_NAME="${APP_ASSET_NAME:-LLMBox}"
+VOLUME_NAME="${VOLUME_NAME:-LLMBox}"
 XCARCHIVE_PATH="${1:-${XCARCHIVE_PATH:-}}"
 APP_PATH="${APP_PATH:-}"
 ARTIFACTS_PATH="${ARTIFACTS_PATH:-$REPO_ROOT/build/artifacts}"
@@ -15,7 +15,7 @@ REQUIRE_SPCTL="${REQUIRE_SPCTL:-0}"
 
 if [[ -z "$APP_PATH" && -z "$XCARCHIVE_PATH" ]]; then
   echo "APP_PATH or XCARCHIVE_PATH is required" >&2
-  echo "Usage: APP_PATH=/abs/path/to/GPT Box.app $0" >&2
+  echo "Usage: APP_PATH=/abs/path/to/LLMBox.app $0" >&2
   echo "   or: XCARCHIVE_PATH=/abs/path/to/Runner.xcarchive $0" >&2
   exit 1
 fi

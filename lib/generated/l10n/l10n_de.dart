@@ -291,4 +291,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Aus der Zwischenablage wiederherstellen';
+
+  @override
+  String get pullNewChat => 'Nach unten ziehen für einen neuen Chat';
+
+  @override
+  String get releaseNewChat => 'Loslassen für einen neuen Chat';
+
+  @override
+  String get pullOlderChat =>
+      'Nach oben ziehen und halten für den vorherigen Chat';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Weiter halten: $title';
+  }
 }

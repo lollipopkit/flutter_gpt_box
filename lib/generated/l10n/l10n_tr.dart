@@ -278,4 +278,18 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Panodan geri yükle';
+
+  @override
+  String get pullNewChat => 'Yeni sohbet için aşağı çekin';
+
+  @override
+  String get releaseNewChat => 'Yeni sohbet için bırakın';
+
+  @override
+  String get pullOlderChat => 'Önceki sohbet için yukarı çekip basılı tutun';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Basılı tutun: $title';
+  }
 }

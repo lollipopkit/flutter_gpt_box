@@ -78,5 +78,9 @@
   "exportFile": "Dosyaya aktar",
   "importFile": "Dosyadan geri yükle",
   "copyBackup": "Panoya kopyala",
-  "pasteBackup": "Panodan geri yükle"
+  "pasteBackup": "Panodan geri yükle",
+  "pullNewChat": "Yeni sohbet için aşağı çekin",
+  "releaseNewChat": "Yeni sohbet için bırakın",
+  "pullOlderChat": "Önceki sohbet için yukarı çekip basılı tutun",
+  "holdOlderChatFmt": "Basılı tutun: {title}"
 }

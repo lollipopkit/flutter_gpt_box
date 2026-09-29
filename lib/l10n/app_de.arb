@@ -78,5 +78,9 @@
   "exportFile": "In eine Datei exportieren",
   "importFile": "Aus einer Datei wiederherstellen",
   "copyBackup": "In die Zwischenablage kopieren",
-  "pasteBackup": "Aus der Zwischenablage wiederherstellen"
+  "pasteBackup": "Aus der Zwischenablage wiederherstellen",
+  "pullNewChat": "Nach unten ziehen für einen neuen Chat",
+  "releaseNewChat": "Loslassen für einen neuen Chat",
+  "pullOlderChat": "Nach oben ziehen und halten für den vorherigen Chat",
+  "holdOlderChatFmt": "Weiter halten: {title}"
 }

@@ -279,4 +279,18 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Pulihkan dari papan klip';
+
+  @override
+  String get pullNewChat => 'Tarik ke bawah untuk chat baru';
+
+  @override
+  String get releaseNewChat => 'Lepaskan untuk chat baru';
+
+  @override
+  String get pullOlderChat => 'Tarik ke atas dan tahan untuk chat sebelumnya';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Terus tahan: $title';
+  }
 }

@@ -78,5 +78,9 @@
   "exportFile": "匯出到檔案",
   "importFile": "從檔案還原",
   "copyBackup": "複製到剪貼簿",
-  "pasteBackup": "從剪貼簿還原"
+  "pasteBackup": "從剪貼簿還原",
+  "pullNewChat": "下拉新建對話",
+  "releaseNewChat": "放開新建對話",
+  "pullOlderChat": "上拉並按住,切換到上一個對話",
+  "holdOlderChatFmt": "繼續按住:{title}"
 }

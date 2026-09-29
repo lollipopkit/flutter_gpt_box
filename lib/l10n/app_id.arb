@@ -78,5 +78,9 @@
   "exportFile": "Ekspor ke berkas",
   "importFile": "Pulihkan dari berkas",
   "copyBackup": "Salin ke papan klip",
-  "pasteBackup": "Pulihkan dari papan klip"
+  "pasteBackup": "Pulihkan dari papan klip",
+  "pullNewChat": "Tarik ke bawah untuk chat baru",
+  "releaseNewChat": "Lepaskan untuk chat baru",
+  "pullOlderChat": "Tarik ke atas dan tahan untuk chat sebelumnya",
+  "holdOlderChatFmt": "Terus tahan: {title}"
 }

@@ -304,4 +304,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get pasteBackup => 'Restaurer depuis le presse-papiers';
+
+  @override
+  String get pullNewChat => 'Tirez vers le bas pour un nouveau chat';
+
+  @override
+  String get releaseNewChat => 'Relâchez pour un nouveau chat';
+
+  @override
+  String get pullOlderChat =>
+      'Tirez vers le haut et maintenez pour le chat précédent';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Maintenez : $title';
+  }
 }
