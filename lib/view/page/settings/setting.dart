@@ -1,8 +1,7 @@
-import 'dart:async';
 
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
-import 'package:gpt_box/core/util/tool_func/tool.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:gpt_box/core/util/update.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/github_id.dart';
 import 'package:gpt_box/data/res/l10n.dart';
@@ -10,193 +9,278 @@ import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
-import 'package:gpt_box/view/page/settings/providers.dart';
-import 'package:gpt_box/view/widget/section_list.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:gpt_box/view/widget/transitions.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
-part 'mcp.dart';
 part 'about.dart';
 part 'def.dart';
 
-class SettingsPage extends StatefulWidget {
-  final SettingsPageArgs? args;
+/// Where the settings are shown.
+///
+/// On a wide window they are pushed as one page of their own — their
+/// categories in the sidebar, the page beside them; a phone pushes each page.
+/// [inline] says which the home page is laying out now.
+abstract final class SettingsNav {
+  /// The page shown beside the categories, while [SettingsShell] is open.
+  static final tab = nvn<SettingsTab>();
 
-  const SettingsPage({super.key, this.args});
+  /// A provider opened from the providers page, shown in its place: its id,
+  /// or '' for a new custom one.
+  static final provider = nvn<String>();
 
-  static const route = AppRoute<SettingsPageRet, SettingsPageArgs>(
-    page: SettingsPage.new,
-    path: '/settings',
-  );
+  /// Whether the home page is wide, and so opens [SettingsShell].
+  static var inline = false;
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  /// The open [SettingsShell]'s context, to close it from outside.
+  static BuildContext? _shell;
+
+  /// Whether [SettingsShell] is open: a provider opens inside it.
+  static bool get inShell => _shell?.mounted ?? false;
+
+  static void open(BuildContext context, [SettingsTab tab = SettingsTab.app]) {
+    if (!inline) {
+      SettingsTabPage.route.go(context, args: tab);
+      return;
+    }
+    provider.value = null;
+    SettingsNav.tab.value = tab;
+    if (_shell == null) SettingsShell.route.go(context);
+  }
+
+  /// Back to the chat.
+  static void close() {
+    final shell = _shell;
+    if (shell != null && shell.mounted) Navigator.of(shell).pop();
+  }
 }
 
-class _SettingsPageState extends State<SettingsPage>
-    with SingleTickerProviderStateMixin {
-  late final _tabCtrl = TabController(
-      length: SettingsTab.values.length,
-      vsync: this,
-      initialIndex: widget.args?.tabIndex.index ?? 0);
+/// The settings on a wide window: their categories where the chats were, and
+/// the page beside them. Pushed, so it comes in the way any page does.
+class SettingsShell extends StatefulWidget {
+  const SettingsShell({super.key});
+
+  static const route = AppRouteNoArg(page: SettingsShell.new, path: '/settings/shell');
+
+  @override
+  State<SettingsShell> createState() => _SettingsShellState();
+}
+
+class _SettingsShellState extends State<SettingsShell> {
+  @override
+  void initState() {
+    super.initState();
+    SettingsNav._shell = context;
+  }
 
   @override
   void dispose() {
-    _tabCtrl.dispose();
+    if (SettingsNav._shell == context) SettingsNav._shell = null;
+    SettingsNav.provider.value = null;
+    SettingsNav.tab.value = null;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final sets = Stores.setting;
     return Scaffold(
-      key: UniqueKey(),
-      appBar: CustomAppBar(
-        title: Text(libL10n.setting),
-        bottom: TabBar(
-          controller: _tabCtrl,
-          tabs: SettingsTab.tabs,
-          dividerHeight: 0,
-          tabAlignment: TabAlignment.center,
-          isScrollable: true,
+      body: sets.paneListWidth.listenable().listenVal(
+        (width) => AdaptivePanes.surface(
+          listWidth: width,
+          onListWidthChanged: sets.paneListWidth.set,
+          listBuilder: (_, _) => const SettingsSidebar(),
+          surfaceBuilder: (_, _) => SettingsNav.tab.listenVal((tab) {
+            final t = tab ?? SettingsTab.app;
+            // Peers: fade through from one page to another.
+            return FadeThroughSwitcher(
+              child: Padding(
+                key: ValueKey(t),
+                padding: const EdgeInsets.only(top: 4),
+                child: t == SettingsTab.providers ? const _Providers() : t.page,
+              ),
+            );
+          }),
         ),
       ),
-      body: TabBarView(controller: _tabCtrl, children: SettingsTab.pages),
     );
   }
 }
 
-final class AppSettingsPage extends StatefulWidget {
-  const AppSettingsPage({super.key});
+/// The providers, and a provider pushed within the pane.
+class _Providers extends StatelessWidget {
+  const _Providers();
 
   @override
-  State<AppSettingsPage> createState() => _AppSettingsPageState();
+  Widget build(BuildContext context) {
+    return SettingsNav.provider.listenVal((id) {
+      return PushSwitcher(
+        reverse: id == null,
+        child: id == null
+            ? const ProvidersPage(key: ValueKey('providers'))
+            : KeyedSubtree(
+                key: ValueKey('provider:$id'),
+                child: ProvidersPage.detail(id, onBack: () => SettingsNav.provider.value = null),
+              ),
+      );
+    });
+  }
 }
 
-final class _AppSettingsPageState extends State<AppSettingsPage> {
-  final _setStore = Stores.setting;
-  final _autoDelTrashCtrl = TextEditingController();
+/// The categories, for a phone: the sidebar's list as a page.
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
+  static const route = AppRouteNoArg(page: SettingsPage.new, path: '/settings');
 
   @override
-  void dispose() {
-    _autoDelTrashCtrl.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(title: Text(libL10n.setting)),
+      body: SectionList(
+        children: [
+          SettingsGroup(
+            rows: [
+              for (final t in SettingsTab.values)
+                SettingsRow(
+                  icon: t.icon,
+                  title: t.i18n,
+                  trailing: const RowChevron(),
+                  onTap: () => SettingsTabPage.route.go(context, args: t),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
+}
+
+/// One settings page, pushed.
+class SettingsTabPage extends StatelessWidget {
+  const SettingsTabPage({super.key, this.args});
+
+  final SettingsTab? args;
+
+  static const route = AppRoute<void, SettingsTab>(page: SettingsTabPage.new, path: '/settings/page');
 
   @override
-  void initState() {
-    super.initState();
-    _autoDelTrashCtrl.text = _setStore.trashDays.get().toString();
+  Widget build(BuildContext context) {
+    final tab = args ?? SettingsTab.app;
+    return Scaffold(
+      appBar: CustomAppBar(title: Text(tab.i18n)),
+      body: tab.page,
+    );
   }
+}
+
+/// The sidebar while in the settings: back to the chats, then the categories.
+class SettingsSidebar extends StatelessWidget {
+  const SettingsSidebar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsNav.tab.listenVal((tab) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(9, 0, 7, 9),
+            child: Row(
+              children: [
+                Btn.icon(
+                  icon: const Icon(Icons.arrow_back, size: 22),
+                  text: l10n.backToChats,
+                  onTap: () => Navigator.of(context).pop(),
+                ),
+                const SizedBox(width: 5),
+                Text(libL10n.setting, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ),
+          for (final t in SettingsTab.values)
+            SideBarTile(
+              icon: t == tab ? t.selectedIcon : t.icon,
+              title: t.i18n,
+              selected: t == tab,
+              onTap: () => SettingsNav.open(context, t),
+            ),
+        ],
+      );
+    });
+  }
+}
+
+final class AppSettingsPage extends StatelessWidget {
+  const AppSettingsPage({super.key});
+
+  static final _set = Stores.setting;
 
   @override
   Widget build(BuildContext context) {
     return SectionList(
       children: [
-        const CenterGreyTitle('App'),
-        _buildApp(),
-        CenterGreyTitle(l10n.chat),
-        _buildAppChat(),
+        SettingsGroup(
+          title: libL10n.app,
+          rows: [
+            _locale(context),
+            _colorSeed(context),
+            _themeMode(context),
+            _checkUpdate(context),
+          ],
+        ),
+        SettingsGroup(
+          title: l10n.chat,
+          rows: [
+            SettingsRow(
+              icon: Icons.auto_awesome,
+              title: l10n.genChatTitle,
+              subtitle: l10n.genChatTitleTip,
+              trailing: StoreSwitch(prop: _set.genTitle),
+            ),
+            SettingsRow(
+              icon: Icons.vertical_align_bottom,
+              title: l10n.scrollOnNewMsg,
+              trailing: StoreSwitch(prop: _set.scrollBottom),
+            ),
+            SettingsRow(
+              icon: Icons.swap_vert,
+              title: l10n.scrollAfterSwitch,
+              trailing: StoreSwitch(prop: _set.scrollAfterSwitch),
+            ),
+            SettingsRow(
+              icon: Icons.wrap_text,
+              title: l10n.softWrap,
+              subtitle: l10n.codeBlock,
+              trailing: StoreSwitch(prop: _set.softWrap),
+            ),
+            SettingsRow(
+              icon: Icons.check_circle_outline,
+              title: l10n.deleteConfirm,
+              trailing: StoreSwitch(prop: _set.confrimDel),
+            ),
+            _trashDays(context),
+            LlmStores.chat.changes.listen(() {
+              final n = LlmStores.chat.all(trashed: true).length;
+              return SettingsRow(
+                icon: Icons.restore_from_trash_outlined,
+                title: l10n.trash,
+                trailing: Row(mainAxisSize: MainAxisSize.min, children: [RowValue(l10n.chatsCountFmt(n)), const RowChevron()]),
+                onTap: () => TrashPage.route.go(context),
+              );
+            }),
+          ],
+        ),
       ],
     );
   }
 
-  Widget _buildApp() {
-    final children = [
-      _buildLocale(),
-      _buildColorSeed(),
-      _buildThemeMode(),
-      _buildCheckUpdate(),
-      _buildAppMore(),
-    ];
-    return Column(children: children.map((e) => e.cardx).toList());
-  }
-
-  Widget _buildAppChat() {
-    final children = [
-      _buildUserName(),
-      _buildGenTitle(),
-      _buildAutoScrollBottom(),
-      _buildSoftWrap(),
-      _buildDeleteConfrim(),
-      _buildAutoDeleteTrash,
-    ];
-    return Column(children: children.map((e) => e.cardx).toList());
-  }
-
-  Widget _buildThemeMode() {
-    return ValueListenableBuilder(
-      valueListenable: _setStore.themeMode.listenable(),
-      builder: (_, val, _) => ListTile(
-        leading: const Icon(Icons.sunny),
-        title: Text(l10n.themeMode),
-        onTap: () async {
-          final result = await context.showPickSingleDialog(
-            title: l10n.themeMode,
-            items: ThemeMode.values,
-            display: (e) => e.i18n,
-            initial: ThemeMode.values[val],
-          );
-          if (result != null) {
-            _setStore.themeMode.set(result.index);
-            context.pop();
-
-            /// Set delay to true to wait for db update.
-            RNodes.app.notify(delay: true);
-          }
-        },
-        trailing: Text(
-          ThemeMode.values[val].name,
-          style: UIs.text13Grey,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildColorSeed() {
-    return ValueListenableBuilder(
-      valueListenable: _setStore.themeColorSeed.listenable(),
-      builder: (_, val, _) {
-        final primaryColor = Color(val);
-        return ListTile(
-          leading: const Icon(Icons.colorize),
-          title: Text(l10n.themeColorSeed),
-          trailing: ClipOval(
-            child: Container(color: primaryColor, height: 27, width: 27),
-          ),
-          onTap: () async {
-            var color = primaryColor;
-            await context.showRoundDialog(
-              title: libL10n.select,
-              child: ColorPicker(
-                color: primaryColor,
-                onColorChanged: (c) => color = c,
-              ),
-              actions: Btn.ok(onTap: () {
-                _onSaveColor(color);
-                context.pop();
-              }).toList,
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _onSaveColor(Color c) {
-    _setStore.themeColorSeed.put(c.value255);
-    RNodes.app.notify(delay: true);
-  }
-
-  Widget _buildLocale() {
-    return ValueListenableBuilder(
-      valueListenable: _setStore.locale.listenable(),
-      builder: (_, val, _) => ListTile(
-        leading: const Icon(MingCute.translate_2_line),
-        title: Text(libL10n.language),
-        trailing: Text(
-          val.isEmpty ? context.localeNativeName : val,
-          style: UIs.text13Grey,
-        ),
+  Widget _locale(BuildContext context) {
+    return _set.locale.listenable().listenVal((val) {
+      return SettingsRow(
+        icon: Icons.translate,
+        title: libL10n.language,
+        trailing: RowValue(val.isEmpty ? context.localeNativeName : (val.toLocale?.nativeName ?? val)),
         onTap: () async {
           final result = await context.showPickSingleDialog<Locale>(
             title: libL10n.language,
@@ -205,250 +289,158 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
             initial: val.toLocale ?? l10n.localeName.toLocale,
           );
           if (result != null) {
-            _setStore.locale.set(result.code);
+            _set.locale.set(result.code);
             await RNodes.app.notify(delay: true);
           }
         },
-      ),
-    );
+      );
+    });
   }
 
-  Widget _buildCheckUpdate() {
-    return ListTile(
-      leading: const Icon(Icons.update),
-      title: Text(l10n.autoCheckUpdate),
-      subtitle: ValueListenableBuilder(
-        valueListenable: AppUpdateIface.newestBuild,
-        builder: (_, val, _) {
-          final text = switch (val) {
-            null => '${l10n.current} v${BuildData.build}, ${l10n.clickToCheck}',
-            > BuildData.build => libL10n.versionHasUpdate(val),
-            _ => libL10n.versionUpdated(BuildData.build),
-          };
-          return Text(text, style: UIs.textGrey);
-        },
-      ),
-      onTap: () => Fns.throttle(
-        () => AppUpdateIface.doUpdate(
-          githubReleasesUrl: Urls.githubReleasesApi,
-          context: context,
-          build: BuildData.build,
-        ),
-      ),
-      trailing: StoreSwitch(prop: _setStore.autoCheckUpdate),
-    );
-  }
-
-  // Widget _buildFontSize() {
-  //   return ValueListenableBuilder(
-  //     valueListenable: _store.fontSize.listenable(),
-  //     builder: (_, val, __) => ListTile(
-  //       leading: const Icon(Icons.text_fields),
-  //       title: Text(l10n.fontSize),
-  //       trailing: Text(
-  //         val.toString(),
-  //         style: UIs.text13Grey,
-  //       ),
-  //       subtitle: Text(l10n.fontSizeSettingTip, style: UIs.text13Grey),
-  //       onTap: () async {
-  //         final ctrl = TextEditingController(text: val.toString());
-  //         final result = await context.showRoundDialog<String>(
-  //           title: l10n.fontSize,
-  //           child: Input(
-  //             icon: Icons.text_fields,
-  //             controller: ctrl,
-  //             hint: '12',
-  //             type: const TextInputType.numberWithOptions(decimal: true),
-  //           ),
-  //           actions: Btns.oks(onTap: () => context.pop(ctrl.text)),
-  //         );
-  //         if (result == null) return;
-  //         final newVal = double.tryParse(result);
-  //         if (newVal == null) {
-  //           Toast.show('Invalid number: $result');
-  //           return;
-  //         }
-  //         _store.fontSize.put(newVal);
-  //       },
-  //     ),
-  //   );
-  // }
-
-  Widget _buildGenTitle() {
-    return ListTile(
-      leading: const Icon(Icons.auto_awesome, size: 21),
-      title: Text(l10n.genChatTitle),
-      trailing: StoreSwitch(prop: _setStore.genTitle),
-    );
-  }
-
-  Widget _buildAutoScrollBottom() {
-    return ExpandTile(
-      leading: const Icon(Icons.keyboard_arrow_down),
-      title: Text(l10n.autoScrollBottom),
-      children: [
-        _buildScrollBottomOnMsg(),
-        _buildScrollAfterSwitch(),
-      ],
-    );
-  }
-
-  Widget _buildScrollBottomOnMsg() {
-    return ListTile(
-      title: Text(l10n.onMsgCome),
-      trailing: StoreSwitch(prop: _setStore.scrollBottom),
-    );
-  }
-
-  Widget _buildSoftWrap() {
-    return ListTile(
-      leading: const Icon(Icons.wrap_text),
-      title: TipText(l10n.softWrap, l10n.codeBlock),
-      trailing: StoreSwitch(prop: _setStore.softWrap),
-    );
-  }
-
-
-  // Widget _buildCalcTokenLen() {
-  //   return ListTile(
-  //     leading: const Icon(Icons.calculate),
-  //     title: Text(l10n.calcTokenLen),
-  //     trailing: StoreSwitch(prop: _store.calcTokenLen),
-  //   );
-  // }
-
-  // Widget _buildReplay() {
-  //   return ListTile(
-  //     leading: const Icon(Icons.replay),
-  //     title: Text(l10n.replay),
-  //     trailing: StoreSwitch(prop: _store.replay),
-  //   );
-  // }
-
-  Widget _buildAppMore() {
-    return ExpandTile(
-      leading: const Icon(MingCute.more_3_fill),
-      title: Text(l10n.more),
-      children: [
-        _buildJoinBeta(),
-        if (isDesktop) _buildHideTitleBar(),
-      ],
-    );
-  }
-
-  Widget _buildDeleteConfrim() {
-    return ListTile(
-      leading: const Icon(MingCute.check_circle_fill),
-      title: Text(l10n.deleteConfirm),
-      trailing: StoreSwitch(prop: _setStore.confrimDel),
-    );
-  }
-
-  Widget _buildJoinBeta() {
-    return ListTile(
-      leading: const Icon(Clarity.beta_solid),
-      title: Text(l10n.joinBeta),
-      trailing: StoreSwitch(
-        prop: _setStore.joinBeta,
-        callback: (val) async {
-          if (val) {
-            AppUpdate.chan = AppUpdateChan.beta;
-          } else {
-            AppUpdate.chan = AppUpdateChan.stable;
-          }
-          await AppUpdateIface.doUpdate(
-            context: context,
-            githubReleasesUrl: Urls.githubReleasesApi,
-            build: BuildData.build,
+  Widget _colorSeed(BuildContext context) {
+    return _set.themeColorSeed.listenable().listenVal((val) {
+      final color = Color(val);
+      return SettingsRow(
+        icon: Icons.colorize,
+        title: l10n.themeColorSeed,
+        trailing: Container(width: 24, height: 24, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        onTap: () async {
+          var picked = color;
+          await context.showRoundDialog(
+            title: libL10n.select,
+            child: ColorPicker(color: color, onColorChanged: (c) => picked = c),
+            actions: Btn.ok(
+              onTap: () {
+                _set.themeColorSeed.put(picked.value255);
+                RNodes.app.notify(delay: true);
+                context.pop();
+              },
+            ).toList,
           );
         },
-      ),
-    );
+      );
+    });
   }
 
+  Widget _themeMode(BuildContext context) {
+    return _set.themeMode.listenable().listenVal((val) {
+      return SettingsRow(
+        icon: Icons.contrast,
+        title: l10n.themeMode,
+        trailing: RowValue(ThemeMode.values[val].i18n),
+        onTap: () async {
+          final result = await context.showPickSingleDialog(
+            title: l10n.themeMode,
+            items: ThemeMode.values,
+            display: (e) => e.i18n,
+            initial: ThemeMode.values[val],
+          );
+          if (result == null) return;
+          _set.themeMode.set(result.index);
+          RNodes.app.notify(delay: true);
+        },
+      );
+    });
+  }
 
+  Widget _checkUpdate(BuildContext context) {
+    return AppUpdateIface.newestBuild.listenVal((val) {
+      final text = switch (val) {
+        null => '${l10n.current} v${BuildData.build}, ${l10n.clickToCheck}',
+        > BuildData.build => libL10n.versionHasUpdate(val),
+        _ => libL10n.versionUpdated(BuildData.build),
+      };
+      return SettingsRow(
+        icon: Icons.update,
+        title: l10n.autoCheckUpdate,
+        subtitle: text,
+        trailing: StoreSwitch(prop: _set.autoCheckUpdate),
+        onTap: () => Fns.throttle(() => checkAppUpdate(context)),
+      );
+    });
+  }
 
+  Widget _trashDays(BuildContext context) {
+    return _set.trashDays.listenable().listenVal((days) {
+      return SettingsRow(
+        icon: Icons.delete_outline,
+        title: l10n.emptyTrashAfter,
+        subtitle: l10n.trashTip,
+        trailing: RowValue(l10n.daysFmt(days)),
+        onTap: () async {
+          final ctrl = TextEditingController(text: '$days');
+          void save(String s) {
+            // At least a day: 0 would empty the trash at the next launch.
+            final v = int.tryParse(s);
+            if (v == null || v < 1) {
+              Toast.show(libL10n.fail);
+              return;
+            }
+            _set.trashDays.put(v);
+            context.pop();
+          }
 
-  Widget _buildUserName() {
-    final property = _setStore.avatar;
-    return ListTile(
-      leading: const Icon(Bootstrap.person_vcard_fill, size: 22),
-      title: Text(libL10n.name),
-      trailing: ValBuilder(
-        listenable: _setStore.avatar.listenable(),
-        builder: (val) => Text(val, style: const TextStyle(fontSize: 18)),
-      ),
-      onTap: () async {
-        final ctrl = TextEditingController(text: property.get());
-        void onSave(String s) {
-          property.set(s);
-          context.pop();
-        }
+          await context.showRoundDialog(
+            title: l10n.emptyTrashAfter,
+            child: Input(controller: ctrl, type: TextInputType.number, autoFocus: true, onSubmitted: save, hint: l10n.emptyTrashTip),
+            actions: Btn.ok(onTap: () => save(ctrl.text)).toList,
+          );
+          ctrl.dispose();
+        },
+      );
+    });
+  }
+}
 
-        await context.showRoundDialog(
-          title: libL10n.name,
-          child: Input(
-            controller: ctrl,
-            type: TextInputType.name,
-            maxLength: 7,
-            autoFocus: true,
-            onSubmitted: (s) => onSave(s),
-          ),
-          actions: Btn.ok(onTap: () => onSave(ctrl.text)).toList,
+/// Deleted chats, until the trash is emptied.
+class TrashPage extends StatelessWidget {
+  const TrashPage({super.key});
+
+  static const route = AppRouteNoArg(page: TrashPage.new, path: '/trash');
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(title: Text(l10n.trash)),
+      body: LlmStores.chat.changes.listen(() {
+        final chats = LlmStores.chat.all(trashed: true);
+        if (chats.isEmpty) return EmptyPane(icon: Icons.delete_outline, label: libL10n.empty);
+        return SectionList(
+          children: [
+            SettingsGroup(
+              rows: [
+                for (final m in chats)
+                  SettingsRow(
+                    title: m.title ?? l10n.untitled,
+                    subtitle: m.trashedAt?.toAgoStr(),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Btn.icon(
+                          icon: const Icon(Icons.restore, size: 19),
+                          text: libL10n.restore,
+                          onTap: () => Chats.restore(m.id),
+                        ),
+                        Btn.icon(
+                          icon: const Icon(Icons.delete_forever_outlined, size: 19),
+                          text: libL10n.delete,
+                          onTap: () async {
+                            final ok = await context.showRoundDialog<bool>(
+                              title: libL10n.attention,
+                              child: Text(l10n.delFmt(m.title ?? l10n.untitled, l10n.chat)),
+                              actions: Btnx.okReds,
+                            );
+                            if (ok == true) await Chats.deleteForever(m.id);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ],
         );
-      },
-    );
-  }
-
-
-  Widget _buildHideTitleBar() {
-    return ListTile(
-      leading: const Icon(Bootstrap.window_sidebar, size: 20),
-      title: Text(libL10n.hideTitleBar),
-      trailing: StoreSwitch(
-        prop: _setStore.hideTitleBar,
-        callback: (value) => SystemUIs.updateTitleBarStyle(hideTitleBar: value),
-      ),
-    );
-  }
-
-  Widget _buildScrollAfterSwitch() {
-    return ListTile(
-      title: Text(l10n.onSwitchChat),
-      trailing: StoreSwitch(prop: _setStore.scrollAfterSwitch),
-    );
-  }
-
-  Widget get _buildAutoDeleteTrash {
-    void onSave(String s) {
-      final days = int.tryParse(s);
-      if (days == null) {
-        Toast.show(libL10n.fail);
-        return;
-      }
-      _setStore.trashDays.put(days);
-      context.pop();
-    }
-
-    return ListTile(
-      leading: const Icon(Icons.delete),
-      title: TipText(
-          l10n.emptyTrash, l10n.emptyTrashTip),
-      onTap: () {
-        context.showRoundDialog(
-          title: l10n.emptyTrash,
-          child: Input(
-            controller: _autoDelTrashCtrl,
-            type: TextInputType.number,
-            autoFocus: true,
-            onSubmitted: onSave,
-          ),
-          actions: Btn.ok(onTap: () => onSave(_autoDelTrashCtrl.text)).toList,
-        );
-      },
-      trailing: _setStore.trashDays
-          .listenable()
-          .listenVal((days) => Text('$days ${libL10n.day}')),
+      }),
     );
   }
 }

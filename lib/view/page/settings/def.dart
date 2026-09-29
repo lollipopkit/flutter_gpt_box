@@ -1,40 +1,42 @@
 part of 'setting.dart';
 
-final class SettingsPageRet {
-  final bool restored;
-  const SettingsPageRet({required this.restored});
-}
-
-final class SettingsPageArgs {
-  final SettingsTab tabIndex;
-  const SettingsPageArgs({this.tabIndex = SettingsTab.app});
-}
-
 enum SettingsTab {
   app,
   providers,
   tool,
   bak,
-  about,
-  ;
+  about;
 
   String get i18n => switch (this) {
-        app => libL10n.app,
-        providers => l10n.providers,
-        tool => l10n.tool,
-        bak => libL10n.backup,
-        about => libL10n.about,
-      };
+    app => libL10n.app,
+    providers => l10n.providers,
+    tool => l10n.toolsAndMcp,
+    bak => libL10n.backup,
+    about => libL10n.about,
+  };
+
+  IconData get icon => switch (this) {
+    app => Icons.tune,
+    providers => Icons.key_outlined,
+    tool => Icons.build_outlined,
+    bak => Icons.backup_outlined,
+    about => Icons.info_outline,
+  };
+
+  /// Filled, for the one open.
+  IconData get selectedIcon => switch (this) {
+    app => Icons.tune,
+    providers => Icons.key,
+    tool => Icons.build,
+    bak => Icons.backup,
+    about => Icons.info,
+  };
 
   Widget get page => switch (this) {
-        app => const AppSettingsPage(),
-        providers => const ProvidersPage(embedded: true),
-        tool => const McpPage(),
-        bak => const BackupPage(),
-        about => const AboutPage(),
-      };
-
-  static List<Tab> get tabs => values.map((e) => Tab(text: e.i18n)).toList();
-
-  static List<Widget> get pages => values.map((e) => e.page).toList();
+    app => const AppSettingsPage(),
+    providers => const ProvidersPage(),
+    tool => const ToolsPage(),
+    bak => const BackupPage(),
+    about => const AboutPage(),
+  };
 }

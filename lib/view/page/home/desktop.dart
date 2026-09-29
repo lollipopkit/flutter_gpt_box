@@ -10,7 +10,7 @@ Map<ShortcutActivator, VoidCallback> _desktopShortcuts(_HomePageState s) {
   if (!isDesktop) return const {};
   return {
     _chord(LogicalKeyboardKey.keyN): s._newChat,
-    _chord(LogicalKeyboardKey.comma): s._openSettings,
+    _chord(LogicalKeyboardKey.comma): () => s._openSettings(),
     _chord(LogicalKeyboardKey.keyF): s._search,
     _chord(LogicalKeyboardKey.bracketLeft): () => s._step(-1),
     _chord(LogicalKeyboardKey.bracketRight): () => s._step(1),
@@ -31,7 +31,7 @@ List<PlatformMenuItem> _macosMenus(_HomePageState s) {
             PlatformMenuItem(
               label: libL10n.setting,
               shortcut: _chord(LogicalKeyboardKey.comma),
-              onSelected: s._openSettings,
+              onSelected: () => s._openSettings(),
             ),
           ],
         ),

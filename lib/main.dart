@@ -1,15 +1,14 @@
 import 'dart:async';
 
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gpt_box/app.dart';
 import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/res/build_data.dart';
-import 'package:gpt_box/core/llm/chats.dart';
-import 'package:gpt_box/core/llm/llm.dart';
-import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/page/settings/setting.dart';
 import 'package:logging/logging.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 Future<void> main() async {
   await _runInZone(() async {
@@ -42,7 +41,8 @@ Future<void> _initApp() async {
 
   await Paths.init(
     BuildData.name,
-    dirs: const {PathDir.img, PathDir.audio},
+    bakName: bakFileName,
+    dirs: const {},
     fileInUserDocuments: false,
   );
   await CrashLog.attach(Paths.doc.joinPath('logs'));
@@ -76,10 +76,10 @@ Future<void> _initWindow() async {
   final sets = Stores.setting;
   final windowStateProp = sets.windowState;
   final windowState = windowStateProp.get();
-  final hideTitleBar = sets.hideTitleBar.get();
-  WindowFrameConfig.setShowCaption(hideTitleBar);
+  // The app draws its own title bar: the design has no system one.
+  WindowFrameConfig.setShowCaption(true);
   await SystemUIs.initDesktopWindow(
-    hideTitleBar: hideTitleBar,
+    hideTitleBar: true,
     size: windowState?.size ?? const Size(1100, 760),
     position: windowState?.position,
     listener: WindowStateListener(windowStateProp),
@@ -87,14 +87,34 @@ Future<void> _initWindow() async {
 }
 
 Future<void> _initAppComponents() async {
+  _configLlmUi();
   await Llm.init();
-  // Tools and memories live in the tool store; open chats follow it.
-  Stores.mcp.watch().listen((_) => Chats.reconfigureSoon());
+  // Open chats follow the tool settings and the MCP servers.
+  LlmStores.tool.watch().listen((_) => Chats.reconfigureSoon());
   McpTools.changes.addListener(Chats.reconfigureSoon);
-  if (Stores.mcp.enabled.get()) unawaited(McpTools.connectStored());
+  if (LlmStores.tool.enabled.get()) unawaited(McpTools.connectStored());
 
   BakSync.instance.init();
-  unawaited(BakSync.instance.sync());
+  // Only when sync is on, and never without a password: see BakSync.
+  BakSync.instance.syncSoon();
+}
 
-  if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;
+/// What fl_pi_llm_ui takes from this app: its name, its settings, and where
+/// the provider settings are.
+void _configLlmUi() {
+  final set = Stores.setting;
+  LlmUi.appName = BuildData.name;
+  LlmUi.appVersion = '1.0.${BuildData.build}';
+  LlmUi.genTitle = set.genTitle.get;
+  LlmUi.trashDays = set.trashDays.get;
+  LlmUi.softWrap = set.softWrap.listenable();
+  LlmUi.scrollBottom = set.scrollBottom.get;
+  LlmUi.scrollAfterSwitch = set.scrollAfterSwitch.get;
+  LlmUi.showProvider = (_, id) {
+    // Beside the provider list, in the settings of a wide window.
+    if (!SettingsNav.inShell) return false;
+    SettingsNav.provider.value = id;
+    return true;
+  };
+  LlmUi.openProviders = (context) => SettingsNav.open(context, SettingsTab.providers);
 }

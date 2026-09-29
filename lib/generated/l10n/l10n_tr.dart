@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -9,23 +10,14 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get attention => 'Dikkat';
-
-  @override
   String get auto => 'Otomatik';
 
   @override
   String get autoCheckUpdate => 'Güncellemeleri otomatik kontrol et';
 
   @override
-  String get autoScrollBottom => 'Otomatik aşağı kaydır';
-
-  @override
   String get backupTip =>
       'Lütfen yedekleme dosyanızın özel ve güvenli olduğundan emin olun!';
-
-  @override
-  String get calcTokenLen => 'Token uzunluğunu hesapla';
 
   @override
   String get chat => 'Sohbet';
@@ -56,34 +48,11 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Geri dönüşüm kutusunu boşalt';
-
-  @override
   String get emptyTrashTip =>
       '==0, bir sonraki başlangıçta sil. <0 otomatik olarak silme.';
 
   @override
-  String get fontSize => 'Yazı tipi boyutu';
-
-  @override
-  String get fontSizeSettingTip => 'Sadece kod bloklarına uygulanır';
-
-  @override
   String get genChatTitle => 'Sohbet başlığı oluştur';
-
-  @override
-  String get history => 'Geçmiş';
-
-  @override
-  String historyToolHelp(Object keywords) {
-    return '$keywords anahtar kelimelerini içeren sohbetler bağlam olarak yüklensin mi?';
-  }
-
-  @override
-  String get historyToolTip => 'Geçmiş sohbetleri bağlam olarak yükle';
-
-  @override
-  String get httpToolTip => 'HTTP isteği gerçekleştir, örneğin: içerik ara';
 
   @override
   String get image => 'Resim';
@@ -92,9 +61,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String invalidLinkFmt(Object uri) {
     return 'Bilinmeyen bağlantı: $uri';
   }
-
-  @override
-  String get joinBeta => 'Beta testine katıl';
 
   @override
   String get languageName => 'Türkçe';
@@ -106,29 +72,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get licenseMenuItem => 'Açık kaynak lisansları';
 
   @override
-  String get list => 'Liste';
-
-  @override
   String get manual => 'Manuel';
-
-  @override
-  String get memory => 'Hafıza';
-
-  @override
-  String memoryAdded(Object str) {
-    return 'Hafıza eklendi: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return '[$txt] hatırlansın mı?';
-  }
-
-  @override
-  String get message => 'Mesaj';
-
-  @override
-  String get model => 'Model';
 
   @override
   String get more => 'Daha fazla';
@@ -138,12 +82,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get newChat => 'Yeni sohbet';
-
-  @override
-  String get onMsgCome => 'Yeni mesajlar olduğunda';
-
-  @override
-  String get onSwitchChat => 'Konuşmalar arasında geçiş yaparken';
 
   @override
   String get passwd => 'Şifre';
@@ -156,9 +94,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get rename => 'Yeniden adlandır';
-
-  @override
-  String get replay => 'Tekrar oynat';
 
   @override
   String get share => 'Paylaş';
@@ -175,9 +110,6 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get switcher => 'Değiştirici';
-
-  @override
   String syncConflict(Object a, Object b) {
     return 'Çakışma: $a ve $b aynı anda etkinleştirilemez';
   }
@@ -192,22 +124,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get themeMode => 'Tema modu';
 
   @override
-  String get tool => 'Araç';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return '$tool aracını kullanmayı kabul ediyor musunuz?';
-  }
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Ağdan veri alınacak, bu sefer $host ile iletişim kurulacak';
-  }
-
-  @override
-  String get toolHttpReqName => 'HTTP isteği';
-
-  @override
   String get untitled => 'Başlıksız';
 
   @override
@@ -217,93 +133,163 @@ class AppLocalizationsTr extends AppLocalizations {
   String get user => 'Kullanıcı';
 
   @override
-  String get deny => 'Deny';
+  String get trash => 'Çöp kutusu';
 
   @override
-  String get allow => 'Allow';
-
-  @override
-  String get allowAlways => 'Always allow';
-
-  @override
-  String get trash => 'Trash';
-
-  @override
-  String get startChatTip => 'Pick a model below and say something.';
-
-  @override
-  String get camera => 'Camera';
-
-  @override
-  String get send => 'Send';
+  String get startChatTip => 'Aşağıdan bir model seçip bir şey yazın.';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Henüz hiçbir sağlayıcının anahtarı yok. Sohbete başlamak için bir tane ekleyin.';
 
   @override
-  String get providers => 'Providers';
-
-  @override
-  String get regenerate => 'Regenerate';
-
-  @override
-  String get compacted => 'Earlier messages were summarised';
-
-  @override
-  String get favorite => 'Favorites';
-
-  @override
-  String get defaultModel => 'Default model';
-
-  @override
-  String get titleModel => 'Model for titles';
-
-  @override
-  String get systemPrompt => 'System prompt';
-
-  @override
-  String get compaction => 'Compact long chats';
-
-  @override
-  String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
-
-  @override
-  String get customProvider => 'Custom provider';
-
-  @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
-
-  @override
-  String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
-
-  @override
-  String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n models';
-  }
-
-  @override
-  String get sameAsChat => 'Same as the chat';
+  String get providers => 'Sağlayıcılar';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Sistem anahtar zincirinde saklanır, yedeklere asla girmez.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String providersCountFmt(int n) {
+    return '$n sağlayıcı';
+  }
 
   @override
-  String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+  String get today => 'Bugün';
+
+  @override
+  String get earlier => 'Daha önce';
+
+  @override
+  String get now => 'şimdi';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n dk';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n sa';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return '$n mesaj';
+  }
+
+  @override
+  String get version => 'Sürüm';
+
+  @override
+  String get toolsAndMcp => 'Araçlar ve MCP';
+
+  @override
+  String get backToChats => 'Sohbetlere dön';
+
+  @override
+  String get genChatTitleTip => 'İlk yanıttan sonra sohbete ad verir';
+
+  @override
+  String get scrollOnNewMsg => 'Yeni mesajda en alta kaydır';
+
+  @override
+  String get scrollAfterSwitch => 'Sohbet değiştirince en alta kaydır';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n sohbet';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Çöp kutusunu boşaltma süresi';
+
+  @override
+  String get trashTip => 'Silinen sohbetler önce burada bekler';
+
+  @override
+  String daysFmt(int n) {
+    return '$n gün';
+  }
+
+  @override
+  String get sync => 'Senkronizasyon';
+
+  @override
+  String get syncNow => 'Şimdi senkronize et';
+
+  @override
+  String get syncing => 'Senkronize ediliyor…';
+
+  @override
+  String get neverSynced => 'Henüz senkronize edilmedi';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Son senkronizasyon: $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Otomatik senkronizasyon için aşağıda iCloud veya WebDAV\'ı açın.';
+
+  @override
+  String get backupPassword => 'Yedek parolası';
+
+  @override
+  String get backupEncrypted => 'Yedekler bununla şifrelenir';
+
+  @override
+  String get backupNotEncrypted =>
+      'Ayarlanmadı: dosya yedekleri şifresizdir ve senkronizasyon için gereklidir';
+
+  @override
+  String get backupEncryptedTip => 'Bu yedek şifreli';
+
+  @override
+  String get backupPasswordRequired =>
+      'Önce bir yedek parolası ayarlayın: senkronize yedekler her zaman şifrelenir';
+
+  @override
+  String get passwordWrong => 'Yanlış parola veya yedek bozuk';
+
+  @override
+  String get backupTooNew =>
+      'Bu yedek uygulamanın daha yeni bir sürümünden. Geri yüklemek için güncelleyin.';
+
+  @override
+  String get syncAppSettings => 'Uygulama ayarlarını senkronize et';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Pencere boyutu ve başlık çubuğu cihaza özel kalır';
+
+  @override
+  String get webdavManualTip => 'Senkronize olanın yanında tarihli bir kopya';
+
+  @override
+  String get exportFile => 'Dosyaya aktar';
+
+  @override
+  String get importFile => 'Dosyadan geri yükle';
+
+  @override
+  String get copyBackup => 'Panoya kopyala';
+
+  @override
+  String get pasteBackup => 'Panodan geri yükle';
+
+  @override
+  String get pullNewChat => 'Yeni sohbet için aşağı çekin';
+
+  @override
+  String get releaseNewChat => 'Yeni sohbet için bırakın';
+
+  @override
+  String get pullOlderChat => 'Önceki sohbet için yukarı çekip basılı tutun';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Basılı tutun: $title';
+  }
 }

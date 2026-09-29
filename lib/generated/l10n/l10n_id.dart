@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -9,23 +10,14 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get attention => 'Perhatian';
-
-  @override
   String get auto => 'Otomatis';
 
   @override
   String get autoCheckUpdate => 'Periksa pembaruan secara otomatis';
 
   @override
-  String get autoScrollBottom => 'Gulir ke bawah secara otomatis';
-
-  @override
   String get backupTip =>
       'Pastikan file cadangan Anda bersifat pribadi dan aman!';
-
-  @override
-  String get calcTokenLen => 'Hitung panjang Token';
 
   @override
   String get chat => 'Obrolan';
@@ -56,34 +48,11 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Kosongkan tempat sampah';
-
-  @override
   String get emptyTrashTip =>
       '==0, hapus saat mulai berikutnya. <0 jangan hapus secara otomatis.';
 
   @override
-  String get fontSize => 'Ukuran font';
-
-  @override
-  String get fontSizeSettingTip => 'Hanya berlaku untuk blok kode';
-
-  @override
   String get genChatTitle => 'Buat judul obrolan';
-
-  @override
-  String get history => 'Riwayat';
-
-  @override
-  String historyToolHelp(Object keywords) {
-    return 'Muat obrolan yang berisi kata kunci $keywords sebagai konteks?';
-  }
-
-  @override
-  String get historyToolTip => 'Muat riwayat obrolan sebagai konteks';
-
-  @override
-  String get httpToolTip => 'Lakukan permintaan Http, contoh: cari konten';
 
   @override
   String get image => 'Gambar';
@@ -92,9 +61,6 @@ class AppLocalizationsId extends AppLocalizations {
   String invalidLinkFmt(Object uri) {
     return 'Tautan tidak dikenal: $uri';
   }
-
-  @override
-  String get joinBeta => 'Bergabung dengan pengujian Beta';
 
   @override
   String get languageName => 'Bahasa Indonesia';
@@ -106,29 +72,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get licenseMenuItem => 'Lisensi sumber terbuka';
 
   @override
-  String get list => 'Daftar';
-
-  @override
   String get manual => 'Manual';
-
-  @override
-  String get memory => 'Memori';
-
-  @override
-  String memoryAdded(Object str) {
-    return 'Memori ditambahkan: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return 'Ingat [$txt]?';
-  }
-
-  @override
-  String get message => 'Pesan';
-
-  @override
-  String get model => 'Model';
 
   @override
   String get more => 'Lainnya';
@@ -138,12 +82,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get newChat => 'Obrolan baru';
-
-  @override
-  String get onMsgCome => 'Ketika ada pesan baru';
-
-  @override
-  String get onSwitchChat => 'Saat beralih percakapan';
 
   @override
   String get passwd => 'Kata sandi';
@@ -156,9 +94,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get rename => 'Ubah nama';
-
-  @override
-  String get replay => 'Putar ulang';
 
   @override
   String get share => 'Bagikan';
@@ -175,9 +110,6 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get switcher => 'Pengalih';
-
-  @override
   String syncConflict(Object a, Object b) {
     return 'Konflik: tidak dapat mengaktifkan $a dan $b secara bersamaan';
   }
@@ -192,22 +124,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get themeMode => 'Mode tema';
 
   @override
-  String get tool => 'Alat';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Apakah Anda setuju untuk menggunakan alat $tool?';
-  }
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Akan mengambil data dari jaringan, kali ini akan menghubungi $host';
-  }
-
-  @override
-  String get toolHttpReqName => 'Permintaan Http';
-
-  @override
   String get untitled => 'Tanpa judul';
 
   @override
@@ -217,93 +133,164 @@ class AppLocalizationsId extends AppLocalizations {
   String get user => 'Pengguna';
 
   @override
-  String get deny => 'Deny';
+  String get trash => 'Sampah';
 
   @override
-  String get allow => 'Allow';
-
-  @override
-  String get allowAlways => 'Always allow';
-
-  @override
-  String get trash => 'Trash';
-
-  @override
-  String get startChatTip => 'Pick a model below and say something.';
-
-  @override
-  String get camera => 'Camera';
-
-  @override
-  String get send => 'Send';
+  String get startChatTip => 'Pilih model di bawah lalu tulis sesuatu.';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Belum ada penyedia yang memiliki kunci. Tambahkan satu untuk mulai mengobrol.';
 
   @override
-  String get providers => 'Providers';
-
-  @override
-  String get regenerate => 'Regenerate';
-
-  @override
-  String get compacted => 'Earlier messages were summarised';
-
-  @override
-  String get favorite => 'Favorites';
-
-  @override
-  String get defaultModel => 'Default model';
-
-  @override
-  String get titleModel => 'Model for titles';
-
-  @override
-  String get systemPrompt => 'System prompt';
-
-  @override
-  String get compaction => 'Compact long chats';
-
-  @override
-  String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
-
-  @override
-  String get customProvider => 'Custom provider';
-
-  @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
-
-  @override
-  String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
-
-  @override
-  String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n models';
-  }
-
-  @override
-  String get sameAsChat => 'Same as the chat';
+  String get providers => 'Penyedia';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Disimpan di keychain sistem, tidak pernah di cadangan.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String providersCountFmt(int n) {
+    return '$n penyedia';
+  }
 
   @override
-  String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+  String get today => 'Hari ini';
+
+  @override
+  String get earlier => 'Sebelumnya';
+
+  @override
+  String get now => 'baru saja';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n mnt';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n jam';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return '$n pesan';
+  }
+
+  @override
+  String get version => 'Versi';
+
+  @override
+  String get toolsAndMcp => 'Alat & MCP';
+
+  @override
+  String get backToChats => 'Kembali ke obrolan';
+
+  @override
+  String get genChatTitleTip => 'Memberi nama obrolan setelah balasan pertama';
+
+  @override
+  String get scrollOnNewMsg => 'Gulir ke bawah saat ada pesan baru';
+
+  @override
+  String get scrollAfterSwitch => 'Gulir ke bawah setelah berganti obrolan';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n obrolan';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Kosongkan sampah setelah';
+
+  @override
+  String get trashTip => 'Obrolan yang dihapus menunggu di sini dulu';
+
+  @override
+  String daysFmt(int n) {
+    return '$n hari';
+  }
+
+  @override
+  String get sync => 'Sinkronisasi';
+
+  @override
+  String get syncNow => 'Sinkronkan sekarang';
+
+  @override
+  String get syncing => 'Menyinkronkan…';
+
+  @override
+  String get neverSynced => 'Belum disinkronkan';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Terakhir disinkronkan $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Aktifkan iCloud atau WebDAV di bawah untuk sinkronisasi otomatis.';
+
+  @override
+  String get backupPassword => 'Kata sandi cadangan';
+
+  @override
+  String get backupEncrypted => 'Cadangan dienkripsi dengannya';
+
+  @override
+  String get backupNotEncrypted =>
+      'Belum diatur: cadangan berkas tidak terenkripsi, dan sinkronisasi memerlukannya';
+
+  @override
+  String get backupEncryptedTip => 'Cadangan ini terenkripsi';
+
+  @override
+  String get backupPasswordRequired =>
+      'Atur kata sandi cadangan dulu: cadangan yang disinkronkan selalu dienkripsi';
+
+  @override
+  String get passwordWrong => 'Kata sandi salah, atau cadangan rusak';
+
+  @override
+  String get backupTooNew =>
+      'Cadangan ini dari versi aplikasi yang lebih baru. Perbarui untuk memulihkannya.';
+
+  @override
+  String get syncAppSettings => 'Sinkronkan pengaturan aplikasi';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Ukuran jendela dan bilah judul tetap per perangkat';
+
+  @override
+  String get webdavManualTip =>
+      'Salinan bertanggal di samping yang disinkronkan';
+
+  @override
+  String get exportFile => 'Ekspor ke berkas';
+
+  @override
+  String get importFile => 'Pulihkan dari berkas';
+
+  @override
+  String get copyBackup => 'Salin ke papan klip';
+
+  @override
+  String get pasteBackup => 'Pulihkan dari papan klip';
+
+  @override
+  String get pullNewChat => 'Tarik ke bawah untuk chat baru';
+
+  @override
+  String get releaseNewChat => 'Lepaskan untuk chat baru';
+
+  @override
+  String get pullOlderChat => 'Tarik ke atas dan tahan untuk chat sebelumnya';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Terus tahan: $title';
+  }
 }

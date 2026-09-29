@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -9,22 +10,13 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
-  String get attention => '注意';
-
-  @override
   String get auto => '自動';
 
   @override
   String get autoCheckUpdate => '自動更新チェック';
 
   @override
-  String get autoScrollBottom => '自動で下にスクロール';
-
-  @override
   String get backupTip => 'バックアップファイルのプライバシーと安全性を確保してください！';
-
-  @override
-  String get calcTokenLen => 'トークン長を計算';
 
   @override
   String get chat => 'チャット';
@@ -55,33 +47,10 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'ゴミ箱を空にする';
-
-  @override
   String get emptyTrashTip => '==0、次回起動時に削除。<0 自動削除しない。';
 
   @override
-  String get fontSize => 'フォントサイズ';
-
-  @override
-  String get fontSizeSettingTip => 'コードブロックにのみ適用されます';
-
-  @override
   String get genChatTitle => 'チャットタイトルを生成';
-
-  @override
-  String get history => '履歴';
-
-  @override
-  String historyToolHelp(Object keywords) {
-    return 'キーワード$keywordsを含むチャットをコンテキストとして読み込みますか？';
-  }
-
-  @override
-  String get historyToolTip => '履歴チャットをコンテキストとして読み込む';
-
-  @override
-  String get httpToolTip => 'HTTP要求を送信、例：コンテンツを検索';
 
   @override
   String get image => '画像';
@@ -90,9 +59,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String invalidLinkFmt(Object uri) {
     return '不明なリンク：$uri';
   }
-
-  @override
-  String get joinBeta => 'ベータテストに参加';
 
   @override
   String get languageName => '日本語';
@@ -104,29 +70,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get licenseMenuItem => 'オープンソースライセンス';
 
   @override
-  String get list => 'リスト';
-
-  @override
   String get manual => '手動';
-
-  @override
-  String get memory => 'メモリ';
-
-  @override
-  String memoryAdded(Object str) {
-    return 'メモリに追加しました：$str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return '[$txt]を記憶しますか？';
-  }
-
-  @override
-  String get message => 'メッセージ';
-
-  @override
-  String get model => 'モデル';
 
   @override
   String get more => 'もっと';
@@ -136,12 +80,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get newChat => '新しいチャット';
-
-  @override
-  String get onMsgCome => '新しいメッセージがある時';
-
-  @override
-  String get onSwitchChat => '会話を切り替える時';
 
   @override
   String get passwd => 'パスワード';
@@ -154,9 +92,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rename => '名前変更';
-
-  @override
-  String get replay => 'リプレイ';
 
   @override
   String get share => '共有';
@@ -173,9 +108,6 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get switcher => 'スイッチャー';
-
-  @override
   String syncConflict(Object a, Object b) {
     return '競合：$aと$bを同時に有効にすることはできません';
   }
@@ -190,22 +122,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get themeMode => 'テーマモード';
 
   @override
-  String get tool => 'ツール';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'ツール$toolの使用に同意しますか？';
-  }
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'ネットワークからデータを取得します。今回は$hostに接続します';
-  }
-
-  @override
-  String get toolHttpReqName => 'HTTP要求';
-
-  @override
   String get untitled => '無題';
 
   @override
@@ -215,93 +131,157 @@ class AppLocalizationsJa extends AppLocalizations {
   String get user => 'ユーザー';
 
   @override
-  String get deny => 'Deny';
+  String get trash => 'ゴミ箱';
 
   @override
-  String get allow => 'Allow';
+  String get startChatTip => '下でモデルを選んで話しかけてください。';
 
   @override
-  String get allowAlways => 'Always allow';
+  String get noProviderKey => 'キーが設定されたプロバイダーがまだありません。追加するとチャットを始められます。';
 
   @override
-  String get trash => 'Trash';
+  String get providers => 'プロバイダー';
 
   @override
-  String get startChatTip => 'Pick a model below and say something.';
+  String get keyInKeychain => 'システムのキーチェーンに保存され、バックアップには含まれません。';
 
   @override
-  String get camera => 'Camera';
-
-  @override
-  String get send => 'Send';
-
-  @override
-  String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
-
-  @override
-  String get providers => 'Providers';
-
-  @override
-  String get regenerate => 'Regenerate';
-
-  @override
-  String get compacted => 'Earlier messages were summarised';
-
-  @override
-  String get favorite => 'Favorites';
-
-  @override
-  String get defaultModel => 'Default model';
-
-  @override
-  String get titleModel => 'Model for titles';
-
-  @override
-  String get systemPrompt => 'System prompt';
-
-  @override
-  String get compaction => 'Compact long chats';
-
-  @override
-  String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
-
-  @override
-  String get customProvider => 'Custom provider';
-
-  @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
+  String providersCountFmt(int n) {
+    return '$n 個のプロバイダー';
   }
 
   @override
-  String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
+  String get today => '今日';
 
   @override
-  String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
+  String get earlier => 'それ以前';
 
   @override
-  String modelsCountFmt(int n) {
-    return '$n models';
+  String get now => 'たった今';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n 分';
   }
 
   @override
-  String get sameAsChat => 'Same as the chat';
+  String hoursFmt(int n) {
+    return '$n 時間';
+  }
 
   @override
-  String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+  String messagesCountFmt(int n) {
+    return '$n 件のメッセージ';
+  }
 
   @override
-  String get extraVars => 'Extra variables';
+  String get version => 'バージョン';
 
   @override
-  String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+  String get toolsAndMcp => 'ツールと MCP';
+
+  @override
+  String get backToChats => 'チャットに戻る';
+
+  @override
+  String get genChatTitleTip => '最初の返信の後にチャットに名前を付けます';
+
+  @override
+  String get scrollOnNewMsg => '新しいメッセージで一番下へスクロール';
+
+  @override
+  String get scrollAfterSwitch => 'チャット切り替え後に一番下へスクロール';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n 件のチャット';
+  }
+
+  @override
+  String get emptyTrashAfter => 'ゴミ箱を空にするまで';
+
+  @override
+  String get trashTip => '削除したチャットはまずここに入ります';
+
+  @override
+  String daysFmt(int n) {
+    return '$n 日';
+  }
+
+  @override
+  String get sync => '同期';
+
+  @override
+  String get syncNow => '今すぐ同期';
+
+  @override
+  String get syncing => '同期中…';
+
+  @override
+  String get neverSynced => 'まだ同期していません';
+
+  @override
+  String lastSyncFmt(String time) {
+    return '最終同期：$time';
+  }
+
+  @override
+  String get syncOffTip => '下で iCloud または WebDAV をオンにすると自動で同期します。';
+
+  @override
+  String get backupPassword => 'バックアップのパスワード';
+
+  @override
+  String get backupEncrypted => 'バックアップはこれで暗号化されます';
+
+  @override
+  String get backupNotEncrypted => '未設定：ファイルのバックアップは平文になり、同期には必要です';
+
+  @override
+  String get backupEncryptedTip => 'このバックアップは暗号化されています';
+
+  @override
+  String get backupPasswordRequired =>
+      '先にバックアップのパスワードを設定してください。同期するバックアップは常に暗号化されます';
+
+  @override
+  String get passwordWrong => 'パスワードが違うか、バックアップが壊れています';
+
+  @override
+  String get backupTooNew => 'このバックアップは新しいバージョンのアプリで作成されました。復元するには更新してください。';
+
+  @override
+  String get syncAppSettings => 'アプリの設定を同期';
+
+  @override
+  String get syncAppSettingsTip => 'ウィンドウサイズとタイトルバーは端末ごとに保持されます';
+
+  @override
+  String get webdavManualTip => '同期ファイルの横に日付付きのコピー';
+
+  @override
+  String get exportFile => 'ファイルに書き出す';
+
+  @override
+  String get importFile => 'ファイルから復元';
+
+  @override
+  String get copyBackup => 'クリップボードにコピー';
+
+  @override
+  String get pasteBackup => 'クリップボードから復元';
+
+  @override
+  String get pullNewChat => '下に引いて新しいチャット';
+
+  @override
+  String get releaseNewChat => '離すと新しいチャット';
+
+  @override
+  String get pullOlderChat => '上に引いて長押しで前のチャット';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'そのまま押し続ける: $title';
+  }
 }

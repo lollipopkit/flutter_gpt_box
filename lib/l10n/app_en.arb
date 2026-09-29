@@ -1,109 +1,142 @@
 {
   "@@locale": "en",
-  "attention": "Attention",
   "auto": "Auto",
   "autoCheckUpdate": "Auto check for updates",
-  "autoScrollBottom": "Auto scroll to bottom",
   "backupTip": "Please keep backup files private and safe!",
-  "calcTokenLen": "Calculate tokens length",
   "chat": "Chat",
   "clickToCheck": "Click to check",
   "codeBlock": "Code block",
   "copied": "Copied",
   "current": "Current",
   "delFmt": "Delete {type}({id})?",
-  "deleteConfirm": "Confirmation berfore delete",
+  "deleteConfirm": "Confirm before deleting",
   "emptyFields": "{fields} is empty",
-  "emptyTrash": "Empty recycle bin",
   "emptyTrashTip": "==0, delete on next startup. <0 do not delete automatically.",
-  "fontSize": "Font size",
-  "fontSizeSettingTip": "Applies only to code blocks",
   "genChatTitle": "Chat title generator",
-  "history": "History",
-  "historyToolHelp": "Load chats containing keywords {keywords} as context?",
-  "historyToolTip": "Load history chats as context",
-  "httpToolTip": "Send Http request, eg. search web content",
   "image": "Image",
   "invalidLinkFmt": "Invalid link: {uri}",
-  "joinBeta": "Join Beta Program",
   "languageName": "English",
   "license": "License",
   "licenseMenuItem": "Open-source licenses",
-  "list": "List",
   "manual": "Manual",
-  "memory": "Memory",
-  "memoryAdded": "Memory added: {str}",
-  "memoryTip": "Memorise [{txt}]?",
-  "message": "Message",
-  "model": "Model",
   "more": "More",
   "myOtherApps": "My other apps",
   "newChat": "New chat",
-  "onMsgCome": "When there are new messages",
-  "onSwitchChat": "When switching conversations",
   "passwd": "Password",
   "privacy": "Privacy",
   "privacyTip": "This app does not collect any data.",
   "rename": "Rename",
-  "replay": "Replay",
   "share": "Share",
   "shareFrom": "Share from",
   "softWrap": "Soft wrap",
   "sureRestoreFmt": "Are you sure to restore Backup({time})?",
-  "switcher": "Switch",
   "syncConflict": "Sync conflict: can't turn on {a} and {b} at the same time.",
   "text": "Text",
   "themeColorSeed": "Theme color seed",
   "themeMode": "Theme mode",
-  "tool": "Tool",
-  "toolConfirmFmt": "Is it permitted to use the tool {tool} ?",
-  "toolHttpReqHelp": "It will fetch data from network. In this time, it will communicate with {host}.",
-  "toolHttpReqName": "Http Request",
   "untitled": "Untitled",
   "usage": "Usage",
   "user": "User",
-  "deny": "Deny",
-  "allow": "Allow",
-  "allowAlways": "Always allow",
   "trash": "Trash",
   "startChatTip": "Pick a model below and say something.",
-  "camera": "Camera",
-  "send": "Send",
   "noProviderKey": "No provider has a key yet. Add one to start chatting.",
   "providers": "Providers",
-  "regenerate": "Regenerate",
-  "compacted": "Earlier messages were summarised",
-  "favorite": "Favorites",
-  "defaultModel": "Default model",
-  "titleModel": "Model for titles",
-  "systemPrompt": "System prompt",
-  "compaction": "Compact long chats",
-  "compactionTip": "When a chat no longer fits the model's context, earlier messages are summarised for the model. You still see all of them.",
-  "customProvider": "Custom provider",
-  "refreshModels": "Refresh models",
-  "providerLinkFmt": "Add the provider \"{name}\" at {url}? Its key is not in the link; you enter it yourself.",
-  "@providerLinkFmt": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "url": {
-        "type": "String"
-      }
-    }
-  },
-  "modelsListedTip": "Optional: the endpoint's /models list is fetched. Add ids it does not list.",
-  "modelsRequired": "This API cannot list its models: enter at least one model id.",
-  "modelsCountFmt": "{n} models",
-  "@modelsCountFmt": {
+  "keyInKeychain": "Stored in the system keychain, never in backups.",
+  "providersCountFmt": "{n, plural, =1{1 provider} other{{n} providers}}",
+  "@providersCountFmt": {
     "placeholders": {
       "n": {
         "type": "int"
       }
     }
   },
-  "sameAsChat": "Same as the chat",
-  "keyInKeychain": "Stored in the system keychain, never in backups.",
-  "extraVars": "Extra variables",
-  "extraVarsTip": "KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account)."
+  "today": "Today",
+  "earlier": "Earlier",
+  "now": "now",
+  "minutesFmt": "{n} min",
+  "@minutesFmt": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursFmt": "{n} h",
+  "@hoursFmt": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "messagesCountFmt": "{n, plural, =1{1 message} other{{n} messages}}",
+  "@messagesCountFmt": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "version": "Version",
+  "toolsAndMcp": "Tools & MCP",
+  "backToChats": "Back to chats",
+  "genChatTitleTip": "Names a chat after its first reply",
+  "scrollOnNewMsg": "Scroll to bottom on new message",
+  "scrollAfterSwitch": "Scroll to bottom after switching chat",
+  "chatsCountFmt": "{n, plural, =1{1 chat} other{{n} chats}}",
+  "@chatsCountFmt": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "emptyTrashAfter": "Empty trash after",
+  "trashTip": "Deleted chats wait here first",
+  "daysFmt": "{n, plural, =1{1 day} other{{n} days}}",
+  "@daysFmt": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "sync": "Sync",
+  "syncNow": "Sync now",
+  "syncing": "Syncing…",
+  "neverSynced": "Not synced yet",
+  "lastSyncFmt": "Last synced {time}",
+  "@lastSyncFmt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "syncOffTip": "Turn on iCloud or WebDAV below to sync automatically.",
+  "backupPassword": "Backup password",
+  "backupEncrypted": "Backups are encrypted with it",
+  "backupNotEncrypted": "Not set: file backups are plain text, and sync needs one",
+  "backupEncryptedTip": "This backup is encrypted",
+  "backupPasswordRequired": "Set a backup password first: synced backups are always encrypted",
+  "passwordWrong": "Wrong password, or the backup is damaged",
+  "backupTooNew": "This backup is from a newer version of the app. Update to restore it.",
+  "syncAppSettings": "Sync app settings",
+  "syncAppSettingsTip": "Window size and title bar stay per device",
+  "webdavManualTip": "A dated copy beside the synced one",
+  "exportFile": "Export to a file",
+  "importFile": "Restore from a file",
+  "copyBackup": "Copy to clipboard",
+  "pasteBackup": "Restore from clipboard",
+  "pullNewChat": "Pull down for a new chat",
+  "releaseNewChat": "Release for a new chat",
+  "pullOlderChat": "Pull up and hold for the previous chat",
+  "holdOlderChatFmt": "Keep holding: {title}",
+  "@holdOlderChatFmt": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
 }

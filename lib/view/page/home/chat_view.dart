@@ -1,39 +1,61 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:fl_pi_llm/fl_pi_llm.dart';
-import 'package:flutter/material.dart';
-import 'package:gpt_box/core/llm/chats.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/page/home/composer.dart';
-import 'package:gpt_box/view/page/home/message.dart';
+import 'package:gpt_box/view/page/home/chat_list.dart';
+import 'package:gpt_box/view/page/home/share.dart';
+import 'package:gpt_box/view/widget/transitions.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
-/// The conversation on screen and the composer under it.
-class ChatView extends StatelessWidget {
-  const ChatView({super.key});
+/// The chat on screen: its title row (on a wide window), the thread and the
+/// composer.
+class ChatPane extends StatelessWidget {
+  const ChatPane({super.key, this.compact = false});
+
+  /// On a phone: the title is the home page's top bar.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     return Chats.current.listenVal((id) {
       return Column(
         children: [
+          if (!compact) _Header(chatId: id),
           Expanded(
-            child: id == null
-                ? EmptyPane(icon: Icons.chat_bubble_outline, title: l10n.newChat, label: l10n.startChatTip)
-                : _Conversation(key: ValueKey(id), chatId: id),
-          ),
-          SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(11, 5, 11, 11),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 860),
-                child: Composer(
-                  key: ValueKey(id),
-                  chatId: id,
-                  onChatCreated: (id) => Chats.current.value = id,
-                ),
-              ),
+            child: FadeThroughSwitcher(
+              child: id == null
+                  ? EmptyPane(
+                      key: const ValueKey('empty'),
+                      icon: Icons.chat_bubble_outline,
+                      title: l10n.newChat,
+                      label: l10n.startChatTip,
+                    )
+                  : LlmConversation(
+                      key: ValueKey(id),
+                      chatId: id,
+                      pullDown: isMobile ? _newChatPull() : null,
+                      pullUp: isMobile ? _olderChatPull(id) : null,
+                    ),
             ),
+          ),
+          LayoutBuilder(
+            builder: (context, cons) {
+              final side = (cons.maxWidth * 0.03).clamp(9.0, 20.0);
+              return SafeArea(
+                top: false,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(side, 0, side, 13),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 760),
+                    child: Composer(
+                      key: ValueKey(id),
+                      chatId: id,
+                      compact: compact,
+                      onChatCreated: (id) => Chats.current.value = id,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       );
@@ -41,105 +63,126 @@ class ChatView extends StatelessWidget {
   }
 }
 
-class _Conversation extends StatefulWidget {
-  const _Conversation({super.key, required this.chatId});
+/// Pulling down past the top of a chat starts a new one.
+PullAction _newChatPull() => PullAction(
+  icon: Icons.add_comment_outlined,
+  label: l10n.pullNewChat,
+  readyLabel: l10n.releaseNewChat,
+  onTrigger: () => Chats.current.value = null,
+);
 
-  final String chatId;
-
-  @override
-  State<_Conversation> createState() => _ConversationState();
+/// Pulling up past the end of chat [id], and holding, opens the one before
+/// it in the list — older; none past the last.
+PullAction? _olderChatPull(String id) {
+  final chats = LlmStores.chat.all();
+  final i = chats.indexWhere((c) => c.id == id);
+  if (i < 0 || i + 1 >= chats.length) return null;
+  final older = chats[i + 1];
+  return PullAction(
+    icon: Icons.history,
+    label: l10n.pullOlderChat,
+    readyLabel: l10n.holdOlderChatFmt(older.title ?? l10n.untitled),
+    hold: const Duration(seconds: 1),
+    onTrigger: () => Chats.current.value = older.id,
+  );
 }
 
-class _ConversationState extends State<_Conversation> {
-  late final Future<OpenChat> _open = Chats.open(widget.chatId);
-  final _scroll = ScrollController();
+class _Header extends StatelessWidget {
+  const _Header({required this.chatId});
 
-  /// Whether the view is at the bottom, and so follows new content.
-  var _atBottom = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _scroll.addListener(() {
-      if (!_scroll.hasClients) return;
-      _atBottom = _scroll.position.pixels >= _scroll.position.maxScrollExtent - 48;
-    });
-    _open.then((c) {
-      c.streaming.addListener(_follow);
-      c.entries.addListener(_follow);
-      _jumpToEnd();
-    }, onError: (_) {});
-  }
-
-  @override
-  void dispose() {
-    _open.then((c) {
-      c.streaming.removeListener(_follow);
-      c.entries.removeListener(_follow);
-    }, onError: (_) {});
-    _scroll.dispose();
-    super.dispose();
-  }
-
-  void _follow() {
-    if (_atBottom && Stores.setting.scrollBottom.get()) _jumpToEnd();
-  }
-
-  void _jumpToEnd() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scroll.hasClients) _scroll.jumpTo(_scroll.position.maxScrollExtent);
-    });
-  }
+  final String? chatId;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<OpenChat>(
-      future: _open,
-      builder: (context, snap) {
-        if (snap.hasError) {
-          return EmptyPane(icon: Icons.error_outline, title: libL10n.error, label: '${snap.error}');
-        }
-        final chat = snap.data;
-        if (chat == null) return const Center(child: CircularProgressIndicator());
-        return ListenableBuilder(
-          listenable: Listenable.merge([chat.entries, chat.streaming, chat.error]),
-          builder: (context, _) {
-            final entries = [
-              for (final e in chat.entries.value)
-                if (_visible(e)) e,
-            ];
-            final streaming = chat.streaming.value;
-            final error = chat.error.value;
-            return Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 900),
-                child: ListView.builder(
-                  controller: _scroll,
-                  padding: const EdgeInsets.symmetric(vertical: 13),
-                  itemCount: entries.length + (streaming == null ? 0 : 1) + (error == null ? 0 : 1),
-                  itemBuilder: (_, i) {
-                    if (i < entries.length) {
-                      return MessageView(key: ValueKey(entries[i].id), chat: chat, entry: entries[i]);
-                    }
-                    if (streaming != null && i == entries.length) return StreamingView(reply: streaming);
-                    return Padding(
-                      padding: const EdgeInsets.all(13),
-                      child: Text('❌ $error', style: TextStyle(color: context.theme.colorScheme.error)),
-                    );
-                  },
+    final id = chatId;
+    // The menu's actions carry the meta: kept current with a rename.
+    return LlmStores.chat.changes.listen(() => _build(context, id));
+  }
+
+  Widget _build(BuildContext context, String? id) {
+    return SizedBox(
+      height: 54,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 9, 0),
+        child: Row(
+          children: [
+            const Expanded(child: ChatTitle()),
+            if (id != null) ...[
+              Btn.icon(icon: const Icon(Icons.ios_share, size: 18), text: l10n.share, onTap: () => shareChat(context, id)),
+              if (LlmStores.chat.fetch(id) case final meta?)
+                MenuBtn(
+                  actions: chatActions(context, meta),
+                  builder: (toggle) => Btn.icon(icon: const Icon(Icons.more_vert, size: 18), text: l10n.more, onTap: toggle),
                 ),
-              ),
-            );
+            ],
+          ].joinWith(const SizedBox(width: 3)),
+        ),
+      ),
+    );
+  }
+}
+
+/// The chat's name, a spinner while it replies, and under it the model — and
+/// how long the chat is, when [center] is off.
+class ChatTitle extends StatelessWidget {
+  const ChatTitle({super.key, this.center = false});
+
+  /// Centred in a phone's top bar, with only the model under it.
+  final bool center;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: Listenable.merge([Chats.current, LlmStores.chat.changes, Llm.providers]),
+      builder: (context, _) {
+        final id = Chats.current.value;
+        final meta = id == null ? null : LlmStores.chat.fetch(id);
+        final model = meta?.model ?? Llm.defaultModel;
+        final modelName = Llm.info(model)?.name ?? model?.id ?? '';
+        final title = id == null ? l10n.newChat : meta?.title ?? l10n.untitled;
+        if (id == null) return _build(title, modelName, running: false);
+        Widget live(OpenChat chat) => ListenableBuilder(
+          listenable: Listenable.merge([chat.running, chat.entries]),
+          builder: (_, _) {
+            final n = threadBlocks(chat.entries.value).where((b) => b is! SummaryBlock).length;
+            final sub = center || n == 0 ? modelName : '$modelName · ${l10n.messagesCountFmt(n)}';
+            return _build(title, sub, running: chat.running.value);
           },
+        );
+        if (Chats.openOf(id) case final chat?) return live(chat);
+        // The thread opens it; until then, what the list knows.
+        return FutureBuilder<OpenChat>(
+          future: Chats.open(id),
+          builder: (_, snap) => snap.data == null ? _build(title, modelName, running: false) : live(snap.data!),
         );
       },
     );
   }
 
-  static bool _visible(LlmEntry e) => switch (e.type) {
-    'message' => const {'user', 'assistant', 'toolResult'}.contains(e.message?.role),
-    'compaction' || 'branch_summary' => true,
-    _ => false,
-  };
+  Widget _build(String title, String sub, {required bool running}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: center ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 15, height: 20 / 15, fontWeight: FontWeight.w500),
+              ),
+            ),
+            if (running) ...[
+              const SizedBox(width: 7),
+              const SizedLoading(20, padding: 6, builder: SizedLoading.circularBuilder),
+            ],
+          ],
+        ),
+        if (sub.isNotEmpty) Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: UIs.text12Grey),
+      ],
+    );
+  }
 }

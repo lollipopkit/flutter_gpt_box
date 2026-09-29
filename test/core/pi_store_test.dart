@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/core/llm/store.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 void main() {
   late SqlitePiSessionStore store;
@@ -39,10 +41,25 @@ void main() {
     expect(await store.list("/sessionsX"), isEmpty);
   });
 
-  test('search finds the files that contain a string', () async {
-    await store.append('/s/a.jsonl', 'hello world');
-    await store.append('/s/b.jsonl', 'goodbye');
-    expect(store.search('world'), ['/s/a.jsonl']);
-    expect(store.dump(), {'/s/a.jsonl': 'hello world', '/s/b.jsonl': 'goodbye'});
+  test('search finds what was said, ignoring case, and follows appends', () async {
+    String entry(String role, Object content) => '${jsonEncode({
+      'kind': 'entry',
+      'id': role,
+      'type': 'message',
+      'message': {'role': role, 'content': content},
+    })}\n';
+    await store.append('/s/a.jsonl', '{"kind":"header","id":"a"}\n${entry('user', 'Hello World')}');
+    await store.append('/s/b.jsonl', entry('assistant', [
+      {'type': 'text', 'text': 'goodbye'},
+      {'type': 'image', 'data': 'd29ybGQ='},
+    ]));
+    expect(await store.search('world'), ['/s/a.jsonl']);
+    // Keys and ids are not what was said.
+    expect(await store.search('header'), isEmpty);
+    expect(await store.search('role'), isEmpty);
+    await store.append('/s/b.jsonl', entry('user', 'a whole new world'));
+    expect((await store.search('WORLD')).toSet(), {'/s/a.jsonl', '/s/b.jsonl'});
+    await store.remove('/s/a.jsonl');
+    expect(await store.search('world'), ['/s/b.jsonl']);
   });
 }

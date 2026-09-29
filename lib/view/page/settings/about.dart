@@ -1,73 +1,66 @@
 part of 'setting.dart';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({super.key, Never? args});
+  const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 17),
-        children: [
-          _buildUniLinks(),
-          _buildLicense(context),
-          _buildInfo(),
-        ],
-      ),
-      bottomSheet: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 3, horizontal: 13),
-        child: Text(
-          'GPT Box v${BuildData.build}',
-          textAlign: TextAlign.center,
+    return SectionList(
+      children: [
+        SettingsGroup(
+          title: BuildData.name,
+          rows: [
+            SettingsRow(icon: Icons.tag, title: l10n.version, trailing: RowValue('v1.0.${BuildData.build}')),
+            SettingsRow(
+              icon: Icons.link,
+              title: 'URL Scheme ${l10n.usage}',
+              trailing: const RowChevron(),
+              onTap: () => launchUrlString(Urls.unilinkDoc),
+            ),
+            SettingsRow(
+              icon: Icons.receipt_long_outlined,
+              title: libL10n.logs,
+              trailing: const RowChevron(),
+              onTap: () => DebugPage.route.go(context, args: DebugPageArgs(title: libL10n.logs)),
+            ),
+            SettingsRow(
+              icon: Icons.description_outlined,
+              title: l10n.licenseMenuItem,
+              trailing: const RowChevron(),
+              // Pushed like any page, so it gets the window's frame too.
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => VirtualWindowFrame(
+                    child: LicensePage(applicationName: BuildData.name, applicationVersion: 'v1.0.${BuildData.build}'),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildUniLinks() {
-    return CardX(
-      child: ListTile(
-        leading: const Icon(Icons.link),
-        title: Text('URL Scheme ${l10n.usage}'),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => launchUrlString(Urls.unilinkDoc),
-      ),
-    );
-  }
-
-  Widget _buildInfo() {
-    return CardX(
-      child: Padding(
-        padding: const EdgeInsets.all(17),
-        child: SimpleMarkdown(
-          data: '''
+        SettingsGroup(
+          title: l10n.more,
+          rows: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 13),
+              child: SimpleMarkdown(
+                data: '''
 ${GithubId.markdownStr}
 
+### ${l10n.myOtherApps}
+[Server Box](${Urls.serverBoxRepo})
 
-### 💡 ${l10n.myOtherApps}
-[Server Box](${Urls.serverBoxRepo}): View status & control your server
-
-
-### 🗂️ ${l10n.privacy}
+### ${l10n.privacy}
 ${l10n.privacyTip}
 
-
-### 📝 ${l10n.license}
-GPL v3 lollipopkit
+### ${l10n.license}
+AGPL-3.0 lollipopkit
 ''',
+              ),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildLicense(BuildContext context) {
-    return CardX(
-      child: ListTile(
-        leading: const Icon(Icons.description),
-        title: Text(l10n.licenseMenuItem),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () => showLicensePage(context: context),
-      ),
+      ],
     );
   }
 }

@@ -5,6 +5,14 @@ class SettingStore extends SqliteStore {
 
   static final instance = SettingStore._();
 
+  /// This device's own: never in a backup, never set by one. A window's size
+  /// and where the sidebar was dragged to are about this screen, and the
+  /// intro about this install.
+  ///
+  /// TODO: drop `hideTitleBar` once no install has it: the setting is gone
+  /// (the title bar is always hidden), and its stored value must not sync.
+  static const deviceLocalKeys = {'windowState', 'paneListWidth', 'hideTitleBar', 'introVer'};
+
   late final themeMode = propertyDefault('themeMode', 0);
 
   late final themeColorSeed = propertyDefault('themeColorSeed', 4287106639);
@@ -21,12 +29,8 @@ class SettingStore extends SqliteStore {
   /// Name a chat from its first exchange.
   late final genTitle = propertyDefault('genTitle', true);
 
-  late final hideTitleBar = propertyDefault('hideTitleBar', isDesktop);
-
-  /// If it is false, delete without asking.
+  /// Whether deleting a chat asks first.
   late final confrimDel = propertyDefault('confrimDel', true);
-
-  late final joinBeta = propertyDefault('joinBeta', false);
 
   /// For desktop only.
   /// Record the position and size of the window.
@@ -39,8 +43,6 @@ class SettingStore extends SqliteStore {
     toObj: (state) => state?.toJson(),
   );
 
-  late final avatar = propertyDefault('avatar', '🧐');
-
   late final introVer = propertyDefault('introVer', 0);
 
   /// Scroll to the bottom after switching chat.
@@ -50,8 +52,5 @@ class SettingStore extends SqliteStore {
   late final trashDays = propertyDefault('trashDays', 7);
 
   /// Width of the chat list beside the chat, in the two-column layout.
-  late final paneListWidth = propertyDefault('paneListWidth', 280.0);
-
-  /// Whether the chat list beside the chat is folded away.
-  late final paneListCollapsed = propertyDefault('paneListCollapsed', false);
+  late final paneListWidth = propertyDefault('paneListWidth', 264.0);
 }

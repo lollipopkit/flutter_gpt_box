@@ -14,13 +14,13 @@
 	<array>
 		<string>iCloud.tech.lolli.gptbox</string>
 	</array>
+	<!-- macOS ships as a Developer ID DMG only (scripts/release/release-macos-dmg.sh),
+	     unsandboxed. The sandboxed Mac App Store build is no longer maintained. -->
 	<key>com.apple.security.app-sandbox</key>
-	<true/>
+	<false/>
+	<!-- Unsandboxed, but file_picker checks for it before opening a panel
+	     (ENTITLEMENT_NOT_FOUND without it). -->
 	<key>com.apple.security.files.user-selected.read-write</key>
-	<true/>
-	<key>com.apple.security.network.client</key>
-	<true/>
-	<key>com.apple.security.network.server</key>
 	<true/>
 	<key>keychain-access-groups</key>
 	<array/>

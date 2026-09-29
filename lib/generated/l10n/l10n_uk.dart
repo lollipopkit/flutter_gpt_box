@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -9,23 +10,14 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
-  String get attention => 'Увага';
-
-  @override
   String get auto => 'Авто';
 
   @override
   String get autoCheckUpdate => 'Автоматично перевіряти оновлення';
 
   @override
-  String get autoScrollBottom => 'Автоматично прокручувати до низу';
-
-  @override
   String get backupTip =>
       'Будь ласка, зберігайте резервну копію файлу в безпеці та приватності!';
-
-  @override
-  String get calcTokenLen => 'Обчислити довжину токенів';
 
   @override
   String get chat => 'Чат';
@@ -56,34 +48,11 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Очистити кошик';
-
-  @override
   String get emptyTrashTip =>
       '==0, видалити під час наступного запуску. <0 не видаляти автоматично.';
 
   @override
-  String get fontSize => 'Розмір шрифту';
-
-  @override
-  String get fontSizeSettingTip => 'Діє лише для блоків коду';
-
-  @override
   String get genChatTitle => 'Генерувати заголовок чату';
-
-  @override
-  String get history => 'Історія';
-
-  @override
-  String historyToolHelp(Object keywords) {
-    return 'Завантажити чат, що містить ключові слова $keywords, як контекст?';
-  }
-
-  @override
-  String get historyToolTip => 'Завантажити історію чату як контекст';
-
-  @override
-  String get httpToolTip => 'Зробити HTTP-запит, наприклад: пошук вмісту';
 
   @override
   String get image => 'Зображення';
@@ -92,9 +61,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String invalidLinkFmt(Object uri) {
     return 'Невідоме посилання: $uri';
   }
-
-  @override
-  String get joinBeta => 'Приєднатися до бета-тестування';
 
   @override
   String get languageName => 'Українська';
@@ -106,29 +72,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get licenseMenuItem => 'Ліцензії відкритого коду';
 
   @override
-  String get list => 'Список';
-
-  @override
   String get manual => 'Вручну';
-
-  @override
-  String get memory => 'Пам\'ять';
-
-  @override
-  String memoryAdded(Object str) {
-    return 'Пам\'ять додано: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return 'Запам\'ятати [$txt]?';
-  }
-
-  @override
-  String get message => 'Повідомлення';
-
-  @override
-  String get model => 'Модель';
 
   @override
   String get more => 'Більше';
@@ -138,12 +82,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get newChat => 'Новий чат';
-
-  @override
-  String get onMsgCome => 'Коли приходить нове повідомлення';
-
-  @override
-  String get onSwitchChat => 'При перемиканні чату';
 
   @override
   String get passwd => 'Пароль';
@@ -156,9 +94,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get rename => 'Перейменувати';
-
-  @override
-  String get replay => 'Повторити';
 
   @override
   String get share => 'Поділитися';
@@ -175,9 +110,6 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get switcher => 'Перемикач';
-
-  @override
   String syncConflict(Object a, Object b) {
     return 'Конфлікт: неможливо одночасно увімкнути $a та $b';
   }
@@ -192,22 +124,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get themeMode => 'Режим теми';
 
   @override
-  String get tool => 'Інструмент';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Ви згодні використовувати інструмент $tool?';
-  }
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Буде отримано дані з мережі, цього разу буде зв\'язок з $host';
-  }
-
-  @override
-  String get toolHttpReqName => 'HTTP-запит';
-
-  @override
   String get untitled => 'Без назви';
 
   @override
@@ -217,93 +133,164 @@ class AppLocalizationsUk extends AppLocalizations {
   String get user => 'Користувач';
 
   @override
-  String get deny => 'Deny';
+  String get trash => 'Кошик';
 
   @override
-  String get allow => 'Allow';
-
-  @override
-  String get allowAlways => 'Always allow';
-
-  @override
-  String get trash => 'Trash';
-
-  @override
-  String get startChatTip => 'Pick a model below and say something.';
-
-  @override
-  String get camera => 'Camera';
-
-  @override
-  String get send => 'Send';
+  String get startChatTip => 'Виберіть модель нижче й напишіть щось.';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Жоден провайдер ще не має ключа. Додайте ключ, щоб почати чат.';
 
   @override
-  String get providers => 'Providers';
-
-  @override
-  String get regenerate => 'Regenerate';
-
-  @override
-  String get compacted => 'Earlier messages were summarised';
-
-  @override
-  String get favorite => 'Favorites';
-
-  @override
-  String get defaultModel => 'Default model';
-
-  @override
-  String get titleModel => 'Model for titles';
-
-  @override
-  String get systemPrompt => 'System prompt';
-
-  @override
-  String get compaction => 'Compact long chats';
-
-  @override
-  String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
-
-  @override
-  String get customProvider => 'Custom provider';
-
-  @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
-
-  @override
-  String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
-
-  @override
-  String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n models';
-  }
-
-  @override
-  String get sameAsChat => 'Same as the chat';
+  String get providers => 'Провайдери';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Зберігається в системній вʼязці ключів, ніколи не потрапляє в резервні копії.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String providersCountFmt(int n) {
+    return 'Провайдерів: $n';
+  }
 
   @override
-  String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+  String get today => 'Сьогодні';
+
+  @override
+  String get earlier => 'Раніше';
+
+  @override
+  String get now => 'щойно';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n хв';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n год';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return 'Повідомлень: $n';
+  }
+
+  @override
+  String get version => 'Версія';
+
+  @override
+  String get toolsAndMcp => 'Інструменти та MCP';
+
+  @override
+  String get backToChats => 'Назад до чатів';
+
+  @override
+  String get genChatTitleTip => 'Називає чат після першої відповіді';
+
+  @override
+  String get scrollOnNewMsg => 'Прокручувати вниз при новому повідомленні';
+
+  @override
+  String get scrollAfterSwitch => 'Прокручувати вниз після зміни чату';
+
+  @override
+  String chatsCountFmt(int n) {
+    return 'Чатів: $n';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Очищати кошик через';
+
+  @override
+  String get trashTip => 'Видалені чати спершу потрапляють сюди';
+
+  @override
+  String daysFmt(int n) {
+    return 'Днів: $n';
+  }
+
+  @override
+  String get sync => 'Синхронізація';
+
+  @override
+  String get syncNow => 'Синхронізувати зараз';
+
+  @override
+  String get syncing => 'Синхронізація…';
+
+  @override
+  String get neverSynced => 'Ще не синхронізовано';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Остання синхронізація: $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Увімкніть iCloud або WebDAV нижче для автоматичної синхронізації.';
+
+  @override
+  String get backupPassword => 'Пароль резервної копії';
+
+  @override
+  String get backupEncrypted => 'Резервні копії шифруються ним';
+
+  @override
+  String get backupNotEncrypted =>
+      'Не задано: резервні копії у файл не шифруються, а для синхронізації він потрібен';
+
+  @override
+  String get backupEncryptedTip => 'Ця резервна копія зашифрована';
+
+  @override
+  String get backupPasswordRequired =>
+      'Спершу задайте пароль: синхронізовані копії завжди шифруються';
+
+  @override
+  String get passwordWrong => 'Неправильний пароль або копія пошкоджена';
+
+  @override
+  String get backupTooNew =>
+      'Ця копія з новішої версії застосунку. Оновіть застосунок, щоб відновити її.';
+
+  @override
+  String get syncAppSettings => 'Синхронізувати налаштування';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Розмір вікна й заголовок лишаються окремими для кожного пристрою';
+
+  @override
+  String get webdavManualTip => 'Датована копія поруч із синхронізованою';
+
+  @override
+  String get exportFile => 'Експорт у файл';
+
+  @override
+  String get importFile => 'Відновити з файлу';
+
+  @override
+  String get copyBackup => 'Скопіювати в буфер обміну';
+
+  @override
+  String get pasteBackup => 'Відновити з буфера обміну';
+
+  @override
+  String get pullNewChat => 'Потягніть униз для нового чату';
+
+  @override
+  String get releaseNewChat => 'Відпустіть для нового чату';
+
+  @override
+  String get pullOlderChat =>
+      'Потягніть угору й утримуйте для попереднього чату';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Утримуйте: $title';
+  }
 }

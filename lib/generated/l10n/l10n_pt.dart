@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -9,23 +10,14 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
-  String get attention => 'Atenção';
-
-  @override
   String get auto => 'Auto';
 
   @override
   String get autoCheckUpdate => 'Verificar atualizações automaticamente';
 
   @override
-  String get autoScrollBottom => 'Rolar automaticamente para baixo';
-
-  @override
   String get backupTip =>
       'Por favor, certifique-se de que seu arquivo de backup é privado e seguro!';
-
-  @override
-  String get calcTokenLen => 'Calcular comprimento dos tokens';
 
   @override
   String get chat => 'Chat';
@@ -56,35 +48,11 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Esvaziar a lixeira';
-
-  @override
   String get emptyTrashTip =>
       '==0, excluir na próxima inicialização. <0 não excluir automaticamente.';
 
   @override
-  String get fontSize => 'Tamanho da fonte';
-
-  @override
-  String get fontSizeSettingTip => 'Aplica-se apenas a blocos de código';
-
-  @override
   String get genChatTitle => 'Gerar título do chat';
-
-  @override
-  String get history => 'Histórico';
-
-  @override
-  String historyToolHelp(Object keywords) {
-    return 'Carregar chats contendo as palavras-chave $keywords como contexto?';
-  }
-
-  @override
-  String get historyToolTip => 'Carregar chats históricos como contexto';
-
-  @override
-  String get httpToolTip =>
-      'Realizar uma solicitação HTTP, por exemplo: pesquisar conteúdo';
 
   @override
   String get image => 'Imagem';
@@ -93,9 +61,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String invalidLinkFmt(Object uri) {
     return 'Link desconhecido: $uri';
   }
-
-  @override
-  String get joinBeta => 'Participar do teste beta';
 
   @override
   String get languageName => 'Português';
@@ -107,29 +72,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get licenseMenuItem => 'Licenças de código aberto';
 
   @override
-  String get list => 'Lista';
-
-  @override
   String get manual => 'Manual';
-
-  @override
-  String get memory => 'Memória';
-
-  @override
-  String memoryAdded(Object str) {
-    return 'Memória adicionada: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return 'Lembrar [$txt]?';
-  }
-
-  @override
-  String get message => 'Mensagem';
-
-  @override
-  String get model => 'Modelo';
 
   @override
   String get more => 'Mais';
@@ -139,12 +82,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get newChat => 'Novo chat';
-
-  @override
-  String get onMsgCome => 'Quando houver novas mensagens';
-
-  @override
-  String get onSwitchChat => 'Ao alternar conversas';
 
   @override
   String get passwd => 'Senha';
@@ -157,9 +94,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get rename => 'Renomear';
-
-  @override
-  String get replay => 'Repetir';
 
   @override
   String get share => 'Compartilhar';
@@ -176,9 +110,6 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get switcher => 'Alternador';
-
-  @override
   String syncConflict(Object a, Object b) {
     return 'Conflito: não é possível ativar $a e $b ao mesmo tempo';
   }
@@ -193,22 +124,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get themeMode => 'Modo de tema';
 
   @override
-  String get tool => 'Ferramenta';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Você concorda em usar a ferramenta $tool?';
-  }
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Serão obtidos dados da rede, desta vez entrando em contato com $host';
-  }
-
-  @override
-  String get toolHttpReqName => 'Solicitação HTTP';
-
-  @override
   String get untitled => 'Sem título';
 
   @override
@@ -218,93 +133,187 @@ class AppLocalizationsPt extends AppLocalizations {
   String get user => 'Usuário';
 
   @override
-  String get deny => 'Deny';
+  String get trash => 'Lixeira';
 
   @override
-  String get allow => 'Allow';
-
-  @override
-  String get allowAlways => 'Always allow';
-
-  @override
-  String get trash => 'Trash';
-
-  @override
-  String get startChatTip => 'Pick a model below and say something.';
-
-  @override
-  String get camera => 'Camera';
-
-  @override
-  String get send => 'Send';
+  String get startChatTip => 'Escolha um modelo abaixo e diga algo.';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Nenhum provedor tem chave ainda. Adicione uma para começar a conversar.';
 
   @override
-  String get providers => 'Providers';
-
-  @override
-  String get regenerate => 'Regenerate';
-
-  @override
-  String get compacted => 'Earlier messages were summarised';
-
-  @override
-  String get favorite => 'Favorites';
-
-  @override
-  String get defaultModel => 'Default model';
-
-  @override
-  String get titleModel => 'Model for titles';
-
-  @override
-  String get systemPrompt => 'System prompt';
-
-  @override
-  String get compaction => 'Compact long chats';
-
-  @override
-  String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
-
-  @override
-  String get customProvider => 'Custom provider';
-
-  @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
-
-  @override
-  String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
-
-  @override
-  String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n models';
-  }
-
-  @override
-  String get sameAsChat => 'Same as the chat';
+  String get providers => 'Provedores';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Guardada no chaveiro do sistema, nunca nos backups.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String providersCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n provedores',
+      one: '1 provedor',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+  String get today => 'Hoje';
+
+  @override
+  String get earlier => 'Anteriores';
+
+  @override
+  String get now => 'agora';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n min';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n h';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n mensagens',
+      one: '1 mensagem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get version => 'Versão';
+
+  @override
+  String get toolsAndMcp => 'Ferramentas e MCP';
+
+  @override
+  String get backToChats => 'Voltar às conversas';
+
+  @override
+  String get genChatTitleTip => 'Dá nome à conversa após a primeira resposta';
+
+  @override
+  String get scrollOnNewMsg => 'Rolar até o fim a cada nova mensagem';
+
+  @override
+  String get scrollAfterSwitch => 'Rolar até o fim ao trocar de conversa';
+
+  @override
+  String chatsCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n conversas',
+      one: '1 conversa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Esvaziar a lixeira após';
+
+  @override
+  String get trashTip => 'As conversas excluídas ficam aqui primeiro';
+
+  @override
+  String daysFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n dias',
+      one: '1 dia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sync => 'Sincronização';
+
+  @override
+  String get syncNow => 'Sincronizar agora';
+
+  @override
+  String get syncing => 'Sincronizando…';
+
+  @override
+  String get neverSynced => 'Ainda não sincronizado';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Última sincronização: $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Ative o iCloud ou o WebDAV abaixo para sincronizar automaticamente.';
+
+  @override
+  String get backupPassword => 'Senha do backup';
+
+  @override
+  String get backupEncrypted => 'Os backups são criptografados com ela';
+
+  @override
+  String get backupNotEncrypted =>
+      'Não definida: backups em arquivo ficam sem criptografia, e a sincronização exige uma';
+
+  @override
+  String get backupEncryptedTip => 'Este backup está criptografado';
+
+  @override
+  String get backupPasswordRequired =>
+      'Defina uma senha de backup primeiro: backups sincronizados são sempre criptografados';
+
+  @override
+  String get passwordWrong => 'Senha incorreta ou backup danificado';
+
+  @override
+  String get backupTooNew =>
+      'Este backup é de uma versão mais nova do app. Atualize para restaurá-lo.';
+
+  @override
+  String get syncAppSettings => 'Sincronizar ajustes do app';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Tamanho da janela e barra de título ficam por dispositivo';
+
+  @override
+  String get webdavManualTip => 'Uma cópia datada ao lado da sincronizada';
+
+  @override
+  String get exportFile => 'Exportar para um arquivo';
+
+  @override
+  String get importFile => 'Restaurar de um arquivo';
+
+  @override
+  String get copyBackup => 'Copiar para a área de transferência';
+
+  @override
+  String get pasteBackup => 'Restaurar da área de transferência';
+
+  @override
+  String get pullNewChat => 'Puxe para baixo para um novo chat';
+
+  @override
+  String get releaseNewChat => 'Solte para um novo chat';
+
+  @override
+  String get pullOlderChat => 'Puxe para cima e segure para o chat anterior';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Continue segurando: $title';
+  }
 }

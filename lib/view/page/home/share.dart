@@ -1,11 +1,9 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
-import 'package:gpt_box/core/llm/chats.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/page/home/message.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 final _screenshot = ScreenshotController();
 
@@ -18,10 +16,8 @@ Future<void> shareChat(BuildContext context, String chatId) async {
   );
   if (type == null || !context.mounted) return;
 
-  final title = Stores.chat.fetch(chatId)?.title ?? l10n.untitled;
-  final wasOpen = Chats.openOf(chatId) != null;
-  final chat = await Chats.open(chatId);
-  try {
+  final title = LlmStores.chat.fetch(chatId)?.title ?? l10n.untitled;
+  await Chats.borrow(chatId, (chat) async {
     if (type == 'md') {
       await Pfs.shareStr('# $title\n\n${Chats.toMarkdown(chat.entries.value)}', title: title);
       return;
@@ -35,18 +31,17 @@ Future<void> shareChat(BuildContext context, String chatId) async {
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 17),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
-              UIs.height13,
-              for (final e in chat.entries.value)
-                if (e.message?.role == 'user' || e.message?.role == 'assistant')
-                  MessageView(chat: null, entry: e, forCapture: true),
-              UIs.height13,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
+              for (final b in threadBlocks(chat.entries.value))
+                ThreadBlockView(chat: null, block: b, forCapture: true),
               Text(
                 '${l10n.shareFrom} ${BuildData.name} v1.0.${BuildData.build}',
-                style: const TextStyle(fontSize: 9, color: Colors.grey, fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+                style: UIs.text12Grey,
               ),
-            ],
+            ].joinWith(const SizedBox(height: 20)),
           ),
         ),
       ),
@@ -62,7 +57,5 @@ Future<void> shareChat(BuildContext context, String chatId) async {
     );
     if (err != null || pic == null) return;
     await Pfs.shareBytes(bytes: pic, title: title, fileName: '$title.png', mime: 'image/png');
-  } finally {
-    if (!wasOpen && !chat.running.value) await Chats.close(chatId);
-  }
+  });
 }

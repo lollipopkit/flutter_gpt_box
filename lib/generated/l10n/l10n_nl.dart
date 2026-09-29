@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -9,23 +10,14 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
-  String get attention => 'Opgelet';
-
-  @override
   String get auto => 'Auto';
 
   @override
   String get autoCheckUpdate => 'Automatisch controleren op updates';
 
   @override
-  String get autoScrollBottom => 'Automatisch naar beneden scrollen';
-
-  @override
   String get backupTip =>
       'Zorg ervoor dat uw back-upbestand privé en veilig is!';
-
-  @override
-  String get calcTokenLen => 'Tokenlengte berekenen';
 
   @override
   String get chat => 'Chat';
@@ -56,35 +48,11 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Prullenbak leegmaken';
-
-  @override
   String get emptyTrashTip =>
       '==0, bij de volgende start verwijderen. <0 niet automatisch verwijderen.';
 
   @override
-  String get fontSize => 'Lettergrootte';
-
-  @override
-  String get fontSizeSettingTip => 'Alleen van toepassing op codeblokken';
-
-  @override
   String get genChatTitle => 'Chattitel genereren';
-
-  @override
-  String get history => 'Geschiedenis';
-
-  @override
-  String historyToolHelp(Object keywords) {
-    return 'Chats laden met trefwoorden $keywords als context?';
-  }
-
-  @override
-  String get historyToolTip => 'Historische chats laden als context';
-
-  @override
-  String get httpToolTip =>
-      'HTTP-verzoek uitvoeren, bijvoorbeeld: inhoud zoeken';
 
   @override
   String get image => 'Afbeelding';
@@ -93,9 +61,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String invalidLinkFmt(Object uri) {
     return 'Onbekende link: $uri';
   }
-
-  @override
-  String get joinBeta => 'Deelnemen aan bètatest';
 
   @override
   String get languageName => 'Nederlands';
@@ -107,29 +72,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get licenseMenuItem => 'Open-source licenties';
 
   @override
-  String get list => 'Lijst';
-
-  @override
   String get manual => 'Handmatig';
-
-  @override
-  String get memory => 'Geheugen';
-
-  @override
-  String memoryAdded(Object str) {
-    return 'Geheugen toegevoegd: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return 'Onthouden [$txt]?';
-  }
-
-  @override
-  String get message => 'Bericht';
-
-  @override
-  String get model => 'Model';
 
   @override
   String get more => 'Meer';
@@ -139,12 +82,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get newChat => 'Nieuwe chat';
-
-  @override
-  String get onMsgCome => 'Wanneer er nieuwe berichten zijn';
-
-  @override
-  String get onSwitchChat => 'Bij het wisselen van gesprekken';
 
   @override
   String get passwd => 'Wachtwoord';
@@ -157,9 +94,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get rename => 'Hernoemen';
-
-  @override
-  String get replay => 'Herhalen';
 
   @override
   String get share => 'Delen';
@@ -176,9 +110,6 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
-  String get switcher => 'Schakelaar';
-
-  @override
   String syncConflict(Object a, Object b) {
     return 'Conflict: kan $a en $b niet tegelijkertijd activeren';
   }
@@ -193,22 +124,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get themeMode => 'Thema-modus';
 
   @override
-  String get tool => 'Tool';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Gaat u akkoord met het gebruik van tool $tool?';
-  }
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Er zullen gegevens van het netwerk worden opgehaald, deze keer zal er contact worden opgenomen met $host';
-  }
-
-  @override
-  String get toolHttpReqName => 'HTTP-verzoek';
-
-  @override
   String get untitled => 'Naamloos';
 
   @override
@@ -218,93 +133,184 @@ class AppLocalizationsNl extends AppLocalizations {
   String get user => 'Gebruiker';
 
   @override
-  String get deny => 'Deny';
+  String get trash => 'Prullenbak';
 
   @override
-  String get allow => 'Allow';
-
-  @override
-  String get allowAlways => 'Always allow';
-
-  @override
-  String get trash => 'Trash';
-
-  @override
-  String get startChatTip => 'Pick a model below and say something.';
-
-  @override
-  String get camera => 'Camera';
-
-  @override
-  String get send => 'Send';
+  String get startChatTip => 'Kies hieronder een model en zeg iets.';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Nog geen enkele provider heeft een sleutel. Voeg er een toe om te chatten.';
 
   @override
   String get providers => 'Providers';
 
   @override
-  String get regenerate => 'Regenerate';
-
-  @override
-  String get compacted => 'Earlier messages were summarised';
-
-  @override
-  String get favorite => 'Favorites';
-
-  @override
-  String get defaultModel => 'Default model';
-
-  @override
-  String get titleModel => 'Model for titles';
-
-  @override
-  String get systemPrompt => 'System prompt';
-
-  @override
-  String get compaction => 'Compact long chats';
-
-  @override
-  String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
-
-  @override
-  String get customProvider => 'Custom provider';
-
-  @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
-
-  @override
-  String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
-
-  @override
-  String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n models';
-  }
-
-  @override
-  String get sameAsChat => 'Same as the chat';
-
-  @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Opgeslagen in de sleutelhanger van het systeem, nooit in back-ups.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String providersCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n providers',
+      one: '1 provider',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+  String get today => 'Vandaag';
+
+  @override
+  String get earlier => 'Eerder';
+
+  @override
+  String get now => 'nu';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n min';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n u';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n berichten',
+      one: '1 bericht',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get version => 'Versie';
+
+  @override
+  String get toolsAndMcp => 'Tools & MCP';
+
+  @override
+  String get backToChats => 'Terug naar chats';
+
+  @override
+  String get genChatTitleTip =>
+      'Geeft een chat een naam na het eerste antwoord';
+
+  @override
+  String get scrollOnNewMsg => 'Naar beneden scrollen bij nieuw bericht';
+
+  @override
+  String get scrollAfterSwitch => 'Naar beneden scrollen na wisselen van chat';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n chats';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Prullenbak legen na';
+
+  @override
+  String get trashTip => 'Verwijderde chats wachten eerst hier';
+
+  @override
+  String daysFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n dagen',
+      one: '1 dag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sync => 'Synchronisatie';
+
+  @override
+  String get syncNow => 'Nu synchroniseren';
+
+  @override
+  String get syncing => 'Synchroniseren…';
+
+  @override
+  String get neverSynced => 'Nog niet gesynchroniseerd';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Laatst gesynchroniseerd: $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Zet hieronder iCloud of WebDAV aan om automatisch te synchroniseren.';
+
+  @override
+  String get backupPassword => 'Back-upwachtwoord';
+
+  @override
+  String get backupEncrypted => 'Back-ups worden hiermee versleuteld';
+
+  @override
+  String get backupNotEncrypted =>
+      'Niet ingesteld: bestandsback-ups zijn onversleuteld en synchronisatie vereist er een';
+
+  @override
+  String get backupEncryptedTip => 'Deze back-up is versleuteld';
+
+  @override
+  String get backupPasswordRequired =>
+      'Stel eerst een back-upwachtwoord in: gesynchroniseerde back-ups zijn altijd versleuteld';
+
+  @override
+  String get passwordWrong => 'Verkeerd wachtwoord of beschadigde back-up';
+
+  @override
+  String get backupTooNew =>
+      'Deze back-up komt uit een nieuwere versie van de app. Werk bij om hem te herstellen.';
+
+  @override
+  String get syncAppSettings => 'App-instellingen synchroniseren';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Venstergrootte en titelbalk blijven per apparaat';
+
+  @override
+  String get webdavManualTip =>
+      'Een gedateerde kopie naast de gesynchroniseerde';
+
+  @override
+  String get exportFile => 'Naar een bestand exporteren';
+
+  @override
+  String get importFile => 'Herstellen uit een bestand';
+
+  @override
+  String get copyBackup => 'Naar klembord kopiëren';
+
+  @override
+  String get pasteBackup => 'Herstellen vanaf klembord';
+
+  @override
+  String get pullNewChat => 'Omlaag trekken voor een nieuwe chat';
+
+  @override
+  String get releaseNewChat => 'Loslaten voor een nieuwe chat';
+
+  @override
+  String get pullOlderChat =>
+      'Omhoog trekken en vasthouden voor de vorige chat';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Blijf vasthouden: $title';
+  }
 }

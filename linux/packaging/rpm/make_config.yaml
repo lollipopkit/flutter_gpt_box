@@ -7,7 +7,7 @@ packagerEmail: 10864310+lollipopkit@users.noreply.github.com
 license: GPLv3
 url: https://github.com/lollipopkit/flutter_gpt_box
 
-display_name: GPT Box
+display_name: LLMBox
 
 keywords:
   - gpt
@@ -15,7 +15,7 @@ keywords:
   - openai
   - ai
 
-generic_name: GPT Box
+generic_name: LLMBox
 
 categories:
   - Utility

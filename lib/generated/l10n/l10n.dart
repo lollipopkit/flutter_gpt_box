@@ -119,12 +119,6 @@ abstract class AppLocalizations {
     Locale('zh', 'TW'),
   ];
 
-  /// No description provided for @attention.
-  ///
-  /// In en, this message translates to:
-  /// **'Attention'**
-  String get attention;
-
   /// No description provided for @auto.
   ///
   /// In en, this message translates to:
@@ -137,23 +131,11 @@ abstract class AppLocalizations {
   /// **'Auto check for updates'**
   String get autoCheckUpdate;
 
-  /// No description provided for @autoScrollBottom.
-  ///
-  /// In en, this message translates to:
-  /// **'Auto scroll to bottom'**
-  String get autoScrollBottom;
-
   /// No description provided for @backupTip.
   ///
   /// In en, this message translates to:
   /// **'Please keep backup files private and safe!'**
   String get backupTip;
-
-  /// No description provided for @calcTokenLen.
-  ///
-  /// In en, this message translates to:
-  /// **'Calculate tokens length'**
-  String get calcTokenLen;
 
   /// No description provided for @chat.
   ///
@@ -194,7 +176,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteConfirm.
   ///
   /// In en, this message translates to:
-  /// **'Confirmation berfore delete'**
+  /// **'Confirm before deleting'**
   String get deleteConfirm;
 
   /// No description provided for @emptyFields.
@@ -203,59 +185,17 @@ abstract class AppLocalizations {
   /// **'{fields} is empty'**
   String emptyFields(Object fields);
 
-  /// No description provided for @emptyTrash.
-  ///
-  /// In en, this message translates to:
-  /// **'Empty recycle bin'**
-  String get emptyTrash;
-
   /// No description provided for @emptyTrashTip.
   ///
   /// In en, this message translates to:
   /// **'==0, delete on next startup. <0 do not delete automatically.'**
   String get emptyTrashTip;
 
-  /// No description provided for @fontSize.
-  ///
-  /// In en, this message translates to:
-  /// **'Font size'**
-  String get fontSize;
-
-  /// No description provided for @fontSizeSettingTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Applies only to code blocks'**
-  String get fontSizeSettingTip;
-
   /// No description provided for @genChatTitle.
   ///
   /// In en, this message translates to:
   /// **'Chat title generator'**
   String get genChatTitle;
-
-  /// No description provided for @history.
-  ///
-  /// In en, this message translates to:
-  /// **'History'**
-  String get history;
-
-  /// No description provided for @historyToolHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'Load chats containing keywords {keywords} as context?'**
-  String historyToolHelp(Object keywords);
-
-  /// No description provided for @historyToolTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Load history chats as context'**
-  String get historyToolTip;
-
-  /// No description provided for @httpToolTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Send Http request, eg. search web content'**
-  String get httpToolTip;
 
   /// No description provided for @image.
   ///
@@ -268,12 +208,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid link: {uri}'**
   String invalidLinkFmt(Object uri);
-
-  /// No description provided for @joinBeta.
-  ///
-  /// In en, this message translates to:
-  /// **'Join Beta Program'**
-  String get joinBeta;
 
   /// No description provided for @languageName.
   ///
@@ -293,47 +227,11 @@ abstract class AppLocalizations {
   /// **'Open-source licenses'**
   String get licenseMenuItem;
 
-  /// No description provided for @list.
-  ///
-  /// In en, this message translates to:
-  /// **'List'**
-  String get list;
-
   /// No description provided for @manual.
   ///
   /// In en, this message translates to:
   /// **'Manual'**
   String get manual;
-
-  /// No description provided for @memory.
-  ///
-  /// In en, this message translates to:
-  /// **'Memory'**
-  String get memory;
-
-  /// No description provided for @memoryAdded.
-  ///
-  /// In en, this message translates to:
-  /// **'Memory added: {str}'**
-  String memoryAdded(Object str);
-
-  /// No description provided for @memoryTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Memorise [{txt}]?'**
-  String memoryTip(Object txt);
-
-  /// No description provided for @message.
-  ///
-  /// In en, this message translates to:
-  /// **'Message'**
-  String get message;
-
-  /// No description provided for @model.
-  ///
-  /// In en, this message translates to:
-  /// **'Model'**
-  String get model;
 
   /// No description provided for @more.
   ///
@@ -352,18 +250,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New chat'**
   String get newChat;
-
-  /// No description provided for @onMsgCome.
-  ///
-  /// In en, this message translates to:
-  /// **'When there are new messages'**
-  String get onMsgCome;
-
-  /// No description provided for @onSwitchChat.
-  ///
-  /// In en, this message translates to:
-  /// **'When switching conversations'**
-  String get onSwitchChat;
 
   /// No description provided for @passwd.
   ///
@@ -389,12 +275,6 @@ abstract class AppLocalizations {
   /// **'Rename'**
   String get rename;
 
-  /// No description provided for @replay.
-  ///
-  /// In en, this message translates to:
-  /// **'Replay'**
-  String get replay;
-
   /// No description provided for @share.
   ///
   /// In en, this message translates to:
@@ -418,12 +298,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure to restore Backup({time})?'**
   String sureRestoreFmt(Object time);
-
-  /// No description provided for @switcher.
-  ///
-  /// In en, this message translates to:
-  /// **'Switch'**
-  String get switcher;
 
   /// No description provided for @syncConflict.
   ///
@@ -449,30 +323,6 @@ abstract class AppLocalizations {
   /// **'Theme mode'**
   String get themeMode;
 
-  /// No description provided for @tool.
-  ///
-  /// In en, this message translates to:
-  /// **'Tool'**
-  String get tool;
-
-  /// No description provided for @toolConfirmFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'Is it permitted to use the tool {tool} ?'**
-  String toolConfirmFmt(Object tool);
-
-  /// No description provided for @toolHttpReqHelp.
-  ///
-  /// In en, this message translates to:
-  /// **'It will fetch data from network. In this time, it will communicate with {host}.'**
-  String toolHttpReqHelp(Object host);
-
-  /// No description provided for @toolHttpReqName.
-  ///
-  /// In en, this message translates to:
-  /// **'Http Request'**
-  String get toolHttpReqName;
-
   /// No description provided for @untitled.
   ///
   /// In en, this message translates to:
@@ -491,24 +341,6 @@ abstract class AppLocalizations {
   /// **'User'**
   String get user;
 
-  /// No description provided for @deny.
-  ///
-  /// In en, this message translates to:
-  /// **'Deny'**
-  String get deny;
-
-  /// No description provided for @allow.
-  ///
-  /// In en, this message translates to:
-  /// **'Allow'**
-  String get allow;
-
-  /// No description provided for @allowAlways.
-  ///
-  /// In en, this message translates to:
-  /// **'Always allow'**
-  String get allowAlways;
-
   /// No description provided for @trash.
   ///
   /// In en, this message translates to:
@@ -520,18 +352,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick a model below and say something.'**
   String get startChatTip;
-
-  /// No description provided for @camera.
-  ///
-  /// In en, this message translates to:
-  /// **'Camera'**
-  String get camera;
-
-  /// No description provided for @send.
-  ///
-  /// In en, this message translates to:
-  /// **'Send'**
-  String get send;
 
   /// No description provided for @noProviderKey.
   ///
@@ -545,113 +365,257 @@ abstract class AppLocalizations {
   /// **'Providers'**
   String get providers;
 
-  /// No description provided for @regenerate.
-  ///
-  /// In en, this message translates to:
-  /// **'Regenerate'**
-  String get regenerate;
-
-  /// No description provided for @compacted.
-  ///
-  /// In en, this message translates to:
-  /// **'Earlier messages were summarised'**
-  String get compacted;
-
-  /// No description provided for @favorite.
-  ///
-  /// In en, this message translates to:
-  /// **'Favorites'**
-  String get favorite;
-
-  /// No description provided for @defaultModel.
-  ///
-  /// In en, this message translates to:
-  /// **'Default model'**
-  String get defaultModel;
-
-  /// No description provided for @titleModel.
-  ///
-  /// In en, this message translates to:
-  /// **'Model for titles'**
-  String get titleModel;
-
-  /// No description provided for @systemPrompt.
-  ///
-  /// In en, this message translates to:
-  /// **'System prompt'**
-  String get systemPrompt;
-
-  /// No description provided for @compaction.
-  ///
-  /// In en, this message translates to:
-  /// **'Compact long chats'**
-  String get compaction;
-
-  /// No description provided for @compactionTip.
-  ///
-  /// In en, this message translates to:
-  /// **'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.'**
-  String get compactionTip;
-
-  /// No description provided for @customProvider.
-  ///
-  /// In en, this message translates to:
-  /// **'Custom provider'**
-  String get customProvider;
-
-  /// No description provided for @refreshModels.
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh models'**
-  String get refreshModels;
-
-  /// No description provided for @providerLinkFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'Add the provider \"{name}\" at {url}? Its key is not in the link; you enter it yourself.'**
-  String providerLinkFmt(String name, String url);
-
-  /// No description provided for @modelsListedTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.'**
-  String get modelsListedTip;
-
-  /// No description provided for @modelsRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'This API cannot list its models: enter at least one model id.'**
-  String get modelsRequired;
-
-  /// No description provided for @modelsCountFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'{n} models'**
-  String modelsCountFmt(int n);
-
-  /// No description provided for @sameAsChat.
-  ///
-  /// In en, this message translates to:
-  /// **'Same as the chat'**
-  String get sameAsChat;
-
   /// No description provided for @keyInKeychain.
   ///
   /// In en, this message translates to:
   /// **'Stored in the system keychain, never in backups.'**
   String get keyInKeychain;
 
-  /// No description provided for @extraVars.
+  /// No description provided for @providersCountFmt.
   ///
   /// In en, this message translates to:
-  /// **'Extra variables'**
-  String get extraVars;
+  /// **'{n, plural, =1{1 provider} other{{n} providers}}'**
+  String providersCountFmt(int n);
 
-  /// No description provided for @extraVarsTip.
+  /// No description provided for @today.
   ///
   /// In en, this message translates to:
-  /// **'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).'**
-  String get extraVarsTip;
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @earlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get earlier;
+
+  /// No description provided for @now.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get now;
+
+  /// No description provided for @minutesFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} min'**
+  String minutesFmt(int n);
+
+  /// No description provided for @hoursFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} h'**
+  String hoursFmt(int n);
+
+  /// No description provided for @messagesCountFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 message} other{{n} messages}}'**
+  String messagesCountFmt(int n);
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @toolsAndMcp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools & MCP'**
+  String get toolsAndMcp;
+
+  /// No description provided for @backToChats.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to chats'**
+  String get backToChats;
+
+  /// No description provided for @genChatTitleTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Names a chat after its first reply'**
+  String get genChatTitleTip;
+
+  /// No description provided for @scrollOnNewMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll to bottom on new message'**
+  String get scrollOnNewMsg;
+
+  /// No description provided for @scrollAfterSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll to bottom after switching chat'**
+  String get scrollAfterSwitch;
+
+  /// No description provided for @chatsCountFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 chat} other{{n} chats}}'**
+  String chatsCountFmt(int n);
+
+  /// No description provided for @emptyTrashAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty trash after'**
+  String get emptyTrashAfter;
+
+  /// No description provided for @trashTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted chats wait here first'**
+  String get trashTip;
+
+  /// No description provided for @daysFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 day} other{{n} days}}'**
+  String daysFmt(int n);
+
+  /// No description provided for @sync.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get sync;
+
+  /// No description provided for @syncNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get syncNow;
+
+  /// No description provided for @syncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get syncing;
+
+  /// No description provided for @neverSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Not synced yet'**
+  String get neverSynced;
+
+  /// No description provided for @lastSyncFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced {time}'**
+  String lastSyncFmt(String time);
+
+  /// No description provided for @syncOffTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on iCloud or WebDAV below to sync automatically.'**
+  String get syncOffTip;
+
+  /// No description provided for @backupPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup password'**
+  String get backupPassword;
+
+  /// No description provided for @backupEncrypted.
+  ///
+  /// In en, this message translates to:
+  /// **'Backups are encrypted with it'**
+  String get backupEncrypted;
+
+  /// No description provided for @backupNotEncrypted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set: file backups are plain text, and sync needs one'**
+  String get backupNotEncrypted;
+
+  /// No description provided for @backupEncryptedTip.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is encrypted'**
+  String get backupEncryptedTip;
+
+  /// No description provided for @backupPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a backup password first: synced backups are always encrypted'**
+  String get backupPasswordRequired;
+
+  /// No description provided for @passwordWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong password, or the backup is damaged'**
+  String get passwordWrong;
+
+  /// No description provided for @backupTooNew.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is from a newer version of the app. Update to restore it.'**
+  String get backupTooNew;
+
+  /// No description provided for @syncAppSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync app settings'**
+  String get syncAppSettings;
+
+  /// No description provided for @syncAppSettingsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Window size and title bar stay per device'**
+  String get syncAppSettingsTip;
+
+  /// No description provided for @webdavManualTip.
+  ///
+  /// In en, this message translates to:
+  /// **'A dated copy beside the synced one'**
+  String get webdavManualTip;
+
+  /// No description provided for @exportFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Export to a file'**
+  String get exportFile;
+
+  /// No description provided for @importFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from a file'**
+  String get importFile;
+
+  /// No description provided for @copyBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to clipboard'**
+  String get copyBackup;
+
+  /// No description provided for @pasteBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from clipboard'**
+  String get pasteBackup;
+
+  /// No description provided for @pullNewChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down for a new chat'**
+  String get pullNewChat;
+
+  /// No description provided for @releaseNewChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Release for a new chat'**
+  String get releaseNewChat;
+
+  /// No description provided for @pullOlderChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull up and hold for the previous chat'**
+  String get pullOlderChat;
+
+  /// No description provided for @holdOlderChatFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep holding: {title}'**
+  String holdOlderChatFmt(String title);
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'l10n.dart';
 
 // ignore_for_file: type=lint
@@ -9,23 +10,14 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get attention => 'Achtung';
-
-  @override
   String get auto => 'Automatisch';
 
   @override
   String get autoCheckUpdate => 'Automatisch nach Updates suchen';
 
   @override
-  String get autoScrollBottom => 'Automatisch nach unten scrollen';
-
-  @override
   String get backupTip =>
       'Bitte stellen Sie sicher, dass Ihre Sicherungsdatei privat und sicher ist!';
-
-  @override
-  String get calcTokenLen => 'Token-Länge berechnen';
 
   @override
   String get chat => 'Chat';
@@ -56,34 +48,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Papierkorb leeren';
-
-  @override
   String get emptyTrashTip =>
       '==0, beim nächsten Start löschen. <0 nicht automatisch löschen.';
 
   @override
-  String get fontSize => 'Schriftgröße';
-
-  @override
-  String get fontSizeSettingTip => 'Gilt nur für Codeblöcke';
-
-  @override
   String get genChatTitle => 'Chat-Titel generieren';
-
-  @override
-  String get history => 'Verlauf';
-
-  @override
-  String historyToolHelp(Object keywords) {
-    return 'Chats mit den Schlüsselwörtern $keywords als Kontext laden?';
-  }
-
-  @override
-  String get historyToolTip => 'Lade historische Chats als Kontext';
-
-  @override
-  String get httpToolTip => 'HTTP-Anfrage senden, z.B.: Inhalte suchen';
 
   @override
   String get image => 'Bild';
@@ -92,9 +61,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String invalidLinkFmt(Object uri) {
     return 'Unbekannter Link: $uri';
   }
-
-  @override
-  String get joinBeta => 'An Beta-Tests teilnehmen';
 
   @override
   String get languageName => 'Deutsch';
@@ -106,29 +72,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get licenseMenuItem => 'Open-Source-Lizenzen';
 
   @override
-  String get list => 'Liste';
-
-  @override
   String get manual => 'Manuell';
-
-  @override
-  String get memory => 'Gedächtnis';
-
-  @override
-  String memoryAdded(Object str) {
-    return 'Gedächtnis hinzugefügt: $str';
-  }
-
-  @override
-  String memoryTip(Object txt) {
-    return '[$txt] merken?';
-  }
-
-  @override
-  String get message => 'Nachricht';
-
-  @override
-  String get model => 'Modell';
 
   @override
   String get more => 'Mehr';
@@ -138,12 +82,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get newChat => 'Neuer Chat';
-
-  @override
-  String get onMsgCome => 'Wenn neue Nachrichten vorhanden sind';
-
-  @override
-  String get onSwitchChat => 'Beim Wechseln der Konversation';
 
   @override
   String get passwd => 'Passwort';
@@ -156,9 +94,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get rename => 'Umbenennen';
-
-  @override
-  String get replay => 'Wiederholen';
 
   @override
   String get share => 'Teilen';
@@ -175,9 +110,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get switcher => 'Schalter';
-
-  @override
   String syncConflict(Object a, Object b) {
     return 'Konflikt: $a und $b können nicht gleichzeitig aktiviert werden';
   }
@@ -192,22 +124,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get themeMode => 'Theme-Modus';
 
   @override
-  String get tool => 'Werkzeug';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Stimmen Sie der Verwendung des Werkzeugs $tool zu?';
-  }
-
-  @override
-  String toolHttpReqHelp(Object host) {
-    return 'Es werden Daten aus dem Netzwerk abgerufen, diesmal wird $host kontaktiert';
-  }
-
-  @override
-  String get toolHttpReqName => 'HTTP-Anfrage';
-
-  @override
   String get untitled => 'Unbenannt';
 
   @override
@@ -217,93 +133,177 @@ class AppLocalizationsDe extends AppLocalizations {
   String get user => 'Benutzer';
 
   @override
-  String get deny => 'Deny';
+  String get trash => 'Papierkorb';
 
   @override
-  String get allow => 'Allow';
-
-  @override
-  String get allowAlways => 'Always allow';
-
-  @override
-  String get trash => 'Trash';
-
-  @override
-  String get startChatTip => 'Pick a model below and say something.';
-
-  @override
-  String get camera => 'Camera';
-
-  @override
-  String get send => 'Send';
+  String get startChatTip => 'Wähle unten ein Modell und schreib etwas.';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Noch kein Anbieter hat einen Schlüssel. Füge einen hinzu, um zu chatten.';
 
   @override
-  String get providers => 'Providers';
-
-  @override
-  String get regenerate => 'Regenerate';
-
-  @override
-  String get compacted => 'Earlier messages were summarised';
-
-  @override
-  String get favorite => 'Favorites';
-
-  @override
-  String get defaultModel => 'Default model';
-
-  @override
-  String get titleModel => 'Model for titles';
-
-  @override
-  String get systemPrompt => 'System prompt';
-
-  @override
-  String get compaction => 'Compact long chats';
-
-  @override
-  String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
-
-  @override
-  String get customProvider => 'Custom provider';
-
-  @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
-
-  @override
-  String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
-
-  @override
-  String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
-
-  @override
-  String modelsCountFmt(int n) {
-    return '$n models';
-  }
-
-  @override
-  String get sameAsChat => 'Same as the chat';
+  String get providers => 'Anbieter';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Im Schlüsselbund des Systems gespeichert, nie in Backups.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String providersCountFmt(int n) {
+    return '$n Anbieter';
+  }
 
   @override
-  String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+  String get today => 'Heute';
+
+  @override
+  String get earlier => 'Früher';
+
+  @override
+  String get now => 'jetzt';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n Min.';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n Std.';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n Nachrichten',
+      one: '1 Nachricht',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get toolsAndMcp => 'Werkzeuge & MCP';
+
+  @override
+  String get backToChats => 'Zurück zu den Chats';
+
+  @override
+  String get genChatTitleTip => 'Benennt einen Chat nach der ersten Antwort';
+
+  @override
+  String get scrollOnNewMsg => 'Bei neuer Nachricht nach unten scrollen';
+
+  @override
+  String get scrollAfterSwitch => 'Nach Chatwechsel nach unten scrollen';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n Chats';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Papierkorb leeren nach';
+
+  @override
+  String get trashTip => 'Gelöschte Chats landen zuerst hier';
+
+  @override
+  String daysFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n Tage',
+      one: '1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sync => 'Synchronisierung';
+
+  @override
+  String get syncNow => 'Jetzt synchronisieren';
+
+  @override
+  String get syncing => 'Wird synchronisiert…';
+
+  @override
+  String get neverSynced => 'Noch nicht synchronisiert';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Zuletzt synchronisiert: $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Schalte unten iCloud oder WebDAV ein, um automatisch zu synchronisieren.';
+
+  @override
+  String get backupPassword => 'Backup-Passwort';
+
+  @override
+  String get backupEncrypted => 'Backups werden damit verschlüsselt';
+
+  @override
+  String get backupNotEncrypted =>
+      'Nicht gesetzt: Datei-Backups sind unverschlüsselt, und die Synchronisierung braucht eines';
+
+  @override
+  String get backupEncryptedTip => 'Dieses Backup ist verschlüsselt';
+
+  @override
+  String get backupPasswordRequired =>
+      'Lege zuerst ein Backup-Passwort fest: synchronisierte Backups sind immer verschlüsselt';
+
+  @override
+  String get passwordWrong => 'Falsches Passwort oder beschädigtes Backup';
+
+  @override
+  String get backupTooNew =>
+      'Dieses Backup stammt aus einer neueren App-Version. Aktualisiere, um es wiederherzustellen.';
+
+  @override
+  String get syncAppSettings => 'App-Einstellungen synchronisieren';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Fenstergröße und Titelleiste bleiben pro Gerät';
+
+  @override
+  String get webdavManualTip =>
+      'Eine datierte Kopie neben der synchronisierten';
+
+  @override
+  String get exportFile => 'In eine Datei exportieren';
+
+  @override
+  String get importFile => 'Aus einer Datei wiederherstellen';
+
+  @override
+  String get copyBackup => 'In die Zwischenablage kopieren';
+
+  @override
+  String get pasteBackup => 'Aus der Zwischenablage wiederherstellen';
+
+  @override
+  String get pullNewChat => 'Nach unten ziehen für einen neuen Chat';
+
+  @override
+  String get releaseNewChat => 'Loslassen für einen neuen Chat';
+
+  @override
+  String get pullOlderChat =>
+      'Nach oben ziehen und halten für den vorherigen Chat';
+
+  @override
+  String holdOlderChatFmt(String title) {
+    return 'Weiter halten: $title';
+  }
 }

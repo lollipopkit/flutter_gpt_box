@@ -9,6 +9,6 @@ abstract final class Urls {
   static const githubReleasesApi =
       'https://api.github.com/repos/lollipopkit/flutter_gpt_box/releases';
 
-  /// Github models url has no '/v1' suffix
-  static const githubModels = 'https://models.inference.ai.azure.com';
+  /// Where iOS updates come from: its build there is looked up too.
+  static const appStore = 'https://apps.apple.com/app/id6476033062';
 }
