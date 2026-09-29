@@ -1,196 +1,139 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gpt_box/core/util/sync.dart';
+import 'package:gpt_box/core/llm/chats.dart';
+import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/core/util/url.dart';
-//import 'package:flutter_tiktoken/flutter_tiktoken.dart';
-import 'package:gpt_box/data/model/chat/history/share.dart';
-import 'package:gpt_box/core/util/chat_title.dart';
-import 'package:gpt_box/core/util/tool_func/tool.dart';
-import 'package:gpt_box/data/model/chat/config.dart';
-import 'package:gpt_box/data/model/chat/history/history.dart';
-import 'package:gpt_box/data/model/chat/history/view.dart';
-import 'package:gpt_box/data/model/chat/type.dart';
+import 'package:gpt_box/data/model/chat.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/migrations.dart';
-import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/page/home/approval.dart';
+import 'package:gpt_box/view/page/home/chat_list.dart';
+import 'package:gpt_box/view/page/home/chat_view.dart';
+import 'package:gpt_box/view/page/home/composer.dart';
+import 'package:gpt_box/view/page/home/share.dart';
+import 'package:gpt_box/view/page/settings/providers.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
-import 'package:icons_plus/icons_plus.dart';
-// import 'package:image_picker/image_picker.dart';
-import 'package:openai_dart/openai_dart.dart';
-import 'package:screenshot/screenshot.dart';
 
-part 'chat.dart';
-part 'history.dart';
-part 'var.dart';
-part 'ctrl.dart';
-part 'enum.dart';
-part 'search.dart';
-part 'appbar.dart';
-part 'bottom/bottom.dart';
-part 'bottom/settings.dart';
-part 'bottom/picked_files.dart';
-part 'url_scheme.dart';
-part 'req.dart';
-part 'md_copy.dart';
-part 'trash.dart';
 part 'desktop.dart';
+part 'url_scheme.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
-
-  static void afterRestore() {
-    _allHistories = Stores.history.fetchAll();
-    _historyRN.notify();
-    _chatRN.notify();
-    _switchChat();
-    Cfg.setTo();
-  }
 }
 
-class _HomePageState extends State<HomePage>
-    with AfterLayoutMixin<HomePage>, TickerProviderStateMixin {
-  Timer? _refreshTimeTimer;
-  final _appLink = AppLinks();
+class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
+  final _scaffold = GlobalKey<ScaffoldState>();
+  final _appLinks = AppLinks();
+  StreamSubscription<Uri>? _linkSub;
 
   @override
   void dispose() {
-    // Do NOT dispose these, it's global and will be reused
-    // _inputCtrl.dispose();
-    // _chatScrollCtrl.dispose();
-    // _historyScrollCtrl.dispose();
-
-    _refreshTimeTimer?.cancel();
-    // The context used inside the keyboard listener will be invalid after
-    // [_HomePageState.dispose], so this must be disposed here
-    _keyboardSendListener?.dispose();
+    _linkSub?.cancel();
+    Chats.approver = null;
     super.dispose();
   }
 
   @override
-  void didChangeDependencies() {
-    RNodes.dark.value = context.isDark;
-    // The same width [AdaptivePanes] splits at, so the input bar follows the
-    // column the chat is in.
-    _isDesktop.value =
-        MediaQuery.sizeOf(context).width >= AdaptivePanes.kSplitWidth;
-    super.didChangeDependencies();
-    _homeBottomRN.notify();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final scaffold = CallbackShortcuts(
-      bindings: _desktopShortcuts(context),
-      child: const Scaffold(
-        appBar: _CustomAppBar(),
-        body: _Body(),
-        bottomNavigationBar: _HomeBottom(isHome: true),
-      ),
-    );
-    return ExitConfirm(
-      onPop: (_) => ExitConfirm.exitApp(),
-      child: isMacOS
-          ? PlatformMenuBar(menus: _macosMenus(context), child: scaffold)
-          : scaffold,
-    );
-  }
-
-  @override
-  FutureOr<void> afterFirstLayout(BuildContext context) {
-    _allHistories = Stores.history.fetchAll();
-    _refreshTimeTimer = Timer.periodic(
-      const Duration(seconds: 10),
-      (_) {
-        if (mounted) _timeRN.notify();
-      },
-    );
-    _initUrlScheme();
-    // AudioCard.listenAudioPlayer();
-
-    /// Keep this here.
-    /// - If there is not chat history, [_switchChat] will create one
-    /// - If the init help haven't shown, [_switchChat] will show it
-    /// - Init help uses [l10n] to gen msg, so [l10n] must be ready
-    /// - [l10n] is ready after first layout
-    _switchChat();
-    _listenKeyboard();
-    _historyRN.notify();
-    //_removeDuplicateHistory(context);
-
+  FutureOr<void> afterFirstLayout(BuildContext context) async {
+    Chats.approver = (call) => askToolApproval(this.context, call);
+    Chats.current.value ??= Stores.chat.all().firstOrNull?.id;
+    unawaited(Chats.purgeTrash());
+    _initLinks();
     if (Stores.setting.autoCheckUpdate.get()) {
-      AppUpdateIface.doUpdate(
+      unawaited(AppUpdateIface.doUpdate(
         githubReleasesUrl: Urls.githubReleasesApi,
         context: context,
         build: BuildData.build,
-      );
+      ));
     }
-
-    _migrate();
+    if (Llm.configured.value.isEmpty && context.mounted) {
+      // Nothing can be sent without a key; say so up front.
+      Toast.show(l10n.noProviderKey, action: ToastAction(label: l10n.providers, onTap: _openProviders));
+    }
   }
 
-  void _migrate() async {
-    final lastVer = PrefProps.lastVer.get();
-    const now = BuildData.build;
+  void _openProviders() => ProvidersPage.route.go(context);
 
-    await MigrationFns.appendV1ToUrl(lastVer, now, context: context);
-
-    PrefProps.lastVer.set(now);
-  }
-
-  void _listenKeyboard() {
-    _keyboardSendListener = KeyboardCtrlListener(
-      key: PhysicalKeyboardKey.enter,
-      callback: () {
-        // If the current page is not chat, do nothing
-        if (context.stillOnPage != true) return false;
-
-        if (_inputCtrl.text.isEmpty) return false;
-        _onCreateRequest(context, _curChatId.value);
-        return true;
-      },
+  void _initLinks() {
+    DeepLinks.register(_handleLink);
+    _linkSub = _appLinks.uriLinkStream.listen(
+      (uri) => DeepLinks.process(uri, mounted ? context : null),
+      onError: (Object e) => Loggers.app.warning(l10n.invalidLinkFmt(e)),
     );
   }
 
-  Future<void> _initUrlScheme() async {
-    DeepLinks.register(_AppLink.handle);
+  bool get _split => MediaQuery.sizeOf(context).width >= AdaptivePanes.kSplitWidth;
 
-    if (isWeb) {
-      final uri = await _appLink.getInitialLink();
-      if (uri == null) return;
-      DeepLinks.process(uri, context);
-    } else {
-      _appLink.uriLinkStream.listen((uri) {
-        final ctx = mounted ? context : null;
-        DeepLinks.process(uri, ctx);
-      }, onError: (err) {
-        final msg = l10n.invalidLinkFmt(err);
-        Loggers.app.warning(msg);
-        context.showRoundDialog(title: l10n.attention, child: Text(msg));
-      });
-    }
+  void _newChat() {
+    Chats.current.value = null;
+    if (!_split) _scaffold.currentState?.closeDrawer();
   }
-}
 
-final class _Body extends StatelessWidget {
-  const _Body();
+  void _openSettings() => SettingsPage.route.go(context);
+
+  void _search() {
+    if (!_split) _scaffold.currentState?.openDrawer();
+    ChatList.searchRequest.notify();
+  }
+
+  void _step(int delta) {
+    final chats = Stores.chat.all();
+    if (chats.isEmpty) return;
+    final i = chats.indexWhere((c) => c.id == Chats.current.value);
+    final next = (i < 0 ? 0 : i + delta).clamp(0, chats.length - 1);
+    Chats.current.value = chats[next].id;
+  }
 
   @override
   Widget build(BuildContext context) {
-    const history = _HistoryPage();
-    const chat = _ChatPage();
+    final scaffold = Scaffold(
+      key: _scaffold,
+      appBar: _appBar(),
+      drawer: _split ? null : Drawer(child: SafeArea(child: ChatList(onPicked: () => Navigator.of(context).pop()))),
+      body: _body(),
+    );
+    final shortcuts = CallbackShortcuts(bindings: _desktopShortcuts(this), child: Focus(autofocus: true, child: scaffold));
+    return ExitConfirm(
+      onPop: (_) => ExitConfirm.exitApp(),
+      // The target platform, not the host: the menu bar is the platform's.
+      child: defaultTargetPlatform == TargetPlatform.macOS
+          ? PlatformMenuBar(menus: _macosMenus(this), child: shortcuts)
+          : shortcuts,
+    );
+  }
 
+  PreferredSizeWidget _appBar() {
+    return CustomAppBar(
+      title: ListenableBuilder(
+        listenable: Listenable.merge([Chats.current, Stores.chat.changes]),
+        builder: (_, _) {
+          final id = Chats.current.value;
+          final title = id == null ? l10n.newChat : Stores.chat.fetch(id)?.title ?? l10n.untitled;
+          return Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: UIs.text15);
+        },
+      ),
+      actions: [
+        Chats.current.listenVal((id) {
+          if (id == null) return UIs.placeholder;
+          return IconButton(tooltip: l10n.share, icon: const Icon(Icons.share), onPressed: () => shareChat(context, id));
+        }),
+        IconButton(tooltip: l10n.newChat, icon: const Icon(Icons.add_comment_outlined), onPressed: _newChat),
+        IconButton(tooltip: libL10n.setting, icon: const Icon(Icons.settings_outlined), onPressed: _openSettings),
+      ],
+    );
+  }
+
+  Widget _body() {
     final sets = Stores.setting;
     return sets.paneListWidth.listenable().listenVal(
       (width) => sets.paneListCollapsed.listenable().listenVal(
@@ -199,17 +142,9 @@ final class _Body extends StatelessWidget {
           onListWidthChanged: sets.paneListWidth.set,
           collapsed: collapsed,
           onCollapsedChanged: sets.paneListCollapsed.set,
-          listBuilder: (_, _) => history,
-          surfaceBuilder: (_, split) {
-            if (split) return chat;
-            return PageView(
-              controller: _pageCtrl,
-              onPageChanged: (value) {
-                _curPage.value = HomePageEnum.fromIdx(value);
-              },
-              children: const [history, chat],
-            );
-          },
+          listBuilder: (_, _) => const ChatList(),
+          // Narrow: the list is in the drawer, the chat has the width.
+          surfaceBuilder: (_, _) => const ChatView(),
         ),
       ),
     );

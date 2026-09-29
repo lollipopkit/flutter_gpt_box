@@ -1,18 +1,27 @@
 abstract final class AppLink {
-  /// lpkt.cn
-  static const scheme = 'lpkt.cn';
+  static const scheme = 'lollipopkit.com';
   static const host = 'gptbox';
 
-  /// lpkt.cn://gptbox
+  /// lollipopkit.com://gptbox
   static const prefix = '$scheme://$host';
 
+  /// `?msg=...&send=true`
   static const newChatPath = '/new';
+
+  /// `?chatId=...` or `?title=...`
   static const openChatPath = '/open';
+
+  /// `?keyword=...`
   static const searchPath = '/search';
+
+  /// `?chatId=...`
   static const shareChatPath = '/share';
+
+  /// `?page=settings|providers|tools|backup|about`
   static const goPath = '/go';
-  static const setPath = '/set';
-  static const profilePath = '/profile';
+
+  /// `?name=...&api=...&baseUrl=...` — asks before adding it; never a key.
+  static const providerPath = '/provider';
 }
 
 enum UrlType {

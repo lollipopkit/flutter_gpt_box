@@ -5,7 +5,6 @@ abstract final class Urls {
   static const repoDiscussion = '$repoBase/discussions';
   static const repoIssue = '$repoBase/issues';
   static const unilinkDoc = '$repoBase/blob/main/doc/uni_link.md';
-  static const openaiRestoreDoc = '$repoBase/blob/main/doc/openai_restore.md';
 
   static const githubReleasesApi =
       'https://api.github.com/repos/lollipopkit/flutter_gpt_box/releases';

@@ -4,11 +4,24 @@ part of 'tool.dart';
 abstract class McpTools {
   static final _clients = <String, McpClient>{};
   static final _transports = <String, Transport>{};
-  static final _toolsByServer = <String, Set<ChatCompletionTool>>{};
+  static final _toolsByServer = <String, List<Tool>>{};
   static final _serverNames = <Transport, String>{};
   static final _connectionStates = <String, bool>{};
   static final _retryTimers = <String, Timer>{};
   static const int _maxRetries = 3;
+
+  /// Notified when the set of tools changes: a server connected, dropped or
+  /// relisted its tools.
+  static final changes = RNode();
+
+  /// Connects every stored server. Run at launch; each connects on its own.
+  static Future<void> connectStored() async {
+    final urls = Stores.mcp.mcpServers.get();
+    await Future.wait([
+      for (var i = 0; i < urls.length; i++)
+        if (!_clients.containsKey('server_$i')) addTs(newHttpTs(url: urls[i]), 'server_$i'),
+    ]);
+  }
   static const Duration _retryDelay = Duration(seconds: 5);
 
   /// Init a stdio [Transport] with lifecycle management.
@@ -82,6 +95,7 @@ abstract class McpTools {
       transport.onclose = () {
         Loggers.app.info('Transport closed for $serverName');
         _connectionStates[serverName] = false;
+        changes.notify();
       };
       
       await client.connect(transport);
@@ -96,7 +110,7 @@ abstract class McpTools {
       _retryTimers.remove(serverName);
       
       await _refreshToolsForServer(serverName);
-      Loggers.app.info('Successfully connected to MCP server "$serverName" with ${(_toolsByServer[serverName] ?? {}).length} tools');
+      Loggers.app.info('Successfully connected to MCP server "$serverName" with ${(_toolsByServer[serverName] ?? const []).length} tools');
       return transport;
     } catch (e, s) {
       _connectionStates[serverName] = false;
@@ -127,162 +141,78 @@ abstract class McpTools {
   static Future<void> _refreshToolsForServer(String serverName) async {
     final client = _clients[serverName];
     if (client == null || !isServerConnected(serverName)) {
-      _toolsByServer[serverName] = {};
+      _toolsByServer[serverName] = [];
       return;
     }
-    
+
     try {
       final list = await client.listTools();
-      final tools = list.tools
-          .map(
-            (e) => ChatCompletionTool(
-              type: ChatCompletionToolType.function,
-              function: FunctionObject(
-                name: '$serverName::${e.name}',
-                description: '[$serverName] ${e.description}',
-                parameters: e.inputSchema.toJson(),
-              ),
-            ),
-          )
-          .toSet();
-      _toolsByServer[serverName] = tools;
-      Loggers.app.info('Loaded ${tools.length} tools from server "$serverName"');
+      _toolsByServer[serverName] = list.tools;
+      changes.notify();
+      Loggers.app.info('Loaded ${list.tools.length} tools from server "$serverName"');
     } catch (e, s) {
       Loggers.app.warning('Load tools from server "$serverName" failed', e, s);
-      _toolsByServer[serverName] = {};
+      _toolsByServer[serverName] = [];
     }
   }
-  
+
   /// Refresh tools for a specific server by name (public method).
   static Future<void> refreshToolsForServer(String serverName) async {
     await _refreshToolsForServer(serverName);
   }
 
-  /// Get all tools from all connected servers.
-  static Set<ChatCompletionTool> get tools {
-    // Add internal tools
-    _toolsByServer[InternalMcpServer.serverName] = _getInternalTools();
-    _connectionStates[InternalMcpServer.serverName] = true;
-    
-    // Only include tools from connected servers
-    return _toolsByServer.entries
-        .where((entry) => isServerConnected(entry.key))
-        .expand((entry) => entry.value)
-        .toSet();
-  }
-  
-  /// Get internal tools as ChatCompletionTool objects
-  static Set<ChatCompletionTool> _getInternalTools() {
-    final disabledMcp = Stores.mcp.disabledTools.get();
-    final tools = <ChatCompletionTool>{};
-    
-    for (final tool in OpenAIFuncCalls.internalTools) {
-      final toolName = '${InternalMcpServer.serverName}::${tool.name}';
-      if (!disabledMcp.contains(toolName) && !disabledMcp.contains(tool.name)) {
-        tools.add(ChatCompletionTool(
-          type: ChatCompletionToolType.function,
-          function: FunctionObject(
-            name: toolName,
-            description: '[${InternalMcpServer.serverName}] ${tool.description}',
-            parameters: tool.parametersSchema,
+  /// A tool's name as the model sees it: providers take `[a-zA-Z0-9_-]`
+  /// only, and two servers may both have a `search`.
+  static String toolName(String serverName, String tool) =>
+      '${serverName}__$tool'.replaceAll(RegExp(r'[^a-zA-Z0-9_-]'), '_');
+
+  /// Every tool of every connected server, as the model gets it.
+  static List<LlmTool> get llmTools => [
+    for (final MapEntry(key: server, value: tools) in _toolsByServer.entries)
+      if (isServerConnected(server))
+        for (final t in tools)
+          LlmTool(
+            name: toolName(server, t.name),
+            description: '[$server] ${t.description ?? ''}',
+            parameters: t.inputSchema.toJson(),
+            label: '$server · ${t.name}',
+            execute: (call, _) => _call(server, t.name, call.args),
           ),
-        ));
-      }
-    }
-    
-    return tools;
-  }
-  
+  ];
+
   /// Get count of available tools per server.
   static Map<String, int> get toolCounts {
     return Map.fromEntries(
       _toolsByServer.entries
           .where((entry) => isServerConnected(entry.key))
-          .map((entry) => MapEntry(entry.key, entry.value.length))
+          .map((entry) => MapEntry(entry.key, entry.value.length)),
     );
-  }
-
-  /// Get tools from a specific server.
-  static Set<ChatCompletionTool> getToolsFromServer(String serverName) {
-    return _toolsByServer[serverName] ?? {};
   }
 
   /// Get all connected server names.
   static Set<String> get serverNames => _clients.keys.toSet();
 
-  static Future<_Ret?> handle(_CallResp call, OnToolLog onToolLog) async {
-    final fullName = call.function.name;
-    final parts = fullName.split('::');
-    
-    if (parts.length != 2) {
-      final error = 'Invalid tool name format: $fullName (expected "server::tool")';
-      Loggers.app.warning(error);
-      onToolLog(error);
-      return null;
-    }
-    
-    final serverName = parts[0];
-    final toolName = parts[1];
-    
-    // Handle internal MCP server tools directly
-    if (serverName == InternalMcpServer.serverName) {
-      final args = await _parseMap(call.function.arguments);
-      return await InternalMcpServer.handleToolCall(toolName, args, onToolLog);
-    }
-    
+  static Future<LlmToolResult> _call(String serverName, String toolName, _Map args) async {
     final client = _clients[serverName];
-    
-    if (client == null) {
-      final error = 'Server not found: $serverName';
-      Loggers.app.warning(error);
-      onToolLog(error);
-      return null;
+    if (client == null) throw StateError('Server not found: $serverName');
+    if (!isServerConnected(serverName)) throw StateError('Server $serverName is not connected');
+
+    _log('Calling [$serverName] $toolName...');
+    final res = await client.callTool(CallToolRequest(name: toolName, arguments: args));
+    final parts = <Map<String, Object?>>[
+      for (final c in res.content)
+        switch (c) {
+          TextContent() => LlmContent.text(c.text),
+          ImageContent() => LlmContent.image(c.data, c.mimeType),
+          AudioContent() => LlmContent.text('[Audio: ${c.mimeType}]'),
+          EmbeddedResource() => LlmContent.text('[Resource: ${c.resource.uri}]'),
+          _ => LlmContent.text(c.toString()),
+        },
+    ];
+    if (res.isError == true) {
+      throw StateError(parts.map((p) => p['text'] ?? '').join('\n'));
     }
-    
-    if (!isServerConnected(serverName)) {
-      final error = 'Server $serverName is not connected';
-      Loggers.app.warning(error);
-      onToolLog(error);
-      return null;
-    }
-    
-    final args = await _parseMap(call.function.arguments);
-    try {
-      onToolLog('Calling [$serverName] $toolName...');
-      final res = await client.callTool(
-        CallToolRequest(name: toolName, arguments: args),
-      );
-      
-      String resultText = '';
-      if (res.content.isNotEmpty) {
-        resultText = res.content.map((content) {
-          if (content is TextContent) {
-            return content.text;
-          } else if (content is ImageContent) {
-            return '[Image: ${content.data}]';
-          } else if (content is AudioContent) {
-            return '[Audio: ${content.data}]';
-          } else if (content is EmbeddedResource) {
-            return '[Resource: ${content.resource.uri}]';
-          }
-          return content.toString();
-        }).join('\n');
-      }
-      
-      if (res.isError == true) {
-        final error = 'Tool execution failed: $resultText';
-        onToolLog('[$serverName] Error: $resultText');
-        return [ChatContent.text(error)];
-      }
-      
-      onToolLog('[$serverName] Success: $resultText');
-      return [ChatContent.text(resultText)];
-    } catch (e, s) {
-      final error = 'MCP tool error for $fullName: $e';
-      Loggers.app.warning(error, e, s);
-      onToolLog('[$serverName] Error: $e');
-      return null;
-    }
+    return LlmToolResult(content: parts);
   }
 
   /// Schedule a retry connection attempt.
@@ -323,6 +253,7 @@ abstract class McpTools {
     _transports.remove(serverName);
     _toolsByServer.remove(serverName);
     _connectionStates.remove(serverName);
+    changes.notify();
   }
 
   /// Close all connections and clean up.
@@ -375,7 +306,7 @@ abstract class McpTools {
     return Map.fromEntries(
       serverNames.map((serverName) {
         final isConnected = isServerConnected(serverName);
-        final toolCount = (_toolsByServer[serverName] ?? {}).length;
+        final toolCount = (_toolsByServer[serverName] ?? const []).length;
         final serverInfo = getServerInfo(serverName);
         final capabilities = getServerCapabilities(serverName);
         

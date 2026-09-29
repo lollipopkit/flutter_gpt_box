@@ -1,113 +1,91 @@
-/// Live API tests. They need credentials, either as environment variables or
-/// in `.env` / `test/.env` (see `.env.example`); environment variables win.
-/// Without them the whole group is skipped.
+/// Live API tests, through fl_pi_llm. They need credentials, either as
+/// environment variables or in `.env` / `test/.env` (see `.env.example`);
+/// environment variables win. Without them the whole group is skipped.
+///
+/// `LLM_API` picks the protocol (an `LlmApi` wire name), default
+/// `openai-completions`.
 library;
 
 import 'dart:io';
 
+import 'package:fl_pi_llm/fl_pi_llm.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:openai_dart/openai_dart.dart';
 
 void main() {
   final env = _Env.load();
   final baseUrl = env['LLM_BASE_URL'];
   final apiKey = env['LLM_API_KEY'];
-  final model = env['LLM_MODEL'] ?? 'gpt-3.5-turbo';
+  final model = env['LLM_MODEL'] ?? 'gpt-4o-mini';
+  final api = LlmApi.fromWire(env['LLM_API']) ?? LlmApi.openaiCompletions;
   final missing = baseUrl == null || apiKey == null || apiKey == 'sk-xxx';
 
-  group(
-    'LLM API',
-    skip: missing ? 'LLM_BASE_URL / LLM_API_KEY not configured' : false,
-    () {
-      late OpenAIClient client;
+  group('LLM API', skip: missing ? 'LLM_BASE_URL / LLM_API_KEY not configured' : false, () {
+    late FlPiLlm llm;
+    const ref = LlmModelRef('live', '');
+    final m = LlmModelRef('live', model);
 
-      setUpAll(() {
-        client = OpenAIClient(apiKey: apiKey, baseUrl: baseUrl);
-      });
-
-      CreateChatCompletionRequest request(
-        List<ChatCompletionMessage> messages, {
-        int maxTokens = 256,
-      }) {
-        return CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId(model),
-          messages: messages,
-          maxTokens: maxTokens,
-        );
-      }
-
-      ChatCompletionMessage user(String text) => ChatCompletionMessage.user(
-        content: ChatCompletionUserMessageContent.string(text),
+    setUpAll(() async {
+      llm = await FlPiLlm.start(
+        store: MemorySessionStore(),
+        credentials: MemoryCredentials({'live': LlmCredential.apiKey(apiKey!)}),
+        externalLibrary: ExternalLibrary.open(switch (Platform.operatingSystem) {
+          'macos' => 'build/native_assets/macos/libfl_pi_llm.dylib',
+          'windows' => 'build/native_assets/windows/fl_pi_llm.dll',
+          _ => 'build/native_assets/linux/libfl_pi_llm.so',
+        }),
       );
+      await llm.setCustomProviders([
+        LlmCustomProvider(id: ref.provider, name: 'Live', api: api, baseUrl: baseUrl!, models: [model]),
+      ]);
+    });
+    tearDownAll(() => llm.dispose());
 
-      test('simple chat completion', () async {
-        final response = await client.createChatCompletion(
-          request: request([user('Hello!')]),
-        );
-        expect(response.choices, isNotEmpty);
-        expect(_assistantText(response.choices.first.message), isNotEmpty);
-      });
+    test('a completion answers', () async {
+      final reply = await llm.complete(
+        model: m,
+        messages: [
+          LlmMessage({'role': 'user', 'content': 'Reply with the single word: pong', 'timestamp': 0}),
+        ],
+      );
+      expect(reply.stopReason, 'stop', reason: '${reply.errorMessage}');
+      expect(reply.text.toLowerCase(), contains('pong'));
+    });
 
-      test('system + user message', () async {
-        final response = await client.createChatCompletion(
-          request: request([
-            const ChatCompletionMessage.system(
-              content: 'You are a helpful assistant. Keep responses short.',
-            ),
-            user('Say "test ok".'),
-          ], maxTokens: 512),
-        );
-        expect(response.choices, isNotEmpty);
-        expect(_assistantText(response.choices.first.message), isNotEmpty);
+    test('a session streams and remembers', () async {
+      final s = await llm.openSession(id: 'live', model: m);
+      final deltas = <String>[];
+      s.events.listen((e) {
+        if (e.textDelta case final d?) deltas.add(d);
       });
+      expect((await s.prompt('My name is Zed. Reply OK.')).completed, isTrue);
+      final r = await s.prompt('What is my name? One word.');
+      expect(r.completed, isTrue, reason: r.error);
+      final entries = await s.entries();
+      expect(entries.last.message!.text, contains('Zed'));
+      expect(deltas, isNotEmpty);
+      await s.close();
+    });
 
-      test('stream chat completion', () async {
-        final chunks = await client
-            .createChatCompletionStream(
-              request: request([user('Count from 1 to 3, one per line.')]),
-            )
-            .toList();
-        expect(chunks, isNotEmpty);
-      });
-
-      test('request with custom headers', () async {
-        final customClient = OpenAIClient(
-          apiKey: apiKey,
-          baseUrl: baseUrl,
-          headers: {'X-Custom-Header': 'test'},
-        );
-        final response = await customClient.createChatCompletion(
-          request: request([user('Hi')], maxTokens: 10),
-        );
-        expect(response.choices, isNotEmpty);
-      });
-
-      test('error handling - invalid key', () async {
-        final badClient = OpenAIClient(apiKey: 'invalid-key', baseUrl: baseUrl);
-        await expectLater(
-          badClient.createChatCompletion(
-            request: request([user('Hi')], maxTokens: 10),
-          ),
-          throwsA(isA<OpenAIClientException>()),
-        );
-      });
-
-      test('usage tokens in response', () async {
-        final response = await client.createChatCompletion(
-          request: request([user('Hello')], maxTokens: 20),
-        );
-        expect(response.usage, isNotNull);
-        expect(response.usage!.promptTokens, greaterThan(0));
-        expect(response.usage!.completionTokens, greaterThan(0));
-      });
-    },
-  );
+    test('a wrong key fails the run with an error', () async {
+      final bad = await FlPiLlm.start(
+        store: MemorySessionStore(),
+        credentials: MemoryCredentials({'live': LlmCredential.apiKey('sk-invalid')}),
+      );
+      await bad.setCustomProviders([
+        LlmCustomProvider(id: 'live', name: 'Live', api: api, baseUrl: baseUrl!, models: [model]),
+      ]);
+      final reply = await bad.complete(
+        model: m,
+        messages: [LlmMessage({'role': 'user', 'content': 'hi', 'timestamp': 0})],
+      );
+      expect(reply.stopReason, 'error');
+      await bad.dispose();
+    });
+  });
 }
 
-/// Reads `test/.env` or `.env` (first found), then overlays the process
-/// environment. Returns an empty map when neither provides anything.
 abstract final class _Env {
-  static const _keys = ['LLM_BASE_URL', 'LLM_API_KEY', 'LLM_MODEL'];
+  static const _keys = ['LLM_BASE_URL', 'LLM_API_KEY', 'LLM_MODEL', 'LLM_API'];
 
   static Map<String, String> load() {
     final map = <String, String>{};
@@ -133,7 +111,3 @@ abstract final class _Env {
   }
 }
 
-String _assistantText(ChatCompletionMessage msg) {
-  if (msg is ChatCompletionAssistantMessage) return msg.content ?? '';
-  return '';
-}

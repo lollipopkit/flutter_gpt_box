@@ -1,13 +1,11 @@
 part of '../tool.dart';
 
-abstract final class ToolFunc {
+/// A tool built into the app.
+abstract class ToolFunc {
   final String name;
   final _Map parametersSchema;
 
-  const ToolFunc({
-    required this.name,
-    required this.parametersSchema,
-  });
+  const ToolFunc({required this.name, required this.parametersSchema});
 
   String get description;
 
@@ -15,26 +13,19 @@ abstract final class ToolFunc {
 
   bool get defaultEnabled => true;
 
-  /// For users to understand what this function does.
-  /// Used in permission request dialog.
-  String help(_CallResp call, _Map args) {
-    return '''
-
-${json.encode(call)}
-
-${json.encode(args)}
-''';
-  }
+  /// For users to understand what a call does. Shown when asking for approval.
+  String help(_Map args) => '```json\n${const JsonEncoder.withIndent('  ').convert(args)}\n```';
 
   String? get l10nTip => null;
 
-  Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log);
+  /// Runs the tool. Throw to report a failure to the model.
+  Future<LlmToolResult> run(_Map args, OnToolLog log);
 
-  ChatCompletionTool get into => ChatCompletionTool(
-      type: ChatCompletionToolType.function,
-      function: FunctionObject(
-        name: name,
-        description: description,
-        parameters: parametersSchema,
-      ));
+  LlmTool get llmTool => LlmTool(
+    name: name,
+    description: description,
+    parameters: parametersSchema,
+    label: l10nName,
+    execute: (call, _) => run(call.args, _log),
+  );
 }

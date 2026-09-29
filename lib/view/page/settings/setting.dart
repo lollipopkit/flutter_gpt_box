@@ -1,27 +1,21 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/view/widget/section_list.dart';
-import 'package:gpt_box/core/util/api_balance.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
-import 'package:gpt_box/data/model/chat/config.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/github_id.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/openai.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/backup/view.dart';
+import 'package:gpt_box/view/page/settings/providers.dart';
+import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:shortid/shortid.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 part 'mcp.dart';
-part 'profile.dart';
-part 'res.dart';
 part 'about.dart';
 part 'def.dart';
 
@@ -120,14 +114,11 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
   Widget _buildAppChat() {
     final children = [
       _buildUserName(),
-      if (isMobile) _buildScrollSwitchChat(),
-      //_buildFontSize(),
       _buildGenTitle(),
       _buildAutoScrollBottom(),
       _buildSoftWrap(),
-      //_buildCalcTokenLen(),
-      //_buildReplay(),
-      _buildMoreMore(),
+      _buildDeleteConfrim(),
+      _buildAutoDeleteTrash,
     ];
     return Column(children: children.map((e) => e.cardx).toList());
   }
@@ -317,13 +308,6 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
     );
   }
 
-  Widget _buildAutoRmDupChat() {
-    return ListTile(
-      leading: const Icon(Icons.delete),
-      title: Text(l10n.autoRmDupChat),
-      trailing: StoreSwitch(prop: _setStore.autoRmDupChat),
-    );
-  }
 
   // Widget _buildCalcTokenLen() {
   //   return ListTile(
@@ -382,29 +366,8 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
     );
   }
 
-  Widget _buildCompressImg() {
-    return ListTile(
-      leading: const Icon(Icons.compress),
-      title: TipText(l10n.compress, l10n.compressImgTip),
-      trailing: StoreSwitch(prop: _setStore.compressImg),
-    );
-  }
 
-  Widget _buildSaveErrChat() {
-    return ListTile(
-      leading: const Icon(Icons.save),
-      title: TipText(l10n.saveErrChat, l10n.saveErrChatTip),
-      trailing: StoreSwitch(prop: _setStore.saveErrChat),
-    );
-  }
 
-  Widget _buildScrollSwitchChat() {
-    return ListTile(
-      leading: const Icon(Icons.swap_vert),
-      title: TipText(l10n.scrollSwitchChat, l10n.needRestart),
-      trailing: StoreSwitch(prop: _setStore.scrollSwitchChat),
-    );
-  }
 
   Widget _buildUserName() {
     final property = _setStore.avatar;
@@ -437,19 +400,6 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
     );
   }
 
-  Widget _buildMoreMore() {
-    return ExpandTile(
-      leading: const Icon(MingCute.more_3_fill),
-      title: Text(l10n.more),
-      children: [
-        _buildSaveErrChat(),
-        _buildAutoRmDupChat(),
-        _buildDeleteConfrim(),
-        _buildCompressImg(),
-        _buildAutoDeleteTrash,
-      ],
-    );
-  }
 
   Widget _buildHideTitleBar() {
     return ListTile(
@@ -483,7 +433,7 @@ final class _AppSettingsPageState extends State<AppSettingsPage> {
     return ListTile(
       leading: const Icon(Icons.delete),
       title: TipText(
-          l10n.emptyTrash, '${l10n.emptyTrashTip}\n${l10n.needRestart}'),
+          l10n.emptyTrash, l10n.emptyTrashTip),
       onTap: () {
         context.showRoundDialog(
           title: l10n.emptyTrash,

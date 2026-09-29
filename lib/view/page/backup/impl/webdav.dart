@@ -79,8 +79,6 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
     final dlBak = await compute(Backup.fromJsonString, dlFile);
     await dlBak.merge(force: true);
     Toast.success(libL10n.success);
-
-    context.pop(const SettingsPageRet(restored: true));
   } catch (e, s) {
     context.showErrDialog(e, s, 'Download webdav backup');
   } finally {
@@ -91,8 +89,7 @@ Future<void> _onTapWebdavDl(BuildContext context) async {
 Future<void> _onTapWebdavUp(BuildContext context) async {
   _webdavLoading.value = true;
   try {
-    final content = await Backup.backup();
-    await File(Paths.bak).writeAsString(content);
+    await Backup.toFile();
     await Webdav.shared.upload(relativePath: Paths.bakName);
     Toast.success(libL10n.success);
   } catch (e, s) {

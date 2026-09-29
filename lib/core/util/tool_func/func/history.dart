@@ -48,27 +48,31 @@ The user's prompt maybe included.''';
   bool get defaultEnabled => false;
 
   @override
-  String help(_CallResp call, _Map args) {
+  String help(_Map args) {
     final keywords = args['keywords'] as List? ?? [];
     return l10n.historyToolHelp(keywords);
   }
 
   @override
-  Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log) async {
-    final keywords_ = args['keywords'] as List?;
-    if (keywords_ == null) return null;
-
-    final keywords = <String>[];
-    for (final e in keywords_) {
-      if (e is String) keywords.add(e);
-    }
+  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
+    final keywords = [...?(args['keywords'] as List?)?.whereType<String>()];
     final count = args['count'] as int? ?? 3;
-    final prop = Stores.history;
-    final chats = prop.take(count, keywords);
     final onlyTitles = args['onlyTitles'] as bool? ?? false;
-    return chats
-        .map((e) => ChatContent.text(
-            onlyTitles ? e.name ?? l10n.untitled : e.toMarkdown))
-        .toList();
+    final current = Chats.current.value;
+    final found = keywords.isEmpty
+        ? Stores.chat.all()
+        : {for (final k in keywords) ...Chats.search(k)}.toList();
+    final chats = [
+      for (final c in found)
+        if (c.id != current) c,
+    ].take(count <= 0 ? found.length : count).toList();
+    if (onlyTitles) {
+      return LlmToolResult.text(chats.map((e) => e.title ?? l10n.untitled).join('\n'));
+    }
+    final parts = <String>[];
+    for (final c in chats) {
+      parts.add('# ${c.title ?? l10n.untitled}\n\n${await Chats.markdownOf(c.id)}');
+    }
+    return LlmToolResult.text(parts.join('\n\n---\n\n'));
   }
 }

@@ -73,17 +73,6 @@ final class _IntroPage extends StatelessWidget {
           title: Text(l10n.genChatTitle),
           trailing: StoreSwitch(prop: _setting.genTitle),
         ).cardx,
-        ListTile(
-          leading: const Icon(LineAwesome.compress_solid),
-          title: Text(l10n.compress),
-          subtitle: Text(l10n.compressImgTip, style: UIs.textGrey),
-          trailing: StoreSwitch(prop: _setting.compressImg),
-        ).cardx,
-        ListTile(
-          leading: const Icon(Icons.swap_vert),
-          title: Text(l10n.scrollSwitchChat),
-          trailing: StoreSwitch(prop: _setting.scrollSwitchChat),
-        ).cardx,
       ],
     );
   }

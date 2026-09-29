@@ -26,19 +26,18 @@ Only call this func if users explicitly ask to memorise something.''';
   String get l10nName => l10n.memory;
 
   @override
-  String help(_CallResp call, _Map args) {
+  String help(_Map args) {
     return l10n.memoryTip(args['memory'] as String? ?? '<?>');
   }
 
   @override
-  Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log) async {
+  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
     final memory = args['memory'] as String?;
-    if (memory == null) return null;
+    if (memory == null) throw ArgumentError('memory is required');
 
     final prop = Stores.mcp.memories;
     final memories = prop.get();
     prop.set([...memories, memory]);
-    await Future.delayed(Durations.medium1);
-    return [ChatContent.text(l10n.memoryAdded(memory))];
+    return LlmToolResult.text(l10n.memoryAdded(memory));
   }
 }

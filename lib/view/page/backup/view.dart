@@ -1,32 +1,18 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:gpt_box/core/util/sync.dart';
-import 'package:gpt_box/data/model/app/backup.dart';
-import 'package:gpt_box/data/model/app/backup2.dart';
-import 'package:gpt_box/data/model/app/utils.dart';
-import 'package:gpt_box/data/model/chat/gpt_next.dart';
-import 'package:gpt_box/data/model/chat/history/history.dart';
-import 'package:gpt_box/data/model/chat/openai.dart';
+import 'package:gpt_box/data/model/backup.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/url.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/page/home/home.dart';
-import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import 'package:gpt_box/view/page/settings/setting.dart';
+import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:webdav_client_plus/webdav_client_plus.dart';
 
 part 'impl/file.dart';
 part 'impl/webdav.dart';
 part 'impl/icloud.dart';
-part 'impl/gpt_next.dart';
-part 'impl/openai.dart';
-part 'impl/shared.dart';
 
 final _webdavLoading = ValueNotifier(false);
 
@@ -49,9 +35,6 @@ final class BackupPage extends StatelessWidget {
         _buildFile(context),
         CenterGreyTitle(libL10n.attention),
         _buildTip(),
-        CenterGreyTitle(l10n.thirdParty),
-        _buildGPTNext(context),
-        _buildOpenAI(context),
       ],
     );
   }
@@ -61,7 +44,7 @@ final class BackupPage extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.warning),
         title: Text(l10n.attention),
-        subtitle: Text(l10n.backupTip, style: UIs.textGrey),
+        subtitle: Text('${l10n.backupTip}\n${l10n.keyInKeychain}', style: UIs.textGrey),
       ),
     );
   }

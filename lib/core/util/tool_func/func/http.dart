@@ -56,12 +56,12 @@ If blob, encode it into base64 String.''';
   String? get l10nTip => l10n.httpToolTip;
 
   @override
-  String help(_CallResp call, _Map args) {
+  String help(_Map args) {
     return l10n.toolHttpReqHelp(args['url'] as String? ?? '<?>');
   }
 
   @override
-  Future<_Ret?> run(_CallResp call, _Map args, OnToolLog log) async {
+  Future<LlmToolResult> run(_Map args, OnToolLog log) async {
     final method = args['method'] as String? ?? 'GET';
     final url = args['url'] as String;
     final headers = (args['headers'] as Map? ?? {}).cast<String, dynamic>();
@@ -169,11 +169,8 @@ If blob, encode it into base64 String.''';
       respBody = respBody.substring(0, truncateSize);
     }
 
-    await Future.delayed(Durations.short3);
     log('Http $method -> ${libL10n.success}');
-    await Future.delayed(Durations.short3);
-
-    return [ChatContent.text(respBody)];
+    return LlmToolResult.text(respBody);
   }
 }
 

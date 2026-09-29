@@ -12,28 +12,25 @@ final class SettingsPageArgs {
 
 enum SettingsTab {
   app,
-  profile,
+  providers,
   tool,
   bak,
-  res,
   about,
   ;
 
   String get i18n => switch (this) {
         app => libL10n.app,
-        profile => l10n.profile,
+        providers => l10n.providers,
         tool => l10n.tool,
         bak => libL10n.backup,
-        res => l10n.res,
         about => libL10n.about,
       };
 
   Widget get page => switch (this) {
         app => const AppSettingsPage(),
-        profile => const ProfilePage(),
+        providers => const ProvidersPage(embedded: true),
         tool => const McpPage(),
         bak => const BackupPage(),
-        res => const ResPage(),
         about => const AboutPage(),
       };
 

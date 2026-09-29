@@ -27,7 +27,7 @@ Please refrain from using it in production environments or for critical data.
 - Text / Image / Audio chat.
 - Localization. (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)
 - Share chat as image.
-- Url Scheme, eg: `lpkt.cn://gptbox/new?msg=hello`
+- Url Scheme, eg: `lollipopkit.com://gptbox/new?msg=hello`
 - Sync with WebDAV / iCloud.
 - Mobile & Desktop supports.
 - Render code block / latex formula.

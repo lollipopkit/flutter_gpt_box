@@ -34,11 +34,9 @@ dependencies:
   # only honoured for this package's own dependencies.
   sqlite3: ^3.6.0
   webdav_client_plus: ^2.0.0
-  openai_dart:
-    git:
-      url: https://github.com/lollipopkit/langchain_dart
-      ref: v1.0.759
-      path: packages/openai_dart
+  # TODO: a git dependency once lollipopkit/fl_pi_llm is published.
+  fl_pi_llm:
+    path: ../fl_pi_llm
   mcp_dart:
     git:
       url: https://github.com/leehack/mcp_dart
@@ -47,10 +45,6 @@ dependencies:
     path: packages/fl_lib
 
 dependency_overrides:
-  # openai_dart (lollipopkit fork) still pins freezed_annotation ^2.
-  # TODO: drop once the fork moves to freezed v3.
-  freezed_annotation: ^3.0.0
-  freezed: ^3.0.0
   flutter_math_fork: ^0.7.4
 
 dev_dependencies:

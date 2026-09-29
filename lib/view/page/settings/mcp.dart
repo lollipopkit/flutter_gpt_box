@@ -22,7 +22,6 @@ final class _McpPageState extends State<McpPage>
       children: [
         CenterGreyTitle(l10n.tool),
         _buildUseTool(),
-        _buildModelRegExp(),
       ],
     );
   }
@@ -84,43 +83,6 @@ final class _McpPageState extends State<McpPage>
     ).cardx;
   }
 
-  Widget _buildModelRegExp() {
-    final prop = _mcpStore.mcpRegExp;
-    final listenable = prop.listenable();
-    return ListTile(
-      leading: const Icon(Bootstrap.regex),
-      title: TipText(l10n.regExp, l10n.modelRegExpTip),
-      trailing: SizedBox(
-        width: 60,
-        child: listenable.listenVal(
-          (val) => Text(
-            val,
-            style: UIs.textGrey,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
-      onTap: () {
-        final ctrl = TextEditingController(text: listenable.value);
-        void onSave(String v) {
-          prop.set(v);
-          context.pop();
-        }
-
-        context.showRoundDialog(
-          title: l10n.regExp,
-          child: Input(
-            controller: ctrl,
-            maxLines: 3,
-            autoFocus: true,
-            onSubmitted: onSave,
-          ),
-          actions: Btn.ok(onTap: () => onSave(ctrl.text)).toList,
-        );
-      },
-    ).cardx;
-  }
 
   Widget _buildMcpServers() {
     return _mcpStore.mcpServers.listenable().listenVal((servers) {
@@ -154,7 +116,7 @@ final class _McpPageState extends State<McpPage>
     final url = servers[idx];
     final serverName = 'server_$idx';
     final isConnected = McpTools.isServerConnected(serverName);
-    final toolCount = McpTools.getToolsFromServer(serverName).length;
+    final toolCount = McpTools.toolCounts[serverName] ?? 0;
     
     return Dismissible(
       key: ValueKey(url),

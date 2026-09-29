@@ -30,7 +30,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="lpkt.cn" android:host="gptbox" />
+                <data android:scheme="lollipopkit.com" android:host="gptbox" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

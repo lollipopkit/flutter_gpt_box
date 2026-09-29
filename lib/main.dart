@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/app.dart';
 import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/res/build_data.dart';
-import 'package:gpt_box/data/res/openai.dart';
+import 'package:gpt_box/core/llm/chats.dart';
+import 'package:gpt_box/core/llm/llm.dart';
+import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:logging/logging.dart';
 
@@ -47,7 +49,7 @@ Future<void> _initApp() async {
 
   await _initData();
   await _initWindow();
-  _initAppComponents();
+  await _initAppComponents();
 }
 
 Future<void> _initData() async {
@@ -84,14 +86,15 @@ Future<void> _initWindow() async {
   );
 }
 
-void _initAppComponents() {
-  Cfg.applyClient();
-  Cfg.updateModels();
+Future<void> _initAppComponents() async {
+  await Llm.init();
+  // Tools and memories live in the tool store; open chats follow it.
+  Stores.mcp.watch().listen((_) => Chats.reconfigureSoon());
+  McpTools.changes.addListener(Chats.reconfigureSoon);
+  if (Stores.mcp.enabled.get()) unawaited(McpTools.connectStored());
 
   BakSync.instance.init();
   unawaited(BakSync.instance.sync());
 
   if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;
-
-  Stores.trash.autoDelete();
 }

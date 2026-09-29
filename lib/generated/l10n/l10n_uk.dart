@@ -9,26 +9,13 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
-  String get apiUrlV1Tip =>
-      'Схоже на https://api.openai.com/v1 (потрібен кінцевий /v1). Продовжити використання цього URL?';
-
-  @override
-  String get assistant => 'Асистент';
-
-  @override
   String get attention => 'Увага';
-
-  @override
-  String get audio => 'Аудіо';
 
   @override
   String get auto => 'Авто';
 
   @override
   String get autoCheckUpdate => 'Автоматично перевіряти оновлення';
-
-  @override
-  String get autoRmDupChat => 'Автоматично видаляти дублікати чатів';
 
   @override
   String get autoScrollBottom => 'Автоматично прокручувати до низу';
@@ -38,47 +25,16 @@ class AppLocalizationsUk extends AppLocalizations {
       'Будь ласка, зберігайте резервну копію файлу в безпеці та приватності!';
 
   @override
-  String get balance => 'Баланс';
-
-  @override
   String get calcTokenLen => 'Обчислити довжину токенів';
-
-  @override
-  String get changeModelTip =>
-      'Різні ключі можуть мати доступ до різних списків моделей. Якщо ви не розумієте механізму і виникають помилки, рекомендується переналаштувати модель.';
 
   @override
   String get chat => 'Чат';
 
   @override
-  String get chatHistoryLength => 'Довжина історії чату';
-
-  @override
-  String get chatHistoryTip => 'Використовується як контекст чату';
-
-  @override
-  String get clickSwitch => 'Натисніть для перемикання';
-
-  @override
   String get clickToCheck => 'Натисніть для перевірки';
 
   @override
-  String get clipboard => 'Буфер обміну';
-
-  @override
   String get codeBlock => 'Блок коду';
-
-  @override
-  String get colorSeedTip => 'Це насіння кольору, а не сам колір';
-
-  @override
-  String get compress => 'Стиснути';
-
-  @override
-  String get compressImgTip => 'Для чату та поширення';
-
-  @override
-  String get contributor => 'Учасник';
 
   @override
   String get copied => 'Скопійовано';
@@ -87,27 +43,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get current => 'Поточний';
 
   @override
-  String get custom => 'Користувацький';
-
-  @override
-  String get day => 'День';
-
-  @override
-  String get defaulT => 'За замовчуванням';
-
-  @override
   String delFmt(Object id, Object type) {
     return 'Видалити $type ($id)?';
   }
 
   @override
-  String get delete => 'Видалити';
-
-  @override
   String get deleteConfirm => 'Підтвердити перед видаленням';
-
-  @override
-  String get editor => 'Редактор';
 
   @override
   String emptyFields(Object fields) {
@@ -122,42 +63,13 @@ class AppLocalizationsUk extends AppLocalizations {
       '==0, видалити під час наступного запуску. <0 не видаляти автоматично.';
 
   @override
-  String fileNotFound(Object file) {
-    return 'Файл ($file) не знайдено';
-  }
-
-  @override
-  String fileTooLarge(Object size) {
-    return 'Файл занадто великий: $size';
-  }
-
-  @override
-  String get followChatModel => 'Слідувати моделі чату';
-
-  @override
   String get fontSize => 'Розмір шрифту';
 
   @override
   String get fontSizeSettingTip => 'Діє лише для блоків коду';
 
   @override
-  String get freeCopy => 'Вільне копіювання';
-
-  @override
   String get genChatTitle => 'Генерувати заголовок чату';
-
-  @override
-  String get genTitle => 'Генерувати заголовок';
-
-  @override
-  String get headTailMode => 'Режим голова-хвіст';
-
-  @override
-  String get headTailModeTip =>
-      'Надсилає лише підказку + перше повідомлення користувача + поточне введення як контекст.\n\nЦе особливо корисно при перекладі діалогів (може заощадити токени).';
-
-  @override
-  String get help => 'Допомога';
 
   @override
   String get history => 'Історія';
@@ -171,24 +83,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get historyToolTip => 'Завантажити історію чату як контекст';
 
   @override
-  String get hour => 'Година';
-
-  @override
   String get httpToolTip => 'Зробити HTTP-запит, наприклад: пошук вмісту';
 
   @override
-  String get ignoreContextConstraint => 'Ігнорувати обмеження контексту';
-
-  @override
-  String get ignoreTip => 'Ігнорувати підказку';
-
-  @override
   String get image => 'Зображення';
-
-  @override
-  String initChatHelp(Object issue, Object unilink) {
-    return '### 📖 Підказка\n- Надмірне прокручування (overscroll) в інтерфейсі чату дозволяє швидко перемикатися між історіями чатів\n- Довге натискання на текст чату дозволяє вільно вибирати та копіювати вихідний Markdown\n- Використання URL Scheme можна знайти тут\n\n### 🔍 Допомога\n- Якщо у GPT Box є помилки, будь ласка, використовуйте Github Issue\n- Telegram @lpktg';
-  }
 
   @override
   String invalidLinkFmt(Object uri) {
@@ -230,63 +128,22 @@ class AppLocalizationsUk extends AppLocalizations {
   String get message => 'Повідомлення';
 
   @override
-  String get migrationV1UrlTip =>
-      'Автоматично додати \"/v1\" у кінці конфігурації?';
-
-  @override
-  String get minute => 'Хвилина';
-
-  @override
   String get model => 'Модель';
-
-  @override
-  String get modelRegExpTip =>
-      'Якщо назва моделі відповідає, використовувати інструменти';
 
   @override
   String get more => 'Більше';
 
   @override
-  String get multiModel => 'Мультимодальний';
-
-  @override
   String get myOtherApps => 'Мої інші додатки';
 
   @override
-  String get needOpenAIKey => 'Будь ласка, спочатку введіть ключ OpenAI';
-
-  @override
-  String get needRestart => 'Потрібен перезапуск для застосування';
-
-  @override
   String get newChat => 'Новий чат';
-
-  @override
-  String get noDuplication => 'Немає дублікатів';
-
-  @override
-  String notSupported(Object val) {
-    return '$val не підтримується';
-  }
 
   @override
   String get onMsgCome => 'Коли приходить нове повідомлення';
 
   @override
   String get onSwitchChat => 'При перемиканні чату';
-
-  @override
-  String get onlyRestoreHistory =>
-      'Відновити лише історію чатів (без відновлення API Url та Secret Key)';
-
-  @override
-  String get onlySyncOnLaunch => 'Синхронізувати лише при запуску';
-
-  @override
-  String get other => 'Інше';
-
-  @override
-  String get participant => 'Учасник';
 
   @override
   String get passwd => 'Пароль';
@@ -298,74 +155,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get privacyTip => 'Цей додаток не збирає жодної інформації.';
 
   @override
-  String get profile => 'Профіль';
-
-  @override
-  String get promptsSettingsItem => 'Підказки';
-
-  @override
-  String get quickShareTip =>
-      'Відкрийте це посилання на іншому пристрої, щоб швидко імпортувати поточну конфігурацію.';
-
-  @override
-  String get raw => 'Сирий';
-
-  @override
-  String get refresh => 'Оновити';
-
-  @override
-  String get regExp => 'Регулярний вираз';
-
-  @override
-  String get remember30s => 'Запам\'ятати на 30 секунд';
-
-  @override
   String get rename => 'Перейменувати';
 
   @override
   String get replay => 'Повторити';
-
-  @override
-  String get replayTip => 'Очистить повторені повідомлення та всі наступні';
-
-  @override
-  String get res => 'Ресурси';
-
-  @override
-  String restoreOpenaiTip(Object url) {
-    return 'Документацію можна знайти тут';
-  }
-
-  @override
-  String get rmDuplication => 'Видалити дублікати';
-
-  @override
-  String rmDuplicationFmt(Object count) {
-    return 'Ви впевнені, що хочете видалити [$count] дублікатів?';
-  }
-
-  @override
-  String get route => 'Маршрут';
-
-  @override
-  String get save => 'Зберегти';
-
-  @override
-  String get saveErrChat => 'Зберегти помилку чату';
-
-  @override
-  String get saveErrChatTip =>
-      'Зберігати після отримання/відправлення кожного повідомлення, навіть якщо є помилки';
-
-  @override
-  String get scrollSwitchChat =>
-      'Прокручування вгору-вниз для перемикання чатів';
-
-  @override
-  String get search => 'Пошук';
-
-  @override
-  String get secretKey => 'Секретний ключ';
 
   @override
   String get share => 'Поділитися';
@@ -374,14 +167,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get shareFrom => 'Поділитися з';
 
   @override
-  String get skipSameTitle =>
-      'Пропустити чати з такими ж заголовками, як у локальних';
-
-  @override
   String get softWrap => 'М\'який перенос';
-
-  @override
-  String get stt => 'Мовлення в текст';
 
   @override
   String sureRestoreFmt(Object time) {
@@ -397,9 +183,6 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get system => 'Система';
-
-  @override
   String get text => 'Текст';
 
   @override
@@ -407,9 +190,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get themeMode => 'Режим теми';
-
-  @override
-  String get thirdParty => 'Сторонній';
 
   @override
   String get tool => 'Інструмент';
@@ -420,9 +200,6 @@ class AppLocalizationsUk extends AppLocalizations {
   }
 
   @override
-  String get toolFinishTip => 'Виклик інструменту завершено';
-
-  @override
   String toolHttpReqHelp(Object host) {
     return 'Буде отримано дані з мережі, цього разу буде зв\'язок з $host';
   }
@@ -431,16 +208,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get toolHttpReqName => 'HTTP-запит';
 
   @override
-  String get tts => 'Текст у мовлення';
-
-  @override
-  String get unsupported => 'Не підтримується';
-
-  @override
   String get untitled => 'Без назви';
-
-  @override
-  String get update => 'Оновити';
 
   @override
   String get usage => 'Використання';
@@ -449,10 +217,93 @@ class AppLocalizationsUk extends AppLocalizations {
   String get user => 'Користувач';
 
   @override
-  String weeksAgo(Object weeks) {
-    return '$weeks тижнів тому';
+  String get deny => 'Deny';
+
+  @override
+  String get allow => 'Allow';
+
+  @override
+  String get allowAlways => 'Always allow';
+
+  @override
+  String get trash => 'Trash';
+
+  @override
+  String get startChatTip => 'Pick a model below and say something.';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get noProviderKey =>
+      'No provider has a key yet. Add one to start chatting.';
+
+  @override
+  String get providers => 'Providers';
+
+  @override
+  String get regenerate => 'Regenerate';
+
+  @override
+  String get compacted => 'Earlier messages were summarised';
+
+  @override
+  String get favorite => 'Favorites';
+
+  @override
+  String get defaultModel => 'Default model';
+
+  @override
+  String get titleModel => 'Model for titles';
+
+  @override
+  String get systemPrompt => 'System prompt';
+
+  @override
+  String get compaction => 'Compact long chats';
+
+  @override
+  String get compactionTip =>
+      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
+
+  @override
+  String get customProvider => 'Custom provider';
+
+  @override
+  String get refreshModels => 'Refresh models';
+
+  @override
+  String providerLinkFmt(String name, String url) {
+    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
   }
 
   @override
-  String get wrap => 'Перенос';
+  String get modelsListedTip =>
+      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
+
+  @override
+  String get modelsRequired =>
+      'This API cannot list its models: enter at least one model id.';
+
+  @override
+  String modelsCountFmt(int n) {
+    return '$n models';
+  }
+
+  @override
+  String get sameAsChat => 'Same as the chat';
+
+  @override
+  String get keyInKeychain =>
+      'Stored in the system keychain, never in backups.';
+
+  @override
+  String get extraVars => 'Extra variables';
+
+  @override
+  String get extraVarsTip =>
+      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
 }
