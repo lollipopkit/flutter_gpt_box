@@ -55,3 +55,4 @@ android/app/.cxx
 a.sh
 .env
 .env.release
+missing_l10n.json

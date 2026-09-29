@@ -19,16 +19,17 @@
 
 
 ## 🪄 特性
-- (🥳 New) Tools
-  - 加载历史聊天作为上下文
-  - 请求 GPT 添加记忆
-  - 查看 Http 链接的内容。[视频](https://cdn.lpkt.cn/gptbox/screenshot/tools.mp4)
-- 从 [ChatGPT Next Web 备份](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI导出文件](https://chatgpt.com) 恢复
-- 文本 / 图片 / 音频聊天
-- 本地化 (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)
+- 多个 provider (OpenAI、Anthropic、Gemini、OpenRouter……以及任意 OpenAI 兼容接口)，密钥保存在系统钥匙串
+- Tools
+  - 记忆：模型跨对话保存的文件，可在设置中编辑
+  - 读取网页和 API。[视频](https://cdn.lpkt.cn/gptbox/screenshot/tools.mp4)
+  - 搜索和读取其他对话
+  - MCP 服务器
+- 文本 / 图片聊天，文本文件作为附件
+- 本地化 (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Українська, Português, 日本語)
 - 以图片形式分享聊天
 - Url Scheme，例如：`lollipopkit.com://gptbox/new?msg=你好`
-- 与 WebDAV / iCloud 同步
+- 与 WebDAV / iCloud 加密同步
 - 移动端 & 桌面端 支持
 - 渲染 代码块 / LaTeX 公式
 - 性能远超传统 Web
@@ -66,7 +67,7 @@ Linux & Windows | [Github](https://github.com/lollipopkit/flutter_gpt_box/releas
 </div>
 
 反馈前须知：
-1. 反馈问题请附带 log（长按首页标题），并以 bug 模版提交。
+1. 反馈问题请附带 log（设置 → 关于 → 日志），并以 bug 模版提交。
 2. 反馈问题前请检查是否是 本app 的问题。
 3. 欢迎所有有效、正面的反馈，主观（比如你觉得其他UI更好看）的反馈不一定会接受
 

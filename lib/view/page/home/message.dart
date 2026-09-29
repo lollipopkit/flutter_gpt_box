@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_pi_llm/fl_pi_llm.dart';
@@ -9,7 +10,6 @@ import 'package:gpt_box/core/llm/chats.dart';
 import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
 import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/widget/code.dart';
 import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:intl/intl.dart';
@@ -559,14 +559,29 @@ class _SmallBtn extends StatelessWidget {
   Widget build(BuildContext context) => Btn.icon(icon: Icon(icon, size: 17), text: tip, onTap: onTap);
 }
 
-class _ImageThumb extends StatelessWidget {
+class _ImageThumb extends StatefulWidget {
   const _ImageThumb({required this.data});
 
   final String data;
 
   @override
+  State<_ImageThumb> createState() => _ImageThumbState();
+}
+
+class _ImageThumbState extends State<_ImageThumb> {
+  /// Decoded once: a new [Uint8List] each build is a new [MemoryImage] to
+  /// the image cache, decoded again and flickering.
+  late Uint8List _bytes = base64Decode(widget.data);
+
+  @override
+  void didUpdateWidget(_ImageThumb old) {
+    super.didUpdateWidget(old);
+    if (old.data != widget.data) _bytes = base64Decode(widget.data);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final bytes = base64Decode(data);
+    final bytes = _bytes;
     return InkWell(
       borderRadius: BorderRadius.circular(9),
       onTap: () => showDialog<void>(
@@ -578,7 +593,15 @@ class _ImageThumb extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(9),
-        child: SizedBox(width: 120, height: 120, child: Image.memory(bytes, fit: BoxFit.cover)),
+        child: SizedBox(
+          width: 120,
+          height: 120,
+          child: Semantics(
+            image: true,
+            label: l10n.image,
+            child: Image.memory(bytes, fit: BoxFit.cover, gaplessPlayback: true),
+          ),
+        ),
       ),
     );
   }
@@ -604,5 +627,3 @@ List<(String, String)> _imagesOf(LlmMessage m) {
   ];
 }
 
-/// The user's avatar, for the few places that show one.
-String get userAvatar => Stores.setting.avatar.get();

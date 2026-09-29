@@ -66,7 +66,7 @@ class _ProviderPageState extends State<ProviderPage> {
         if (line.contains('=')) line.substring(0, line.indexOf('=')).trim(): line.substring(line.indexOf('=') + 1).trim(),
     };
     await Llm.setCredential(_id, LlmCredential.apiKey(key, env: vars.isEmpty ? null : vars));
-    setState(() => _stored = true);
+    if (mounted) setState(() => _stored = true);
     Toast.success(libL10n.success);
     unawaited(_refresh());
   }

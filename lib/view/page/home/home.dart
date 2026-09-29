@@ -29,6 +29,27 @@ part 'url_scheme.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  static _HomePageState? _state;
+
+  /// The desktop shortcuts, for a key pressed on any page: the settings are
+  /// routes of their own, above the home page. Put above the navigator.
+  static Widget shortcuts({required Widget child}) => Focus(
+    canRequestFocus: false,
+    skipTraversal: true,
+    onKeyEvent: (_, e) {
+      final s = _state;
+      if (s == null || !s.mounted || e is! KeyDownEvent) return KeyEventResult.ignored;
+      for (final MapEntry(key: a, value: run) in _desktopShortcuts(s).entries) {
+        if (a.accepts(e, HardwareKeyboard.instance)) {
+          run();
+          return KeyEventResult.handled;
+        }
+      }
+      return KeyEventResult.ignored;
+    },
+    child: child,
+  );
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -39,7 +60,14 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   StreamSubscription<Uri>? _linkSub;
 
   @override
+  void initState() {
+    super.initState();
+    HomePage._state = this;
+  }
+
+  @override
   void dispose() {
+    if (HomePage._state == this) HomePage._state = null;
     _linkSub?.cancel();
     super.dispose();
   }
@@ -98,7 +126,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   void _search() {
     SettingsNav.close();
     if (!SettingsNav.inline) _scaffold.currentState?.openDrawer();
-    ChatSidebar.searchRequest.notify();
+    ChatSidebar.requestSearch();
   }
 
   void _step(int delta) {
@@ -132,10 +160,7 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
       drawerEnableOpenDragGesture: !isDesktop,
       body: body,
     );
-    final shortcuts = CallbackShortcuts(
-      bindings: _desktopShortcuts(this),
-      child: Focus(autofocus: true, child: scaffold),
-    );
+    final shortcuts = Focus(autofocus: true, child: scaffold);
     return ExitConfirm(
       onPop: (_) => ExitConfirm.exitApp(),
       // The target platform, not the host: the menu bar is the platform's.

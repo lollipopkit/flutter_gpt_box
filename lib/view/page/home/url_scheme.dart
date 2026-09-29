@@ -10,11 +10,16 @@ extension on _HomePageState {
         Chats.current.value = null;
         final msg = p['msg'];
         if (msg == null) return;
-        if (p['send'] == 'true') {
+        // Without a model it cannot be sent: it waits in the composer.
+        if (p['send'] == 'true' && Llm.defaultModel != null) {
           final id = Chats.create();
           Chats.current.value = id;
-          unawaited(Chats.send(id, msg));
+          Chats.send(id, msg).catchError((Object e) {
+            Loggers.app.warning('Send from a link', e);
+            Toast.show('$e');
+          });
         } else {
+          if (p['send'] == 'true') Toast.show(l10n.noProviderKey);
           Composer.draft.value = msg;
         }
       case AppLink.openChatPath:

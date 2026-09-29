@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gpt_box/core/llm/store.dart';
@@ -51,7 +53,7 @@ void main() {
 
     test('with a password it is encrypted, and opens only with it', () async {
       chat('a');
-      final text = (await Backup.fromStores()).encode(password: 'pw');
+      final text = await (await Backup.fromStores()).encode(password: 'pw');
       expect(Backup.isEncrypted(text), isTrue);
       expect(text, isNot(contains('"chats"')));
       expect((await Backup.parse(text, password: 'pw')).chats.keys, contains('a'));
@@ -60,17 +62,17 @@ void main() {
     });
 
     test('without one it is plain JSON', () async {
-      final text = (await Backup.fromStores()).encode();
+      final text = await (await Backup.fromStores()).encode();
       expect(Backup.isEncrypted(text), isFalse);
       expect((await Backup.parse(text)).date, greaterThan(0));
     });
 
     test("this device's own settings stay out of it", () async {
       Stores.setting.paneListWidth.set(300);
-      Stores.setting.avatar.set('x');
+      Stores.setting.genTitle.set(false);
       final b = await Backup.fromStores();
       expect(b.settings.keys, isNot(contains('paneListWidth')));
-      expect(b.settings.keys, contains('avatar'));
+      expect(b.settings.keys, contains('genTitle'));
       expect((await Backup.fromStores(includeSettings: false)).settings, isEmpty);
     });
   });
@@ -153,6 +155,37 @@ void main() {
       final local = Stores.chat.lastUpdateTs!['a']!;
       await backupWith(chats: data({}, {'a': local + 1000})).merge();
       expect(await files.read(sessionOf('a')), isNull);
+    });
+  });
+
+  group('diverged logs', () {
+    const header = '{"kind":"header","id":"s","storageVersion":1}';
+    String e(String id, int seq, [String? parent]) =>
+        '{"kind":"entry","id":"$id","parentId":${parent == null ? 'null' : '"$parent"'},"seq":$seq,"type":"message"}';
+    String log(List<String> lines) => '${[header, ...lines].join('\n')}\n';
+
+    test('are joined: remote-only entries after local ones, renumbered', () {
+      final local = log([e('a', 1), e('l', 2, 'a'), '{"kind":"value","key":"leaf","seq":3}']);
+      final remote = log([e('a', 1), e('r', 2, 'a'), e('r2', 3, 'r')]);
+      final joined = Backup.unionLogs(local, remote)!;
+      final lines = joined.trim().split('\n');
+      expect(lines.take(4), local.trim().split('\n'));
+      expect(lines.skip(4).map((l) => json.decode(l)['id']), ['r', 'r2']);
+      expect(lines.skip(4).map((l) => json.decode(l)['seq']), [4, 5]);
+    });
+
+    test('settle: joining twice adds nothing', () {
+      final a = log([e('a', 1), e('l', 2, 'a')]);
+      final b = log([e('a', 1), e('r', 2, 'a')]);
+      final ab = Backup.unionLogs(a, b)!;
+      final ba = Backup.unionLogs(b, a)!;
+      expect(Backup.unionLogs(ab, ba), ab);
+      expect(Backup.unionLogs(ba, ab), ba);
+    });
+
+    test('of different sessions, or not v4, are not joined', () {
+      expect(Backup.unionLogs(log([e('a', 1)]), '{"kind":"header","id":"other"}\n'), isNull);
+      expect(Backup.unionLogs('a\nlocal\n', 'a\nremote\n'), isNull);
     });
   });
 

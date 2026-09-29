@@ -19,16 +19,17 @@ Please refrain from using it in production environments or for critical data.
 
 
 ## 🪄 Features
-- (🥳 New) Tools
-  - Load history chats as context.
-  - Ask GPT to add Memories.
-  - Viewing the content of HTTP links. [Video](https://cdn.lpkt.cn/gptbox/screenshot/tools.mp4)
-- Restore from [ChatGPT Next Web backup](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) / [OpenAI exported file](https://chatgpt.com).
-- Text / Image / Audio chat.
-- Localization. (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Português, 日本語)
+- Many providers (OpenAI, Anthropic, Gemini, OpenRouter, … and any OpenAI-compatible endpoint), keys kept in the system keychain.
+- Tools
+  - Memory: files the model keeps across chats, editable in the settings.
+  - Read web pages and APIs. [Video](https://cdn.lpkt.cn/gptbox/screenshot/tools.mp4)
+  - Search and read your other chats.
+  - MCP servers.
+- Text / Image chat, text files as attachments.
+- Localization. (English, 简体中文, Deutsch, 繁體中文, Indonesian, Français, Dutch, Türkçe, Español, Русский язык, Українська, Português, 日本語)
 - Share chat as image.
 - Url Scheme, eg: `lollipopkit.com://gptbox/new?msg=hello`
-- Sync with WebDAV / iCloud.
+- Encrypted sync with WebDAV / iCloud.
 - Mobile & Desktop supports.
 - Render code block / latex formula.
 - Performance far exceeds traditional Web.
@@ -65,7 +66,7 @@ Only download from the source **you trust**
 </div>
 
 Before you open an issue, please read the following:
-1. Paste the **entire log** (long press home title) in the issue template.
+1. Paste the **entire log** (Settings → About → Logs) in the issue template.
 2. Make sure whether the issue is caused by this app.
 3. Welcome all valid and positive feedback, subjective feedback (such as you think other UI is better) may not be accepted.
 

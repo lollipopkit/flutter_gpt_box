@@ -43,7 +43,8 @@ class MyApp extends StatelessWidget {
       theme: appTheme(ThemeData(colorSchemeSeed: UIs.colorSeed)).fixWindowsFont,
       darkTheme: appTheme(ThemeData(brightness: Brightness.dark, colorSchemeSeed: UIs.colorSeed)).toAmoled.fixWindowsFont,
       // Outside the breakpoints builder: a toast is sized against the window.
-      builder: (context, child) => ToastHost(child: ResponsivePoints.builder(context, child)),
+      builder: (context, child) =>
+          ToastHost(child: HomePage.shortcuts(child: ResponsivePoints.builder(context, child))),
       navigatorObservers: [AppRouteObserver.instance],
       home: Builder(
         builder: (context) {

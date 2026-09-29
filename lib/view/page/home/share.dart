@@ -19,9 +19,7 @@ Future<void> shareChat(BuildContext context, String chatId) async {
   if (type == null || !context.mounted) return;
 
   final title = Stores.chat.fetch(chatId)?.title ?? l10n.untitled;
-  final wasOpen = Chats.openOf(chatId) != null;
-  final chat = await Chats.open(chatId);
-  try {
+  await Chats.borrow(chatId, (chat) async {
     if (type == 'md') {
       await Pfs.shareStr('# $title\n\n${Chats.toMarkdown(chat.entries.value)}', title: title);
       return;
@@ -61,7 +59,5 @@ Future<void> shareChat(BuildContext context, String chatId) async {
     );
     if (err != null || pic == null) return;
     await Pfs.shareBytes(bytes: pic, title: title, fileName: '$title.png', mime: 'image/png');
-  } finally {
-    if (!wasOpen && !chat.running.value) await Chats.close(chatId);
-  }
+  });
 }

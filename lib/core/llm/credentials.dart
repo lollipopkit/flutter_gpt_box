@@ -23,19 +23,43 @@ final class KeychainCredentials implements LlmCredentials {
     }
   }
 
+  /// The providers with a credential. Kept beside them so listing does not
+  /// read every secret in the keychain into memory.
+  static const _indexKey = 'llm.credentialIds';
+
   @override
   Future<List<String>> list() async {
+    final raw = await SecureStore.storage.read(key: _indexKey);
+    if (raw != null) {
+      try {
+        return (json.decode(raw) as List).cast<String>();
+      } catch (e) {
+        Loggers.app.warning('Credential index is unreadable', e);
+      }
+    }
+    // TODO: remove once every install has the index (it was added after
+    // the first release on fl_pi_llm): built from a full read, once.
     final all = await SecureStore.storage.readAll();
-    return [
+    final ids = [
       for (final k in all.keys)
         if (k.startsWith(_prefix)) k.substring(_prefix.length),
     ];
+    await _saveIndex(ids);
+    return ids;
+  }
+
+  static Future<void> _saveIndex(List<String> ids) =>
+      SecureStore.storage.write(key: _indexKey, value: json.encode(ids.toSet().toList()..sort()));
+
+  @override
+  Future<void> write(String providerId, LlmCredential credential) async {
+    await SecureStore.storage.write(key: '$_prefix$providerId', value: json.encode(credential.json));
+    await _saveIndex([...await list(), providerId]);
   }
 
   @override
-  Future<void> write(String providerId, LlmCredential credential) =>
-      SecureStore.storage.write(key: '$_prefix$providerId', value: json.encode(credential.json));
-
-  @override
-  Future<void> delete(String providerId) => SecureStore.storage.delete(key: '$_prefix$providerId');
+  Future<void> delete(String providerId) async {
+    await SecureStore.storage.delete(key: '$_prefix$providerId');
+    await _saveIndex([...(await list()).where((e) => e != providerId)]);
+  }
 }

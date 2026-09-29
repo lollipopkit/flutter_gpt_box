@@ -13,16 +13,18 @@ final class ChatStore extends SqliteStore {
   /// Every chat, newest first.
   List<ChatMeta> all({bool trashed = false}) {
     final out = <ChatMeta>[];
-    for (final key in keys()) {
-      final m = fetch(key);
+    // One query: the list is read on every change.
+    for (final MapEntry(:key, :value) in getAllMap().entries) {
+      final m = _decode(key, value);
       if (m != null && m.trashed == trashed) out.add(m);
     }
     out.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
     return out;
   }
 
-  ChatMeta? fetch(String id) {
-    final v = get<Object>(id);
+  ChatMeta? fetch(String id) => _decode(id, get<Object>(id));
+
+  static ChatMeta? _decode(String id, Object? v) {
     if (v is! Map) return null;
     try {
       return ChatMeta.fromJson(v.cast<String, Object?>());

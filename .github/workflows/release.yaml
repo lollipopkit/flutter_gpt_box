@@ -25,9 +25,14 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
       - name: Fetch secrets
+        # Through env, not interpolated into the script; -f fails on an HTTP error
+        # instead of saving the error page as the key.
+        env:
+          BASIC_AUTH: ${{ secrets.BASIC_AUTH }}
+          URL_PREFIX: ${{ secrets.URL_PREFIX }}
         run: |
-          curl -u ${{ secrets.BASIC_AUTH }} -o android/app/app.key ${{ secrets.URL_PREFIX }}app.key
-          curl -u ${{ secrets.BASIC_AUTH }} -o android/key.properties ${{ secrets.URL_PREFIX }}key.properties
+          curl -fsS -u "$BASIC_AUTH" -o android/app/app.key "${URL_PREFIX}app.key"
+          curl -fsS -u "$BASIC_AUTH" -o android/key.properties "${URL_PREFIX}key.properties"
       - name: Build
         run: dart run fl_build -p android
       - name: Create Release
@@ -55,7 +60,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y clang cmake ninja-build pkg-config libgtk-3-dev mesa-utils libvulkan-dev desktop-file-utils wget
-          sudo apt install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libunwind-dev libsecret-1-dev
+          sudo apt install -y libsecret-1-dev
       - name: Build
         run: |
           dart run fl_build -p linux

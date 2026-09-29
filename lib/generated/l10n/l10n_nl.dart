@@ -9,9 +9,6 @@ class AppLocalizationsNl extends AppLocalizations {
   AppLocalizationsNl([String locale = 'nl']) : super(locale);
 
   @override
-  String get attention => 'Opgelet';
-
-  @override
   String get auto => 'Auto';
 
   @override
@@ -545,4 +542,15 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get chatRead => 'Chat lezen';
+
+  @override
+  String attachUnsupported(String name) {
+    return 'Kan $name niet bijvoegen: alleen afbeeldingen en tekstbestanden tot 512 KB';
+  }
+
+  @override
+  String get replyInterrupted => 'Het antwoord is onderbroken';
+
+  @override
+  String get resumeReply => 'Doorgaan';
 }

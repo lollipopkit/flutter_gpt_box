@@ -9,9 +9,6 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get attention => 'Perhatian';
-
-  @override
   String get auto => 'Otomatis';
 
   @override
@@ -513,4 +510,15 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get chatRead => 'Baca chat';
+
+  @override
+  String attachUnsupported(String name) {
+    return 'Tidak dapat melampirkan $name: hanya gambar dan file teks hingga 512 KB';
+  }
+
+  @override
+  String get replyInterrupted => 'Balasan terputus';
+
+  @override
+  String get resumeReply => 'Lanjutkan';
 }

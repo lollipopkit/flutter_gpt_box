@@ -18,6 +18,12 @@ class AboutPage extends StatelessWidget {
               onTap: () => launchUrlString(Urls.unilinkDoc),
             ),
             SettingsRow(
+              icon: Icons.receipt_long_outlined,
+              title: libL10n.logs,
+              trailing: const RowChevron(),
+              onTap: () => DebugPage.route.go(context, args: DebugPageArgs(title: libL10n.logs)),
+            ),
+            SettingsRow(
               icon: Icons.description_outlined,
               title: l10n.licenseMenuItem,
               trailing: const RowChevron(),

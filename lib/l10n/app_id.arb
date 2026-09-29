@@ -1,6 +1,5 @@
 {
   "@@locale": "id",
-  "attention": "Perhatian",
   "auto": "Otomatis",
   "autoCheckUpdate": "Periksa pembaruan secara otomatis",
   "backupTip": "Pastikan file cadangan Anda bersifat pribadi dan aman!",
@@ -147,5 +146,8 @@
   "unsavedChanges": "Simpan perubahan sebelum keluar?",
   "discard": "Buang",
   "chatSearch": "Cari chat",
-  "chatRead": "Baca chat"
+  "chatRead": "Baca chat",
+  "attachUnsupported": "Tidak dapat melampirkan {name}: hanya gambar dan file teks hingga 512 KB",
+  "replyInterrupted": "Balasan terputus",
+  "resumeReply": "Lanjutkan"
 }

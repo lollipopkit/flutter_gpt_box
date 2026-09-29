@@ -25,8 +25,12 @@ class Composer extends StatefulWidget {
   /// On a phone: the thinking level is an icon.
   final bool compact;
 
-  /// Text put in by a deep link.
+  /// Text put in by a deep link, for the new-chat composer.
   static final draft = nvn<String>();
+
+  /// Set when a message makes the chat: the composer that takes over keeps
+  /// the keyboard.
+  static var _keepFocus = false;
 
   @override
   State<Composer> createState() => _ComposerState();
@@ -42,6 +46,12 @@ class _ComposerState extends State<Composer> {
     super.initState();
     Composer.draft.addListener(_takeDraft);
     _takeDraft();
+    if (Composer._keepFocus) {
+      Composer._keepFocus = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _focus.requestFocus();
+      });
+    }
   }
 
   @override
@@ -55,7 +65,8 @@ class _ComposerState extends State<Composer> {
 
   void _takeDraft() {
     final d = Composer.draft.value;
-    if (d == null) return;
+    // A chat's composer leaves it to the new chat's, which is on its way.
+    if (d == null || widget.chatId != null) return;
     _ctrl.text = d;
     Composer.draft.value = null;
   }
@@ -65,8 +76,18 @@ class _ComposerState extends State<Composer> {
     return (id == null ? null : Stores.chat.fetch(id)?.model) ?? Llm.defaultModel;
   }
 
+  /// What a chat not open yet is doing.
+  static final _idle = false.vn;
+
+  bool get _running {
+    final id = widget.chatId;
+    return id != null && (Chats.openOf(id)?.running.value ?? false);
+  }
+
   Future<void> _send() async {
-    final text = _ctrl.text.trim();
+    if (_running) return;
+    final raw = _ctrl.text;
+    final text = raw.trim();
     final files = [..._files.value];
     if (text.isEmpty && files.isEmpty) return;
     if (_model == null) {
@@ -76,6 +97,7 @@ class _ComposerState extends State<Composer> {
     var id = widget.chatId;
     if (id == null) {
       id = Chats.create();
+      Composer._keepFocus = _focus.hasFocus;
       widget.onChatCreated(id);
     }
     _ctrl.clear();
@@ -84,8 +106,26 @@ class _ComposerState extends State<Composer> {
       await Chats.send(id, text, files: files);
     } catch (e, s) {
       Loggers.app.warning('Send', e, s);
-      Toast.show('$e');
+      Toast.show(e is UnsupportedAttachment ? l10n.attachUnsupported(e.name) : '$e');
+      // What was written is not lost with the send: back where it was, if
+      // this composer is still the one on screen and nothing new was typed.
+      if (mounted && _ctrl.text.isEmpty && _files.value.isEmpty) {
+        _ctrl.text = raw;
+        _files.value = files;
+      }
     }
+  }
+
+  /// Enter sends on a keyboard; Shift+Enter is a new line, and an Enter the
+  /// input method takes (to confirm what is being composed) is its own.
+  KeyEventResult _onKey(FocusNode _, KeyEvent e) {
+    if (e is! KeyDownEvent) return KeyEventResult.ignored;
+    if (e.logicalKey != LogicalKeyboardKey.enter && e.logicalKey != LogicalKeyboardKey.numpadEnter) {
+      return KeyEventResult.ignored;
+    }
+    if (HardwareKeyboard.instance.isShiftPressed || _ctrl.value.composing.isValid) return KeyEventResult.ignored;
+    unawaited(_send());
+    return KeyEventResult.handled;
   }
 
 
@@ -127,8 +167,6 @@ class _ComposerState extends State<Composer> {
   @override
   Widget build(BuildContext context) {
     final scheme = context.theme.colorScheme;
-    final chat = widget.chatId == null ? null : Chats.openOf(widget.chatId!);
-    final running = chat?.running ?? false.vn;
     return Material(
       color: scheme.surfaceContainerLow,
       borderRadius: BorderRadius.circular(17),
@@ -153,11 +191,10 @@ class _ComposerState extends State<Composer> {
                 ),
               );
             }),
-            CallbackShortcuts(
-              bindings: {
-                // Enter sends on a keyboard; Shift+Enter is a new line.
-                if (isDesktop) const SingleActivator(LogicalKeyboardKey.enter): _send,
-              },
+            Focus(
+              canRequestFocus: false,
+              skipTraversal: true,
+              onKeyEvent: isDesktop ? _onKey : null,
               child: TextField(
                 controller: _ctrl,
                 focusNode: _focus,
@@ -184,7 +221,12 @@ class _ComposerState extends State<Composer> {
                 _ThinkingChip(model: _model, compact: widget.compact),
                 if (widget.chatId != null) _ToolsToggle(chatId: widget.chatId!),
                 const Spacer(),
-                running.listenVal((r) {
+                // The chat opens after the composer is built: follow it.
+                ListenableBuilder(
+                  listenable: Chats.openChanges,
+                  builder: (context, _) {
+                    final id = widget.chatId;
+                    return ((id == null ? null : Chats.openOf(id))?.running ?? _idle).listenVal((r) {
                   return r
                       ? _CircleBtn(
                           icon: Icons.stop_rounded,
@@ -200,7 +242,9 @@ class _ComposerState extends State<Composer> {
                           onColor: scheme.onPrimary,
                           onTap: _send,
                         );
-                }),
+                    });
+                  },
+                ),
               ].joinWith(const SizedBox(width: 1)),
             ),
           ],

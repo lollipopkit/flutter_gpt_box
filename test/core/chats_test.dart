@@ -10,6 +10,7 @@ import 'package:gpt_box/core/llm/chats.dart';
 import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/core/llm/store.dart';
 import 'package:gpt_box/core/util/tool_func/tool.dart';
+import 'package:gpt_box/data/model/backup.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/data/store/memory.dart';
 
@@ -185,8 +186,10 @@ void main() {
   test('search finds a chat by what was said in it', () async {
     final id = Chats.create();
     await Chats.send(id, 'a very particular zebra');
-    expect(Chats.search('zebra').map((m) => m.id), contains(id));
-    expect(Chats.search('no such thing'), isEmpty);
+    expect((await Chats.search('ZEBRA')).map((m) => m.id), contains(id));
+    expect(await Chats.search('no such thing'), isEmpty);
+    // What was said, not the stored JSON around it.
+    expect(await Chats.search('assistant'), isEmpty);
   });
 
   test('trash, restore, delete for good', () async {
@@ -238,6 +241,56 @@ void main() {
     final read = text(await TfChatRead.instance.run({'id': a}, ToolCtx(b, LlmCancelToken())));
     expect(read, contains('Echo: the quokka code is 42'));
     await expectLater(TfChatRead.instance.run({'id': 'nope'}, ToolCtx(b, LlmCancelToken())), throwsArgumentError);
+  });
+
+  test('a rewritten session is swapped into the same open chat', () async {
+    final id = Chats.create();
+    final chat = await Chats.open(id);
+    await Chats.send(id, 'before');
+    final files = SqlitePiSessionStore.instance;
+    final path = files.dump().keys.firstWhere((p) => SqlitePiSessionStore.chatIdOf(p, [id]) != null);
+    final text = (await files.read(path))!;
+    expect(await Chats.rewrite(id, () => files.write(path, text)), isTrue);
+    expect(Chats.openOf(id), same(chat));
+    await Chats.send(id, 'after');
+    expect(chat.entries.value.map((e) => e.message?.text), containsAllInOrder(['before', 'after']));
+  });
+
+  test('two continuations of one chat, joined, open with both', () async {
+    final id = Chats.create();
+    await Chats.open(id);
+    await Chats.send(id, 'shared');
+    final files = SqlitePiSessionStore.instance;
+    final path = files.dump().keys.firstWhere((p) => SqlitePiSessionStore.chatIdOf(p, [id]) != null);
+    final base = (await files.read(path))!;
+    await Chats.send(id, 'here');
+    final local = (await files.read(path))!;
+    await Chats.rewrite(id, () => files.write(path, base));
+    await Chats.send(id, 'there');
+    final remote = (await files.read(path))!;
+    final joined = Backup.unionLogs(local, remote);
+    expect(joined, isNotNull);
+    await Chats.rewrite(id, () => files.write(path, joined!));
+    final chat = Chats.openOf(id)!;
+    expect(chat.error.value, isNull);
+    final said = chat.tree.map((e) => e.message?.text).whereType<String>();
+    expect(said, containsAll(['shared', 'here', 'there']));
+    // And it still takes a message.
+    await Chats.send(id, 'next');
+    expect(chat.entries.value.last.message?.text, 'Echo: next ');
+  });
+
+  test('retry asks the last message again; a send while replying is refused', () async {
+    final id = Chats.create();
+    final chat = await Chats.open(id);
+    await Chats.send(id, 'again');
+    await Chats.retry(id);
+    final user = chat.entries.value.lastWhere((e) => e.message?.role == 'user');
+    expect(chat.versionsOf(user), hasLength(2));
+    expect(chat.entries.value.last.message?.text, 'Echo: again ');
+    final first = Chats.send(id, 'one');
+    await expectLater(Chats.send(id, 'two'), throwsA(isA<LlmException>()));
+    await first;
   });
 
   test('switched off, the memory tools and prompt are gone', () {

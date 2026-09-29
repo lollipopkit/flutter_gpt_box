@@ -1,6 +1,5 @@
 {
   "@@locale": "pt",
-  "attention": "Atenção",
   "auto": "Auto",
   "autoCheckUpdate": "Verificar atualizações automaticamente",
   "backupTip": "Por favor, certifique-se de que seu arquivo de backup é privado e seguro!",
@@ -147,5 +146,8 @@
   "unsavedChanges": "Salvar as alterações antes de sair?",
   "discard": "Descartar",
   "chatSearch": "Pesquisar chats",
-  "chatRead": "Ler chat"
+  "chatRead": "Ler chat",
+  "attachUnsupported": "Não é possível anexar {name}: apenas imagens e arquivos de texto até 512 KB",
+  "replyInterrupted": "A resposta foi interrompida",
+  "resumeReply": "Continuar"
 }

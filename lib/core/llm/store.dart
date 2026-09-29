@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_pi_llm/fl_pi_llm.dart';
+import 'package:flutter/foundation.dart';
 
 /// pi's sessions, kept in the app's encrypted SQLite database.
 ///
@@ -134,12 +137,71 @@ WHERE substr(path, 1, length(?1)) = ?1 GROUP BY path;
     return null;
   }
 
-  /// Whether any stored file contains [needle], and which.
-  List<String> search(String needle) {
+  /// What was said in each file, lowercased, with the mtime and size it was
+  /// read at: an append within the same millisecond still counts.
+  final _said = <String, (String, String)>{};
+
+  /// The files whose messages contain [needle], ignoring case.
+  ///
+  /// Searches what the user and the model said, not the stored JSON (its
+  /// keys, ids, base64 images). That text is kept per file and read again
+  /// only when the file changes, off this isolate.
+  Future<List<String>> search(String needle) async {
+    final q = needle.toLowerCase();
     final rows = SqliteDb.instance.select(
-      'SELECT DISTINCT path FROM pi_chunks WHERE instr(text, ?) > 0;',
-      [needle],
+      'SELECT path, MAX(mtime) AS m, SUM(length(text)) AS n FROM pi_chunks GROUP BY path;',
     );
-    return [for (final r in rows) r['path'] as String];
+    final mtimes = {for (final r in rows) r['path'] as String: '${r['m']}/${r['n']}'};
+    _said.removeWhere((k, _) => !mtimes.containsKey(k));
+    final stale = [
+      for (final MapEntry(:key, :value) in mtimes.entries)
+        if (_said[key]?.$1 != value) key,
+    ];
+    if (stale.isNotEmpty) {
+      final texts = <String, String>{
+        for (final p in stale) p: await read(p) ?? '',
+      };
+      final said = await compute(_saidIn, texts);
+      for (final p in stale) {
+        _said[p] = (mtimes[p]!, said[p] ?? '');
+      }
+    }
+    return [
+      for (final MapEntry(:key, :value) in _said.entries)
+        if (value.$2.contains(q)) key,
+    ];
+  }
+
+  /// The user's and the model's text in each session log, lowercased.
+  static Map<String, String> _saidIn(Map<String, String> files) => {
+    for (final MapEntry(:key, :value) in files.entries) key: _said1(value),
+  };
+
+  static String _said1(String log) {
+    final sb = StringBuffer();
+    void text(Object? content) {
+      if (content is String) {
+        sb.writeln(content);
+      } else if (content is List) {
+        for (final p in content) {
+          if (p is Map && p['type'] == 'text' && p['text'] is String) sb.writeln(p['text']);
+        }
+      }
+    }
+
+    for (final line in const LineSplitter().convert(log)) {
+      if (line.isEmpty) continue;
+      try {
+        final v = json.decode(line);
+        for (final w in v is List ? v : [v]) {
+          if (w is! Map || w['kind'] != 'entry') continue;
+          final m = w['message'];
+          if (m is Map && (m['role'] == 'user' || m['role'] == 'assistant')) text(m['content']);
+        }
+      } catch (_) {
+        // Not a line of writes: the header, or a torn line.
+      }
+    }
+    return sb.toString().toLowerCase();
   }
 }

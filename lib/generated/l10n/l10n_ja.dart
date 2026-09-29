@@ -9,9 +9,6 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
-  String get attention => '注意';
-
-  @override
   String get auto => '自動';
 
   @override
@@ -501,4 +498,15 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get chatRead => 'チャットを読む';
+
+  @override
+  String attachUnsupported(String name) {
+    return '$name を添付できません: 画像と 512 KB までのテキストファイルのみ';
+  }
+
+  @override
+  String get replyInterrupted => '返信が中断されました';
+
+  @override
+  String get resumeReply => '続ける';
 }

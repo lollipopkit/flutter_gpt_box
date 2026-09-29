@@ -1,6 +1,5 @@
 {
   "@@locale": "fr",
-  "attention": "Attention",
   "auto": "Auto",
   "autoCheckUpdate": "Vérifier automatiquement les mises à jour",
   "backupTip": "Assurez-vous que votre fichier de sauvegarde est privé et sécurisé !",
@@ -147,5 +146,8 @@
   "unsavedChanges": "Enregistrer les modifications avant de quitter ?",
   "discard": "Abandonner",
   "chatSearch": "Rechercher des chats",
-  "chatRead": "Lire un chat"
+  "chatRead": "Lire un chat",
+  "attachUnsupported": "Impossible de joindre {name} : seulement des images et des fichiers texte jusqu'à 512 Ko",
+  "replyInterrupted": "La réponse a été interrompue",
+  "resumeReply": "Continuer"
 }

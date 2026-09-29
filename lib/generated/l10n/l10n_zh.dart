@@ -9,9 +9,6 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get attention => '注意';
-
-  @override
   String get auto => '自动';
 
   @override
@@ -498,14 +495,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get chatRead => '读取对话';
+
+  @override
+  String attachUnsupported(String name) {
+    return '无法附加 $name:仅支持图片和 512 KB 以内的文本文件';
+  }
+
+  @override
+  String get replyInterrupted => '回复被中断';
+
+  @override
+  String get resumeReply => '继续';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
 class AppLocalizationsZhTw extends AppLocalizationsZh {
   AppLocalizationsZhTw() : super('zh_TW');
-
-  @override
-  String get attention => '注意';
 
   @override
   String get auto => '自動';
@@ -994,4 +999,15 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get chatRead => '讀取對話';
+
+  @override
+  String attachUnsupported(String name) {
+    return '無法附加 $name:僅支援圖片和 512 KB 以內的文字檔';
+  }
+
+  @override
+  String get replyInterrupted => '回覆被中斷';
+
+  @override
+  String get resumeReply => '繼續';
 }

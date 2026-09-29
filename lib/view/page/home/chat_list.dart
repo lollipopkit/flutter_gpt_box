@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/llm/chats.dart';
@@ -19,8 +21,19 @@ class ChatSidebar extends StatefulWidget {
   /// After a chat is picked — the drawer closes itself with it.
   final VoidCallback? onPicked;
 
-  /// Focuses the search field; for the keyboard shortcut.
-  static final searchRequest = RNode();
+  static _ChatSidebarState? _mounted;
+  static var _searchPending = false;
+
+  /// Focuses the search field; for the keyboard shortcut. A sidebar not
+  /// built yet (a drawer opening) takes it when it is.
+  static void requestSearch() {
+    final s = _mounted;
+    if (s != null && s.mounted) {
+      s._queryFocus.requestFocus();
+    } else {
+      _searchPending = true;
+    }
+  }
 
   @override
   State<ChatSidebar> createState() => _ChatSidebarState();
@@ -30,21 +43,48 @@ class _ChatSidebarState extends State<ChatSidebar> {
   final _query = TextEditingController();
   final _queryFocus = FocusNode();
 
+  /// The chats matching the query; null while there is none.
+  final _found = nvn<List<ChatMeta>>();
+  Timer? _debounce;
+  var _searchSeq = 0;
+
   @override
   void initState() {
     super.initState();
-    ChatSidebar.searchRequest.addListener(_focusSearch);
+    ChatSidebar._mounted = this;
+    if (ChatSidebar._searchPending) {
+      ChatSidebar._searchPending = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _queryFocus.requestFocus());
+    }
+    Stores.chat.changes.addListener(_searchSoon);
   }
 
   @override
   void dispose() {
-    ChatSidebar.searchRequest.removeListener(_focusSearch);
+    if (ChatSidebar._mounted == this) ChatSidebar._mounted = null;
+    Stores.chat.changes.removeListener(_searchSoon);
+    _debounce?.cancel();
     _query.dispose();
     _queryFocus.dispose();
+    _found.dispose();
     super.dispose();
   }
 
-  void _focusSearch() => _queryFocus.requestFocus();
+  /// Searches once typing pauses; a later search wins over an earlier one.
+  void _searchSoon() {
+    _debounce?.cancel();
+    final q = _query.text.trim();
+    if (q.isEmpty) {
+      _searchSeq++;
+      _found.value = null;
+      return;
+    }
+    _debounce = Timer(const Duration(milliseconds: 200), () async {
+      final seq = ++_searchSeq;
+      final res = await Chats.search(q);
+      if (mounted && seq == _searchSeq) _found.value = res;
+    });
+  }
 
   void _pick(String id) {
     Chats.current.value = id;
@@ -76,21 +116,22 @@ class _ChatSidebarState extends State<ChatSidebar> {
             node: _queryFocus,
             hint: libL10n.search,
             icon: Icons.search,
-            onChanged: (_) => setState(() {}),
+            onChanged: (_) => _searchSoon(),
           ),
         ),
         Expanded(
           child: ListenableBuilder(
-            listenable: Listenable.merge([Stores.chat.changes, Chats.current]),
+            listenable: Listenable.merge([Stores.chat.changes, Chats.current, _found]),
             builder: (context, _) {
-              final q = _query.text.trim();
-              final chats = q.isEmpty ? Stores.chat.all() : Chats.search(q);
+              final found = _found.value;
+              final q = found != null;
+              final chats = found ?? Stores.chat.all();
               if (chats.isEmpty) return Center(child: Text(libL10n.empty, style: UIs.textGrey));
               final rows = <Widget>[];
               String? group;
               for (final m in chats) {
                 // Searching, the order is the match's: no day headings.
-                final g = q.isEmpty ? _groupOf(m.updatedAt) : null;
+                final g = q ? null : _groupOf(m.updatedAt);
                 if (g != null && g != group) {
                   rows.add(Padding(padding: const EdgeInsets.only(top: 13), child: SideBarSection(g)));
                   group = g;
@@ -177,6 +218,14 @@ List<ContextMenuAction> chatActions(BuildContext context, ChatMeta m) => [
         icon: Icons.delete_outline,
         destructive: true,
         onTap: () async {
+          if (Stores.setting.confrimDel.get()) {
+            final ok = await context.showRoundDialog<bool>(
+              title: libL10n.delete,
+              child: Text(l10n.delFmt(m.title ?? l10n.untitled, l10n.chat)),
+              actions: Btnx.cancelRedOk,
+            );
+            if (ok != true) return;
+          }
           if (Chats.current.value == m.id) Chats.current.value = null;
           await Chats.trash(m.id);
         },

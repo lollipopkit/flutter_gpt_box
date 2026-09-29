@@ -84,10 +84,10 @@ abstract final class Llm {
   }
 
   /// Ids of chats whose session mentions [needle].
-  static Set<String> sessionsContaining(String needle) {
+  static Future<Set<String>> sessionsContaining(String needle) async {
     final chats = [for (final m in Stores.chat.all()) m.id];
     return {
-      for (final path in SqlitePiSessionStore.instance.search(needle))
+      for (final path in await SqlitePiSessionStore.instance.search(needle))
         ?SqlitePiSessionStore.chatIdOf(path, chats),
     };
   }

@@ -28,7 +28,7 @@ class SettingStore extends SqliteStore {
 
   late final hideTitleBar = propertyDefault('hideTitleBar', isDesktop);
 
-  /// If it is false, delete without asking.
+  /// Whether deleting a chat asks first.
   late final confrimDel = propertyDefault('confrimDel', true);
 
   late final joinBeta = propertyDefault('joinBeta', false);
@@ -43,8 +43,6 @@ class SettingStore extends SqliteStore {
     },
     toObj: (state) => state?.toJson(),
   );
-
-  late final avatar = propertyDefault('avatar', '🧐');
 
   late final introVer = propertyDefault('introVer', 0);
 

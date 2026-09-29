@@ -176,9 +176,13 @@ final class Backup implements Mergeable {
   }
 
   /// The backup as file text: with a [password], gzipped JSON in fl_lib's
-  /// AES-GCM envelope; without, plain JSON.
-  String encode({String? password}) {
-    final raw = json.encode(toJson());
+  /// AES-GCM envelope; without, plain JSON. Off this isolate: it is every
+  /// chat, images included.
+  Future<String> encode({String? password}) => compute(_encode, (toJson(), password));
+
+  static String _encode((Map<String, Object?>, String?) args) {
+    final (data, password) = args;
+    final raw = json.encode(data);
     if (password == null || password.isEmpty) return raw;
     return Cryptor.encryptBytes(gzip.encode(utf8.encode(raw)), password);
   }
@@ -190,7 +194,7 @@ final class Backup implements Mergeable {
   static Future<String> toFile({String? password, bool includeSettings = true, String? name}) async {
     final bak = await fromStores(includeSettings: includeSettings);
     final path = name == null ? Paths.bak : Paths.doc.joinPath(name);
-    await File(path).writeAsString(bak.encode(password: password));
+    await File(path).writeAsString(await bak.encode(password: password));
     return path;
   }
 
@@ -203,9 +207,11 @@ final class Backup implements Mergeable {
   /// deletes what only this device has.
   ///
   /// A session is taken from the backup when it is missing here, or when it
-  /// extends the local log; two logs that have diverged — the same chat
-  /// continued on two devices — keep the newer, or with [force] the backup's.
-  /// Sessions of chats the merge deleted go with them.
+  /// extends the local log. Two logs that have diverged — the same chat
+  /// continued on two devices — are joined ([unionLogs]): nothing said on
+  /// either is lost. With [force] the backup's is taken. A chat writing a
+  /// reply keeps its log until the next sync. Sessions of chats the merge
+  /// deleted go with them.
   @override
   Future<void> merge({bool force = false}) async {
     final before = Stores.chat.keys().toSet();
@@ -220,35 +226,27 @@ final class Backup implements Mergeable {
     final gone = before.difference(alive);
 
     final files = SqlitePiSessionStore.instance;
-    var closed = false;
-    Future<void> closeChats() async {
-      // An open session would keep writing over what is replaced here.
-      if (closed) return;
-      closed = true;
-      await Chats.closeAll();
-    }
-
     for (final MapEntry(key: path, value: remote) in sessions.entries) {
       // A chat deleted here, or never synced: its session is not wanted.
-      if (SqlitePiSessionStore.chatIdOf(path, alive) == null) continue;
+      final chatId = SqlitePiSessionStore.chatIdOf(path, alive);
+      if (chatId == null) continue;
       final local = await files.read(path);
-      final localMtime = (await files.stat(path))?.modified.millisecondsSinceEpoch ?? 0;
-      final take = switch (local) {
-        null => true,
-        _ when local == remote.text => false,
-        _ when remote.text.startsWith(local) => true,
-        _ when local.startsWith(remote.text) => false,
-        _ => force || remote.mtime > localMtime,
+      final text = switch (local) {
+        null => remote.text,
+        _ when local == remote.text || local.startsWith(remote.text) => null,
+        _ when remote.text.startsWith(local) || force => remote.text,
+        _ => unionLogs(local, remote.text) ?? await _newer(path, local, remote),
       };
-      if (!take) continue;
-      await closeChats();
-      await files.write(path, remote.text);
+      if (text == null || text == local) continue;
+      // An open chat carries on over the new log.
+      await Chats.rewrite(chatId, () => files.write(path, text));
     }
     if (gone.isNotEmpty) {
+      for (final id in gone) {
+        await Chats.close(id);
+      }
       for (final path in files.dump().keys) {
-        if (SqlitePiSessionStore.chatIdOf(path, gone) == null) continue;
-        await closeChats();
-        await files.remove(path);
+        if (SqlitePiSessionStore.chatIdOf(path, gone) != null) await files.remove(path);
       }
       if (gone.contains(Chats.current.value)) Chats.current.value = null;
     }
@@ -257,6 +255,61 @@ final class Backup implements Mergeable {
     await Llm.applyCustomProviders();
     await Chats.reconfigure();
     RNodes.app.notify();
+  }
+
+  /// For logs [unionLogs] cannot join: the one written last.
+  static Future<String?> _newer(String path, String local, ({String text, int mtime}) remote) async {
+    final at = (await SqlitePiSessionStore.instance.stat(path))?.modified.millisecondsSinceEpoch ?? 0;
+    return remote.mtime > at ? remote.text : null;
+  }
+
+  /// Two diverged pi session logs (JSONL storage v4: a header line, then one
+  /// transaction of writes per line) joined: [local], then the entries and
+  /// usage rows only [remote] has, in its order, renumbered after local's.
+  ///
+  /// Their other writes (state such as the current leaf) stay local's: the
+  /// remote branch is there to switch to, and a join of two joined logs adds
+  /// nothing, so two devices settle instead of growing the log back and
+  /// forth. Null when the two are not the same v4 session.
+  @visibleForTesting
+  static String? unionLogs(String local, String remote) {
+    try {
+      List<String> lines(String t) => [
+        for (final l in const LineSplitter().convert(t))
+          if (l.isNotEmpty) l,
+      ];
+      final l = lines(local), r = lines(remote);
+      if (l.isEmpty || r.isEmpty || l.first != r.first) return null;
+      final header = json.decode(l.first);
+      if (header is! Map || header['kind'] != 'header') return null;
+
+      List<Map<String, Object?>> writes(String line) {
+        final v = json.decode(line);
+        return [for (final w in (v is List ? v : [v])) (w as Map).cast<String, Object?>()];
+      }
+
+      final ids = <Object?>{};
+      var seq = 0;
+      for (final line in l.skip(1)) {
+        for (final w in writes(line)) {
+          if (w['kind'] == 'entry' || w['kind'] == 'usage') ids.add(w['id']);
+          if (w['seq'] case final int s when s > seq) seq = s;
+        }
+      }
+      final added = <String>[];
+      for (final line in r.skip(1)) {
+        final keep = [
+          for (final w in writes(line))
+            if ((w['kind'] == 'entry' || w['kind'] == 'usage') && ids.add(w['id'])) {...w, 'seq': ++seq},
+        ];
+        if (keep.isNotEmpty) added.add(json.encode(keep.length == 1 ? keep.first : keep));
+      }
+      if (added.isEmpty) return local;
+      return '${[...l, ...added].join('\n')}\n';
+    } catch (e) {
+      Loggers.app.warning('Join session logs', e);
+      return null;
+    }
   }
 
   /// One store, per key: see [merge]. Keys in [keep] are this device's alone

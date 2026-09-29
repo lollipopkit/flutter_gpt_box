@@ -248,7 +248,6 @@ final class AppSettingsPage extends StatelessWidget {
         SettingsGroup(
           title: l10n.chat,
           rows: [
-            _name(context),
             SettingsRow(
               icon: Icons.auto_awesome,
               title: l10n.genChatTitle,
@@ -401,30 +400,6 @@ final class AppSettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _name(BuildContext context) {
-    return _set.avatar.listenable().listenVal((val) {
-      return SettingsRow(
-        icon: Icons.badge_outlined,
-        title: libL10n.name,
-        trailing: RowValue(val),
-        onTap: () async {
-          final ctrl = TextEditingController(text: val);
-          void save(String s) {
-            _set.avatar.set(s);
-            context.pop();
-          }
-
-          await context.showRoundDialog(
-            title: libL10n.name,
-            child: Input(controller: ctrl, type: TextInputType.name, maxLength: 7, autoFocus: true, onSubmitted: save),
-            actions: Btn.ok(onTap: () => save(ctrl.text)).toList,
-          );
-          ctrl.dispose();
-        },
-      );
-    });
-  }
-
   Widget _trashDays(BuildContext context) {
     return _set.trashDays.listenable().listenVal((days) {
       return SettingsRow(
@@ -435,8 +410,9 @@ final class AppSettingsPage extends StatelessWidget {
         onTap: () async {
           final ctrl = TextEditingController(text: '$days');
           void save(String s) {
+            // At least a day: 0 would empty the trash at the next launch.
             final v = int.tryParse(s);
-            if (v == null) {
+            if (v == null || v < 1) {
               Toast.show(libL10n.fail);
               return;
             }

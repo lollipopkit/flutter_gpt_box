@@ -1,6 +1,5 @@
 {
   "@@locale": "de",
-  "attention": "Achtung",
   "auto": "Automatisch",
   "autoCheckUpdate": "Automatisch nach Updates suchen",
   "backupTip": "Bitte stellen Sie sicher, dass Ihre Sicherungsdatei privat und sicher ist!",
@@ -147,5 +146,8 @@
   "unsavedChanges": "Änderungen vor dem Verlassen speichern?",
   "discard": "Verwerfen",
   "chatSearch": "Chats durchsuchen",
-  "chatRead": "Chat lesen"
+  "chatRead": "Chat lesen",
+  "attachUnsupported": "{name} kann nicht angehängt werden: nur Bilder und Textdateien bis 512 KB",
+  "replyInterrupted": "Die Antwort wurde unterbrochen",
+  "resumeReply": "Fortsetzen"
 }

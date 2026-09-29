@@ -9,9 +9,6 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get attention => 'Dikkat';
-
-  @override
   String get auto => 'Otomatik';
 
   @override
@@ -511,4 +508,15 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get chatRead => 'Sohbeti oku';
+
+  @override
+  String attachUnsupported(String name) {
+    return '$name eklenemiyor: yalnızca görseller ve 512 KB\'a kadar metin dosyaları';
+  }
+
+  @override
+  String get replyInterrupted => 'Yanıt yarıda kesildi';
+
+  @override
+  String get resumeReply => 'Devam et';
 }

@@ -328,7 +328,7 @@ final class _BackupPageState extends State<BackupPage> {
       );
       if (err == null) {
         Toast.success(libL10n.success);
-        setState(() {});
+        if (mounted) setState(() {});
       }
     }
     url.dispose();

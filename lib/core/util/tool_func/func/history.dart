@@ -66,7 +66,7 @@ Use it when the user refers to an earlier conversation. Read a whole chat with c
     final query = (args['query'] as String? ?? '').trim();
     final limit = (args['limit'] as num? ?? 5).toInt().clamp(1, _maxLimit);
     final found = [
-      for (final c in query.isEmpty ? Stores.chat.all() : Chats.search(query))
+      for (final c in query.isEmpty ? Stores.chat.all() : await Chats.search(query))
         if (c.id != ctx.chatId) c,
     ].take(limit).toList();
     if (found.isEmpty) return LlmToolResult.text('No chats found.');

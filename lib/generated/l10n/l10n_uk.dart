@@ -9,9 +9,6 @@ class AppLocalizationsUk extends AppLocalizations {
   AppLocalizationsUk([String locale = 'uk']) : super(locale);
 
   @override
-  String get attention => 'Увага';
-
-  @override
   String get auto => 'Авто';
 
   @override
@@ -512,4 +509,15 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get chatRead => 'Прочитати чат';
+
+  @override
+  String attachUnsupported(String name) {
+    return 'Не вдалося прикріпити $name: лише зображення й текстові файли до 512 КБ';
+  }
+
+  @override
+  String get replyInterrupted => 'Відповідь було перервано';
+
+  @override
+  String get resumeReply => 'Продовжити';
 }

@@ -140,19 +140,30 @@ class _ProvidersPageState extends State<ProvidersPage> {
           trailing: const RowChevron(),
           onTap: () async {
             final m = await pickModel(context, current: Llm.defaultModel);
-            if (m != null) setState(() => Stores.llm.defaultModel.set(m));
+            if (m == null) return;
+            Stores.llm.defaultModel.set(m);
+            if (mounted) setState(() {});
           },
         ),
         SettingsRow(
           icon: Icons.title,
           title: l10n.titleModel,
           subtitle: Stores.llm.titleModel.get() == null ? l10n.sameAsChat : nameOf(Stores.llm.titleModel.get()),
-          trailing: const RowChevron(),
+          // Back to the chat's own model: a button, as a long press is not
+          // found on a computer.
+          trailing: Stores.llm.titleModel.get() == null
+              ? const RowChevron()
+              : Btn.icon(
+                  icon: const Icon(Icons.close, size: 17),
+                  text: l10n.sameAsChat,
+                  onTap: () => setState(() => Stores.llm.titleModel.remove()),
+                ),
           onTap: () async {
             final m = await pickModel(context, current: Stores.llm.titleModel.get());
-            if (m != null) setState(() => Stores.llm.titleModel.set(m));
+            if (m == null) return;
+            Stores.llm.titleModel.set(m);
+            if (mounted) setState(() {});
           },
-          onLongPress: () => setState(() => Stores.llm.titleModel.remove()),
         ),
         SettingsRow(
           icon: Icons.notes,
@@ -182,7 +193,7 @@ class _ProvidersPageState extends State<ProvidersPage> {
     if (v == null) return;
     Stores.llm.systemPrompt.set(v);
     await Chats.reconfigure();
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   Widget _tile(LlmProviderInfo p) {

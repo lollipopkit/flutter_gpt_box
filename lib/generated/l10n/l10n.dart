@@ -119,12 +119,6 @@ abstract class AppLocalizations {
     Locale('zh', 'TW'),
   ];
 
-  /// No description provided for @attention.
-  ///
-  /// In en, this message translates to:
-  /// **'Attention'**
-  String get attention;
-
   /// No description provided for @auto.
   ///
   /// In en, this message translates to:
@@ -1006,6 +1000,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read chat'**
   String get chatRead;
+
+  /// No description provided for @attachUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot attach {name}: only images and text files up to 512 KB'**
+  String attachUnsupported(String name);
+
+  /// No description provided for @replyInterrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'The reply was interrupted'**
+  String get replyInterrupted;
+
+  /// No description provided for @resumeReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get resumeReply;
 }
 
 class _AppLocalizationsDelegate

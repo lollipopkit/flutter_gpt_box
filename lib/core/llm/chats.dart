@@ -39,15 +39,42 @@ final class PendingApproval {
 /// How the user answered a [PendingApproval].
 enum ApprovalAnswer { deny, once, always }
 
+/// A file [Chats.send] cannot attach: not an image, and not text of at most
+/// [maxBytes].
+final class UnsupportedAttachment implements Exception {
+  const UnsupportedAttachment(this.name);
+
+  final String name;
+  static const maxBytes = 512 * 1024;
+
+  @override
+  String toString() => 'Cannot attach $name: only images and text files up to 512 KB';
+}
+
 /// An open chat: its session, and what the chat view draws.
+///
+/// Outlives its session: a sync that rewrites the session file swaps a new
+/// one in ([Chats.rewrite]), and the chat view keeps drawing this.
 final class OpenChat {
-  OpenChat._(this.id, this.session) {
-    _sub = session.events.listen(_onEvent);
+  OpenChat._(this.id, LlmSession session) {
+    _attach(session);
   }
 
   final String id;
-  final LlmSession session;
-  late final StreamSubscription<LlmEvent> _sub;
+  late LlmSession _session;
+  late StreamSubscription<LlmEvent> _sub;
+
+  LlmSession get session => _session;
+
+  void _attach(LlmSession s) {
+    _session = s;
+    _sub = s.events.listen(_onEvent);
+  }
+
+  Future<void> _detach() async {
+    await _sub.cancel();
+    await _session.close();
+  }
 
   /// The current branch, root first.
   final entries = <LlmEntry>[].vn;
@@ -63,6 +90,9 @@ final class OpenChat {
 
   /// An error the last run ended with.
   final error = nvn<String>();
+
+  /// A run a previous launch left unfinished: [Chats.resume] picks it up.
+  final interrupted = false.vn;
 
   /// How long each reply of this session thought, by entry id, as measured
   /// while it streamed. A reply that also wrote text cannot be timed from its
@@ -85,6 +115,7 @@ final class OpenChat {
   Future<void> reload() async {
     entries.value = await session.entries();
     tree = await session.tree();
+    interrupted.value = session.interrupted;
   }
 
   void _onEvent(LlmEvent e) {
@@ -153,8 +184,7 @@ final class OpenChat {
 
   Future<void> _dispose() async {
     _denyPending('The chat was closed');
-    await _sub.cancel();
-    await session.close();
+    await _detach();
   }
 }
 
@@ -166,8 +196,11 @@ abstract final class Chats {
   /// The chat on screen.
   static final current = nvn<String>();
 
-  /// Asked before a tool call the user has not allowed for good. Set by the
-  /// chat page, which can show a dialog.
+  /// Notified when a chat is opened or closed: what shows its state follows.
+  static final openChanges = RNode();
+
+  /// Temporary users of each chat ([borrow]), which close it when done.
+  static final _borrows = <String, int>{};
 
   static OpenChat? openOf(String id) => _open[id];
 
@@ -183,10 +216,24 @@ abstract final class Chats {
   }
 
   static Future<OpenChat> _doOpen(String id) async {
+    final chat = OpenChat._(id, await _openSession(id));
+    try {
+      await chat.reload();
+    } catch (_) {
+      // Or the runtime keeps it, and every later open fails as "already open".
+      await chat._dispose();
+      rethrow;
+    }
+    _open[id] = chat;
+    openChanges.notify();
+    return chat;
+  }
+
+  static Future<LlmSession> _openSession(String id) {
     final meta = Stores.chat.fetch(id);
     final model = meta?.model ?? Llm.defaultModel;
     if (model == null) throw const LlmException('No model: add a provider key first');
-    final session = await Llm.rt.openSession(
+    return Llm.rt.openSession(
       id: id,
       model: model,
       systemPrompt: systemPromptFor(meta),
@@ -195,14 +242,45 @@ abstract final class Chats {
       compaction: Stores.llm.compaction.get() ? const CompactionSettings() : CompactionSettings.disabled,
       approve: _approve,
     );
-    final chat = OpenChat._(id, session);
-    await chat.reload();
-    _open[id] = chat;
-    return chat;
+  }
+
+  /// Runs [write], which replaces chat [id]'s session file, with the chat's
+  /// session closed, then opens it again in the same [OpenChat]: the view
+  /// showing it carries on. Returns false, and does not write, while a reply
+  /// is being written.
+  static Future<bool> rewrite(String id, Future<void> Function() write) async {
+    // One being opened is waited for: it would otherwise read the file mid-write.
+    try {
+      await _opening[id];
+    } catch (_) {
+      // Failed to open: then it is not open.
+    }
+    final chat = _open[id];
+    if (chat == null) {
+      await write();
+      return true;
+    }
+    if (chat.running.value) return false;
+    await chat._detach();
+    try {
+      await write();
+    } finally {
+      try {
+        chat._attach(await _openSession(id));
+        await chat.reload();
+      } catch (e, s) {
+        Loggers.app.warning('Reopen $id', e, s);
+        _open.remove(id);
+        openChanges.notify();
+        chat.error.value = '$e';
+      }
+    }
+    return true;
   }
 
   static Future<void> close(String id) async {
     final c = _open.remove(id);
+    if (c != null) openChanges.notify();
     await c?._dispose();
   }
 
@@ -212,16 +290,24 @@ abstract final class Chats {
     }
   }
 
-  /// The chat's current branch as markdown.
-  static Future<String> markdownOf(String id) async {
-    final wasOpen = _open.containsKey(id);
-    final c = await open(id);
+  /// Runs [fn] on chat [id], opened for it if it was not, and closed again
+  /// after unless something else has taken it up meanwhile: it went on
+  /// screen, or started a run.
+  static Future<T> borrow<T>(String id, Future<T> Function(OpenChat chat) fn) async {
+    final wasOpen = _open.containsKey(id) || _opening.containsKey(id);
+    _borrows[id] = (_borrows[id] ?? 0) + 1;
     try {
-      return toMarkdown(c.entries.value);
+      return await fn(await open(id));
     } finally {
-      if (!wasOpen && !c.running.value) await close(id);
+      final n = _borrows[id]! - 1;
+      n == 0 ? _borrows.remove(id) : _borrows[id] = n;
+      final c = _open[id];
+      if (!wasOpen && n == 0 && c != null && !c.running.value && current.value != id) await close(id);
     }
   }
+
+  /// The chat's current branch as markdown.
+  static Future<String> markdownOf(String id) => borrow(id, (c) async => toMarkdown(c.entries.value));
 
   static String toMarkdown(List<LlmEntry> entries) {
     final sb = StringBuffer();
@@ -253,7 +339,15 @@ abstract final class Chats {
   /// Sends [text], with [files] attached, and runs until the reply is done.
   static Future<void> send(String id, String text, {List<String> files = const []}) async {
     final chat = await open(id);
-    final (prompt, images) = await _compose(text, files);
+    _claim(chat);
+    final (String, List<Map<String, Object?>>) composed;
+    try {
+      composed = await _compose(text, files);
+    } catch (_) {
+      chat.running.value = false;
+      rethrow;
+    }
+    final (prompt, images) = composed;
     await _run(chat, () => chat.session.prompt(prompt, images: images.isEmpty ? null : images));
     _touch(id);
     unawaited(_maybeTitle(chat, text));
@@ -263,16 +357,34 @@ abstract final class Chats {
   /// another version.
   static Future<void> edit(String id, LlmEntry entry, String text) async {
     final chat = await open(id);
+    _claim(chat);
     final images = _imagesOf(entry.message);
-    await chat.session.navigate(entry.parentId);
-    await chat.reload();
-    await _run(chat, () => chat.session.prompt(text, images: images.isEmpty ? null : images));
+    await _run(chat, () async {
+      await chat.session.navigate(entry.parentId);
+      await chat.reload();
+      return chat.session.prompt(text, images: images.isEmpty ? null : images);
+    });
     _touch(id);
   }
 
   /// Asks for another reply to the user message [entry].
   static Future<void> regenerate(String id, LlmEntry entry) =>
       edit(id, entry, entry.message?.text ?? '');
+
+  /// Asks again after the last run failed: the last user message, again.
+  static Future<void> retry(String id) async {
+    final chat = await open(id);
+    final user = chat.entries.value.lastWhereOrNull((e) => e.message?.role == 'user');
+    if (user != null) await regenerate(id, user);
+  }
+
+  /// Carries on the run a previous launch left unfinished.
+  static Future<void> resume(String id) async {
+    final chat = await open(id);
+    _claim(chat);
+    await _run(chat, chat.session.resume);
+    _touch(id);
+  }
 
   /// Shows the version [entry] of a message, and the conversation that
   /// followed it.
@@ -305,9 +417,16 @@ abstract final class Chats {
     }
   }
 
-  static Future<void> _run(OpenChat chat, Future<LlmRunResult> Function() run) async {
+  /// Marks [chat] as running, or refuses: one run at a time. Synchronous
+  /// after the open, so two sends a moment apart cannot both start one.
+  static void _claim(OpenChat chat) {
+    if (chat.running.value) throw const LlmException('A reply is still being written');
     chat.error.value = null;
     chat.running.value = true;
+  }
+
+  /// Runs [run] on [chat], which [_claim] has marked running.
+  static Future<void> _run(OpenChat chat, Future<LlmRunResult> Function() run) async {
     try {
       final r = await run();
       if (r.status == 'failed') chat.error.value = r.error;
@@ -317,7 +436,14 @@ abstract final class Chats {
     } finally {
       chat.running.value = false;
       chat.streaming.value = null;
-      await chat.reload();
+      // Closed meanwhile (trashed, say): nothing to show.
+      if (_open[chat.id] == chat) {
+        try {
+          await chat.reload();
+        } catch (e, s) {
+          Loggers.app.warning('Reload ${chat.id}', e, s);
+        }
+      }
     }
   }
 
@@ -384,10 +510,10 @@ abstract final class Chats {
   }
 
   /// Chats whose title or conversation contains [query], newest first.
-  static List<ChatMeta> search(String query, {bool includeContent = true}) {
+  static Future<List<ChatMeta>> search(String query) async {
     final q = query.toLowerCase();
+    final hits = await Llm.sessionsContaining(query);
     final all = Stores.chat.all();
-    final hits = includeContent ? Llm.sessionsContaining(query) : const <String>{};
     return [
       for (final m in all)
         if ((m.title?.toLowerCase().contains(q) ?? false) || hits.contains(m.id)) m,
@@ -492,7 +618,8 @@ abstract final class Chats {
         ],
       );
       final title = m.text.trim().replaceAll(RegExp(r'^["“《]|["”》]$'), '').split('\n').first;
-      if (title.isNotEmpty) rename(chat.id, title);
+      // Not over one the user gave it while this was being asked.
+      if (title.isNotEmpty && Stores.chat.fetch(chat.id)?.title == null) rename(chat.id, title);
     } catch (e, s) {
       Loggers.app.info('Title of ${chat.id}', e, s);
     }
@@ -514,16 +641,12 @@ abstract final class Chats {
         images.add(LlmContent.image(base64Encode(await file.readAsBytes()), mime));
         continue;
       }
-      const maxInline = 512 * 1024;
-      if (await file.length() <= maxInline) {
-        try {
-          inlined.add('<file name="$name">\n${await file.readAsString()}\n</file>');
-          continue;
-        } catch (_) {
-          // Not text; named below.
-        }
+      if (await file.length() > UnsupportedAttachment.maxBytes) throw UnsupportedAttachment(name);
+      try {
+        inlined.add('<file name="$name">\n${await file.readAsString()}\n</file>');
+      } on FormatException {
+        throw UnsupportedAttachment(name);
       }
-      inlined.add('[file: $name]');
     }
     return ([...inlined, text].join('\n\n'), images);
   }

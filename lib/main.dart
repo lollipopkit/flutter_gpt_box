@@ -43,7 +43,7 @@ Future<void> _initApp() async {
   await Paths.init(
     BuildData.name,
     bakName: bakFileName,
-    dirs: const {PathDir.img, PathDir.audio},
+    dirs: const {},
     fileInUserDocuments: false,
   );
   await CrashLog.attach(Paths.doc.joinPath('logs'));
@@ -89,7 +89,7 @@ Future<void> _initWindow() async {
 
 Future<void> _initAppComponents() async {
   await Llm.init();
-  // Tools and memories live in the tool store; open chats follow it.
+  // Open chats follow the tool settings and the MCP servers.
   Stores.mcp.watch().listen((_) => Chats.reconfigureSoon());
   McpTools.changes.addListener(Chats.reconfigureSoon);
   if (Stores.mcp.enabled.get()) unawaited(McpTools.connectStored());

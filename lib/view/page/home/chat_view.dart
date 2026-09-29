@@ -71,6 +71,11 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final id = chatId;
+    // The menu's actions carry the meta: kept current with a rename.
+    return Stores.chat.changes.listen(() => _build(context, id));
+  }
+
+  Widget _build(BuildContext context, String? id) {
     return SizedBox(
       height: 54,
       child: Padding(
@@ -174,6 +179,10 @@ class _ConversationState extends State<_Conversation> {
   /// Whether the view is at the bottom, and so follows new content.
   var _atBottom = true;
 
+  /// The last entry seen: a new message from the user scrolls down to it
+  /// wherever the view was.
+  String? _lastEntry;
+
   @override
   void initState() {
     super.initState();
@@ -185,6 +194,7 @@ class _ConversationState extends State<_Conversation> {
       c.streaming.addListener(_follow);
       c.entries.addListener(_follow);
       c.approvals.addListener(_follow);
+      _lastEntry = c.entries.value.lastOrNull?.id;
       if (Stores.setting.scrollAfterSwitch.get() || c.entries.value.length < 3) _jumpToEnd();
     }, onError: (_) {});
   }
@@ -201,6 +211,15 @@ class _ConversationState extends State<_Conversation> {
   }
 
   void _follow() {
+    final chat = Chats.openOf(widget.chatId);
+    final last = chat?.entries.value.lastOrNull;
+    if (last != null && last.id != _lastEntry) {
+      _lastEntry = last.id;
+      if (last.message?.role == 'user') {
+        _jumpToEnd();
+        return;
+      }
+    }
     if (_atBottom && Stores.setting.scrollBottom.get()) _jumpToEnd();
   }
 
@@ -220,30 +239,54 @@ class _ConversationState extends State<_Conversation> {
         }
         final chat = snap.data;
         if (chat == null) return const Center(child: SizedLoading(25, builder: SizedLoading.circularBuilder));
+        // Not on each streamed token: that is the last block's alone.
         return ListenableBuilder(
-          listenable: Listenable.merge([chat.entries, chat.streaming, chat.error, chat.approvals, chat.running]),
+          listenable: Listenable.merge([chat.entries, chat.error, chat.approvals, chat.running, chat.interrupted]),
           builder: (context, _) {
             final blocks = threadBlocks(chat.entries.value);
-            final streaming = chat.streaming.value;
             final error = chat.error.value;
             final pending = chat.approvals.value.firstOrNull;
-            // The reply being written continues the last reply, or starts one.
-            final continues = streaming != null && blocks.lastOrNull is ReplyBlock;
+            final lastIsReply = blocks.lastOrNull is ReplyBlock;
+            Widget view(int i, ThreadBlock b, [StreamingReply? streaming]) => ThreadBlockView(
+              key: ValueKey(switch (b) {
+                UserBlock(:final entry) || SummaryBlock(:final entry) => entry.id,
+                ReplyBlock(:final entries) => entries.first.id,
+              }),
+              chat: chat,
+              block: b,
+              streaming: streaming,
+              live: chat.running.value && i == blocks.length - 1,
+            );
             final items = <Widget>[
               for (final (i, b) in blocks.indexed)
-                ThreadBlockView(
-                  key: ValueKey(switch (b) {
-                    UserBlock(:final entry) || SummaryBlock(:final entry) => entry.id,
-                    ReplyBlock(:final entries) => entries.first.id,
-                  }),
-                  chat: chat,
-                  block: b,
-                  streaming: continues && i == blocks.length - 1 ? streaming : null,
-                  live: chat.running.value && i == blocks.length - 1,
-                ),
-              if (streaming != null && !continues) StreamingView(reply: streaming),
+                if (i < blocks.length - 1) view(i, b),
+              // The reply being written continues the last reply, or starts
+              // one under the last block.
+              chat.streaming.listenVal((s) {
+                final last = blocks.lastOrNull;
+                final lastView = last == null ? null : view(blocks.length - 1, last, lastIsReply ? s : null);
+                if (s == null || lastIsReply) return lastView ?? UIs.placeholder;
+                final stream = StreamingView(reply: s);
+                if (lastView == null) return stream;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [lastView, const SizedBox(height: 20), stream],
+                );
+              }),
               if (pending != null) ApprovalCard(chatId: chat.id, pending: pending),
-              if (error != null) Text(error, style: TextStyle(fontSize: 13, color: context.theme.colorScheme.error)),
+              if (!chat.running.value && error != null)
+                _Notice(
+                  text: error,
+                  color: context.theme.colorScheme.error,
+                  action: libL10n.retry,
+                  onTap: () => _guard(Chats.retry(chat.id)),
+                )
+              else if (!chat.running.value && chat.interrupted.value)
+                _Notice(
+                  text: l10n.replyInterrupted,
+                  action: l10n.resumeReply,
+                  onTap: () => _guard(Chats.resume(chat.id)),
+                ),
             ];
             return LayoutBuilder(
               builder: (context, cons) {
@@ -265,6 +308,32 @@ class _ConversationState extends State<_Conversation> {
           },
         );
       },
+    );
+  }
+}
+
+/// A failure is a toast, not an unhandled error.
+void _guard(Future<void> f) => f.catchError((Object e) {
+  Loggers.app.warning('Chat', e);
+  Toast.show('$e');
+});
+
+/// A line under the conversation, with what can be done about it.
+class _Notice extends StatelessWidget {
+  const _Notice({required this.text, required this.action, required this.onTap, this.color});
+
+  final String text;
+  final String action;
+  final VoidCallback onTap;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: Text(text, style: TextStyle(fontSize: 13, color: color ?? context.theme.hintColor))),
+        Btn.text(text: action, onTap: onTap),
+      ],
     );
   }
 }

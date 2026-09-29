@@ -9,9 +9,6 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get attention => 'Attention';
-
-  @override
   String get auto => 'Auto';
 
   @override
@@ -552,4 +549,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get chatRead => 'Lire un chat';
+
+  @override
+  String attachUnsupported(String name) {
+    return 'Impossible de joindre $name : seulement des images et des fichiers texte jusqu\'à 512 Ko';
+  }
+
+  @override
+  String get replyInterrupted => 'La réponse a été interrompue';
+
+  @override
+  String get resumeReply => 'Continuer';
 }

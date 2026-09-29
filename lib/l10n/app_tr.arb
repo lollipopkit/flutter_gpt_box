@@ -1,6 +1,5 @@
 {
   "@@locale": "tr",
-  "attention": "Dikkat",
   "auto": "Otomatik",
   "autoCheckUpdate": "Güncellemeleri otomatik kontrol et",
   "backupTip": "Lütfen yedekleme dosyanızın özel ve güvenli olduğundan emin olun!",
@@ -147,5 +146,8 @@
   "unsavedChanges": "Çıkmadan önce değişiklikler kaydedilsin mi?",
   "discard": "Vazgeç",
   "chatSearch": "Sohbetlerde ara",
-  "chatRead": "Sohbeti oku"
+  "chatRead": "Sohbeti oku",
+  "attachUnsupported": "{name} eklenemiyor: yalnızca görseller ve 512 KB'a kadar metin dosyaları",
+  "replyInterrupted": "Yanıt yarıda kesildi",
+  "resumeReply": "Devam et"
 }

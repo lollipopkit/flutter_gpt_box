@@ -1,6 +1,5 @@
 {
   "@@locale": "ja",
-  "attention": "注意",
   "auto": "自動",
   "autoCheckUpdate": "自動更新チェック",
   "backupTip": "バックアップファイルのプライバシーと安全性を確保してください！",
@@ -147,5 +146,8 @@
   "unsavedChanges": "離れる前に変更を保存しますか?",
   "discard": "破棄",
   "chatSearch": "チャットを検索",
-  "chatRead": "チャットを読む"
+  "chatRead": "チャットを読む",
+  "attachUnsupported": "{name} を添付できません: 画像と 512 KB までのテキストファイルのみ",
+  "replyInterrupted": "返信が中断されました",
+  "resumeReply": "続ける"
 }

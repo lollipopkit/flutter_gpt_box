@@ -1,6 +1,5 @@
 {
   "@@locale": "zh",
-  "attention": "注意",
   "auto": "自动",
   "autoCheckUpdate": "自动检查更新",
   "backupTip": "请保证备份文件私密且安全！",
@@ -147,5 +146,8 @@
   "unsavedChanges": "离开前保存更改?",
   "discard": "放弃",
   "chatSearch": "搜索对话",
-  "chatRead": "读取对话"
+  "chatRead": "读取对话",
+  "attachUnsupported": "无法附加 {name}:仅支持图片和 512 KB 以内的文本文件",
+  "replyInterrupted": "回复被中断",
+  "resumeReply": "继续"
 }

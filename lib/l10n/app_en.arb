@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-  "attention": "Attention",
   "auto": "Auto",
   "autoCheckUpdate": "Auto check for updates",
   "backupTip": "Please keep backup files private and safe!",
@@ -279,5 +278,15 @@
     }
   },
   "chatSearch": "Search chats",
-  "chatRead": "Read chat"
+  "chatRead": "Read chat",
+  "attachUnsupported": "Cannot attach {name}: only images and text files up to 512 KB",
+  "@attachUnsupported": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "replyInterrupted": "The reply was interrupted",
+  "resumeReply": "Continue"
 }

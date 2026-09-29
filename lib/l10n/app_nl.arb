@@ -1,6 +1,5 @@
 {
   "@@locale": "nl",
-  "attention": "Opgelet",
   "auto": "Auto",
   "autoCheckUpdate": "Automatisch controleren op updates",
   "backupTip": "Zorg ervoor dat uw back-upbestand privé en veilig is!",
@@ -147,5 +146,8 @@
   "unsavedChanges": "Wijzigingen opslaan voor het verlaten?",
   "discard": "Verwerpen",
   "chatSearch": "Chats doorzoeken",
-  "chatRead": "Chat lezen"
+  "chatRead": "Chat lezen",
+  "attachUnsupported": "Kan {name} niet bijvoegen: alleen afbeeldingen en tekstbestanden tot 512 KB",
+  "replyInterrupted": "Het antwoord is onderbroken",
+  "resumeReply": "Doorgaan"
 }
