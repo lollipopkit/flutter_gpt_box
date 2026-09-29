@@ -493,7 +493,7 @@ packages:
   fl_pi_llm:
     dependency: "direct main"
     description:
-      path: "../fl_pi_llm"
+      path: "packages/fl_pi_llm"
       relative: true
     source: path
     version: "0.1.0"

@@ -32,9 +32,9 @@ dependencies:
   # only honoured for this package's own dependencies.
   sqlite3: ^3.6.0
   webdav_client_plus: ^2.0.0
-  # TODO: a git dependency once lollipopkit/fl_pi_llm is published.
+  # A submodule, like fl_lib: developed alongside.
   fl_pi_llm:
-    path: ../fl_pi_llm
+    path: packages/fl_pi_llm
   mcp_dart:
     git:
       url: https://github.com/leehack/mcp_dart
