@@ -81,7 +81,6 @@
   "compactionTip": "对话超出模型上下文时，较早的消息会被总结后发给模型；你仍然能看到全部消息。",
   "customProvider": "自定义服务商",
   "refreshModels": "刷新模型",
-  "providerLinkFmt": "添加服务商「{name}」（{url}）？链接中不含 key，需要你自己填写。",
   "modelsListedTip": "可选：会自动获取端点 /models 的模型列表，此处补充其中没有的 ID。",
   "modelsRequired": "该 API 无法获取模型列表，请至少填写一个模型 ID。",
   "modelsCountFmt": "{n} 个模型",

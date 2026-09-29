@@ -81,17 +81,6 @@
   "compactionTip": "When a chat no longer fits the model's context, earlier messages are summarised for the model. You still see all of them.",
   "customProvider": "Custom provider",
   "refreshModels": "Refresh models",
-  "providerLinkFmt": "Add the provider \"{name}\" at {url}? Its key is not in the link; you enter it yourself.",
-  "@providerLinkFmt": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "url": {
-        "type": "String"
-      }
-    }
-  },
   "modelsListedTip": "Optional: the endpoint's /models list is fetched. Add ids it does not list.",
   "modelsRequired": "This API cannot list its models: enter at least one model id.",
   "modelsCountFmt": "{n} models",

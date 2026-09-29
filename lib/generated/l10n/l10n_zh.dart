@@ -272,11 +272,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get refreshModels => '刷新模型';
 
   @override
-  String providerLinkFmt(String name, String url) {
-    return '添加服务商「$name」（$url）？链接中不含 key，需要你自己填写。';
-  }
-
-  @override
   String get modelsListedTip => '可选：会自动获取端点 /models 的模型列表，此处补充其中没有的 ID。';
 
   @override
@@ -510,4 +505,85 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get user => '使用者';
+
+  @override
+  String get deny => '拒絕';
+
+  @override
+  String get allow => '允許';
+
+  @override
+  String get allowAlways => '一律允許';
+
+  @override
+  String get trash => '垃圾桶';
+
+  @override
+  String get startChatTip => '在下方選擇模型，然後開始對話。';
+
+  @override
+  String get camera => '相機';
+
+  @override
+  String get send => '傳送';
+
+  @override
+  String get noProviderKey => '還沒有服務商設定了金鑰。新增一個即可開始聊天。';
+
+  @override
+  String get providers => '服務商';
+
+  @override
+  String get regenerate => '重新生成';
+
+  @override
+  String get compacted => '較早的訊息已被摘要';
+
+  @override
+  String get favorite => '收藏';
+
+  @override
+  String get defaultModel => '預設模型';
+
+  @override
+  String get titleModel => '標題模型';
+
+  @override
+  String get systemPrompt => '系統提示詞';
+
+  @override
+  String get compaction => '壓縮長對話';
+
+  @override
+  String get compactionTip => '當對話超出模型的上下文時，較早的訊息會為模型摘要。你仍可看到全部訊息。';
+
+  @override
+  String get customProvider => '自訂服務商';
+
+  @override
+  String get refreshModels => '重新整理模型';
+
+  @override
+  String get modelsListedTip => '可選：會自動取得端點 /models 的模型清單，此處補充其中沒有的 ID。';
+
+  @override
+  String get modelsRequired => '此 API 無法取得模型清單，請至少填寫一個模型 ID。';
+
+  @override
+  String modelsCountFmt(int n) {
+    return '$n 個模型';
+  }
+
+  @override
+  String get sameAsChat => '與對話相同';
+
+  @override
+  String get keyInKeychain => '儲存在系統鑰匙圈中，不會進入備份。';
+
+  @override
+  String get extraVars => '額外變數';
+
+  @override
+  String get extraVarsTip =>
+      '每行一個 KEY=VALUE，用於除金鑰外還需要其他設定的服務商（Azure 資源、Cloudflare 帳號）。';
 }

@@ -218,93 +218,88 @@ class AppLocalizationsNl extends AppLocalizations {
   String get user => 'Gebruiker';
 
   @override
-  String get deny => 'Deny';
+  String get deny => 'Weigeren';
 
   @override
-  String get allow => 'Allow';
+  String get allow => 'Toestaan';
 
   @override
-  String get allowAlways => 'Always allow';
+  String get allowAlways => 'Altijd toestaan';
 
   @override
-  String get trash => 'Trash';
+  String get trash => 'Prullenbak';
 
   @override
-  String get startChatTip => 'Pick a model below and say something.';
+  String get startChatTip => 'Kies hieronder een model en zeg iets.';
 
   @override
   String get camera => 'Camera';
 
   @override
-  String get send => 'Send';
+  String get send => 'Verzenden';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Nog geen enkele provider heeft een sleutel. Voeg er een toe om te chatten.';
 
   @override
   String get providers => 'Providers';
 
   @override
-  String get regenerate => 'Regenerate';
+  String get regenerate => 'Opnieuw genereren';
 
   @override
-  String get compacted => 'Earlier messages were summarised';
+  String get compacted => 'Eerdere berichten zijn samengevat';
 
   @override
-  String get favorite => 'Favorites';
+  String get favorite => 'Favorieten';
 
   @override
-  String get defaultModel => 'Default model';
+  String get defaultModel => 'Standaardmodel';
 
   @override
-  String get titleModel => 'Model for titles';
+  String get titleModel => 'Model voor titels';
 
   @override
-  String get systemPrompt => 'System prompt';
+  String get systemPrompt => 'Systeemprompt';
 
   @override
-  String get compaction => 'Compact long chats';
+  String get compaction => 'Lange chats comprimeren';
 
   @override
   String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
+      'Past een chat niet meer in de context van het model, dan worden eerdere berichten voor het model samengevat. Jij ziet ze nog allemaal.';
 
   @override
-  String get customProvider => 'Custom provider';
+  String get customProvider => 'Aangepaste provider';
 
   @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
+  String get refreshModels => 'Modellen vernieuwen';
 
   @override
   String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
+      'Optioneel: de /models-lijst van het endpoint wordt opgehaald. Voeg id’s toe die er niet in staan.';
 
   @override
   String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
+      'Deze API kan zijn modellen niet opsommen: vul minstens één model-id in.';
 
   @override
   String modelsCountFmt(int n) {
-    return '$n models';
+    return '$n modellen';
   }
 
   @override
-  String get sameAsChat => 'Same as the chat';
+  String get sameAsChat => 'Zelfde als de chat';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Opgeslagen in de sleutelhanger van het systeem, nooit in back-ups.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String get extraVars => 'Extra variabelen';
 
   @override
   String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+      'Eén KEY=VALUE per regel, voor providers die meer dan een sleutel nodig hebben (Azure-resource, Cloudflare-account).';
 }

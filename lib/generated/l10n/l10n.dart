@@ -605,12 +605,6 @@ abstract class AppLocalizations {
   /// **'Refresh models'**
   String get refreshModels;
 
-  /// No description provided for @providerLinkFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'Add the provider \"{name}\" at {url}? Its key is not in the link; you enter it yourself.'**
-  String providerLinkFmt(String name, String url);
-
   /// No description provided for @modelsListedTip.
   ///
   /// In en, this message translates to:

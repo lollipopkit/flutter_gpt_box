@@ -217,93 +217,88 @@ class AppLocalizationsId extends AppLocalizations {
   String get user => 'Pengguna';
 
   @override
-  String get deny => 'Deny';
+  String get deny => 'Tolak';
 
   @override
-  String get allow => 'Allow';
+  String get allow => 'Izinkan';
 
   @override
-  String get allowAlways => 'Always allow';
+  String get allowAlways => 'Selalu izinkan';
 
   @override
-  String get trash => 'Trash';
+  String get trash => 'Sampah';
 
   @override
-  String get startChatTip => 'Pick a model below and say something.';
+  String get startChatTip => 'Pilih model di bawah lalu tulis sesuatu.';
 
   @override
-  String get camera => 'Camera';
+  String get camera => 'Kamera';
 
   @override
-  String get send => 'Send';
+  String get send => 'Kirim';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Belum ada penyedia yang memiliki kunci. Tambahkan satu untuk mulai mengobrol.';
 
   @override
-  String get providers => 'Providers';
+  String get providers => 'Penyedia';
 
   @override
-  String get regenerate => 'Regenerate';
+  String get regenerate => 'Buat ulang';
 
   @override
-  String get compacted => 'Earlier messages were summarised';
+  String get compacted => 'Pesan sebelumnya telah diringkas';
 
   @override
-  String get favorite => 'Favorites';
+  String get favorite => 'Favorit';
 
   @override
-  String get defaultModel => 'Default model';
+  String get defaultModel => 'Model bawaan';
 
   @override
-  String get titleModel => 'Model for titles';
+  String get titleModel => 'Model untuk judul';
 
   @override
-  String get systemPrompt => 'System prompt';
+  String get systemPrompt => 'Prompt sistem';
 
   @override
-  String get compaction => 'Compact long chats';
+  String get compaction => 'Padatkan obrolan panjang';
 
   @override
   String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
+      'Saat obrolan tidak lagi muat dalam konteks model, pesan sebelumnya diringkas untuk model. Anda tetap melihat semuanya.';
 
   @override
-  String get customProvider => 'Custom provider';
+  String get customProvider => 'Penyedia kustom';
 
   @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
+  String get refreshModels => 'Muat ulang model';
 
   @override
   String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
+      'Opsional: daftar /models dari endpoint akan diambil. Tambahkan ID yang tidak tercantum.';
 
   @override
   String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
+      'API ini tidak dapat mencantumkan modelnya: masukkan setidaknya satu ID model.';
 
   @override
   String modelsCountFmt(int n) {
-    return '$n models';
+    return '$n model';
   }
 
   @override
-  String get sameAsChat => 'Same as the chat';
+  String get sameAsChat => 'Sama seperti obrolan';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Disimpan di keychain sistem, tidak pernah di cadangan.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String get extraVars => 'Variabel tambahan';
 
   @override
   String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+      'Satu KEY=VALUE per baris, untuk penyedia yang butuh lebih dari kunci (resource Azure, akun Cloudflare).';
 }

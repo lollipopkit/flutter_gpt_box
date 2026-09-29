@@ -217,93 +217,88 @@ class AppLocalizationsTr extends AppLocalizations {
   String get user => 'Kullanıcı';
 
   @override
-  String get deny => 'Deny';
+  String get deny => 'Reddet';
 
   @override
-  String get allow => 'Allow';
+  String get allow => 'İzin ver';
 
   @override
-  String get allowAlways => 'Always allow';
+  String get allowAlways => 'Her zaman izin ver';
 
   @override
-  String get trash => 'Trash';
+  String get trash => 'Çöp kutusu';
 
   @override
-  String get startChatTip => 'Pick a model below and say something.';
+  String get startChatTip => 'Aşağıdan bir model seçip bir şey yazın.';
 
   @override
-  String get camera => 'Camera';
+  String get camera => 'Kamera';
 
   @override
-  String get send => 'Send';
+  String get send => 'Gönder';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Henüz hiçbir sağlayıcının anahtarı yok. Sohbete başlamak için bir tane ekleyin.';
 
   @override
-  String get providers => 'Providers';
+  String get providers => 'Sağlayıcılar';
 
   @override
-  String get regenerate => 'Regenerate';
+  String get regenerate => 'Yeniden oluştur';
 
   @override
-  String get compacted => 'Earlier messages were summarised';
+  String get compacted => 'Önceki mesajlar özetlendi';
 
   @override
-  String get favorite => 'Favorites';
+  String get favorite => 'Favoriler';
 
   @override
-  String get defaultModel => 'Default model';
+  String get defaultModel => 'Varsayılan model';
 
   @override
-  String get titleModel => 'Model for titles';
+  String get titleModel => 'Başlık modeli';
 
   @override
-  String get systemPrompt => 'System prompt';
+  String get systemPrompt => 'Sistem istemi';
 
   @override
-  String get compaction => 'Compact long chats';
+  String get compaction => 'Uzun sohbetleri sıkıştır';
 
   @override
   String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
+      'Bir sohbet modelin bağlamına artık sığmadığında, önceki mesajlar model için özetlenir. Siz hepsini görmeye devam edersiniz.';
 
   @override
-  String get customProvider => 'Custom provider';
+  String get customProvider => 'Özel sağlayıcı';
 
   @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
+  String get refreshModels => 'Modelleri yenile';
 
   @override
   String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
+      'İsteğe bağlı: uç noktanın /models listesi alınır. Listede olmayan kimlikleri ekleyin.';
 
   @override
   String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
+      'Bu API modellerini listeleyemez: en az bir model kimliği girin.';
 
   @override
   String modelsCountFmt(int n) {
-    return '$n models';
+    return '$n model';
   }
 
   @override
-  String get sameAsChat => 'Same as the chat';
+  String get sameAsChat => 'Sohbetle aynı';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Sistem anahtar zincirinde saklanır, yedeklere asla girmez.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String get extraVars => 'Ek değişkenler';
 
   @override
   String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+      'Satır başına bir KEY=VALUE; anahtardan fazlasını isteyen sağlayıcılar için (Azure kaynağı, Cloudflare hesabı).';
 }

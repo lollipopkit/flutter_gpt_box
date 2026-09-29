@@ -218,93 +218,88 @@ class AppLocalizationsPt extends AppLocalizations {
   String get user => 'Usuário';
 
   @override
-  String get deny => 'Deny';
+  String get deny => 'Negar';
 
   @override
-  String get allow => 'Allow';
+  String get allow => 'Permitir';
 
   @override
-  String get allowAlways => 'Always allow';
+  String get allowAlways => 'Sempre permitir';
 
   @override
-  String get trash => 'Trash';
+  String get trash => 'Lixeira';
 
   @override
-  String get startChatTip => 'Pick a model below and say something.';
+  String get startChatTip => 'Escolha um modelo abaixo e diga algo.';
 
   @override
-  String get camera => 'Camera';
+  String get camera => 'Câmera';
 
   @override
-  String get send => 'Send';
+  String get send => 'Enviar';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Nenhum provedor tem chave ainda. Adicione uma para começar a conversar.';
 
   @override
-  String get providers => 'Providers';
+  String get providers => 'Provedores';
 
   @override
-  String get regenerate => 'Regenerate';
+  String get regenerate => 'Gerar novamente';
 
   @override
-  String get compacted => 'Earlier messages were summarised';
+  String get compacted => 'As mensagens anteriores foram resumidas';
 
   @override
-  String get favorite => 'Favorites';
+  String get favorite => 'Favoritos';
 
   @override
-  String get defaultModel => 'Default model';
+  String get defaultModel => 'Modelo padrão';
 
   @override
-  String get titleModel => 'Model for titles';
+  String get titleModel => 'Modelo para títulos';
 
   @override
-  String get systemPrompt => 'System prompt';
+  String get systemPrompt => 'Prompt do sistema';
 
   @override
-  String get compaction => 'Compact long chats';
+  String get compaction => 'Compactar conversas longas';
 
   @override
   String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
+      'Quando uma conversa não cabe mais no contexto do modelo, as mensagens anteriores são resumidas para o modelo. Você continua vendo todas.';
 
   @override
-  String get customProvider => 'Custom provider';
+  String get customProvider => 'Provedor personalizado';
 
   @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
+  String get refreshModels => 'Atualizar modelos';
 
   @override
   String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
+      'Opcional: a lista /models do endpoint é obtida. Adicione os IDs que não estiverem nela.';
 
   @override
   String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
+      'Esta API não consegue listar seus modelos: informe pelo menos um ID de modelo.';
 
   @override
   String modelsCountFmt(int n) {
-    return '$n models';
+    return '$n modelos';
   }
 
   @override
-  String get sameAsChat => 'Same as the chat';
+  String get sameAsChat => 'Igual à conversa';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Guardada no chaveiro do sistema, nunca nos backups.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String get extraVars => 'Variáveis extras';
 
   @override
   String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+      'Uma KEY=VALUE por linha, para provedores que precisam de mais que uma chave (recurso do Azure, conta do Cloudflare).';
 }

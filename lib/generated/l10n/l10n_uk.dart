@@ -217,93 +217,88 @@ class AppLocalizationsUk extends AppLocalizations {
   String get user => 'Користувач';
 
   @override
-  String get deny => 'Deny';
+  String get deny => 'Заборонити';
 
   @override
-  String get allow => 'Allow';
+  String get allow => 'Дозволити';
 
   @override
-  String get allowAlways => 'Always allow';
+  String get allowAlways => 'Завжди дозволяти';
 
   @override
-  String get trash => 'Trash';
+  String get trash => 'Кошик';
 
   @override
-  String get startChatTip => 'Pick a model below and say something.';
+  String get startChatTip => 'Виберіть модель нижче й напишіть щось.';
 
   @override
-  String get camera => 'Camera';
+  String get camera => 'Камера';
 
   @override
-  String get send => 'Send';
+  String get send => 'Надіслати';
 
   @override
   String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+      'Жоден провайдер ще не має ключа. Додайте ключ, щоб почати чат.';
 
   @override
-  String get providers => 'Providers';
+  String get providers => 'Провайдери';
 
   @override
-  String get regenerate => 'Regenerate';
+  String get regenerate => 'Згенерувати знову';
 
   @override
-  String get compacted => 'Earlier messages were summarised';
+  String get compacted => 'Ранні повідомлення стиснуто в підсумок';
 
   @override
-  String get favorite => 'Favorites';
+  String get favorite => 'Обране';
 
   @override
-  String get defaultModel => 'Default model';
+  String get defaultModel => 'Модель за замовчуванням';
 
   @override
-  String get titleModel => 'Model for titles';
+  String get titleModel => 'Модель для заголовків';
 
   @override
-  String get systemPrompt => 'System prompt';
+  String get systemPrompt => 'Системний промпт';
 
   @override
-  String get compaction => 'Compact long chats';
+  String get compaction => 'Стискати довгі чати';
 
   @override
   String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
+      'Коли чат більше не вміщається в контекст моделі, ранні повідомлення підсумовуються для моделі. Ви й далі бачите їх усі.';
 
   @override
-  String get customProvider => 'Custom provider';
+  String get customProvider => 'Власний провайдер';
 
   @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
+  String get refreshModels => 'Оновити моделі';
 
   @override
   String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
+      'Необовʼязково: список /models ендпоінта завантажується автоматично. Додайте ID, яких у ньому немає.';
 
   @override
   String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
+      'Цей API не вміє перелічувати моделі: вкажіть щонайменше один ID моделі.';
 
   @override
   String modelsCountFmt(int n) {
-    return '$n models';
+    return 'Моделей: $n';
   }
 
   @override
-  String get sameAsChat => 'Same as the chat';
+  String get sameAsChat => 'Як у чаті';
 
   @override
   String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+      'Зберігається в системній вʼязці ключів, ніколи не потрапляє в резервні копії.';
 
   @override
-  String get extraVars => 'Extra variables';
+  String get extraVars => 'Додаткові змінні';
 
   @override
   String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+      'Одна KEY=VALUE на рядок — для провайдерів, яким потрібно більше, ніж ключ (ресурс Azure, акаунт Cloudflare).';
 }

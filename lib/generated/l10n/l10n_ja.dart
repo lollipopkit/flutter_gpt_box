@@ -215,93 +215,85 @@ class AppLocalizationsJa extends AppLocalizations {
   String get user => 'ユーザー';
 
   @override
-  String get deny => 'Deny';
+  String get deny => '拒否';
 
   @override
-  String get allow => 'Allow';
+  String get allow => '許可';
 
   @override
-  String get allowAlways => 'Always allow';
+  String get allowAlways => '常に許可';
 
   @override
-  String get trash => 'Trash';
+  String get trash => 'ゴミ箱';
 
   @override
-  String get startChatTip => 'Pick a model below and say something.';
+  String get startChatTip => '下でモデルを選んで話しかけてください。';
 
   @override
-  String get camera => 'Camera';
+  String get camera => 'カメラ';
 
   @override
-  String get send => 'Send';
+  String get send => '送信';
 
   @override
-  String get noProviderKey =>
-      'No provider has a key yet. Add one to start chatting.';
+  String get noProviderKey => 'キーが設定されたプロバイダーがまだありません。追加するとチャットを始められます。';
 
   @override
-  String get providers => 'Providers';
+  String get providers => 'プロバイダー';
 
   @override
-  String get regenerate => 'Regenerate';
+  String get regenerate => '再生成';
 
   @override
-  String get compacted => 'Earlier messages were summarised';
+  String get compacted => '以前のメッセージは要約されました';
 
   @override
-  String get favorite => 'Favorites';
+  String get favorite => 'お気に入り';
 
   @override
-  String get defaultModel => 'Default model';
+  String get defaultModel => 'デフォルトモデル';
 
   @override
-  String get titleModel => 'Model for titles';
+  String get titleModel => 'タイトル用モデル';
 
   @override
-  String get systemPrompt => 'System prompt';
+  String get systemPrompt => 'システムプロンプト';
 
   @override
-  String get compaction => 'Compact long chats';
+  String get compaction => '長いチャットを圧縮';
 
   @override
   String get compactionTip =>
-      'When a chat no longer fits the model\'s context, earlier messages are summarised for the model. You still see all of them.';
+      'チャットがモデルのコンテキストに収まらなくなると、以前のメッセージがモデル向けに要約されます。表示上はすべて残ります。';
 
   @override
-  String get customProvider => 'Custom provider';
+  String get customProvider => 'カスタムプロバイダー';
 
   @override
-  String get refreshModels => 'Refresh models';
-
-  @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
+  String get refreshModels => 'モデルを更新';
 
   @override
   String get modelsListedTip =>
-      'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
+      '任意：エンドポイントの /models 一覧を取得します。一覧にない ID をここに追加してください。';
 
   @override
-  String get modelsRequired =>
-      'This API cannot list its models: enter at least one model id.';
+  String get modelsRequired => 'この API はモデル一覧を取得できません。モデル ID を 1 つ以上入力してください。';
 
   @override
   String modelsCountFmt(int n) {
-    return '$n models';
+    return '$n 個のモデル';
   }
 
   @override
-  String get sameAsChat => 'Same as the chat';
+  String get sameAsChat => 'チャットと同じ';
 
   @override
-  String get keyInKeychain =>
-      'Stored in the system keychain, never in backups.';
+  String get keyInKeychain => 'システムのキーチェーンに保存され、バックアップには含まれません。';
 
   @override
-  String get extraVars => 'Extra variables';
+  String get extraVars => '追加の変数';
 
   @override
   String get extraVarsTip =>
-      'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).';
+      '1 行に 1 つの KEY=VALUE。キー以外の設定が必要なプロバイダー向けです（Azure リソース、Cloudflare アカウント）。';
 }

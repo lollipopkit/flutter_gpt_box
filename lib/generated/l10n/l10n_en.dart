@@ -275,11 +275,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get refreshModels => 'Refresh models';
 
   @override
-  String providerLinkFmt(String name, String url) {
-    return 'Add the provider \"$name\" at $url? Its key is not in the link; you enter it yourself.';
-  }
-
-  @override
   String get modelsListedTip =>
       'Optional: the endpoint\'s /models list is fetched. Add ids it does not list.';
 
