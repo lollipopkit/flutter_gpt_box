@@ -65,8 +65,11 @@ final class UserBlock extends ThreadBlock {
 }
 
 final class ReplyBlock extends ThreadBlock {
-  ReplyBlock(this.entries);
+  ReplyBlock(this.entries, {this.to});
   final List<LlmEntry> entries;
+
+  /// The user message it answers, if the thread has it.
+  final LlmEntry? to;
 }
 
 final class SummaryBlock extends ThreadBlock {
@@ -87,7 +90,10 @@ List<ThreadBlock> threadBlocks(List<LlmEntry> entries) {
             if (out.lastOrNull case final ReplyBlock r) {
               r.entries.add(e);
             } else {
-              out.add(ReplyBlock([e]));
+              out.add(ReplyBlock([e], to: switch (out.lastOrNull) {
+                UserBlock(:final entry) => entry,
+                _ => null,
+              }));
             }
         }
       case 'compaction' || 'branch_summary':
@@ -123,8 +129,9 @@ class ThreadBlockView extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (block) {
       UserBlock(:final entry) => _UserMessage(chat: chat, entry: entry, forCapture: forCapture),
-      ReplyBlock(:final entries) => _Reply(
+      ReplyBlock(:final entries, :final to) => _Reply(
         entries: entries,
+        to: to,
         chat: chat,
         streaming: streaming,
         live: live,
@@ -197,7 +204,7 @@ class _UserMessage extends StatelessWidget {
   }
 
   Widget _actions(BuildContext context, OpenChat chat, LlmMessage m) {
-    final versions = chat.versionsOf(entry);
+    final versions = chat.editsOf(entry);
     final idx = versions.indexWhere((e) => e.id == entry.id);
     return chat.running.listenVal((running) {
       return Row(
@@ -220,10 +227,7 @@ class _UserMessage extends StatelessWidget {
             Pfs.copy(m.text);
             Toast.show(l10n.copied);
           }),
-          if (!running) ...[
-            _SmallBtn(Icons.edit_outlined, libL10n.edit, () => _edit(context, chat)),
-            _SmallBtn(Icons.refresh, l10n.regenerate, () => Chats.regenerate(chat.id, entry)),
-          ],
+          if (!running) _SmallBtn(Icons.edit_outlined, libL10n.edit, () => _edit(context, chat)),
         ],
       );
     });
@@ -244,9 +248,12 @@ class _UserMessage extends StatelessWidget {
 
 /// One reply: its thinking, the tools it called, what it said, and a footer.
 class _Reply extends StatelessWidget {
-  const _Reply({required this.entries, this.chat, this.streaming, this.live = false, this.forCapture = false});
+  const _Reply({required this.entries, this.to, this.chat, this.streaming, this.live = false, this.forCapture = false});
 
   final List<LlmEntry> entries;
+
+  /// The user message answered: its askings are this reply's versions.
+  final LlmEntry? to;
   final OpenChat? chat;
   final StreamingReply? streaming;
   final bool live;
@@ -330,10 +337,36 @@ class _Reply extends StatelessWidget {
       final provider = m.json['provider'] as String?;
       if (id != null) model = (provider == null ? null : Llm.info(LlmModelRef(provider, id))?.name) ?? id;
     }
+    final chat = this.chat;
+    final to = this.to;
+    final replies = chat == null || to == null ? const <LlmEntry>[] : chat.repliesOf(to);
+    final idx = replies.indexWhere((e) => e.id == to?.id);
     return DefaultTextStyle.merge(
       style: _tabular12,
       child: Row(
         children: [
+          if (chat != null && to != null)
+            chat.running.listenVal((running) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (replies.length > 1) ...[
+                    _SmallBtn(
+                      Icons.chevron_left,
+                      libL10n.previous,
+                      idx > 0 && !running ? () => Chats.switchTo(chat.id, replies[idx - 1]) : null,
+                    ),
+                    Text('${idx + 1}/${replies.length}'),
+                    _SmallBtn(
+                      Icons.chevron_right,
+                      libL10n.next,
+                      idx < replies.length - 1 && !running ? () => Chats.switchTo(chat.id, replies[idx + 1]) : null,
+                    ),
+                  ],
+                  if (!running) _SmallBtn(Icons.refresh, l10n.regenerate, () => Chats.regenerate(chat.id, to)),
+                ],
+              );
+            }),
           if (texts.isNotEmpty)
             _SmallBtn(Icons.content_copy, libL10n.copy, () {
               Pfs.copy(texts.join('\n\n'));

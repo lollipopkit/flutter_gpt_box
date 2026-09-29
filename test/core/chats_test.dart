@@ -161,7 +161,7 @@ void main() {
     await Chats.edit(id, original, 'second');
     expect(chat.entries.value.last.message!.text.trim(), 'Echo: second');
     final edited = chat.entries.value.first;
-    expect(chat.versionsOf(edited).map((e) => e.message!.text), ['first', 'second']);
+    expect(chat.editsOf(edited).map((e) => e.message!.text), ['first', 'second']);
 
     await Chats.switchTo(id, original);
     expect(chat.entries.value.first.id, original.id);
@@ -286,11 +286,33 @@ void main() {
     await Chats.send(id, 'again');
     await Chats.retry(id);
     final user = chat.entries.value.lastWhere((e) => e.message?.role == 'user');
-    expect(chat.versionsOf(user), hasLength(2));
+    // Asked again: another reply to one message, not another message.
+    expect(chat.repliesOf(user), hasLength(2));
+    expect(chat.editsOf(user), hasLength(1));
     expect(chat.entries.value.last.message?.text, 'Echo: again ');
     final first = Chats.send(id, 'one');
     await expectLater(Chats.send(id, 'two'), throwsA(isA<LlmException>()));
     await first;
+  });
+
+  test('edits and regenerations are versions of the message and of the reply', () async {
+    final id = Chats.create();
+    final chat = await Chats.open(id);
+    await Chats.send(id, 'a');
+    LlmEntry user() => chat.entries.value.lastWhere((e) => e.message?.role == 'user');
+    await Chats.regenerate(id, user());
+    await Chats.edit(id, user(), 'b');
+    await Chats.regenerate(id, user());
+    await Chats.regenerate(id, user());
+    expect(chat.editsOf(user()).map((e) => e.message?.text), ['a', 'b']);
+    expect(chat.repliesOf(user()), hasLength(3));
+    // Back to the first reply to 'b', then to the edit 'a' and its replies.
+    await Chats.switchTo(id, chat.repliesOf(user()).first);
+    expect(chat.repliesOf(user()).indexWhere((e) => e.id == user().id), 0);
+    await Chats.switchTo(id, chat.editsOf(user()).first);
+    expect(user().message?.text, 'a');
+    expect(chat.repliesOf(user()), hasLength(2));
+    expect(chat.entries.value.last.message?.text, 'Echo: a ');
   });
 
   test('switched off, the memory tools and prompt are gone', () {

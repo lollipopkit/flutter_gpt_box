@@ -156,14 +156,42 @@ final class OpenChat {
     }
   }
 
-  /// The versions of the message [entry] is: it and its siblings, oldest
-  /// first. One element when it was never edited or regenerated.
-  List<LlmEntry> versionsOf(LlmEntry entry) {
-    final siblings = [
+  /// The user messages beside [entry]: its siblings in the tree, oldest
+  /// first, itself included.
+  List<LlmEntry> _siblings(LlmEntry entry) {
+    final s = [
       for (final t in tree)
-        if (t.parentId == entry.parentId && t.type == 'message' && t.message?.role == entry.message?.role) t,
+        if (t.parentId == entry.parentId && t.type == 'message' && t.message?.role == 'user') t,
     ]..sort((a, b) => a.seq.compareTo(b.seq));
-    return siblings.isEmpty ? [entry] : siblings;
+    return s.isEmpty ? [entry] : s;
+  }
+
+  /// What a user message says, text and images: siblings saying the same are
+  /// one message asked again (a regeneration — pi starts every run with a
+  /// user message), others are edits.
+  static String _said(LlmEntry e) => jsonEncode(e.message?.json['content']);
+
+  /// The versions of the user message [entry] made by editing it: one per
+  /// thing said, in the order first said. The one said as [entry] is
+  /// [entry]; any other, its latest asking.
+  List<LlmEntry> editsOf(LlmEntry entry) {
+    final mine = _said(entry);
+    final by = <String, LlmEntry>{};
+    for (final s in _siblings(entry)) {
+      final k = _said(s);
+      by[k] = k == mine ? entry : s;
+    }
+    return by.values.toList();
+  }
+
+  /// The replies to the user message [entry]: one per asking of the same
+  /// message, oldest first. Regenerating adds one.
+  List<LlmEntry> repliesOf(LlmEntry entry) {
+    final mine = _said(entry);
+    return [
+      for (final s in _siblings(entry))
+        if (_said(s) == mine) s,
+    ];
   }
 
   /// The newest leaf under [entryId]: where switching to that version lands.

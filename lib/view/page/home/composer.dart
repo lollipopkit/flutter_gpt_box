@@ -214,13 +214,21 @@ class _ComposerState extends State<Composer> {
             ),
             Row(
               children: [
-                _attachBtn(),
-                Flexible(
-                  child: _ModelChip(chatId: widget.chatId, model: _model, onChanged: () => setState(() {})),
+                // Its own row: a Flexible beside a Spacer would split the free
+                // space with it, and what the chip leaves of its half would
+                // end up after the send button.
+                Expanded(
+                  child: Row(
+                    children: [
+                      _attachBtn(),
+                      Flexible(
+                        child: _ModelChip(chatId: widget.chatId, model: _model, onChanged: () => setState(() {})),
+                      ),
+                      _ThinkingChip(model: _model, compact: widget.compact),
+                      if (widget.chatId != null) _ToolsToggle(chatId: widget.chatId!),
+                    ].joinWith(const SizedBox(width: 1)),
+                  ),
                 ),
-                _ThinkingChip(model: _model, compact: widget.compact),
-                if (widget.chatId != null) _ToolsToggle(chatId: widget.chatId!),
-                const Spacer(),
                 // The chat opens after the composer is built: follow it.
                 ListenableBuilder(
                   listenable: Chats.openChanges,
@@ -245,7 +253,7 @@ class _ComposerState extends State<Composer> {
                     });
                   },
                 ),
-              ].joinWith(const SizedBox(width: 1)),
+              ],
             ),
           ],
         ),
