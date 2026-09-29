@@ -1,6 +1,6 @@
 
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gpt_box/core/util/update.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/github_id.dart';

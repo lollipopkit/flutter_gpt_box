@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_lib/generated/l10n/lib_l10n.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gpt_box/data/res/l10n.dart';
@@ -18,7 +18,15 @@ import '../core/chats_test.dart' show mockServer, nativeLib;
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 Widget _app() => MaterialApp(
-  localizationsDelegates: const [LibLocalizations.delegate, LlmLocalizations.delegate, ...AppLocalizations.localizationsDelegates],
+  localizationsDelegates: const [
+    AppLocalizations.delegate,
+    LibLocalizations.delegate,
+    LlmLocalizations.delegate,
+    ...GlobalMaterialLocalizations.delegates,
+  ],
+  // As the app: see MyApp.
+  // ignore: deprecated_member_use
+  builder: (context, child) => MaterialUiCompatibilityBridge(child: child!),
   supportedLocales: AppLocalizations.supportedLocales,
   home: Builder(
     builder: (context) {

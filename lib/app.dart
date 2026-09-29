@@ -1,8 +1,7 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_lib/generated/l10n/lib_l10n.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
-import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
@@ -34,10 +33,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: BuildData.name,
       locale: locale.toLocale,
+      // material_ui's: gen-l10n's list still names flutter_localizations'.
       localizationsDelegates: const [
-        ...AppLocalizations.localizationsDelegates,
+        AppLocalizations.delegate,
         LibLocalizations.delegate,
         LlmLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       localeListResolutionCallback: LocaleUtil.resolve,
@@ -46,7 +47,14 @@ class MyApp extends StatelessWidget {
       darkTheme: appTheme(ThemeData(brightness: Brightness.dark, colorSchemeSeed: UIs.colorSeed)).toAmoled.fixWindowsFont,
       // Outside the breakpoints builder: a toast is sized against the window.
       builder: (context, child) =>
-          ToastHost(child: HomePage.shortcuts(child: ResponsivePoints.builder(context, child))),
+          // TODO: remove once the dependencies still on package:flutter/material.dart
+          // (flutter_markdown_plus, flutter_highlight, animations) move to
+          // material_ui: it hands them the theme and localizations by the
+          // legacy types.
+          // ignore: deprecated_member_use
+          MaterialUiCompatibilityBridge(
+            child: ToastHost(child: HomePage.shortcuts(child: ResponsivePoints.builder(context, child))),
+          ),
       navigatorObservers: [AppRouteObserver.instance],
       home: Builder(
         builder: (context) {
@@ -93,12 +101,11 @@ ThemeData appTheme(ThemeData base) {
       labelMedium: flat(t.labelMedium),
       labelSmall: flat(t.labelSmall),
     ),
-    // Material's push — in from the right — everywhere but iOS, which keeps
-    // its own for the swipe back.
+    // Material's push — in from the right — everywhere, iOS included.
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
-        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: FadeForwardsPageTransitionsBuilder(),
         TargetPlatform.macOS: FadeForwardsPageTransitionsBuilder(),
         TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(),
         TargetPlatform.windows: FadeForwardsPageTransitionsBuilder(),

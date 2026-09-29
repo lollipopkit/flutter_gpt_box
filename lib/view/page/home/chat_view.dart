@@ -1,5 +1,5 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/view/page/home/chat_list.dart';
 import 'package:gpt_box/view/page/home/share.dart';
@@ -148,7 +148,7 @@ class ChatTitle extends StatelessWidget {
             ),
             if (running) ...[
               const SizedBox(width: 7),
-              const SizedLoading(20, padding: 3, builder: SizedLoading.circularBuilder),
+              const SizedLoading(20, padding: 6, builder: SizedLoading.circularBuilder),
             ],
           ],
         ),

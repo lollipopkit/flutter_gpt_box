@@ -1,5 +1,5 @@
 import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Swaps its [child] with Material's fade through: for content that is
 /// replaced by something unrelated in the same place — another chat, another

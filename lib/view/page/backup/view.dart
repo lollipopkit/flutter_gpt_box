@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/model/backup.dart';
 import 'package:gpt_box/data/res/l10n.dart';
@@ -104,7 +104,7 @@ final class _BackupPageState extends State<BackupPage> {
           subtitle: sub,
           error: err,
           trailing: sync.syncing.value
-              ? const SizedLoading(20, padding: 3, builder: SizedLoading.circularBuilder)
+              ? const SizedLoading(20, padding: 6, builder: SizedLoading.circularBuilder)
               : const RowChevron(),
           onTap: !BakSync.enabled || sync.syncing.value ? null : () => sync.syncNow(),
         );
@@ -248,7 +248,7 @@ final class _BackupPageState extends State<BackupPage> {
       title: l10n.manual,
       subtitle: l10n.webdavManualTip,
       trailing: _webdavBusy.listenVal((busy) {
-        if (busy) return const SizedLoading(20, padding: 3, builder: SizedLoading.circularBuilder);
+        if (busy) return const SizedLoading(20, padding: 6, builder: SizedLoading.circularBuilder);
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [

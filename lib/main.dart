@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:gpt_box/app.dart';
 import 'package:gpt_box/core/util/sync.dart';
 import 'package:gpt_box/data/res/build_data.dart';
