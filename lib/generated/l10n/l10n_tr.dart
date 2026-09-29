@@ -18,14 +18,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get autoCheckUpdate => 'Güncellemeleri otomatik kontrol et';
 
   @override
-  String get autoScrollBottom => 'Otomatik aşağı kaydır';
-
-  @override
   String get backupTip =>
       'Lütfen yedekleme dosyanızın özel ve güvenli olduğundan emin olun!';
-
-  @override
-  String get calcTokenLen => 'Token uzunluğunu hesapla';
 
   @override
   String get chat => 'Sohbet';
@@ -56,17 +50,8 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Geri dönüşüm kutusunu boşalt';
-
-  @override
   String get emptyTrashTip =>
       '==0, bir sonraki başlangıçta sil. <0 otomatik olarak silme.';
-
-  @override
-  String get fontSize => 'Yazı tipi boyutu';
-
-  @override
-  String get fontSizeSettingTip => 'Sadece kod bloklarına uygulanır';
 
   @override
   String get genChatTitle => 'Sohbet başlığı oluştur';
@@ -106,9 +91,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get licenseMenuItem => 'Açık kaynak lisansları';
 
   @override
-  String get list => 'Liste';
-
-  @override
   String get manual => 'Manuel';
 
   @override
@@ -140,12 +122,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get newChat => 'Yeni sohbet';
 
   @override
-  String get onMsgCome => 'Yeni mesajlar olduğunda';
-
-  @override
-  String get onSwitchChat => 'Konuşmalar arasında geçiş yaparken';
-
-  @override
   String get passwd => 'Şifre';
 
   @override
@@ -156,9 +132,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get rename => 'Yeniden adlandır';
-
-  @override
-  String get replay => 'Tekrar oynat';
 
   @override
   String get share => 'Paylaş';
@@ -173,9 +146,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String sureRestoreFmt(Object time) {
     return 'Yedeklemeyi ($time) geri yüklemek istediğinizden emin misiniz?';
   }
-
-  @override
-  String get switcher => 'Değiştirici';
 
   @override
   String syncConflict(Object a, Object b) {
@@ -193,11 +163,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tool => 'Araç';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return '$tool aracını kullanmayı kabul ediyor musunuz?';
-  }
 
   @override
   String toolHttpReqHelp(Object host) {
@@ -301,4 +266,233 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get extraVarsTip =>
       'Satır başına bir KEY=VALUE; anahtardan fazlasını isteyen sağlayıcılar için (Azure kaynağı, Cloudflare hesabı).';
+
+  @override
+  String providersCountFmt(int n) {
+    return '$n sağlayıcı';
+  }
+
+  @override
+  String get today => 'Bugün';
+
+  @override
+  String get earlier => 'Daha önce';
+
+  @override
+  String get now => 'şimdi';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n dk';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n sa';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return '$n mesaj';
+  }
+
+  @override
+  String get thought => 'Düşünce';
+
+  @override
+  String tokensFmt(String n) {
+    return '$n token';
+  }
+
+  @override
+  String allowToolFmt(String tool) {
+    return '$tool izin verilsin mi?';
+  }
+
+  @override
+  String get replyWaits => 'Yanıt kararınızı bekliyor.';
+
+  @override
+  String usableModelsFmt(int n, int m) {
+    return '$n kullanılabilir · $m sağlayıcı';
+  }
+
+  @override
+  String get searchModels => 'Model ara';
+
+  @override
+  String get version => 'Sürüm';
+
+  @override
+  String get endpoint => 'Uç nokta';
+
+  @override
+  String get key => 'Anahtar';
+
+  @override
+  String get toolsAndMcp => 'Araçlar ve MCP';
+
+  @override
+  String get useTools => 'Araçları kullan';
+
+  @override
+  String get useToolsTip => 'Aşağıda izin verilmedikçe her çağrı önce sorar';
+
+  @override
+  String get builtIn => 'Yerleşik';
+
+  @override
+  String get memories => 'Anılar';
+
+  @override
+  String entriesFmt(int n) {
+    return '$n kayıt';
+  }
+
+  @override
+  String get allowedWithoutAsking => 'Sormadan izin verilenler';
+
+  @override
+  String get mcpServers => 'MCP sunucuları';
+
+  @override
+  String get addServer => 'Sunucu ekle';
+
+  @override
+  String connectedFmt(int n) {
+    return 'Bağlı · $n araç';
+  }
+
+  @override
+  String get disconnected => 'Bağlı değil';
+
+  @override
+  String get deleteKey => 'Anahtarı sil';
+
+  @override
+  String moreFmt(int n) {
+    return '$n tane daha';
+  }
+
+  @override
+  String get back => 'Geri';
+
+  @override
+  String get allProviders => 'Tüm sağlayıcılar';
+
+  @override
+  String get searchProviders => 'Sağlayıcı ara';
+
+  @override
+  String get backToChats => 'Sohbetlere dön';
+
+  @override
+  String get genChatTitleTip => 'İlk yanıttan sonra sohbete ad verir';
+
+  @override
+  String get scrollOnNewMsg => 'Yeni mesajda en alta kaydır';
+
+  @override
+  String get scrollAfterSwitch => 'Sohbet değiştirince en alta kaydır';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n sohbet';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Çöp kutusunu boşaltma süresi';
+
+  @override
+  String get trashTip => 'Silinen sohbetler önce burada bekler';
+
+  @override
+  String daysFmt(int n) {
+    return '$n gün';
+  }
+
+  @override
+  String thoughtForFmt(String time) {
+    return '$time düşündü';
+  }
+
+  @override
+  String secondsFmt(String n) {
+    return '$n sn';
+  }
+
+  @override
+  String minutesSecondsFmt(int m, int s) {
+    return '$m dk $s sn';
+  }
+
+  @override
+  String get attachment => 'Ek';
+
+  @override
+  String get sync => 'Senkronizasyon';
+
+  @override
+  String get syncNow => 'Şimdi senkronize et';
+
+  @override
+  String get syncing => 'Senkronize ediliyor…';
+
+  @override
+  String get neverSynced => 'Henüz senkronize edilmedi';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Son senkronizasyon: $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Otomatik senkronizasyon için aşağıda iCloud veya WebDAV\'ı açın.';
+
+  @override
+  String get backupPassword => 'Yedek parolası';
+
+  @override
+  String get backupEncrypted => 'Yedekler bununla şifrelenir';
+
+  @override
+  String get backupNotEncrypted =>
+      'Ayarlanmadı: dosya yedekleri şifresizdir ve senkronizasyon için gereklidir';
+
+  @override
+  String get backupEncryptedTip => 'Bu yedek şifreli';
+
+  @override
+  String get backupPasswordRequired =>
+      'Önce bir yedek parolası ayarlayın: senkronize yedekler her zaman şifrelenir';
+
+  @override
+  String get passwordWrong => 'Yanlış parola veya yedek bozuk';
+
+  @override
+  String get backupTooNew =>
+      'Bu yedek uygulamanın daha yeni bir sürümünden. Geri yüklemek için güncelleyin.';
+
+  @override
+  String get syncAppSettings => 'Uygulama ayarlarını senkronize et';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Pencere boyutu ve başlık çubuğu cihaza özel kalır';
+
+  @override
+  String get webdavManualTip => 'Senkronize olanın yanında tarihli bir kopya';
+
+  @override
+  String get exportFile => 'Dosyaya aktar';
+
+  @override
+  String get importFile => 'Dosyadan geri yükle';
+
+  @override
+  String get copyBackup => 'Panoya kopyala';
+
+  @override
+  String get pasteBackup => 'Panodan geri yükle';
 }

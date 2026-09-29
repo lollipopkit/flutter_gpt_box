@@ -14,9 +14,11 @@ import 'package:gpt_box/core/llm/store.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
+import 'package:gpt_box/view/page/home/chat_list.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:gpt_box/view/page/settings/custom_provider.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
+import 'package:gpt_box/view/widget/section_list.dart';
 
 import '../core/chats_test.dart' show mockServer, nativeLib;
 
@@ -73,17 +75,25 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(_app());
     await tester.pump();
+    addTearDown(SettingsNav.close);
+    // The sidebar's foot opens the settings in place of the chat, and the
+    // sidebar turns into their categories.
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
+    expect(find.byType(SettingsSidebar), findsOneWidget);
     for (final tab in SettingsTab.values) {
-      await tester.tap(find.text(tab.i18n));
+      await tester.tap(find.widgetWithText(SideBarTile, tab.i18n));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull, reason: tab.name);
     }
     // The providers tab lists pi-ai's catalog, the configured one first.
-    await tester.tap(find.text(SettingsTab.providers.i18n));
+    await tester.tap(find.widgetWithText(SideBarTile, SettingsTab.providers.i18n));
     await tester.pumpAndSettle();
     expect(find.text('Mock'), findsWidgets);
+    // Back to the chats.
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pumpAndSettle();
+    expect(find.byType(ChatSidebar), findsOneWidget);
   });
 
   testWidgets('a custom provider lists its models while being set up, and comes first once saved', (tester) async {
@@ -92,9 +102,10 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(_app());
     await tester.pump();
+    addTearDown(SettingsNav.close);
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(SettingsTab.providers.i18n));
+    await tester.tap(find.widgetWithText(SideBarTile, SettingsTab.providers.i18n));
     await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.customProvider));
     await tester.pumpAndSettle();
@@ -105,7 +116,7 @@ void main() {
     await tester.enterText(field(libL10n.apiEndpoint), 'http://127.0.0.1:${_server.port}/v1');
     await tester.enterText(field(libL10n.apiKey), 'sk-local');
 
-    final count = find.text(l10n.modelsCountFmt(1));
+    final count = find.widgetWithText(SettingsRow, 'echo');
     for (var i = 0; i < 50 && count.evaluate().isEmpty; i++) {
       // The page waits for typing to settle (fake time), then asks the
       // endpoint (real time).
@@ -114,7 +125,7 @@ void main() {
     }
     expect(count, findsOneWidget, reason: 'the endpoint lists `echo`');
 
-    await tester.tap(find.byIcon(Icons.save));
+    await tester.tap(find.widgetWithText(Btn, libL10n.save));
     for (var i = 0; i < 30 && find.byType(CustomProviderPage).evaluate().isNotEmpty; i++) {
       await tester.pump(const Duration(milliseconds: 100));
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
@@ -126,10 +137,7 @@ void main() {
     expect((await tester.runAsync(() => _credentials.read(saved.id)))?.key, 'sk-local');
 
     // Custom and keyed providers lead the list, ahead of pi-ai's catalog.
-    final names = [
-      for (final t in tester.widgetList<ListTile>(find.byType(ListTile)))
-        if (t.title case Text(:final data?)) data,
-    ];
+    final names = [for (final r in tester.widgetList<SettingsRow>(find.byType(SettingsRow))) r.title];
     final unpinned = {
       for (final p in Llm.providers.value)
         if (!p.custom && !Llm.configured.value.contains(p.id)) p.name,
@@ -150,7 +158,7 @@ void main() {
       await tester.pumpWidget(_app());
       await tester.pump();
       expect(find.byType(TextField), findsWidgets);
-      expect(find.text('echo'), findsOneWidget, reason: 'the default model is on the chip');
+      expect(find.widgetWithText(Btn, 'echo'), findsOneWidget, reason: 'the default model is on the chip');
 
       final input = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText != null && w.minLines == 1);
       await tester.enterText(input, 'hello widget');

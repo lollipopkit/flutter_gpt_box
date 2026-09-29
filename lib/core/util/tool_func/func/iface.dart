@@ -18,6 +18,9 @@ abstract class ToolFunc {
 
   String? get l10nTip => null;
 
+  /// [args] on one line: what a call does, at a glance.
+  String summary(_Map args) => jsonEncode(args);
+
   /// Runs the tool. Throw to report a failure to the model.
   Future<LlmToolResult> run(_Map args, OnToolLog log);
 
@@ -26,6 +29,6 @@ abstract class ToolFunc {
     description: description,
     parameters: parametersSchema,
     label: l10nName,
-    execute: (call, _) => run(call.args, _log),
+    execute: (call, _) => Tools.timed(() => run(call.args, _log)),
   );
 }

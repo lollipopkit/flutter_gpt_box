@@ -118,6 +118,22 @@ WHERE substr(path, 1, length(?1)) = ?1 GROUP BY path;
     return out.map((k, v) => MapEntry(k, v.toString()));
   }
 
+  /// When anything was last written: a cheap "has something changed".
+  int latestMtime() =>
+      SqliteDb.instance.select('SELECT MAX(mtime) AS m FROM pi_chunks;').firstOrNull?['m'] as int? ?? 0;
+
+  /// The chat among [ids] the session file at [path] belongs to. pi names a
+  /// session `<created>_<encoded id>.jsonl`, and an id may itself contain
+  /// `_`, so it is matched rather than split out.
+  static String? chatIdOf(String path, Iterable<String> ids) {
+    final name = path.split('/').last;
+    if (!name.endsWith('.jsonl')) return null;
+    for (final id in ids) {
+      if (name.endsWith('_${Uri.encodeComponent(id)}.jsonl')) return id;
+    }
+    return null;
+  }
+
   /// Whether any stored file contains [needle], and which.
   List<String> search(String needle) {
     final rows = SqliteDb.instance.select(

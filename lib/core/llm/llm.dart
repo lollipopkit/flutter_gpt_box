@@ -85,17 +85,11 @@ abstract final class Llm {
 
   /// Ids of chats whose session mentions [needle].
   static Set<String> sessionsContaining(String needle) {
-    final paths = SqlitePiSessionStore.instance.search(needle);
-    final ids = <String>{};
-    for (final path in paths) {
-      // pi names a session file `<created>_<encoded id>.jsonl`.
-      final name = path.split('/').last;
-      if (!name.endsWith('.jsonl')) continue;
-      for (final meta in Stores.chat.all()) {
-        if (name.endsWith('_${Uri.encodeComponent(meta.id)}.jsonl')) ids.add(meta.id);
-      }
-    }
-    return ids;
+    final chats = [for (final m in Stores.chat.all()) m.id];
+    return {
+      for (final path in SqlitePiSessionStore.instance.search(needle))
+        ?SqlitePiSessionStore.chatIdOf(path, chats),
+    };
   }
 
   static LlmModelInfo? info(LlmModelRef? ref) {

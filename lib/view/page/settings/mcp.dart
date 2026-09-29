@@ -1,266 +1,186 @@
 part of 'setting.dart';
 
-class McpPage extends StatefulWidget {
-  const McpPage({super.key});
+/// Tools: the switch, the built-in ones, and the MCP servers.
+class ToolsPage extends StatelessWidget {
+  const ToolsPage({super.key});
 
-  @override
-  State<McpPage> createState() => _McpPageState();
-}
+  static final _store = Stores.mcp;
 
-final class _McpPageState extends State<McpPage>
-    with AutomaticKeepAliveClientMixin {
-  final _mcpStore = Stores.mcp;
+  static IconData _iconOf(ToolFunc t) => switch (t) {
+    TfHistory() => Icons.history,
+    TfHttpReq() => Icons.language,
+    TfMemory() => Icons.psychology_alt_outlined,
+    _ => Icons.extension_outlined,
+  };
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return SectionList(children: [_buildTools, _buildMcps, _buildList]);
-  }
-
-  Widget get _buildTools {
-    return Column(
+    return SectionList(
       children: [
-        CenterGreyTitle(l10n.tool),
-        _buildUseTool(),
-      ],
-    );
-  }
-
-  Widget get _buildList {
-    return Column(
-      children: [
-        CenterGreyTitle(l10n.list),
-        _buildSwitchTile(TfHistory.instance),
-        _buildSwitchTile(TfHttpReq.instance),
-        _buildMemory(),
-      ],
-    );
-  }
-
-  Widget get _buildMcps {
-    return Column(
-      children: [
-        CenterGreyTitle('MCP'),
-        _buildAddMcpServer(),
-        _buildMcpServers(),
-      ],
-    );
-  }
-
-  Widget _buildMemory() {
-    return ExpandTile(
-      title: Text(l10n.memory),
-      children: [
-        _buildSwitchTile(TfMemory.instance, title: l10n.switcher),
-        ListTile(
-          title: Text(libL10n.edit),
-          onTap: () async {
-            final data = _mcpStore.memories.get();
-            final dataMap = <String, String>{};
-            for (var idx = 0; idx < data.length; idx++) {
-              dataMap['$idx'] = data[idx];
-            }
-            final res = await KvEditor.route.go(
-              context,
-              KvEditorArgs(data: dataMap),
-            );
-            if (res != null) {
-              _mcpStore.memories.set(res.values.toList());
-              Toast.success(libL10n.success);
-            }
-          },
-          trailing: const Icon(Icons.keyboard_arrow_right),
-        ),
-      ],
-    ).cardx;
-  }
-
-  Widget _buildUseTool() {
-    return ListTile(
-      leading: const Icon(MingCute.tool_line),
-      title: Text(l10n.switcher),
-      trailing: StoreSwitch(prop: _mcpStore.enabled),
-    ).cardx;
-  }
-
-
-  Widget _buildMcpServers() {
-    return _mcpStore.mcpServers.listenable().listenVal((servers) {
-      const maxRows = 7;
-      const rowHeight = 56.0;
-      final itemCount = servers.length;
-      final visibleRows = itemCount < maxRows ? itemCount : maxRows;
-      final height = visibleRows * rowHeight;
-      return SizedBox(
-        height: height,
-        child: ListView.builder(
-          itemCount: itemCount,
-          itemBuilder: (ctx, idx) => _buildMcpServerItem(idx, servers),
-        ),
-      );
-    }).cardx;
-  }
-
-  Widget _buildAddMcpServer() {
-    return ListTile(
-      leading: const Icon(Icons.add),
-      title: Text(libL10n.add),
-      onTap: () => _onTapAddMcpServer(
-        _mcpStore.mcpServers,
-        _mcpStore.mcpServers.get(),
-      ),
-    ).cardx;
-  }
-
-  Widget _buildMcpServerItem(int idx, List<String> servers) {
-    final url = servers[idx];
-    final serverName = 'server_$idx';
-    final isConnected = McpTools.isServerConnected(serverName);
-    final toolCount = McpTools.toolCounts[serverName] ?? 0;
-    
-    return Dismissible(
-      key: ValueKey(url),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        color: Colors.red,
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: const Icon(Icons.delete, color: Colors.white),
-      ),
-      onDismissed: (_) async {
-        await _onDeleteMcpServer(serverName, url);
-        final newList = List<String>.from(servers)..removeAt(idx);
-        _mcpStore.mcpServers.set(newList);
-      },
-      child: ListTile(
-        leading: Icon(
-          isConnected ? Icons.cloud_done : Icons.cloud_off,
-          color: isConnected ? Colors.green : Colors.red,
-        ),
-        title: Text(url, maxLines: 1, overflow: TextOverflow.ellipsis),
-        subtitle: Text(
-          isConnected ? 'Connected • $toolCount tools' : 'Disconnected',
-          style: TextStyle(
-            color: isConnected ? Colors.green : Colors.red,
-            fontSize: 12,
-          ),
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (!isConnected)
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () => _onRetryMcpServer(serverName),
-                tooltip: 'Retry connection',
-              ),
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () async {
-                await _onDeleteMcpServer(serverName, url);
-                final newList = List<String>.from(servers)..removeAt(idx);
-                _mcpStore.mcpServers.set(newList);
-              },
+        SettingsGroup(
+          title: l10n.tool,
+          rows: [
+            SettingsRow(
+              icon: Icons.build_outlined,
+              title: l10n.useTools,
+              subtitle: l10n.useToolsTip,
+              trailing: StoreSwitch(prop: _store.enabled, callback: (_) => Chats.reconfigureSoon()),
             ),
           ],
         ),
-      ),
+        _store.disabledTools.listenable().listenVal((disabled) {
+          return SettingsGroup(
+            title: l10n.builtIn,
+            rows: [
+              for (final t in Tools.internalTools)
+                SettingsRow(
+                  icon: _iconOf(t),
+                  title: t.l10nName,
+                  subtitle: t.l10nTip,
+                  trailing: SwitchX(
+                    value: !disabled.contains(t.name),
+                    onChanged: (on) {
+                      _store.disabledTools.set(on ? [...disabled.where((e) => e != t.name)] : [...disabled, t.name]);
+                      Chats.reconfigureSoon();
+                    },
+                  ),
+                ),
+              _store.memories.listenable().listenVal((list) {
+                return SettingsRow(
+                  icon: Icons.edit_note,
+                  title: l10n.memories,
+                  trailing: RowValue(l10n.entriesFmt(list.length)),
+                  onTap: () => _editMemories(context, list),
+                );
+              }),
+              _store.permittedTools.listenable().listenVal((list) {
+                return SettingsRow(
+                  icon: Icons.verified_user_outlined,
+                  title: l10n.allowedWithoutAsking,
+                  trailing: Flexible(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: RowValue(list.isEmpty ? libL10n.empty : list.map(Tools.labelOf).join(', ')),
+                    ),
+                  ),
+                  onTap: list.isEmpty ? null : () => _editPermitted(context, list),
+                );
+              }),
+            ],
+          );
+        }),
+        ListenableBuilder(
+          listenable: Listenable.merge([_store.mcpServers.listenable(), McpTools.changes]),
+          builder: (context, _) {
+            final urls = _store.mcpServers.get();
+            return SettingsGroup(
+              title: l10n.mcpServers,
+              rows: [
+                for (final url in urls) _server(context, url),
+                SettingsRow(icon: Icons.add, title: l10n.addServer, onTap: () => _addServer(context)),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 
-  Widget _buildSwitchTile(ToolFunc e, {String? title}) {
-    final prop = _mcpStore.disabledTools;
-    return ValBuilder(
-      listenable: prop.listenable(),
-      builder: (vals) {
-        final name = e.name;
-        final tip = e.l10nTip;
-        final titleW = tip != null
-            ? TipText(title ?? e.l10nName, tip)
-            : Text(title ?? e.l10nName);
-        return ListTile(
-          title: titleW,
-          trailing: Switch(
-            value: !vals.contains(name),
-            onChanged: (val) {
-              final _ = switch (val) {
-                true => prop.set([...vals.where((e) => e != name)]),
-                false => prop.set([...vals, name]),
-              };
-            },
-          ),
-        );
-      },
-    ).cardx;
+  Widget _server(BuildContext context, String url) {
+    final name = McpTools.nameFor(url);
+    final on = McpTools.isServerConnected(name);
+    final err = McpTools.errorOf(name);
+    void menu([Offset? at]) => showContextMenu(
+      context,
+      [
+        ContextMenuAction(text: libL10n.delete, icon: Icons.delete_outline, destructive: true, onTap: () => _removeServer(context, url)),
+      ],
+      title: url,
+      at: at,
+      sheet: at == null && isMobile,
+    );
+    return SettingsRow(
+      leading: RowDot(on ? StateColors.running : StateColors.failed),
+      title: url.replaceFirst(RegExp(r'^https?://'), ''),
+      mono: true,
+      subtitle: on
+          ? l10n.connectedFmt(McpTools.toolCounts[name] ?? 0)
+          : [l10n.disconnected, ?err].join(' · '),
+      trailing: on
+          ? null
+          : Btn.text(
+              text: libL10n.retry,
+              onTap: () async {
+                await McpTools.retryConnection(name);
+                Chats.reconfigureSoon();
+              },
+            ),
+      onLongPress: menu,
+    ).onSecondary(menu);
   }
 
-  @override
-  bool get wantKeepAlive => true;
-}
-
-extension on _McpPageState {
-  void _onTapAddMcpServer(StorePropDefault<List<String>> prop, List<String> servers) async {
+  Future<void> _addServer(BuildContext context) async {
     final ctrl = TextEditingController();
-    final ok = await showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(libL10n.add),
-        content: Input(
-          controller: ctrl,
-          autoFocus: true,
-          hint: 'https://your-mcp-server',
-          onSubmitted: context.pop,
-        ),
-        actions: [
-          TextButton(onPressed: context.pop, child: Text(libL10n.cancel)),
-          TextButton(
-            onPressed: () => context.pop(ctrl.text),
-            child: Text(libL10n.ok),
-          ),
-        ],
-      ),
+    final url = await context.showRoundDialog<String>(
+      title: l10n.addServer,
+      child: Input(controller: ctrl, autoFocus: true, hint: 'https://mcp.example.net/sse', onSubmitted: context.pop),
+      actions: [Btn.ok(onTap: () => context.pop(ctrl.text))],
     );
     ctrl.dispose();
-    if (ok == null) return;
-    final url = ok.trim();
-    if (url.isEmpty) return;
-
-    await context.showLoadingDialog(
-      fn: () async {
-        final serverName = 'server_${servers.length}';
-        final ts = McpTools.newHttpTs(url: url);
-        final result = await McpTools.addTs(ts, serverName);
-        if (result != null) {
-          final newList = List<String>.from(servers)..add(url);
-          prop.set(newList);
-        } else {
-          throw Exception('Failed to connect to MCP server');
-        }
-      },
-    );
+    final u = url?.trim();
+    if (u == null || u.isEmpty || !context.mounted) return;
+    if (_store.mcpServers.get().contains(u)) return;
+    // Stored first: a server that is down now is still one the user added,
+    // and it shows as disconnected with a retry.
+    _store.mcpServers.set([..._store.mcpServers.get(), u]);
+    await context.showLoadingDialog(fn: () => McpTools.addTs(McpTools.newHttpTs(url: u), McpTools.nameFor(u)));
+    Chats.reconfigureSoon();
   }
 
-  Future<void> _onDeleteMcpServer(String serverName, String url) async {
-    final confirm = await context.showRoundDialog(
+  Future<void> _removeServer(BuildContext context, String url) async {
+    final ok = await context.showRoundDialog<bool>(
       title: libL10n.delete,
-      child: Text(libL10n.askContinue(libL10n.delete + url)),
+      child: Text(libL10n.askContinue('${libL10n.delete} $url')),
+      actions: Btnx.cancelRedOk,
     );
-    if (confirm == true) {
-      try {
-        await McpTools.removeServer(serverName);
-      } catch (e, s) {
-        Loggers.app.warning('Disconnect MCP server failed', e, s);
-      }
-    }
-  }
-  
-  Future<void> _onRetryMcpServer(String serverName) async {
+    if (ok != true) return;
+    _store.mcpServers.set([..._store.mcpServers.get().where((e) => e != url)]);
     try {
-      await McpTools.retryConnection(serverName);
-      Toast.show('Retrying connection...');
+      await McpTools.removeServer(McpTools.nameFor(url));
     } catch (e, s) {
-      Loggers.app.warning('Retry MCP server failed', e, s);
-      Toast.show('Retry failed: $e');
+      Loggers.app.warning('Remove MCP server', e, s);
     }
+    Chats.reconfigureSoon();
+  }
+
+  Future<void> _editMemories(BuildContext context, List<String> list) async {
+    final res = await KvEditor.route.go(context, KvEditorArgs(data: {for (final (i, m) in list.indexed) '$i': m}));
+    if (res == null) return;
+    _store.memories.set(res.values.toList());
+    Chats.reconfigureSoon();
+  }
+
+  Future<void> _editPermitted(BuildContext context, List<String> list) async {
+    await context.showRoundDialog(
+      title: l10n.allowedWithoutAsking,
+      child: _store.permittedTools.listenable().listenVal((now) {
+        if (now.isEmpty) return Text(libL10n.empty, style: UIs.textGrey);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final name in now)
+              ListTile(
+                title: Text(Tools.labelOf(name)),
+                trailing: Btn.icon(
+                  icon: const Icon(Icons.close, size: 19),
+                  text: libL10n.delete,
+                  onTap: () => _store.permittedTools.set([...now.where((e) => e != name)]),
+                ),
+              ),
+          ],
+        );
+      }),
+      actions: Btnx.oks,
+    );
   }
 }

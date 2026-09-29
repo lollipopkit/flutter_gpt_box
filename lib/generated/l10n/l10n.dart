@@ -137,23 +137,11 @@ abstract class AppLocalizations {
   /// **'Auto check for updates'**
   String get autoCheckUpdate;
 
-  /// No description provided for @autoScrollBottom.
-  ///
-  /// In en, this message translates to:
-  /// **'Auto scroll to bottom'**
-  String get autoScrollBottom;
-
   /// No description provided for @backupTip.
   ///
   /// In en, this message translates to:
   /// **'Please keep backup files private and safe!'**
   String get backupTip;
-
-  /// No description provided for @calcTokenLen.
-  ///
-  /// In en, this message translates to:
-  /// **'Calculate tokens length'**
-  String get calcTokenLen;
 
   /// No description provided for @chat.
   ///
@@ -194,7 +182,7 @@ abstract class AppLocalizations {
   /// No description provided for @deleteConfirm.
   ///
   /// In en, this message translates to:
-  /// **'Confirmation berfore delete'**
+  /// **'Confirm before deleting'**
   String get deleteConfirm;
 
   /// No description provided for @emptyFields.
@@ -203,29 +191,11 @@ abstract class AppLocalizations {
   /// **'{fields} is empty'**
   String emptyFields(Object fields);
 
-  /// No description provided for @emptyTrash.
-  ///
-  /// In en, this message translates to:
-  /// **'Empty recycle bin'**
-  String get emptyTrash;
-
   /// No description provided for @emptyTrashTip.
   ///
   /// In en, this message translates to:
   /// **'==0, delete on next startup. <0 do not delete automatically.'**
   String get emptyTrashTip;
-
-  /// No description provided for @fontSize.
-  ///
-  /// In en, this message translates to:
-  /// **'Font size'**
-  String get fontSize;
-
-  /// No description provided for @fontSizeSettingTip.
-  ///
-  /// In en, this message translates to:
-  /// **'Applies only to code blocks'**
-  String get fontSizeSettingTip;
 
   /// No description provided for @genChatTitle.
   ///
@@ -293,12 +263,6 @@ abstract class AppLocalizations {
   /// **'Open-source licenses'**
   String get licenseMenuItem;
 
-  /// No description provided for @list.
-  ///
-  /// In en, this message translates to:
-  /// **'List'**
-  String get list;
-
   /// No description provided for @manual.
   ///
   /// In en, this message translates to:
@@ -353,18 +317,6 @@ abstract class AppLocalizations {
   /// **'New chat'**
   String get newChat;
 
-  /// No description provided for @onMsgCome.
-  ///
-  /// In en, this message translates to:
-  /// **'When there are new messages'**
-  String get onMsgCome;
-
-  /// No description provided for @onSwitchChat.
-  ///
-  /// In en, this message translates to:
-  /// **'When switching conversations'**
-  String get onSwitchChat;
-
   /// No description provided for @passwd.
   ///
   /// In en, this message translates to:
@@ -389,12 +341,6 @@ abstract class AppLocalizations {
   /// **'Rename'**
   String get rename;
 
-  /// No description provided for @replay.
-  ///
-  /// In en, this message translates to:
-  /// **'Replay'**
-  String get replay;
-
   /// No description provided for @share.
   ///
   /// In en, this message translates to:
@@ -418,12 +364,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure to restore Backup({time})?'**
   String sureRestoreFmt(Object time);
-
-  /// No description provided for @switcher.
-  ///
-  /// In en, this message translates to:
-  /// **'Switch'**
-  String get switcher;
 
   /// No description provided for @syncConflict.
   ///
@@ -455,12 +395,6 @@ abstract class AppLocalizations {
   /// **'Tool'**
   String get tool;
 
-  /// No description provided for @toolConfirmFmt.
-  ///
-  /// In en, this message translates to:
-  /// **'Is it permitted to use the tool {tool} ?'**
-  String toolConfirmFmt(Object tool);
-
   /// No description provided for @toolHttpReqHelp.
   ///
   /// In en, this message translates to:
@@ -470,7 +404,7 @@ abstract class AppLocalizations {
   /// No description provided for @toolHttpReqName.
   ///
   /// In en, this message translates to:
-  /// **'Http Request'**
+  /// **'HTTP request'**
   String get toolHttpReqName;
 
   /// No description provided for @untitled.
@@ -620,7 +554,7 @@ abstract class AppLocalizations {
   /// No description provided for @modelsCountFmt.
   ///
   /// In en, this message translates to:
-  /// **'{n} models'**
+  /// **'{n, plural, =1{1 model} other{{n} models}}'**
   String modelsCountFmt(int n);
 
   /// No description provided for @sameAsChat.
@@ -646,6 +580,390 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'KEY=VALUE per line, for providers that need more than a key (Azure resource, Cloudflare account).'**
   String get extraVarsTip;
+
+  /// No description provided for @providersCountFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 provider} other{{n} providers}}'**
+  String providersCountFmt(int n);
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @earlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get earlier;
+
+  /// No description provided for @now.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get now;
+
+  /// No description provided for @minutesFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} min'**
+  String minutesFmt(int n);
+
+  /// No description provided for @hoursFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} h'**
+  String hoursFmt(int n);
+
+  /// No description provided for @messagesCountFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 message} other{{n} messages}}'**
+  String messagesCountFmt(int n);
+
+  /// No description provided for @thought.
+  ///
+  /// In en, this message translates to:
+  /// **'Thought'**
+  String get thought;
+
+  /// No description provided for @tokensFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} tokens'**
+  String tokensFmt(String n);
+
+  /// No description provided for @allowToolFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow {tool}?'**
+  String allowToolFmt(String tool);
+
+  /// No description provided for @replyWaits.
+  ///
+  /// In en, this message translates to:
+  /// **'The reply waits for your answer.'**
+  String get replyWaits;
+
+  /// No description provided for @usableModelsFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} usable · {m, plural, =1{1 provider} other{{m} providers}}'**
+  String usableModelsFmt(int n, int m);
+
+  /// No description provided for @searchModels.
+  ///
+  /// In en, this message translates to:
+  /// **'Search models'**
+  String get searchModels;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @endpoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Endpoint'**
+  String get endpoint;
+
+  /// No description provided for @key.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get key;
+
+  /// No description provided for @toolsAndMcp.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools & MCP'**
+  String get toolsAndMcp;
+
+  /// No description provided for @useTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Use tools'**
+  String get useTools;
+
+  /// No description provided for @useToolsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Each call asks first unless it is allowed below'**
+  String get useToolsTip;
+
+  /// No description provided for @builtIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Built-in'**
+  String get builtIn;
+
+  /// No description provided for @memories.
+  ///
+  /// In en, this message translates to:
+  /// **'Memories'**
+  String get memories;
+
+  /// No description provided for @entriesFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 entry} other{{n} entries}}'**
+  String entriesFmt(int n);
+
+  /// No description provided for @allowedWithoutAsking.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed without asking'**
+  String get allowedWithoutAsking;
+
+  /// No description provided for @mcpServers.
+  ///
+  /// In en, this message translates to:
+  /// **'MCP servers'**
+  String get mcpServers;
+
+  /// No description provided for @addServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Add server'**
+  String get addServer;
+
+  /// No description provided for @connectedFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected · {n} tools'**
+  String connectedFmt(int n);
+
+  /// No description provided for @disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get disconnected;
+
+  /// No description provided for @deleteKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete key'**
+  String get deleteKey;
+
+  /// No description provided for @moreFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} more'**
+  String moreFmt(int n);
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @allProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'All providers'**
+  String get allProviders;
+
+  /// No description provided for @searchProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'Search providers'**
+  String get searchProviders;
+
+  /// No description provided for @backToChats.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to chats'**
+  String get backToChats;
+
+  /// No description provided for @genChatTitleTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Names a chat after its first reply'**
+  String get genChatTitleTip;
+
+  /// No description provided for @scrollOnNewMsg.
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll to bottom on new message'**
+  String get scrollOnNewMsg;
+
+  /// No description provided for @scrollAfterSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Scroll to bottom after switching chat'**
+  String get scrollAfterSwitch;
+
+  /// No description provided for @chatsCountFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 chat} other{{n} chats}}'**
+  String chatsCountFmt(int n);
+
+  /// No description provided for @emptyTrashAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty trash after'**
+  String get emptyTrashAfter;
+
+  /// No description provided for @trashTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted chats wait here first'**
+  String get trashTip;
+
+  /// No description provided for @daysFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{1 day} other{{n} days}}'**
+  String daysFmt(int n);
+
+  /// No description provided for @thoughtForFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'Thought for {time}'**
+  String thoughtForFmt(String time);
+
+  /// No description provided for @secondsFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} s'**
+  String secondsFmt(String n);
+
+  /// No description provided for @minutesSecondsFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{m} min {s} s'**
+  String minutesSecondsFmt(int m, int s);
+
+  /// No description provided for @attachment.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachment'**
+  String get attachment;
+
+  /// No description provided for @sync.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync'**
+  String get sync;
+
+  /// No description provided for @syncNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync now'**
+  String get syncNow;
+
+  /// No description provided for @syncing.
+  ///
+  /// In en, this message translates to:
+  /// **'Syncing…'**
+  String get syncing;
+
+  /// No description provided for @neverSynced.
+  ///
+  /// In en, this message translates to:
+  /// **'Not synced yet'**
+  String get neverSynced;
+
+  /// No description provided for @lastSyncFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last synced {time}'**
+  String lastSyncFmt(String time);
+
+  /// No description provided for @syncOffTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on iCloud or WebDAV below to sync automatically.'**
+  String get syncOffTip;
+
+  /// No description provided for @backupPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup password'**
+  String get backupPassword;
+
+  /// No description provided for @backupEncrypted.
+  ///
+  /// In en, this message translates to:
+  /// **'Backups are encrypted with it'**
+  String get backupEncrypted;
+
+  /// No description provided for @backupNotEncrypted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set: file backups are plain text, and sync needs one'**
+  String get backupNotEncrypted;
+
+  /// No description provided for @backupEncryptedTip.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is encrypted'**
+  String get backupEncryptedTip;
+
+  /// No description provided for @backupPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a backup password first: synced backups are always encrypted'**
+  String get backupPasswordRequired;
+
+  /// No description provided for @passwordWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong password, or the backup is damaged'**
+  String get passwordWrong;
+
+  /// No description provided for @backupTooNew.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup is from a newer version of the app. Update to restore it.'**
+  String get backupTooNew;
+
+  /// No description provided for @syncAppSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync app settings'**
+  String get syncAppSettings;
+
+  /// No description provided for @syncAppSettingsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Window size and title bar stay per device'**
+  String get syncAppSettingsTip;
+
+  /// No description provided for @webdavManualTip.
+  ///
+  /// In en, this message translates to:
+  /// **'A dated copy beside the synced one'**
+  String get webdavManualTip;
+
+  /// No description provided for @exportFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Export to a file'**
+  String get exportFile;
+
+  /// No description provided for @importFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from a file'**
+  String get importFile;
+
+  /// No description provided for @copyBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to clipboard'**
+  String get copyBackup;
+
+  /// No description provided for @pasteBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from clipboard'**
+  String get pasteBackup;
 }
 
 class _AppLocalizationsDelegate

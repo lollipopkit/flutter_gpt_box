@@ -56,6 +56,9 @@ If blob, encode it into base64 String.''';
   String? get l10nTip => l10n.httpToolTip;
 
   @override
+  String summary(_Map args) => '${(args['method'] as String? ?? 'GET').toUpperCase()} ${args['url'] ?? ''}';
+
+  @override
   String help(_Map args) {
     return l10n.toolHttpReqHelp(args['url'] as String? ?? '<?>');
   }
@@ -170,7 +173,7 @@ If blob, encode it into base64 String.''';
     }
 
     log('Http $method -> ${libL10n.success}');
-    return LlmToolResult.text(respBody);
+    return LlmToolResult.text(respBody, details: {'status': resp.statusCode});
   }
 }
 

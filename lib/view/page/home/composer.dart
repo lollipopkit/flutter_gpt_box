@@ -10,16 +10,20 @@ import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/model_picker.dart';
+import 'package:gpt_box/view/widget/menu.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// Where a message is written: text, attachments, the model and the send
-/// button. Makes the chat when there is none yet.
+/// Where a message is written: text, attachments, the model, thinking, tools
+/// and send. Makes the chat when there is none yet.
 class Composer extends StatefulWidget {
-  const Composer({super.key, required this.chatId, required this.onChatCreated});
+  const Composer({super.key, required this.chatId, required this.onChatCreated, this.compact = false});
 
   /// The chat it sends to; null until the first message makes one.
   final String? chatId;
   final void Function(String id) onChatCreated;
+
+  /// On a phone: the thinking level is an icon.
+  final bool compact;
 
   /// Text put in by a deep link.
   static final draft = nvn<String>();
@@ -84,22 +88,49 @@ class _ComposerState extends State<Composer> {
     }
   }
 
-  Future<void> _pickFiles() async {
+
+  Future<void> _pickFiles() => _picking(() async {
     final res = await FilePicker.pickFiles();
-    _files.value = [..._files.value, ...res.map((e) => e.path).whereType<String>()];
+    return [for (final f in res) ?f.path];
+  });
+
+  Future<void> _pickImage(ImageSource source) => _picking(() async {
+    final img = await ImagePicker().pickImage(source: source);
+    return [?img?.path];
+  });
+
+  /// A picker's paths, attached; its failure shown rather than lost.
+  Future<void> _picking(Future<List<String>> Function() pick) async {
+    try {
+      final paths = await pick();
+      if (paths.isNotEmpty) _files.value = [..._files.value, ...paths];
+    } catch (e, s) {
+      Loggers.app.warning('Pick attachment', e, s);
+      Toast.show('$e');
+    }
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    final img = await ImagePicker().pickImage(source: source);
-    if (img != null) _files.value = [..._files.value, img.path];
+  /// A file on a computer; on a phone, a file, a photo or the camera.
+  Widget _attachBtn() {
+    Widget btn(VoidCallback onTap) => Btn.icon(icon: const Icon(Icons.attach_file, size: 19), text: l10n.attachment, onTap: onTap);
+    if (!isMobile) return btn(_pickFiles);
+    return MenuBtn(
+      actions: [
+        ContextMenuAction(text: libL10n.file, icon: Icons.insert_drive_file_outlined, onTap: _pickFiles),
+        ContextMenuAction(text: l10n.image, icon: Icons.image_outlined, onTap: () => _pickImage(ImageSource.gallery)),
+        ContextMenuAction(text: l10n.camera, icon: Icons.photo_camera_outlined, onTap: () => _pickImage(ImageSource.camera)),
+      ],
+      builder: btn,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final scheme = context.theme.colorScheme;
     final chat = widget.chatId == null ? null : Chats.openOf(widget.chatId!);
     final running = chat?.running ?? false.vn;
     return Material(
-      color: context.theme.colorScheme.surfaceContainerLow,
+      color: scheme.surfaceContainerLow,
       borderRadius: BorderRadius.circular(17),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(9, 7, 9, 5),
@@ -132,10 +163,12 @@ class _ComposerState extends State<Composer> {
                 focusNode: _focus,
                 minLines: 1,
                 maxLines: 8,
+                style: const TextStyle(fontSize: 14, height: 20 / 14),
                 textInputAction: isDesktop ? TextInputAction.newline : TextInputAction.send,
                 onSubmitted: isDesktop ? null : (_) => _send(),
                 decoration: InputDecoration(
                   hintText: l10n.message,
+                  hintStyle: UIs.textGrey.copyWith(fontSize: 14, height: 20 / 14),
                   border: InputBorder.none,
                   isDense: true,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 7, vertical: 9),
@@ -144,41 +177,61 @@ class _ComposerState extends State<Composer> {
             ),
             Row(
               children: [
-                PopupMenuButton<String>(
-                  icon: const Icon(Icons.attach_file, size: 19),
-                  itemBuilder: (_) => [
-                    PopupMenuItem(value: 'file', child: Text(libL10n.file)),
-                    if (isMobile) ...[
-                      PopupMenuItem(value: 'gallery', child: Text(l10n.image)),
-                      PopupMenuItem(value: 'camera', child: Text(l10n.camera)),
-                    ],
-                  ],
-                  onSelected: (v) => switch (v) {
-                    'gallery' => _pickImage(ImageSource.gallery),
-                    'camera' => _pickImage(ImageSource.camera),
-                    _ => _pickFiles(),
-                  },
+                _attachBtn(),
+                Flexible(
+                  child: _ModelChip(chatId: widget.chatId, model: _model, onChanged: () => setState(() {})),
                 ),
-                _ModelChip(chatId: widget.chatId, model: _model, onChanged: () => setState(() {})),
-                _ThinkingChip(model: _model),
+                _ThinkingChip(model: _model, compact: widget.compact),
                 if (widget.chatId != null) _ToolsToggle(chatId: widget.chatId!),
                 const Spacer(),
                 running.listenVal((r) {
                   return r
-                      ? IconButton.filledTonal(
-                          icon: const Icon(Icons.stop),
+                      ? _CircleBtn(
+                          icon: Icons.stop_rounded,
                           tooltip: libL10n.stop,
-                          onPressed: () => Chats.abort(widget.chatId!),
+                          color: scheme.secondaryContainer,
+                          onColor: scheme.onSecondaryContainer,
+                          onTap: () => Chats.abort(widget.chatId!),
                         )
-                      : IconButton.filled(
-                          icon: const Icon(Icons.arrow_upward),
+                      : _CircleBtn(
+                          icon: Icons.arrow_upward,
                           tooltip: l10n.send,
-                          onPressed: _send,
+                          color: scheme.primary,
+                          onColor: scheme.onPrimary,
+                          onTap: _send,
                         );
                 }),
-              ],
+              ].joinWith(const SizedBox(width: 1)),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+
+/// Send, or stop: a 40 circle at the end of the row.
+class _CircleBtn extends StatelessWidget {
+  const _CircleBtn({required this.icon, required this.tooltip, required this.color, required this.onColor, required this.onTap});
+
+  final IconData icon;
+  final String tooltip;
+  final Color color;
+  final Color onColor;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Material(
+        color: color,
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onTap,
+          child: SizedBox(width: 40, height: 40, child: Icon(icon, size: 22, color: onColor)),
         ),
       ),
     );
@@ -194,15 +247,15 @@ class _ModelChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = context.theme.colorScheme.primary;
     return Llm.providers.listenVal((_) {
       final name = Llm.info(model)?.name ?? model?.id ?? l10n.model;
-      return TextButton.icon(
-        icon: const Icon(Icons.auto_awesome, size: 17),
-        label: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 180),
-          child: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
-        ),
-        onPressed: () async {
+      return Btn.row(
+        icon: Icon(Icons.auto_awesome, size: 18, color: primary),
+        text: name,
+        textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: primary, overflow: TextOverflow.ellipsis),
+        mainAxisSize: MainAxisSize.min,
+        onTap: () async {
           final picked = await pickModel(context, current: model);
           if (picked == null) return;
           final id = chatId;
@@ -219,36 +272,49 @@ class _ModelChip extends StatelessWidget {
 }
 
 class _ThinkingChip extends StatefulWidget {
-  const _ThinkingChip({required this.model});
+  const _ThinkingChip({required this.model, required this.compact});
 
   final LlmModelRef? model;
+  final bool compact;
 
   @override
   State<_ThinkingChip> createState() => _ThinkingChipState();
 }
 
 class _ThinkingChipState extends State<_ThinkingChip> {
+
+  static String _label(String level) => level.isEmpty ? level : level[0].toUpperCase() + level.substring(1);
+
   @override
   Widget build(BuildContext context) {
     if (Llm.info(widget.model)?.reasoning != true) return UIs.placeholder;
-    final cur = Stores.llm.thinkingLevel.get();
-    return PopupMenuButton<ThinkingLevel>(
-      tooltip: libL10n.thinking,
-      initialValue: ThinkingLevel.values.firstWhereOrNull((e) => e.name == cur),
-      itemBuilder: (_) => [
-        for (final l in ThinkingLevel.values) PopupMenuItem(value: l, child: Text(l.name)),
+    final level = Stores.llm.thinkingLevel.get();
+    final cur = _label(level);
+    return MenuBtn(
+      actions: [
+        for (final l in ThinkingLevel.values)
+          ContextMenuAction(
+            text: _label(l.name),
+            icon: l.name == level ? Icons.check : null,
+            onTap: () async {
+              await Chats.setThinkingLevel(l);
+              if (mounted) setState(() {});
+            },
+          ),
       ],
-      onSelected: (l) async {
-        await Chats.setThinkingLevel(l);
-        setState(() {});
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 7),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [const Icon(Icons.psychology_outlined, size: 17), UIs.width7, Text(cur, style: UIs.text13)],
-        ),
-      ),
+      builder: (toggle) => widget.compact
+          ? Btn.icon(
+              icon: const Icon(Icons.psychology_outlined, size: 19),
+              text: '${libL10n.thinking}: $cur',
+              onTap: toggle,
+            )
+          : Btn.row(
+              icon: const Icon(Icons.psychology_outlined, size: 18),
+              text: cur,
+              textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              mainAxisSize: MainAxisSize.min,
+              onTap: toggle,
+            ),
     );
   }
 }
@@ -265,17 +331,21 @@ class _ToolsToggle extends StatefulWidget {
 class _ToolsToggleState extends State<_ToolsToggle> {
   @override
   Widget build(BuildContext context) {
-    if (!Stores.mcp.enabled.get()) return UIs.placeholder;
-    final on = Stores.chat.fetch(widget.chatId)?.useTools ?? true;
-    return IconButton(
-      tooltip: l10n.tool,
-      isSelected: on,
-      icon: const Icon(Icons.build_outlined, size: 19),
-      selectedIcon: const Icon(Icons.build, size: 19),
-      onPressed: () async {
-        await Chats.setUseTools(widget.chatId, !on);
-        setState(() {});
-      },
-    );
+    return Stores.mcp.enabled.listenable().listenVal((enabled) {
+      if (!enabled) return UIs.placeholder;
+      final on = Stores.chat.fetch(widget.chatId)?.useTools ?? true;
+      return Btn.icon(
+        icon: Icon(
+          on ? Icons.build : Icons.build_outlined,
+          size: 19,
+          color: on ? context.theme.colorScheme.primary : null,
+        ),
+        text: l10n.tool,
+        onTap: () async {
+          await Chats.setUseTools(widget.chatId, !on);
+          setState(() {});
+        },
+      );
+    });
   }
 }

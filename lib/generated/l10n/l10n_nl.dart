@@ -18,14 +18,8 @@ class AppLocalizationsNl extends AppLocalizations {
   String get autoCheckUpdate => 'Automatisch controleren op updates';
 
   @override
-  String get autoScrollBottom => 'Automatisch naar beneden scrollen';
-
-  @override
   String get backupTip =>
       'Zorg ervoor dat uw back-upbestand privé en veilig is!';
-
-  @override
-  String get calcTokenLen => 'Tokenlengte berekenen';
 
   @override
   String get chat => 'Chat';
@@ -56,17 +50,8 @@ class AppLocalizationsNl extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Prullenbak leegmaken';
-
-  @override
   String get emptyTrashTip =>
       '==0, bij de volgende start verwijderen. <0 niet automatisch verwijderen.';
-
-  @override
-  String get fontSize => 'Lettergrootte';
-
-  @override
-  String get fontSizeSettingTip => 'Alleen van toepassing op codeblokken';
 
   @override
   String get genChatTitle => 'Chattitel genereren';
@@ -107,9 +92,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get licenseMenuItem => 'Open-source licenties';
 
   @override
-  String get list => 'Lijst';
-
-  @override
   String get manual => 'Handmatig';
 
   @override
@@ -141,12 +123,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String get newChat => 'Nieuwe chat';
 
   @override
-  String get onMsgCome => 'Wanneer er nieuwe berichten zijn';
-
-  @override
-  String get onSwitchChat => 'Bij het wisselen van gesprekken';
-
-  @override
   String get passwd => 'Wachtwoord';
 
   @override
@@ -157,9 +133,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get rename => 'Hernoemen';
-
-  @override
-  String get replay => 'Herhalen';
 
   @override
   String get share => 'Delen';
@@ -174,9 +147,6 @@ class AppLocalizationsNl extends AppLocalizations {
   String sureRestoreFmt(Object time) {
     return 'Weet u zeker dat u de back-up ($time) wilt herstellen?';
   }
-
-  @override
-  String get switcher => 'Schakelaar';
 
   @override
   String syncConflict(Object a, Object b) {
@@ -194,11 +164,6 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get tool => 'Tool';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Gaat u akkoord met het gebruik van tool $tool?';
-  }
 
   @override
   String toolHttpReqHelp(Object host) {
@@ -286,7 +251,13 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String modelsCountFmt(int n) {
-    return '$n modellen';
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n modellen',
+      one: '1 model',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -302,4 +273,254 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get extraVarsTip =>
       'Eén KEY=VALUE per regel, voor providers die meer dan een sleutel nodig hebben (Azure-resource, Cloudflare-account).';
+
+  @override
+  String providersCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n providers',
+      one: '1 provider',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get today => 'Vandaag';
+
+  @override
+  String get earlier => 'Eerder';
+
+  @override
+  String get now => 'nu';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n min';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n u';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n berichten',
+      one: '1 bericht',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get thought => 'Nagedacht';
+
+  @override
+  String tokensFmt(String n) {
+    return '$n tokens';
+  }
+
+  @override
+  String allowToolFmt(String tool) {
+    return '$tool toestaan?';
+  }
+
+  @override
+  String get replyWaits => 'Het antwoord wacht op je beslissing.';
+
+  @override
+  String usableModelsFmt(int n, int m) {
+    return '$n bruikbaar · $m providers';
+  }
+
+  @override
+  String get searchModels => 'Modellen zoeken';
+
+  @override
+  String get version => 'Versie';
+
+  @override
+  String get endpoint => 'Endpoint';
+
+  @override
+  String get key => 'Sleutel';
+
+  @override
+  String get toolsAndMcp => 'Tools & MCP';
+
+  @override
+  String get useTools => 'Tools gebruiken';
+
+  @override
+  String get useToolsTip =>
+      'Elke aanroep vraagt eerst, tenzij hieronder toegestaan';
+
+  @override
+  String get builtIn => 'Ingebouwd';
+
+  @override
+  String get memories => 'Herinneringen';
+
+  @override
+  String entriesFmt(int n) {
+    return '$n items';
+  }
+
+  @override
+  String get allowedWithoutAsking => 'Toegestaan zonder te vragen';
+
+  @override
+  String get mcpServers => 'MCP-servers';
+
+  @override
+  String get addServer => 'Server toevoegen';
+
+  @override
+  String connectedFmt(int n) {
+    return 'Verbonden · $n tools';
+  }
+
+  @override
+  String get disconnected => 'Niet verbonden';
+
+  @override
+  String get deleteKey => 'Sleutel verwijderen';
+
+  @override
+  String moreFmt(int n) {
+    return '$n meer';
+  }
+
+  @override
+  String get back => 'Terug';
+
+  @override
+  String get allProviders => 'Alle providers';
+
+  @override
+  String get searchProviders => 'Providers zoeken';
+
+  @override
+  String get backToChats => 'Terug naar chats';
+
+  @override
+  String get genChatTitleTip =>
+      'Geeft een chat een naam na het eerste antwoord';
+
+  @override
+  String get scrollOnNewMsg => 'Naar beneden scrollen bij nieuw bericht';
+
+  @override
+  String get scrollAfterSwitch => 'Naar beneden scrollen na wisselen van chat';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n chats';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Prullenbak legen na';
+
+  @override
+  String get trashTip => 'Verwijderde chats wachten eerst hier';
+
+  @override
+  String daysFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n dagen',
+      one: '1 dag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String thoughtForFmt(String time) {
+    return '$time nagedacht';
+  }
+
+  @override
+  String secondsFmt(String n) {
+    return '$n s';
+  }
+
+  @override
+  String minutesSecondsFmt(int m, int s) {
+    return '$m min $s s';
+  }
+
+  @override
+  String get attachment => 'Bijlage';
+
+  @override
+  String get sync => 'Synchronisatie';
+
+  @override
+  String get syncNow => 'Nu synchroniseren';
+
+  @override
+  String get syncing => 'Synchroniseren…';
+
+  @override
+  String get neverSynced => 'Nog niet gesynchroniseerd';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Laatst gesynchroniseerd: $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Zet hieronder iCloud of WebDAV aan om automatisch te synchroniseren.';
+
+  @override
+  String get backupPassword => 'Back-upwachtwoord';
+
+  @override
+  String get backupEncrypted => 'Back-ups worden hiermee versleuteld';
+
+  @override
+  String get backupNotEncrypted =>
+      'Niet ingesteld: bestandsback-ups zijn onversleuteld en synchronisatie vereist er een';
+
+  @override
+  String get backupEncryptedTip => 'Deze back-up is versleuteld';
+
+  @override
+  String get backupPasswordRequired =>
+      'Stel eerst een back-upwachtwoord in: gesynchroniseerde back-ups zijn altijd versleuteld';
+
+  @override
+  String get passwordWrong => 'Verkeerd wachtwoord of beschadigde back-up';
+
+  @override
+  String get backupTooNew =>
+      'Deze back-up komt uit een nieuwere versie van de app. Werk bij om hem te herstellen.';
+
+  @override
+  String get syncAppSettings => 'App-instellingen synchroniseren';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Venstergrootte en titelbalk blijven per apparaat';
+
+  @override
+  String get webdavManualTip =>
+      'Een gedateerde kopie naast de gesynchroniseerde';
+
+  @override
+  String get exportFile => 'Naar een bestand exporteren';
+
+  @override
+  String get importFile => 'Herstellen uit een bestand';
+
+  @override
+  String get copyBackup => 'Naar klembord kopiëren';
+
+  @override
+  String get pasteBackup => 'Herstellen vanaf klembord';
 }

@@ -18,14 +18,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get autoCheckUpdate => 'Periksa pembaruan secara otomatis';
 
   @override
-  String get autoScrollBottom => 'Gulir ke bawah secara otomatis';
-
-  @override
   String get backupTip =>
       'Pastikan file cadangan Anda bersifat pribadi dan aman!';
-
-  @override
-  String get calcTokenLen => 'Hitung panjang Token';
 
   @override
   String get chat => 'Obrolan';
@@ -56,17 +50,8 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Kosongkan tempat sampah';
-
-  @override
   String get emptyTrashTip =>
       '==0, hapus saat mulai berikutnya. <0 jangan hapus secara otomatis.';
-
-  @override
-  String get fontSize => 'Ukuran font';
-
-  @override
-  String get fontSizeSettingTip => 'Hanya berlaku untuk blok kode';
 
   @override
   String get genChatTitle => 'Buat judul obrolan';
@@ -106,9 +91,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get licenseMenuItem => 'Lisensi sumber terbuka';
 
   @override
-  String get list => 'Daftar';
-
-  @override
   String get manual => 'Manual';
 
   @override
@@ -140,12 +122,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get newChat => 'Obrolan baru';
 
   @override
-  String get onMsgCome => 'Ketika ada pesan baru';
-
-  @override
-  String get onSwitchChat => 'Saat beralih percakapan';
-
-  @override
   String get passwd => 'Kata sandi';
 
   @override
@@ -156,9 +132,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get rename => 'Ubah nama';
-
-  @override
-  String get replay => 'Putar ulang';
 
   @override
   String get share => 'Bagikan';
@@ -173,9 +146,6 @@ class AppLocalizationsId extends AppLocalizations {
   String sureRestoreFmt(Object time) {
     return 'Apakah Anda yakin ingin memulihkan cadangan ($time)?';
   }
-
-  @override
-  String get switcher => 'Pengalih';
 
   @override
   String syncConflict(Object a, Object b) {
@@ -193,11 +163,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get tool => 'Alat';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Apakah Anda setuju untuk menggunakan alat $tool?';
-  }
 
   @override
   String toolHttpReqHelp(Object host) {
@@ -301,4 +266,235 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get extraVarsTip =>
       'Satu KEY=VALUE per baris, untuk penyedia yang butuh lebih dari kunci (resource Azure, akun Cloudflare).';
+
+  @override
+  String providersCountFmt(int n) {
+    return '$n penyedia';
+  }
+
+  @override
+  String get today => 'Hari ini';
+
+  @override
+  String get earlier => 'Sebelumnya';
+
+  @override
+  String get now => 'baru saja';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n mnt';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n jam';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return '$n pesan';
+  }
+
+  @override
+  String get thought => 'Pemikiran';
+
+  @override
+  String tokensFmt(String n) {
+    return '$n token';
+  }
+
+  @override
+  String allowToolFmt(String tool) {
+    return 'Izinkan $tool?';
+  }
+
+  @override
+  String get replyWaits => 'Balasan menunggu jawaban Anda.';
+
+  @override
+  String usableModelsFmt(int n, int m) {
+    return '$n tersedia · $m penyedia';
+  }
+
+  @override
+  String get searchModels => 'Cari model';
+
+  @override
+  String get version => 'Versi';
+
+  @override
+  String get endpoint => 'Endpoint';
+
+  @override
+  String get key => 'Kunci';
+
+  @override
+  String get toolsAndMcp => 'Alat & MCP';
+
+  @override
+  String get useTools => 'Gunakan alat';
+
+  @override
+  String get useToolsTip =>
+      'Setiap panggilan bertanya dulu kecuali diizinkan di bawah';
+
+  @override
+  String get builtIn => 'Bawaan';
+
+  @override
+  String get memories => 'Ingatan';
+
+  @override
+  String entriesFmt(int n) {
+    return '$n entri';
+  }
+
+  @override
+  String get allowedWithoutAsking => 'Diizinkan tanpa bertanya';
+
+  @override
+  String get mcpServers => 'Server MCP';
+
+  @override
+  String get addServer => 'Tambah server';
+
+  @override
+  String connectedFmt(int n) {
+    return 'Terhubung · $n alat';
+  }
+
+  @override
+  String get disconnected => 'Terputus';
+
+  @override
+  String get deleteKey => 'Hapus kunci';
+
+  @override
+  String moreFmt(int n) {
+    return '$n lainnya';
+  }
+
+  @override
+  String get back => 'Kembali';
+
+  @override
+  String get allProviders => 'Semua penyedia';
+
+  @override
+  String get searchProviders => 'Cari penyedia';
+
+  @override
+  String get backToChats => 'Kembali ke obrolan';
+
+  @override
+  String get genChatTitleTip => 'Memberi nama obrolan setelah balasan pertama';
+
+  @override
+  String get scrollOnNewMsg => 'Gulir ke bawah saat ada pesan baru';
+
+  @override
+  String get scrollAfterSwitch => 'Gulir ke bawah setelah berganti obrolan';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n obrolan';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Kosongkan sampah setelah';
+
+  @override
+  String get trashTip => 'Obrolan yang dihapus menunggu di sini dulu';
+
+  @override
+  String daysFmt(int n) {
+    return '$n hari';
+  }
+
+  @override
+  String thoughtForFmt(String time) {
+    return 'Berpikir $time';
+  }
+
+  @override
+  String secondsFmt(String n) {
+    return '$n dtk';
+  }
+
+  @override
+  String minutesSecondsFmt(int m, int s) {
+    return '$m mnt $s dtk';
+  }
+
+  @override
+  String get attachment => 'Lampiran';
+
+  @override
+  String get sync => 'Sinkronisasi';
+
+  @override
+  String get syncNow => 'Sinkronkan sekarang';
+
+  @override
+  String get syncing => 'Menyinkronkan…';
+
+  @override
+  String get neverSynced => 'Belum disinkronkan';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Terakhir disinkronkan $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Aktifkan iCloud atau WebDAV di bawah untuk sinkronisasi otomatis.';
+
+  @override
+  String get backupPassword => 'Kata sandi cadangan';
+
+  @override
+  String get backupEncrypted => 'Cadangan dienkripsi dengannya';
+
+  @override
+  String get backupNotEncrypted =>
+      'Belum diatur: cadangan berkas tidak terenkripsi, dan sinkronisasi memerlukannya';
+
+  @override
+  String get backupEncryptedTip => 'Cadangan ini terenkripsi';
+
+  @override
+  String get backupPasswordRequired =>
+      'Atur kata sandi cadangan dulu: cadangan yang disinkronkan selalu dienkripsi';
+
+  @override
+  String get passwordWrong => 'Kata sandi salah, atau cadangan rusak';
+
+  @override
+  String get backupTooNew =>
+      'Cadangan ini dari versi aplikasi yang lebih baru. Perbarui untuk memulihkannya.';
+
+  @override
+  String get syncAppSettings => 'Sinkronkan pengaturan aplikasi';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Ukuran jendela dan bilah judul tetap per perangkat';
+
+  @override
+  String get webdavManualTip =>
+      'Salinan bertanggal di samping yang disinkronkan';
+
+  @override
+  String get exportFile => 'Ekspor ke berkas';
+
+  @override
+  String get importFile => 'Pulihkan dari berkas';
+
+  @override
+  String get copyBackup => 'Salin ke papan klip';
+
+  @override
+  String get pasteBackup => 'Pulihkan dari papan klip';
 }

@@ -18,14 +18,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get autoCheckUpdate => 'Vérifier automatiquement les mises à jour';
 
   @override
-  String get autoScrollBottom => 'Défilement automatique vers le bas';
-
-  @override
   String get backupTip =>
       'Assurez-vous que votre fichier de sauvegarde est privé et sécurisé !';
-
-  @override
-  String get calcTokenLen => 'Calculer la longueur des tokens';
 
   @override
   String get chat => 'Chat';
@@ -56,17 +50,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Vider la corbeille';
-
-  @override
   String get emptyTrashTip =>
       '==0, supprimer au prochain démarrage. <0 ne pas supprimer automatiquement.';
-
-  @override
-  String get fontSize => 'Taille de police';
-
-  @override
-  String get fontSizeSettingTip => 'S\'applique uniquement aux blocs de code';
 
   @override
   String get genChatTitle => 'Générer un titre de chat';
@@ -107,9 +92,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get licenseMenuItem => 'Licences open source';
 
   @override
-  String get list => 'Liste';
-
-  @override
   String get manual => 'Manuel';
 
   @override
@@ -141,12 +123,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newChat => 'Nouveau chat';
 
   @override
-  String get onMsgCome => 'Lorsqu\'il y a de nouveaux messages';
-
-  @override
-  String get onSwitchChat => 'Lors du changement de conversation';
-
-  @override
   String get passwd => 'Mot de passe';
 
   @override
@@ -157,9 +133,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get rename => 'Renommer';
-
-  @override
-  String get replay => 'Rejouer';
 
   @override
   String get share => 'Partager';
@@ -174,9 +147,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String sureRestoreFmt(Object time) {
     return 'Êtes-vous sûr de vouloir restaurer la sauvegarde ($time) ?';
   }
-
-  @override
-  String get switcher => 'Commutateur';
 
   @override
   String syncConflict(Object a, Object b) {
@@ -194,11 +164,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tool => 'Outil';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Acceptez-vous d\'utiliser l\'outil $tool ?';
-  }
 
   @override
   String toolHttpReqHelp(Object host) {
@@ -287,7 +252,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String modelsCountFmt(int n) {
-    return '$n modèles';
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n modèles',
+      one: '1 modèle',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -303,4 +274,265 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get extraVarsTip =>
       'Une KEY=VALUE par ligne, pour les fournisseurs qui demandent plus qu\'une clé (ressource Azure, compte Cloudflare).';
+
+  @override
+  String providersCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n fournisseurs',
+      one: '1 fournisseur',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get today => 'Aujourd\'hui';
+
+  @override
+  String get earlier => 'Plus tôt';
+
+  @override
+  String get now => 'maintenant';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n min';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n h';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n messages',
+      one: '1 message',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get thought => 'Réflexion';
+
+  @override
+  String tokensFmt(String n) {
+    return '$n jetons';
+  }
+
+  @override
+  String allowToolFmt(String tool) {
+    return 'Autoriser $tool ?';
+  }
+
+  @override
+  String get replyWaits => 'La réponse attend votre décision.';
+
+  @override
+  String usableModelsFmt(int n, int m) {
+    return '$n utilisables · $m fournisseurs';
+  }
+
+  @override
+  String get searchModels => 'Rechercher des modèles';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get endpoint => 'Point d\'accès';
+
+  @override
+  String get key => 'Clé';
+
+  @override
+  String get toolsAndMcp => 'Outils et MCP';
+
+  @override
+  String get useTools => 'Utiliser les outils';
+
+  @override
+  String get useToolsTip =>
+      'Chaque appel demande d\'abord, sauf s\'il est autorisé ci-dessous';
+
+  @override
+  String get builtIn => 'Intégrés';
+
+  @override
+  String get memories => 'Souvenirs';
+
+  @override
+  String entriesFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n entrées',
+      one: '1 entrée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get allowedWithoutAsking => 'Autorisés sans demander';
+
+  @override
+  String get mcpServers => 'Serveurs MCP';
+
+  @override
+  String get addServer => 'Ajouter un serveur';
+
+  @override
+  String connectedFmt(int n) {
+    return 'Connecté · $n outils';
+  }
+
+  @override
+  String get disconnected => 'Déconnecté';
+
+  @override
+  String get deleteKey => 'Supprimer la clé';
+
+  @override
+  String moreFmt(int n) {
+    return '$n de plus';
+  }
+
+  @override
+  String get back => 'Retour';
+
+  @override
+  String get allProviders => 'Tous les fournisseurs';
+
+  @override
+  String get searchProviders => 'Rechercher des fournisseurs';
+
+  @override
+  String get backToChats => 'Retour aux discussions';
+
+  @override
+  String get genChatTitleTip => 'Nomme la discussion après la première réponse';
+
+  @override
+  String get scrollOnNewMsg => 'Défiler en bas à chaque nouveau message';
+
+  @override
+  String get scrollAfterSwitch =>
+      'Défiler en bas après un changement de discussion';
+
+  @override
+  String chatsCountFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n discussions',
+      one: '1 discussion',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Vider la corbeille après';
+
+  @override
+  String get trashTip => 'Les discussions supprimées attendent d\'abord ici';
+
+  @override
+  String daysFmt(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n jours',
+      one: '1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String thoughtForFmt(String time) {
+    return 'Réflexion : $time';
+  }
+
+  @override
+  String secondsFmt(String n) {
+    return '$n s';
+  }
+
+  @override
+  String minutesSecondsFmt(int m, int s) {
+    return '$m min $s s';
+  }
+
+  @override
+  String get attachment => 'Pièce jointe';
+
+  @override
+  String get sync => 'Synchronisation';
+
+  @override
+  String get syncNow => 'Synchroniser maintenant';
+
+  @override
+  String get syncing => 'Synchronisation…';
+
+  @override
+  String get neverSynced => 'Pas encore synchronisé';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Dernière synchronisation : $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Activez iCloud ou WebDAV ci-dessous pour synchroniser automatiquement.';
+
+  @override
+  String get backupPassword => 'Mot de passe de sauvegarde';
+
+  @override
+  String get backupEncrypted => 'Les sauvegardes sont chiffrées avec';
+
+  @override
+  String get backupNotEncrypted =>
+      'Non défini : les sauvegardes en fichier sont en clair, et la synchronisation en exige un';
+
+  @override
+  String get backupEncryptedTip => 'Cette sauvegarde est chiffrée';
+
+  @override
+  String get backupPasswordRequired =>
+      'Définissez d\'abord un mot de passe : les sauvegardes synchronisées sont toujours chiffrées';
+
+  @override
+  String get passwordWrong => 'Mot de passe incorrect ou sauvegarde endommagée';
+
+  @override
+  String get backupTooNew =>
+      'Cette sauvegarde vient d\'une version plus récente de l\'app. Mettez à jour pour la restaurer.';
+
+  @override
+  String get syncAppSettings => 'Synchroniser les réglages de l\'app';
+
+  @override
+  String get syncAppSettingsTip =>
+      'La taille de fenêtre et la barre de titre restent propres à l\'appareil';
+
+  @override
+  String get webdavManualTip => 'Une copie datée à côté de celle synchronisée';
+
+  @override
+  String get exportFile => 'Exporter dans un fichier';
+
+  @override
+  String get importFile => 'Restaurer depuis un fichier';
+
+  @override
+  String get copyBackup => 'Copier dans le presse-papiers';
+
+  @override
+  String get pasteBackup => 'Restaurer depuis le presse-papiers';
 }

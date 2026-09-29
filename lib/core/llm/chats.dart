@@ -24,6 +24,21 @@ final class StreamingReply {
       StreamingReply(text: text ?? this.text, thinking: thinking ?? this.thinking, tools: tools ?? this.tools);
 }
 
+/// A tool call waiting for the user, shown in the chat it belongs to.
+final class PendingApproval {
+  PendingApproval(this.call);
+
+  final LlmToolCall call;
+  final _answer = Completer<LlmApproval>();
+
+  void _complete(LlmApproval a) {
+    if (!_answer.isCompleted) _answer.complete(a);
+  }
+}
+
+/// How the user answered a [PendingApproval].
+enum ApprovalAnswer { deny, once, always }
+
 /// An open chat: its session, and what the chat view draws.
 final class OpenChat {
   OpenChat._(this.id, this.session) {
@@ -49,6 +64,24 @@ final class OpenChat {
   /// An error the last run ended with.
   final error = nvn<String>();
 
+  /// How long each reply of this session thought, by entry id, as measured
+  /// while it streamed. A reply that also wrote text cannot be timed from its
+  /// timestamps alone.
+  final thoughtMs = <String, int>{};
+  DateTime? _thinkStart, _thinkEnd;
+
+  /// Tool calls the run is waiting on the user for, in the order asked.
+  /// The first is the one on screen.
+  final approvals = <PendingApproval>[].vn;
+
+  /// Answers every pending call: a run is never left waiting.
+  void _denyPending(String why) {
+    for (final p in approvals.value) {
+      p._complete(LlmApproval.deny(why));
+    }
+    approvals.value = const [];
+  }
+
   Future<void> reload() async {
     entries.value = await session.entries();
     tree = await session.tree();
@@ -58,11 +91,14 @@ final class OpenChat {
     switch (e.type) {
       case 'message_start' when e.message?.role == 'assistant':
         streaming.value = const StreamingReply();
+        _thinkStart = _thinkEnd = null;
       case 'message_update':
         final s = streaming.value ?? const StreamingReply();
         if (e.textDelta case final d?) {
+          if (_thinkStart != null) _thinkEnd ??= DateTime.now();
           streaming.value = s.copyWith(text: s.text + d);
         } else if (e.thinkingDelta case final d?) {
+          _thinkStart ??= DateTime.now();
           streaming.value = s.copyWith(thinking: s.thinking + d);
         }
       case 'tool_start':
@@ -77,6 +113,10 @@ final class OpenChat {
           tree = [...tree, entry];
         }
         if (entry.type == 'message' && entry.message?.role == 'assistant') {
+          if (_thinkStart case final start?) {
+            thoughtMs[entry.id] = (_thinkEnd ?? DateTime.now()).difference(start).inMilliseconds;
+          }
+          _thinkStart = _thinkEnd = null;
           streaming.value = null;
         }
       case 'run_end':
@@ -112,6 +152,7 @@ final class OpenChat {
   }
 
   Future<void> _dispose() async {
+    _denyPending('The chat was closed');
     await _sub.cancel();
     await session.close();
   }
@@ -127,7 +168,6 @@ abstract final class Chats {
 
   /// Asked before a tool call the user has not allowed for good. Set by the
   /// chat page, which can show a dialog.
-  static LlmApprover? approver;
 
   static OpenChat? openOf(String id) => _open[id];
 
@@ -242,7 +282,28 @@ abstract final class Chats {
     await chat.reload();
   }
 
-  static Future<void> abort(String id) async => _open[id]?.session.abort();
+  static Future<void> abort(String id) async {
+    final chat = _open[id];
+    chat?._denyPending('The user stopped the reply');
+    await chat?.session.abort();
+  }
+
+  /// Answers the tool call chat [id] is waiting on.
+  static void answer(String id, ApprovalAnswer answer) {
+    final chat = _open[id];
+    final pending = chat?.approvals.value.firstOrNull;
+    if (chat == null || pending == null) return;
+    chat.approvals.value = chat.approvals.value.skip(1).toList();
+    switch (answer) {
+      case ApprovalAnswer.always:
+        Stores.mcp.permittedTools.set({...Stores.mcp.permittedTools.get(), pending.call.name}.toList());
+        pending._complete(const LlmApproval.allow());
+      case ApprovalAnswer.once:
+        pending._complete(const LlmApproval.allow());
+      case ApprovalAnswer.deny:
+        pending._complete(const LlmApproval.deny('The user denied it'));
+    }
+  }
 
   static Future<void> _run(OpenChat chat, Future<LlmRunResult> Function() run) async {
     chat.error.value = null;
@@ -389,9 +450,12 @@ abstract final class Chats {
 
   static Future<LlmApproval> _approve(LlmToolCall call) async {
     if (Stores.mcp.permittedTools.get().contains(call.name)) return const LlmApproval.allow();
-    final a = approver;
-    if (a == null) return const LlmApproval.deny('Nobody to ask');
-    return a(call);
+    // A chat's id is its session's: the question goes where the run is.
+    final chat = _open[call.sessionId];
+    if (chat == null) return const LlmApproval.deny('The chat is not open');
+    final pending = PendingApproval(call);
+    chat.approvals.value = [...chat.approvals.value, pending];
+    return pending._answer.future;
   }
 
   // ---------------------------------------------------------------------------

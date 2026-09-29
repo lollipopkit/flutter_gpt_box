@@ -42,6 +42,7 @@ Future<void> _initApp() async {
 
   await Paths.init(
     BuildData.name,
+    bakName: bakFileName,
     dirs: const {PathDir.img, PathDir.audio},
     fileInUserDocuments: false,
   );
@@ -94,7 +95,8 @@ Future<void> _initAppComponents() async {
   if (Stores.mcp.enabled.get()) unawaited(McpTools.connectStored());
 
   BakSync.instance.init();
-  unawaited(BakSync.instance.sync());
+  // Only when sync is on, and never without a password: see BakSync.
+  BakSync.instance.syncSoon();
 
   if (Stores.setting.joinBeta.get()) AppUpdate.chan = AppUpdateChan.beta;
 }

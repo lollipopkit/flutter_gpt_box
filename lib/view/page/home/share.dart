@@ -35,18 +35,17 @@ Future<void> shareChat(BuildContext context, String chatId) async {
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 17),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
-              UIs.height13,
-              for (final e in chat.entries.value)
-                if (e.message?.role == 'user' || e.message?.role == 'assistant')
-                  MessageView(chat: null, entry: e, forCapture: true),
-              UIs.height13,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
+              for (final b in threadBlocks(chat.entries.value))
+                ThreadBlockView(chat: null, block: b, forCapture: true),
               Text(
                 '${l10n.shareFrom} ${BuildData.name} v1.0.${BuildData.build}',
-                style: const TextStyle(fontSize: 9, color: Colors.grey, fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+                style: UIs.text12Grey,
               ),
-            ],
+            ].joinWith(const SizedBox(height: 20)),
           ),
         ),
       ),

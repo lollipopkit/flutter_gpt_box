@@ -2,12 +2,11 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:icons_plus/icons_plus.dart';
 
-final _textStyle = GoogleFonts.robotoMono();
+final _textStyle = Mono.style(fontSize: 12.5, height: 1.6);
 
 class CodeElementBuilder extends MarkdownElementBuilder {
   /// On copy callback.
@@ -18,113 +17,76 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
   CodeElementBuilder({this.onCopy, this.isForCapture = false});
 
-  static final _bgPaint = Paint()
-    ..color = const Color.fromARGB(23, 159, 159, 159);
+  /// Code inside a sentence: mono on a tinted ground.
+  static TextStyle inlineStyle(BuildContext context) =>
+      Mono.style(fontSize: 12.5).copyWith(backgroundColor: context.theme.colorScheme.surfaceContainerHigh);
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    // Can't be null
-    String language = '';
-
-    if (element.attributes['class'] != null) {
-      final lg = element.attributes['class'] as String;
-      language = lg.substring(9);
-    }
-
-    final textContent = element.textContent.trim();
-    if (language.isEmpty) {
-      return RichText(
-        text: TextSpan(
-          text: textContent,
-          style: _textStyle.copyWith(
-            color: preferredStyle?.color,
-            background: _bgPaint,
-          ),
-        ),
-        softWrap: false,
-      );
-    }
-
-    if (isForCapture) {
-      return HighlightView(
-        textContent,
-        language: language,
-        theme: _theme,
-        textStyle: _textStyle,
-        tabSize: 4,
-        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
-      );
-    }
-
-    final isMultiLine = textContent.contains('\n');
-    if (!isMultiLine) {
-      return HighlightView(
-        textContent,
-        language: language,
-        theme: _theme,
-        textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
-        tabSize: 4,
-        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-      );
-    }
-    final child = HighlightView(
-      textContent,
-      language: language,
-      theme: _theme,
-      textStyle: _textStyle.copyWith(fontSize: preferredStyle?.fontSize),
-      tabSize: 4,
-      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 11),
-    );
-
-    var lineFeedCount = 0;
-    // If line feed count is greater than 5, a copy btn will be shown.
-    const maxLineFeedCount = 5;
-    for (var i = 0; i < textContent.length; i++) {
-      if (textContent[i] == '\n') {
-        lineFeedCount++;
-        if (lineFeedCount > maxLineFeedCount) {
-          break;
-        }
-      }
-    }
-
-    final autoWrapped = Stores.setting.softWrap.listenable().listenVal(
-      (val) {
-        if (val) return child;
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: child,
-        );
-      },
-    );
-
-    if (lineFeedCount <= maxLineFeedCount) {
-      return autoWrapped;
-    }
-
-    return Stack(
-      children: [
-        autoWrapped,
-        Positioned(
-          right: 0,
-          top: 0,
-          child: Btn.icon(
-            icon: const Icon(
-              MingCute.copy_2_fill,
-              size: 15,
-              color: Color.fromARGB(173, 188, 188, 188),
-            ),
-            onTap: () {
-              onCopy?.call(element.textContent.trim());
-            },
-          ),
-        ),
-      ],
-    );
+    final cls = element.attributes['class'];
+    final language = cls != null && cls.startsWith('language-') ? cls.substring(9) : '';
+    final textContent = element.textContent.trimRight();
+    // Inline code is the style sheet's; a block has a language or lines.
+    if (language.isEmpty && !textContent.contains('\n')) return null;
+    return _CodeBlock(code: textContent, language: language, onCopy: isForCapture ? null : onCopy, theme: _theme);
   }
 
   Map<String, TextStyle> get _theme {
     return RNodes.dark.value ? _darkTheme : _lightTheme;
+  }
+}
+
+/// A fenced block: its language and a copy button over the code.
+class _CodeBlock extends StatelessWidget {
+  const _CodeBlock({required this.code, required this.language, required this.onCopy, required this.theme});
+
+  final String code;
+  final String language;
+  final void Function(String)? onCopy;
+  final Map<String, TextStyle> theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final view = HighlightView(
+      code,
+      language: language.isEmpty ? 'plaintext' : language,
+      theme: theme,
+      textStyle: _textStyle,
+      tabSize: 4,
+      padding: EdgeInsets.zero,
+    );
+    final body = Stores.setting.softWrap.listenable().listenVal((wrap) {
+      if (wrap) return view;
+      return SingleChildScrollView(scrollDirection: Axis.horizontal, child: view);
+    });
+    return Container(
+      width: double.infinity,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: context.theme.colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(9),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(13, 2, 2, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(language, style: Mono.style(fontSize: 11, color: UIs.textGrey.color)),
+                ),
+                if (onCopy case final copy?)
+                  Btn.icon(icon: const Icon(Icons.content_copy, size: 17), text: libL10n.copy, onTap: () => copy(code))
+                else
+                  const SizedBox(height: 31),
+              ],
+            ),
+          ),
+          Padding(padding: const EdgeInsets.fromLTRB(13, 0, 13, 13), child: body),
+        ],
+      ),
+    );
   }
 }
 

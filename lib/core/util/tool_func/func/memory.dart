@@ -26,6 +26,9 @@ Only call this func if users explicitly ask to memorise something.''';
   String get l10nName => l10n.memory;
 
   @override
+  String summary(_Map args) => args['memory'] as String? ?? '';
+
+  @override
   String help(_Map args) {
     return l10n.memoryTip(args['memory'] as String? ?? '<?>');
   }

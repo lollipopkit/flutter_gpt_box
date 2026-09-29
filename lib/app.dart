@@ -1,5 +1,6 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_lib/generated/l10n/lib_l10n.dart';
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
@@ -39,22 +40,10 @@ class MyApp extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       localeListResolutionCallback: LocaleUtil.resolve,
       themeMode: themeMode,
-      theme: ThemeData(colorSchemeSeed: UIs.colorSeed).fixWindowsFont,
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        colorSchemeSeed: UIs.colorSeed,
-      ).toAmoled.fixWindowsFont,
+      theme: appTheme(ThemeData(colorSchemeSeed: UIs.colorSeed)).fixWindowsFont,
+      darkTheme: appTheme(ThemeData(brightness: Brightness.dark, colorSchemeSeed: UIs.colorSeed)).toAmoled.fixWindowsFont,
       // Outside the breakpoints builder: a toast is sized against the window.
-      //
-      // The frame wraps the navigator rather than `home`, so every route —
-      // pushed pages, and the home page the intro replaces itself with — sits
-      // below the caption row instead of under the window's buttons.
-      builder: (context, child) => ToastHost(
-        child: VirtualWindowFrame(
-          title: BuildData.name,
-          child: ResponsivePoints.builder(context, child),
-        ),
-      ),
+      builder: (context, child) => ToastHost(child: ResponsivePoints.builder(context, child)),
       navigatorObservers: [AppRouteObserver.instance],
       home: Builder(
         builder: (context) {
@@ -63,13 +52,67 @@ class MyApp extends StatelessWidget {
           context.setLibL10n();
           UIs.primaryColor = Theme.of(context).colorScheme.primary;
 
+          // The frame goes on each page that fills the window, as fl_lib's
+          // routes put it on every page they push: around the navigator it
+          // would be drawn twice over each of those. No caption text: the
+          // sidebar names the app.
           final intros = _IntroPage.builders;
-          if (intros.isNotEmpty) {
-            return _IntroPage(intros);
-          }
-          return const HomePage();
+          return VirtualWindowFrame(child: intros.isNotEmpty ? _IntroPage(intros) : const HomePage());
         },
       ),
     );
   }
+}
+
+/// The design's type and rows over Material's defaults.
+ThemeData appTheme(ThemeData base) {
+  final scheme = base.colorScheme;
+  // The platform's UI font as it is: Material's tracking (0.25 on body text)
+  // spaces every line out past what the design draws.
+  TextStyle? flat(TextStyle? s) => s?.copyWith(letterSpacing: 0);
+  final t = base.textTheme;
+  return base.copyWith(
+    textTheme: TextTheme(
+      displayLarge: flat(t.displayLarge),
+      displayMedium: flat(t.displayMedium),
+      displaySmall: flat(t.displaySmall),
+      headlineLarge: flat(t.headlineLarge),
+      headlineMedium: flat(t.headlineMedium),
+      headlineSmall: flat(t.headlineSmall),
+      titleLarge: flat(t.titleLarge),
+      titleMedium: flat(t.titleMedium),
+      titleSmall: flat(t.titleSmall),
+      bodyLarge: flat(t.bodyLarge),
+      bodyMedium: flat(t.bodyMedium),
+      bodySmall: flat(t.bodySmall),
+      labelLarge: flat(t.labelLarge),
+      labelMedium: flat(t.labelMedium),
+      labelSmall: flat(t.labelSmall),
+    ),
+    // Material's push — in from the right — everywhere but iOS, which keeps
+    // its own for the swipe back.
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: FadeForwardsPageTransitionsBuilder(),
+        TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(),
+        TargetPlatform.windows: FadeForwardsPageTransitionsBuilder(),
+      },
+    ),
+    extensions: [
+      ComponentStyles(
+        sidebar: SidebarStyle(
+          selectedColor: scheme.secondaryContainer,
+          selectedTextColor: scheme.onSecondaryContainer,
+          selectedIconColor: scheme.onSecondaryContainer,
+          padding: const EdgeInsets.fromLTRB(0, 8, 11, 8),
+          fontWeight: FontWeight.w400,
+          selectedFontWeight: FontWeight.w500,
+          iconSize: 22,
+          iconGap: 13,
+        ),
+      ),
+    ],
+  );
 }

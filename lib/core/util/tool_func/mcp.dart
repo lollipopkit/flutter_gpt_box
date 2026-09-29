@@ -7,6 +7,7 @@ abstract class McpTools {
   static final _toolsByServer = <String, List<Tool>>{};
   static final _serverNames = <Transport, String>{};
   static final _connectionStates = <String, bool>{};
+  static final _errors = <String, String>{};
   static final _retryTimers = <String, Timer>{};
   static const int _maxRetries = 3;
 
@@ -16,11 +17,21 @@ abstract class McpTools {
 
   /// Connects every stored server. Run at launch; each connects on its own.
   static Future<void> connectStored() async {
-    final urls = Stores.mcp.mcpServers.get();
     await Future.wait([
-      for (var i = 0; i < urls.length; i++)
-        if (!_clients.containsKey('server_$i')) addTs(newHttpTs(url: urls[i]), 'server_$i'),
+      for (final url in Stores.mcp.mcpServers.get())
+        if (!_clients.containsKey(nameFor(url))) addTs(newHttpTs(url: url), nameFor(url)),
     ]);
+  }
+
+  /// The name a server's tools are prefixed with: from its URL, so it stays
+  /// the same across launches and when another server is removed.
+  static String nameFor(String url) {
+    // FNV-1a: `String.hashCode` is not stable across runs.
+    var h = 0x811c9dc5;
+    for (final c in url.codeUnits) {
+      h = ((h ^ c) * 0x01000193) & 0xffffffff;
+    }
+    return 'mcp${h.toRadixString(16).padLeft(8, '0')}';
   }
   static const Duration _retryDelay = Duration(seconds: 5);
 
@@ -89,6 +100,8 @@ abstract class McpTools {
       transport.onerror = (error) {
         Loggers.app.warning('Transport error for $serverName: $error');
         _connectionStates[serverName] = false;
+        _errors[serverName] = '$error';
+        changes.notify();
         _scheduleReconnect(serverName, transport);
       };
       
@@ -104,6 +117,7 @@ abstract class McpTools {
       _transports[serverName] = transport;
       _serverNames[transport] = serverName;
       _connectionStates[serverName] = true;
+      _errors.remove(serverName);
       
       // Cancel any pending retry
       _retryTimers[serverName]?.cancel();
@@ -114,6 +128,8 @@ abstract class McpTools {
       return transport;
     } catch (e, s) {
       _connectionStates[serverName] = false;
+      _errors[serverName] = '$e';
+      changes.notify();
       
       if (retryCount < _maxRetries) {
         Loggers.app.warning(
@@ -176,7 +192,7 @@ abstract class McpTools {
             description: '[$server] ${t.description ?? ''}',
             parameters: t.inputSchema.toJson(),
             label: '$server · ${t.name}',
-            execute: (call, _) => _call(server, t.name, call.args),
+            execute: (call, _) => Tools.timed(() => _call(server, t.name, call.args)),
           ),
   ];
 
@@ -238,6 +254,7 @@ abstract class McpTools {
     // Cancel any pending retry
     _retryTimers[serverName]?.cancel();
     _retryTimers.remove(serverName);
+    _errors.remove(serverName);
     
     final transport = _transports[serverName];
     if (transport != null) {
@@ -273,6 +290,9 @@ abstract class McpTools {
   static bool isServerConnected(String serverName) {
     return _connectionStates[serverName] ?? false;
   }
+
+  /// Why [serverName] last failed to connect, if it did.
+  static String? errorOf(String serverName) => _errors[serverName];
 
   /// Get connection status for all servers.
   static Map<String, bool> get connectionStates => Map.unmodifiable(_connectionStates);

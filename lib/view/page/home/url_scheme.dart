@@ -27,13 +27,18 @@ extension on _HomePageState {
         if (id != null && context != null) unawaited(shareChat(context, id));
       case AppLink.goPath:
         if (context == null) return;
-        switch (p['page']) {
-          case 'providers':
-            ProvidersPage.route.go(context);
-          case 'settings' || 'tools' || 'backup' || 'about':
-            SettingsPage.route.go(context);
-          default:
-            Toast.show(l10n.invalidLinkFmt(p['page'] ?? ''));
+        final tab = switch (p['page']) {
+          'settings' => SettingsTab.app,
+          'providers' => SettingsTab.providers,
+          'tools' => SettingsTab.tool,
+          'backup' => SettingsTab.bak,
+          'about' => SettingsTab.about,
+          _ => null,
+        };
+        if (tab == null) {
+          Toast.show(l10n.invalidLinkFmt(p['page'] ?? ''));
+        } else {
+          _openSettings(tab);
         }
       case AppLink.providerPath:
         if (context == null) return;

@@ -18,13 +18,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get autoCheckUpdate => '自動更新チェック';
 
   @override
-  String get autoScrollBottom => '自動で下にスクロール';
-
-  @override
   String get backupTip => 'バックアップファイルのプライバシーと安全性を確保してください！';
-
-  @override
-  String get calcTokenLen => 'トークン長を計算';
 
   @override
   String get chat => 'チャット';
@@ -55,16 +49,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'ゴミ箱を空にする';
-
-  @override
   String get emptyTrashTip => '==0、次回起動時に削除。<0 自動削除しない。';
-
-  @override
-  String get fontSize => 'フォントサイズ';
-
-  @override
-  String get fontSizeSettingTip => 'コードブロックにのみ適用されます';
 
   @override
   String get genChatTitle => 'チャットタイトルを生成';
@@ -104,9 +89,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get licenseMenuItem => 'オープンソースライセンス';
 
   @override
-  String get list => 'リスト';
-
-  @override
   String get manual => '手動';
 
   @override
@@ -138,12 +120,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newChat => '新しいチャット';
 
   @override
-  String get onMsgCome => '新しいメッセージがある時';
-
-  @override
-  String get onSwitchChat => '会話を切り替える時';
-
-  @override
   String get passwd => 'パスワード';
 
   @override
@@ -154,9 +130,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get rename => '名前変更';
-
-  @override
-  String get replay => 'リプレイ';
 
   @override
   String get share => '共有';
@@ -171,9 +144,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String sureRestoreFmt(Object time) {
     return 'バックアップ（$time）を復元してもよろしいですか？';
   }
-
-  @override
-  String get switcher => 'スイッチャー';
 
   @override
   String syncConflict(Object a, Object b) {
@@ -191,11 +161,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get tool => 'ツール';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'ツール$toolの使用に同意しますか？';
-  }
 
   @override
   String toolHttpReqHelp(Object host) {
@@ -296,4 +261,229 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get extraVarsTip =>
       '1 行に 1 つの KEY=VALUE。キー以外の設定が必要なプロバイダー向けです（Azure リソース、Cloudflare アカウント）。';
+
+  @override
+  String providersCountFmt(int n) {
+    return '$n 個のプロバイダー';
+  }
+
+  @override
+  String get today => '今日';
+
+  @override
+  String get earlier => 'それ以前';
+
+  @override
+  String get now => 'たった今';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n 分';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n 時間';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return '$n 件のメッセージ';
+  }
+
+  @override
+  String get thought => '思考';
+
+  @override
+  String tokensFmt(String n) {
+    return '$n トークン';
+  }
+
+  @override
+  String allowToolFmt(String tool) {
+    return '$tool を許可しますか？';
+  }
+
+  @override
+  String get replyWaits => '返信はあなたの回答を待っています。';
+
+  @override
+  String usableModelsFmt(int n, int m) {
+    return '$n 個使用可能 · $m 個のプロバイダー';
+  }
+
+  @override
+  String get searchModels => 'モデルを検索';
+
+  @override
+  String get version => 'バージョン';
+
+  @override
+  String get endpoint => 'エンドポイント';
+
+  @override
+  String get key => 'キー';
+
+  @override
+  String get toolsAndMcp => 'ツールと MCP';
+
+  @override
+  String get useTools => 'ツールを使う';
+
+  @override
+  String get useToolsTip => '下で許可したもの以外、呼び出しごとに確認します';
+
+  @override
+  String get builtIn => '組み込み';
+
+  @override
+  String get memories => '記憶';
+
+  @override
+  String entriesFmt(int n) {
+    return '$n 件';
+  }
+
+  @override
+  String get allowedWithoutAsking => '確認なしで許可';
+
+  @override
+  String get mcpServers => 'MCP サーバー';
+
+  @override
+  String get addServer => 'サーバーを追加';
+
+  @override
+  String connectedFmt(int n) {
+    return '接続済み · $n 個のツール';
+  }
+
+  @override
+  String get disconnected => '未接続';
+
+  @override
+  String get deleteKey => 'キーを削除';
+
+  @override
+  String moreFmt(int n) {
+    return '他 $n 個';
+  }
+
+  @override
+  String get back => '戻る';
+
+  @override
+  String get allProviders => 'すべてのプロバイダー';
+
+  @override
+  String get searchProviders => 'プロバイダーを検索';
+
+  @override
+  String get backToChats => 'チャットに戻る';
+
+  @override
+  String get genChatTitleTip => '最初の返信の後にチャットに名前を付けます';
+
+  @override
+  String get scrollOnNewMsg => '新しいメッセージで一番下へスクロール';
+
+  @override
+  String get scrollAfterSwitch => 'チャット切り替え後に一番下へスクロール';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n 件のチャット';
+  }
+
+  @override
+  String get emptyTrashAfter => 'ゴミ箱を空にするまで';
+
+  @override
+  String get trashTip => '削除したチャットはまずここに入ります';
+
+  @override
+  String daysFmt(int n) {
+    return '$n 日';
+  }
+
+  @override
+  String thoughtForFmt(String time) {
+    return '$time 思考';
+  }
+
+  @override
+  String secondsFmt(String n) {
+    return '$n 秒';
+  }
+
+  @override
+  String minutesSecondsFmt(int m, int s) {
+    return '$m 分 $s 秒';
+  }
+
+  @override
+  String get attachment => '添付ファイル';
+
+  @override
+  String get sync => '同期';
+
+  @override
+  String get syncNow => '今すぐ同期';
+
+  @override
+  String get syncing => '同期中…';
+
+  @override
+  String get neverSynced => 'まだ同期していません';
+
+  @override
+  String lastSyncFmt(String time) {
+    return '最終同期：$time';
+  }
+
+  @override
+  String get syncOffTip => '下で iCloud または WebDAV をオンにすると自動で同期します。';
+
+  @override
+  String get backupPassword => 'バックアップのパスワード';
+
+  @override
+  String get backupEncrypted => 'バックアップはこれで暗号化されます';
+
+  @override
+  String get backupNotEncrypted => '未設定：ファイルのバックアップは平文になり、同期には必要です';
+
+  @override
+  String get backupEncryptedTip => 'このバックアップは暗号化されています';
+
+  @override
+  String get backupPasswordRequired =>
+      '先にバックアップのパスワードを設定してください。同期するバックアップは常に暗号化されます';
+
+  @override
+  String get passwordWrong => 'パスワードが違うか、バックアップが壊れています';
+
+  @override
+  String get backupTooNew => 'このバックアップは新しいバージョンのアプリで作成されました。復元するには更新してください。';
+
+  @override
+  String get syncAppSettings => 'アプリの設定を同期';
+
+  @override
+  String get syncAppSettingsTip => 'ウィンドウサイズとタイトルバーは端末ごとに保持されます';
+
+  @override
+  String get webdavManualTip => '同期ファイルの横に日付付きのコピー';
+
+  @override
+  String get exportFile => 'ファイルに書き出す';
+
+  @override
+  String get importFile => 'ファイルから復元';
+
+  @override
+  String get copyBackup => 'クリップボードにコピー';
+
+  @override
+  String get pasteBackup => 'クリップボードから復元';
 }

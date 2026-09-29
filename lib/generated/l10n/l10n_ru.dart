@@ -18,14 +18,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get autoCheckUpdate => 'Автоматически проверять обновления';
 
   @override
-  String get autoScrollBottom => 'Автоматическая прокрутка вниз';
-
-  @override
   String get backupTip =>
       'Пожалуйста, убедитесь, что ваш файл резервной копии является приватным и безопасным!';
-
-  @override
-  String get calcTokenLen => 'Рассчитать длину токенов';
 
   @override
   String get chat => 'Чат';
@@ -56,17 +50,8 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => 'Очистить корзину';
-
-  @override
   String get emptyTrashTip =>
       '==0, удалить при следующем запуске. <0 не удалять автоматически.';
-
-  @override
-  String get fontSize => 'Размер шрифта';
-
-  @override
-  String get fontSizeSettingTip => 'Применяется только к блокам кода';
 
   @override
   String get genChatTitle => 'Сгенерировать заголовок чата';
@@ -106,9 +91,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get licenseMenuItem => 'Лицензии с открытым исходным кодом';
 
   @override
-  String get list => 'Список';
-
-  @override
   String get manual => 'Ручной';
 
   @override
@@ -140,12 +122,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get newChat => 'Новый чат';
 
   @override
-  String get onMsgCome => 'Когда есть новые сообщения';
-
-  @override
-  String get onSwitchChat => 'При переключении разговора';
-
-  @override
   String get passwd => 'Пароль';
 
   @override
@@ -156,9 +132,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get rename => 'Переименовать';
-
-  @override
-  String get replay => 'Повтор';
 
   @override
   String get share => 'Поделиться';
@@ -173,9 +146,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String sureRestoreFmt(Object time) {
     return 'Вы уверены, что хотите восстановить резервную копию ($time)?';
   }
-
-  @override
-  String get switcher => 'Переключатель';
 
   @override
   String syncConflict(Object a, Object b) {
@@ -193,11 +163,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tool => 'Инструмент';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return 'Вы согласны использовать инструмент $tool?';
-  }
 
   @override
   String toolHttpReqHelp(Object host) {
@@ -301,4 +266,234 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get extraVarsTip =>
       'По одной KEY=VALUE в строке — для провайдеров, которым нужно больше, чем ключ (ресурс Azure, аккаунт Cloudflare).';
+
+  @override
+  String providersCountFmt(int n) {
+    return 'Провайдеров: $n';
+  }
+
+  @override
+  String get today => 'Сегодня';
+
+  @override
+  String get earlier => 'Ранее';
+
+  @override
+  String get now => 'сейчас';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n мин';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n ч';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return 'Сообщений: $n';
+  }
+
+  @override
+  String get thought => 'Размышления';
+
+  @override
+  String tokensFmt(String n) {
+    return 'Токенов: $n';
+  }
+
+  @override
+  String allowToolFmt(String tool) {
+    return 'Разрешить $tool?';
+  }
+
+  @override
+  String get replyWaits => 'Ответ ждёт вашего решения.';
+
+  @override
+  String usableModelsFmt(int n, int m) {
+    return 'Доступно: $n · провайдеров: $m';
+  }
+
+  @override
+  String get searchModels => 'Поиск моделей';
+
+  @override
+  String get version => 'Версия';
+
+  @override
+  String get endpoint => 'Эндпоинт';
+
+  @override
+  String get key => 'Ключ';
+
+  @override
+  String get toolsAndMcp => 'Инструменты и MCP';
+
+  @override
+  String get useTools => 'Использовать инструменты';
+
+  @override
+  String get useToolsTip =>
+      'Каждый вызов сначала спрашивает, если он не разрешён ниже';
+
+  @override
+  String get builtIn => 'Встроенные';
+
+  @override
+  String get memories => 'Воспоминания';
+
+  @override
+  String entriesFmt(int n) {
+    return 'Записей: $n';
+  }
+
+  @override
+  String get allowedWithoutAsking => 'Разрешены без запроса';
+
+  @override
+  String get mcpServers => 'Серверы MCP';
+
+  @override
+  String get addServer => 'Добавить сервер';
+
+  @override
+  String connectedFmt(int n) {
+    return 'Подключён · инструментов: $n';
+  }
+
+  @override
+  String get disconnected => 'Отключён';
+
+  @override
+  String get deleteKey => 'Удалить ключ';
+
+  @override
+  String moreFmt(int n) {
+    return 'Ещё $n';
+  }
+
+  @override
+  String get back => 'Назад';
+
+  @override
+  String get allProviders => 'Все провайдеры';
+
+  @override
+  String get searchProviders => 'Поиск провайдеров';
+
+  @override
+  String get backToChats => 'Назад к чатам';
+
+  @override
+  String get genChatTitleTip => 'Называет чат после первого ответа';
+
+  @override
+  String get scrollOnNewMsg => 'Прокручивать вниз при новом сообщении';
+
+  @override
+  String get scrollAfterSwitch => 'Прокручивать вниз после смены чата';
+
+  @override
+  String chatsCountFmt(int n) {
+    return 'Чатов: $n';
+  }
+
+  @override
+  String get emptyTrashAfter => 'Очищать корзину через';
+
+  @override
+  String get trashTip => 'Удалённые чаты сначала попадают сюда';
+
+  @override
+  String daysFmt(int n) {
+    return 'Дней: $n';
+  }
+
+  @override
+  String thoughtForFmt(String time) {
+    return 'Размышлял $time';
+  }
+
+  @override
+  String secondsFmt(String n) {
+    return '$n с';
+  }
+
+  @override
+  String minutesSecondsFmt(int m, int s) {
+    return '$m мин $s с';
+  }
+
+  @override
+  String get attachment => 'Вложение';
+
+  @override
+  String get sync => 'Синхронизация';
+
+  @override
+  String get syncNow => 'Синхронизировать сейчас';
+
+  @override
+  String get syncing => 'Синхронизация…';
+
+  @override
+  String get neverSynced => 'Ещё не синхронизировано';
+
+  @override
+  String lastSyncFmt(String time) {
+    return 'Последняя синхронизация: $time';
+  }
+
+  @override
+  String get syncOffTip =>
+      'Включите iCloud или WebDAV ниже для автоматической синхронизации.';
+
+  @override
+  String get backupPassword => 'Пароль резервной копии';
+
+  @override
+  String get backupEncrypted => 'Резервные копии шифруются им';
+
+  @override
+  String get backupNotEncrypted =>
+      'Не задан: резервные копии в файл не шифруются, а для синхронизации он нужен';
+
+  @override
+  String get backupEncryptedTip => 'Эта резервная копия зашифрована';
+
+  @override
+  String get backupPasswordRequired =>
+      'Сначала задайте пароль: синхронизируемые копии всегда шифруются';
+
+  @override
+  String get passwordWrong => 'Неверный пароль или копия повреждена';
+
+  @override
+  String get backupTooNew =>
+      'Эта копия из более новой версии приложения. Обновите приложение, чтобы восстановить её.';
+
+  @override
+  String get syncAppSettings => 'Синхронизировать настройки';
+
+  @override
+  String get syncAppSettingsTip =>
+      'Размер окна и заголовок остаются свои на каждом устройстве';
+
+  @override
+  String get webdavManualTip => 'Датированная копия рядом с синхронизируемой';
+
+  @override
+  String get exportFile => 'Экспорт в файл';
+
+  @override
+  String get importFile => 'Восстановить из файла';
+
+  @override
+  String get copyBackup => 'Скопировать в буфер обмена';
+
+  @override
+  String get pasteBackup => 'Восстановить из буфера обмена';
 }

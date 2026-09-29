@@ -18,6 +18,10 @@
 	     unsandboxed. The sandboxed Mac App Store build is no longer maintained. -->
 	<key>com.apple.security.app-sandbox</key>
 	<false/>
+	<!-- Unsandboxed, but file_picker checks for it before opening a panel
+	     (ENTITLEMENT_NOT_FOUND without it). -->
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
 	<key>keychain-access-groups</key>
 	<array/>
 </dict>

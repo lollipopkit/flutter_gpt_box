@@ -13,7 +13,6 @@ import 'package:gpt_box/data/res/build_data.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/res/url.dart';
 import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/page/home/approval.dart';
 import 'package:gpt_box/view/page/home/chat_list.dart';
 import 'package:gpt_box/view/page/home/chat_view.dart';
 import 'package:gpt_box/view/page/home/composer.dart';
@@ -24,6 +23,9 @@ import 'package:gpt_box/view/page/settings/setting.dart';
 part 'desktop.dart';
 part 'url_scheme.dart';
 
+/// One sidebar and the content beside it on a wide window: the chats, or in
+/// the settings their categories. A phone has the chat, with the chats in a
+/// drawer and the settings pushed.
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -39,30 +41,34 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   @override
   void dispose() {
     _linkSub?.cancel();
-    Chats.approver = null;
     super.dispose();
   }
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) async {
-    Chats.approver = (call) => askToolApproval(this.context, call);
     Chats.current.value ??= Stores.chat.all().firstOrNull?.id;
     unawaited(Chats.purgeTrash());
     _initLinks();
     if (Stores.setting.autoCheckUpdate.get()) {
-      unawaited(AppUpdateIface.doUpdate(
-        githubReleasesUrl: Urls.githubReleasesApi,
-        context: context,
-        build: BuildData.build,
-      ));
+      unawaited(
+        AppUpdateIface.doUpdate(
+          githubReleasesUrl: Urls.githubReleasesApi,
+          context: context,
+          build: BuildData.build,
+        ),
+      );
     }
     if (Llm.configured.value.isEmpty && context.mounted) {
       // Nothing can be sent without a key; say so up front.
-      Toast.show(l10n.noProviderKey, action: ToastAction(label: l10n.providers, onTap: _openProviders));
+      Toast.show(
+        l10n.noProviderKey,
+        action: ToastAction(
+          label: l10n.providers,
+          onTap: () => _openSettings(SettingsTab.providers),
+        ),
+      );
     }
   }
-
-  void _openProviders() => ProvidersPage.route.go(context);
 
   void _initLinks() {
     DeepLinks.register(_handleLink);
@@ -72,18 +78,27 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     );
   }
 
-  bool get _split => MediaQuery.sizeOf(context).width >= AdaptivePanes.kSplitWidth;
-
   void _newChat() {
     Chats.current.value = null;
-    if (!_split) _scaffold.currentState?.closeDrawer();
+    SettingsNav.close();
+    _scaffold.currentState?.closeDrawer();
   }
 
-  void _openSettings() => SettingsPage.route.go(context);
+  void _openSettings([SettingsTab tab = SettingsTab.app]) {
+    _scaffold.currentState?.closeDrawer();
+    if (SettingsNav.inline) {
+      SettingsNav.open(context, tab);
+    } else if (tab == SettingsTab.app) {
+      SettingsPage.route.go(context);
+    } else {
+      SettingsTabPage.route.go(context, args: tab);
+    }
+  }
 
   void _search() {
-    if (!_split) _scaffold.currentState?.openDrawer();
-    ChatList.searchRequest.notify();
+    SettingsNav.close();
+    if (!SettingsNav.inline) _scaffold.currentState?.openDrawer();
+    ChatSidebar.searchRequest.notify();
   }
 
   void _step(int delta) {
@@ -96,13 +111,31 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final body = LayoutBuilder(
+      builder: (context, cons) {
+        final wide = cons.maxWidth >= AdaptivePanes.kSplitWidth;
+        SettingsNav.inline = wide;
+        return wide ? _wide() : _narrow();
+      },
+    );
     final scaffold = Scaffold(
       key: _scaffold,
-      appBar: _appBar(),
-      drawer: _split ? null : Drawer(child: SafeArea(child: ChatList(onPicked: () => Navigator.of(context).pop()))),
-      body: _body(),
+      drawer: Drawer(
+        child: SafeArea(
+          child: ChatSidebar(
+            onNewChat: _newChat,
+            onOpenSettings: _openSettings,
+            onPicked: () => _scaffold.currentState?.closeDrawer(),
+          ),
+        ),
+      ),
+      drawerEnableOpenDragGesture: !isDesktop,
+      body: body,
     );
-    final shortcuts = CallbackShortcuts(bindings: _desktopShortcuts(this), child: Focus(autofocus: true, child: scaffold));
+    final shortcuts = CallbackShortcuts(
+      bindings: _desktopShortcuts(this),
+      child: Focus(autofocus: true, child: scaffold),
+    );
     return ExitConfirm(
       onPop: (_) => ExitConfirm.exitApp(),
       // The target platform, not the host: the menu bar is the platform's.
@@ -112,40 +145,47 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
     );
   }
 
-  PreferredSizeWidget _appBar() {
-    return CustomAppBar(
-      title: ListenableBuilder(
-        listenable: Listenable.merge([Chats.current, Stores.chat.changes]),
-        builder: (_, _) {
-          final id = Chats.current.value;
-          final title = id == null ? l10n.newChat : Stores.chat.fetch(id)?.title ?? l10n.untitled;
-          return Text(title, maxLines: 1, overflow: TextOverflow.ellipsis, style: UIs.text15);
-        },
+  Widget _wide() {
+    final sets = Stores.setting;
+    // The seam drags; the sidebar does not fold, so there is no grip on it.
+    return sets.paneListWidth.listenable().listenVal(
+      (width) => AdaptivePanes.surface(
+        listWidth: width,
+        onListWidthChanged: sets.paneListWidth.set,
+        listBuilder: (_, _) => ChatSidebar(onNewChat: _newChat, onOpenSettings: _openSettings),
+        surfaceBuilder: (_, _) => const ChatPane(),
       ),
-      actions: [
-        Chats.current.listenVal((id) {
-          if (id == null) return UIs.placeholder;
-          return IconButton(tooltip: l10n.share, icon: const Icon(Icons.share), onPressed: () => shareChat(context, id));
-        }),
-        IconButton(tooltip: l10n.newChat, icon: const Icon(Icons.add_comment_outlined), onPressed: _newChat),
-        IconButton(tooltip: libL10n.setting, icon: const Icon(Icons.settings_outlined), onPressed: _openSettings),
-      ],
     );
   }
 
-  Widget _body() {
-    final sets = Stores.setting;
-    return sets.paneListWidth.listenable().listenVal(
-      (width) => sets.paneListCollapsed.listenable().listenVal(
-        (collapsed) => AdaptivePanes.surface(
-          listWidth: width,
-          onListWidthChanged: sets.paneListWidth.set,
-          collapsed: collapsed,
-          onCollapsedChanged: sets.paneListCollapsed.set,
-          listBuilder: (_, _) => const ChatList(),
-          // Narrow: the list is in the drawer, the chat has the width.
-          surfaceBuilder: (_, _) => const ChatView(),
-        ),
+  Widget _narrow() {
+    return SafeArea(
+      bottom: false,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 52,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: Row(
+                children: [
+                  Btn.icon(
+                    icon: const Icon(Icons.menu, size: 22),
+                    text: l10n.chat,
+                    onTap: () => _scaffold.currentState?.openDrawer(),
+                  ),
+                  const Expanded(child: ChatTitle(center: true)),
+                  Btn.icon(
+                    icon: const Icon(Icons.settings_outlined, size: 22),
+                    text: libL10n.setting,
+                    onTap: _openSettings,
+                  ),
+                ].joinWith(const SizedBox(width: 3)),
+              ),
+            ),
+          ),
+          const Expanded(child: ChatPane(compact: true)),
+        ],
       ),
     );
   }

@@ -5,6 +5,11 @@ class SettingStore extends SqliteStore {
 
   static final instance = SettingStore._();
 
+  /// This device's own: never in a backup, never set by one. A window's size
+  /// and where the sidebar was dragged to are about this screen, and the
+  /// title bar and intro about this install.
+  static const deviceLocalKeys = {'windowState', 'paneListWidth', 'hideTitleBar', 'introVer'};
+
   late final themeMode = propertyDefault('themeMode', 0);
 
   late final themeColorSeed = propertyDefault('themeColorSeed', 4287106639);
@@ -50,8 +55,5 @@ class SettingStore extends SqliteStore {
   late final trashDays = propertyDefault('trashDays', 7);
 
   /// Width of the chat list beside the chat, in the two-column layout.
-  late final paneListWidth = propertyDefault('paneListWidth', 280.0);
-
-  /// Whether the chat list beside the chat is folded away.
-  late final paneListCollapsed = propertyDefault('paneListCollapsed', false);
+  late final paneListWidth = propertyDefault('paneListWidth', 264.0);
 }

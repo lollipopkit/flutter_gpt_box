@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/page/settings/provider.dart';
+import 'package:gpt_box/view/page/settings/providers.dart';
 import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:shortid/shortid.dart';
 
@@ -14,11 +16,15 @@ import 'package:shortid/shortid.dart';
 /// An OpenAI-compatible endpoint's models are listed while it is being
 /// filled in; typed ids are kept beside them. Nothing is stored until saved.
 class CustomProviderPage extends StatefulWidget {
-  const CustomProviderPage({super.key, this.args});
+  const CustomProviderPage({super.key, this.args, this.onBack});
 
   /// The provider to edit, or a new one prefilled (a deep link). Null starts
   /// empty.
   final LlmCustomProvider? args;
+
+  /// Back to the list, where this is shown in its place. Pushed, the route
+  /// is popped instead.
+  final VoidCallback? onBack;
 
   static const route = AppRoute<void, LlmCustomProvider>(page: CustomProviderPage.new, path: '/providers/custom');
 
@@ -155,8 +161,10 @@ class _CustomProviderPageState extends State<CustomProviderPage> {
     unawaited(Llm.refresh(only: [_id]).then((errors) {
       if (errors[_id] case final e?) Toast.show('$name: $e');
     }, onError: (Object e, StackTrace s) => Loggers.app.warning('Refresh models', e, s)));
-    if (mounted) context.pop();
+    if (mounted) _back();
   }
+
+  void _back() => widget.onBack != null ? widget.onBack!() : context.pop();
 
   Future<void> _delete() async {
     final ok = await context.showRoundDialog<bool>(
@@ -175,90 +183,110 @@ class _CustomProviderPageState extends State<CustomProviderPage> {
         await Llm.applyCustomProviders();
       },
     );
-    if (mounted) context.pop();
+    if (mounted) _back();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: Text(l10n.customProvider),
-        actions: [
-          if (_existing) IconButton(tooltip: libL10n.delete, icon: const Icon(Icons.delete_outline), onPressed: _delete),
-          IconButton(tooltip: libL10n.save, icon: const Icon(Icons.save), onPressed: _save),
-        ],
+    final body = SectionList(
+      header: ListenableBuilder(
+        listenable: Listenable.merge([_name, _url, _listed]),
+        builder: (_, _) => ProviderHeader(
+          title: _name.text.trim().isEmpty ? l10n.customProvider : _name.text.trim(),
+          subtitle: [
+            if (_baseUrl.isNotEmpty) _baseUrl,
+            _api.wire,
+            if (_listed.value case final m?) l10n.modelsCountFmt(m.length),
+          ].join(' · '),
+          onBack: _back,
+          onRefresh: _api.listsModels ? _list : null,
+        ),
       ),
-      body: SectionList(
-        children: [
-          Input(controller: _name, label: libL10n.name, autoFocus: !_existing && _name.text.isEmpty),
-          Input(controller: _url, label: libL10n.apiEndpoint, hint: 'https://api.example.com/v1'),
-          DropdownButtonFormField<LlmApi>(
-            initialValue: _api,
-            decoration: InputDecoration(labelText: libL10n.apiProtocol),
-            items: [for (final a in LlmApi.values) DropdownMenuItem(value: a, child: Text(a.wire))],
-            onChanged: (v) {
-              if (v == null || v == _api) return;
-              setState(() => _api = v);
-              _list();
-            },
-          ).paddingSymmetric(horizontal: 7),
-          UIs.height13,
-          Input(controller: _key, label: libL10n.apiKey, obscureText: true),
-          Text(l10n.keyInKeychain, style: UIs.text12Grey).paddingSymmetric(horizontal: 7),
-          UIs.height13,
-          CenterGreyTitle(l10n.model),
-          if (_api.listsModels) _buildListed(),
-          Input(controller: _extra, label: l10n.model, hint: 'model-a, model-b', maxLines: 4, minLines: 1),
-          Text(
-            _api.listsModels ? l10n.modelsListedTip : l10n.modelsRequired,
-            style: UIs.text12Grey,
-          ).paddingSymmetric(horizontal: 7),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildListed() {
-    return ListenableBuilder(
-      listenable: Listenable.merge([_listed, _listing, _listError]),
-      builder: (context, _) {
-        final models = _listed.value;
-        final err = _listError.value;
-        final Widget title;
-        if (_listing.value) {
-          title = Row(
+      children: [
+        SettingsGroup(
+          title: l10n.endpoint,
+          header: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(width: 15, height: 15, child: CircularProgressIndicator(strokeWidth: 2)),
-              UIs.width7,
-              Text(l10n.refreshModels, style: UIs.textGrey),
+              Input(controller: _name, label: libL10n.name, autoFocus: !_existing && _name.text.isEmpty),
+              Input(controller: _url, label: libL10n.apiEndpoint, hint: 'https://api.example.com/v1'),
+              DropdownButtonFormField<LlmApi>(
+                initialValue: _api,
+                decoration: InputDecoration(labelText: libL10n.apiProtocol, border: InputBorder.none),
+                items: [for (final a in LlmApi.values) DropdownMenuItem(value: a, child: Text(a.wire))],
+                onChanged: (v) {
+                  if (v == null || v == _api) return;
+                  setState(() => _api = v);
+                  _list();
+                },
+              ).paddingSymmetric(horizontal: 13),
             ],
-          );
-        } else if (err != null) {
-          title = Text(err, style: TextStyle(color: context.theme.colorScheme.error));
-        } else if (models != null) {
-          title = Text(l10n.modelsCountFmt(models.length));
-        } else {
-          title = Text(libL10n.empty, style: UIs.textGrey);
-        }
-        final refresh = IconButton(
-          tooltip: l10n.refreshModels,
-          icon: const Icon(Icons.refresh),
-          onPressed: _listing.value ? null : _list,
-        );
-        if (models == null || models.isEmpty) return ListTile(leading: refresh, title: title).cardx;
-        return ExpandTile(
-          leading: refresh,
-          title: title,
-          children: [
-            for (final m in models)
-              ListTile(
-                dense: true,
-                title: Text(m.name),
-                subtitle: m.name == m.id ? null : Text(m.id, style: UIs.text12Grey),
+          ),
+        ),
+        SettingsGroup(
+          title: l10n.key,
+          header: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Input(controller: _key, label: libL10n.apiKey, obscureText: true),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(13, 0, 13, 6),
+                child: Text(l10n.keyInKeychain, style: UIs.text12Grey),
               ),
-          ],
-        ).cardx;
-      },
+            ],
+          ),
+        ),
+        ListenableBuilder(
+          listenable: Listenable.merge([_listed, _listing, _listError]),
+          builder: (context, _) {
+            final models = _listed.value ?? const <LlmModelInfo>[];
+            final err = _listError.value;
+            return SettingsGroup(
+              title: '${l10n.model} · ${models.length}',
+              rows: [
+                if (_listing.value)
+                  SettingsRow(
+                    leading: const SizedBox(width: 17, height: 17, child: CircularProgressIndicator(strokeWidth: 2)),
+                    title: l10n.refreshModels,
+                    muted: true,
+                  )
+                else if (err != null)
+                  SettingsRow(icon: Icons.error_outline, title: libL10n.error, error: err, trailing: Btn.text(text: libL10n.retry, onTap: _list)),
+                for (final m in models)
+                  SettingsRow(
+                    title: m.name,
+                    subtitle: modelSubtitle(m),
+                    trailing: FavoriteStar(model: LlmModelRef(_id, m.id)),
+                  ),
+              ],
+              footer: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Input(controller: _extra, label: l10n.model, hint: 'model-a, model-b', maxLines: 4, minLines: 1),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 13),
+                    child: Text(_api.listsModels ? l10n.modelsListedTip : l10n.modelsRequired, style: UIs.text12Grey),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (_existing)
+                        Btn.text(
+                          text: libL10n.delete,
+                          textStyle: TextStyle(color: context.theme.colorScheme.error),
+                          onTap: _delete,
+                        ),
+                      Btn.text(text: libL10n.save, onTap: _save),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
     );
+    if (widget.onBack != null) return body;
+    return Scaffold(body: SafeArea(child: body));
   }
 }

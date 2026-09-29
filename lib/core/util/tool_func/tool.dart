@@ -41,10 +41,23 @@ abstract final class Tools {
 
   static ToolFunc? internal(String name) => internalTools.firstWhereOrNull((e) => e.name == name);
 
-  /// What the approval dialog says about [call].
-  static String helpFor(LlmToolCall call) {
-    final f = internal(call.name);
-    if (f != null) return f.help(call.args);
-    return '```json\n${const JsonEncoder.withIndent('  ').convert(call.args)}\n```';
+  /// Runs [run] and keeps how long it took in the result's `details`, which
+  /// the session stores with it for the UI (`ms`).
+  static Future<LlmToolResult> timed(Future<LlmToolResult> Function() run) async {
+    final sw = Stopwatch()..start();
+    final r = await run();
+    return LlmToolResult(
+      content: r.content,
+      details: {...?(r.details as Map?)?.cast<String, Object?>(), 'ms': sw.elapsedMilliseconds},
+      terminate: r.terminate,
+    );
   }
+
+  /// A tool's name as the user reads it: the built-in one's own, an MCP
+  /// tool's as `server__tool` has it.
+  static String labelOf(String name) => internal(name)?.l10nName ?? name;
+
+  /// A call's arguments on one line.
+  static String summaryOf(String name, Map<String, Object?> args) =>
+      internal(name)?.summary(args) ?? jsonEncode(args);
 }

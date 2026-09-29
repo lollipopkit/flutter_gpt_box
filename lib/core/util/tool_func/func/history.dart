@@ -42,6 +42,9 @@ The user's prompt maybe included.''';
   String get l10nName => l10n.history;
 
   @override
+  String summary(_Map args) => [...?(args['keywords'] as List?)?.map((e) => '$e')].join(', ');
+
+  @override
   String? get l10nTip => l10n.historyToolTip;
 
   @override

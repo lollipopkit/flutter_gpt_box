@@ -18,13 +18,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get autoCheckUpdate => '自动检查更新';
 
   @override
-  String get autoScrollBottom => '自动滚动到底部';
-
-  @override
   String get backupTip => '请保证备份文件私密且安全！';
-
-  @override
-  String get calcTokenLen => '计算 Tokens 长度';
 
   @override
   String get chat => '聊天';
@@ -55,16 +49,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get emptyTrash => '清理回收站';
-
-  @override
   String get emptyTrashTip => '==0，下次启动时删除。<0 不自动删除。';
-
-  @override
-  String get fontSize => '字体大小';
-
-  @override
-  String get fontSizeSettingTip => '仅对代码块生效';
 
   @override
   String get genChatTitle => '生成聊天标题';
@@ -104,9 +89,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get licenseMenuItem => '开放源代码许可';
 
   @override
-  String get list => '列表';
-
-  @override
   String get manual => '手动';
 
   @override
@@ -138,12 +120,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newChat => '新建聊天';
 
   @override
-  String get onMsgCome => '当有新消息';
-
-  @override
-  String get onSwitchChat => '当切换对话';
-
-  @override
   String get passwd => '密码';
 
   @override
@@ -154,9 +130,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get rename => '重命名';
-
-  @override
-  String get replay => '重放';
 
   @override
   String get share => '分享';
@@ -171,9 +144,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String sureRestoreFmt(Object time) {
     return '确定恢复备份（$time）？';
   }
-
-  @override
-  String get switcher => '开关';
 
   @override
   String syncConflict(Object a, Object b) {
@@ -191,11 +161,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tool => '工具';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return '是否同意使用工具 $tool ？';
-  }
 
   @override
   String toolHttpReqHelp(Object host) {
@@ -294,6 +259,230 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get extraVarsTip =>
       '每行一个 KEY=VALUE，用于需要不止一个 key 的服务商（如 Azure 资源、Cloudflare 账号）。';
+
+  @override
+  String providersCountFmt(int n) {
+    return '$n 个服务商';
+  }
+
+  @override
+  String get today => '今天';
+
+  @override
+  String get earlier => '更早';
+
+  @override
+  String get now => '刚刚';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n 分钟';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n 小时';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return '$n 条消息';
+  }
+
+  @override
+  String get thought => '已思考';
+
+  @override
+  String tokensFmt(String n) {
+    return '$n tokens';
+  }
+
+  @override
+  String allowToolFmt(String tool) {
+    return '允许$tool？';
+  }
+
+  @override
+  String get replyWaits => '回复会等待你的决定。';
+
+  @override
+  String usableModelsFmt(int n, int m) {
+    return '$n 个可用 · $m 个服务商';
+  }
+
+  @override
+  String get searchModels => '搜索模型';
+
+  @override
+  String get version => '版本';
+
+  @override
+  String get endpoint => '端点';
+
+  @override
+  String get key => '密钥';
+
+  @override
+  String get toolsAndMcp => '工具与 MCP';
+
+  @override
+  String get useTools => '使用工具';
+
+  @override
+  String get useToolsTip => '每次调用都会先询问，除非已在下方允许';
+
+  @override
+  String get builtIn => '内置';
+
+  @override
+  String get memories => '记忆';
+
+  @override
+  String entriesFmt(int n) {
+    return '$n 条';
+  }
+
+  @override
+  String get allowedWithoutAsking => '无需询问即可使用';
+
+  @override
+  String get mcpServers => 'MCP 服务器';
+
+  @override
+  String get addServer => '添加服务器';
+
+  @override
+  String connectedFmt(int n) {
+    return '已连接 · $n 个工具';
+  }
+
+  @override
+  String get disconnected => '未连接';
+
+  @override
+  String get deleteKey => '删除密钥';
+
+  @override
+  String moreFmt(int n) {
+    return '还有 $n 个';
+  }
+
+  @override
+  String get back => '返回';
+
+  @override
+  String get allProviders => '全部服务商';
+
+  @override
+  String get searchProviders => '搜索服务商';
+
+  @override
+  String get backToChats => '返回对话';
+
+  @override
+  String get genChatTitleTip => '在首次回复后为对话命名';
+
+  @override
+  String get scrollOnNewMsg => '新消息时滚动到底部';
+
+  @override
+  String get scrollAfterSwitch => '切换对话后滚动到底部';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n 个对话';
+  }
+
+  @override
+  String get emptyTrashAfter => '清空回收站间隔';
+
+  @override
+  String get trashTip => '删除的对话会先放在这里';
+
+  @override
+  String daysFmt(int n) {
+    return '$n 天';
+  }
+
+  @override
+  String thoughtForFmt(String time) {
+    return '思考了 $time';
+  }
+
+  @override
+  String secondsFmt(String n) {
+    return '$n 秒';
+  }
+
+  @override
+  String minutesSecondsFmt(int m, int s) {
+    return '$m 分 $s 秒';
+  }
+
+  @override
+  String get attachment => '附件';
+
+  @override
+  String get sync => '同步';
+
+  @override
+  String get syncNow => '立即同步';
+
+  @override
+  String get syncing => '同步中…';
+
+  @override
+  String get neverSynced => '尚未同步';
+
+  @override
+  String lastSyncFmt(String time) {
+    return '上次同步：$time';
+  }
+
+  @override
+  String get syncOffTip => '在下方开启 iCloud 或 WebDAV 以自动同步。';
+
+  @override
+  String get backupPassword => '备份密码';
+
+  @override
+  String get backupEncrypted => '备份将用它加密';
+
+  @override
+  String get backupNotEncrypted => '未设置：文件备份为明文，且同步需要密码';
+
+  @override
+  String get backupEncryptedTip => '此备份已加密';
+
+  @override
+  String get backupPasswordRequired => '请先设置备份密码：同步的备份始终加密';
+
+  @override
+  String get passwordWrong => '密码错误，或备份已损坏';
+
+  @override
+  String get backupTooNew => '此备份来自更新版本的应用，请更新后再恢复。';
+
+  @override
+  String get syncAppSettings => '同步应用设置';
+
+  @override
+  String get syncAppSettingsTip => '窗口大小和标题栏始终按设备保存';
+
+  @override
+  String get webdavManualTip => '在同步文件旁保存带日期的副本';
+
+  @override
+  String get exportFile => '导出到文件';
+
+  @override
+  String get importFile => '从文件恢复';
+
+  @override
+  String get copyBackup => '复制到剪贴板';
+
+  @override
+  String get pasteBackup => '从剪贴板恢复';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -310,13 +499,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get autoCheckUpdate => '自動檢查更新';
 
   @override
-  String get autoScrollBottom => '自動捲動到底部';
-
-  @override
   String get backupTip => '請確保備份檔案私密且安全！';
-
-  @override
-  String get calcTokenLen => '計算 Tokens 長度';
 
   @override
   String get chat => '聊天';
@@ -347,16 +530,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   }
 
   @override
-  String get emptyTrash => '清理回收站';
-
-  @override
   String get emptyTrashTip => '==0，下次啟動時刪除。<0 不自動刪除。';
-
-  @override
-  String get fontSize => '字型大小';
-
-  @override
-  String get fontSizeSettingTip => '僅對程式碼區塊生效';
 
   @override
   String get genChatTitle => '生成聊天標題';
@@ -396,9 +570,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get licenseMenuItem => '開放源碼許可';
 
   @override
-  String get list => '列表';
-
-  @override
   String get manual => '手動';
 
   @override
@@ -430,12 +601,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get newChat => '新建聊天';
 
   @override
-  String get onMsgCome => '當有新訊息';
-
-  @override
-  String get onSwitchChat => '當切換對話時';
-
-  @override
   String get passwd => '密碼';
 
   @override
@@ -446,9 +611,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get rename => '重新命名';
-
-  @override
-  String get replay => '重播';
 
   @override
   String get share => '分享';
@@ -463,9 +625,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String sureRestoreFmt(Object time) {
     return '確定恢復備份（$time）？';
   }
-
-  @override
-  String get switcher => '開關';
 
   @override
   String syncConflict(Object a, Object b) {
@@ -483,11 +642,6 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String get tool => '工具';
-
-  @override
-  String toolConfirmFmt(Object tool) {
-    return '是否同意使用工具 $tool ？';
-  }
 
   @override
   String toolHttpReqHelp(Object host) {
@@ -586,4 +740,228 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   @override
   String get extraVarsTip =>
       '每行一個 KEY=VALUE，用於除金鑰外還需要其他設定的服務商（Azure 資源、Cloudflare 帳號）。';
+
+  @override
+  String providersCountFmt(int n) {
+    return '$n 個服務商';
+  }
+
+  @override
+  String get today => '今天';
+
+  @override
+  String get earlier => '更早';
+
+  @override
+  String get now => '剛剛';
+
+  @override
+  String minutesFmt(int n) {
+    return '$n 分鐘';
+  }
+
+  @override
+  String hoursFmt(int n) {
+    return '$n 小時';
+  }
+
+  @override
+  String messagesCountFmt(int n) {
+    return '$n 則訊息';
+  }
+
+  @override
+  String get thought => '已思考';
+
+  @override
+  String tokensFmt(String n) {
+    return '$n tokens';
+  }
+
+  @override
+  String allowToolFmt(String tool) {
+    return '允許$tool？';
+  }
+
+  @override
+  String get replyWaits => '回覆會等待你的決定。';
+
+  @override
+  String usableModelsFmt(int n, int m) {
+    return '$n 個可用 · $m 個服務商';
+  }
+
+  @override
+  String get searchModels => '搜尋模型';
+
+  @override
+  String get version => '版本';
+
+  @override
+  String get endpoint => '端點';
+
+  @override
+  String get key => '金鑰';
+
+  @override
+  String get toolsAndMcp => '工具與 MCP';
+
+  @override
+  String get useTools => '使用工具';
+
+  @override
+  String get useToolsTip => '每次呼叫都會先詢問，除非已在下方允許';
+
+  @override
+  String get builtIn => '內建';
+
+  @override
+  String get memories => '記憶';
+
+  @override
+  String entriesFmt(int n) {
+    return '$n 則';
+  }
+
+  @override
+  String get allowedWithoutAsking => '無需詢問即可使用';
+
+  @override
+  String get mcpServers => 'MCP 伺服器';
+
+  @override
+  String get addServer => '新增伺服器';
+
+  @override
+  String connectedFmt(int n) {
+    return '已連線 · $n 個工具';
+  }
+
+  @override
+  String get disconnected => '未連線';
+
+  @override
+  String get deleteKey => '刪除金鑰';
+
+  @override
+  String moreFmt(int n) {
+    return '還有 $n 個';
+  }
+
+  @override
+  String get back => '返回';
+
+  @override
+  String get allProviders => '全部服務商';
+
+  @override
+  String get searchProviders => '搜尋服務商';
+
+  @override
+  String get backToChats => '返回對話';
+
+  @override
+  String get genChatTitleTip => '在首次回覆後為對話命名';
+
+  @override
+  String get scrollOnNewMsg => '新訊息時捲動到底部';
+
+  @override
+  String get scrollAfterSwitch => '切換對話後捲動到底部';
+
+  @override
+  String chatsCountFmt(int n) {
+    return '$n 個對話';
+  }
+
+  @override
+  String get emptyTrashAfter => '清空垃圾桶間隔';
+
+  @override
+  String get trashTip => '刪除的對話會先放在這裡';
+
+  @override
+  String daysFmt(int n) {
+    return '$n 天';
+  }
+
+  @override
+  String thoughtForFmt(String time) {
+    return '思考了 $time';
+  }
+
+  @override
+  String secondsFmt(String n) {
+    return '$n 秒';
+  }
+
+  @override
+  String minutesSecondsFmt(int m, int s) {
+    return '$m 分 $s 秒';
+  }
+
+  @override
+  String get attachment => '附件';
+
+  @override
+  String get sync => '同步';
+
+  @override
+  String get syncNow => '立即同步';
+
+  @override
+  String get syncing => '同步中…';
+
+  @override
+  String get neverSynced => '尚未同步';
+
+  @override
+  String lastSyncFmt(String time) {
+    return '上次同步：$time';
+  }
+
+  @override
+  String get syncOffTip => '在下方開啟 iCloud 或 WebDAV 以自動同步。';
+
+  @override
+  String get backupPassword => '備份密碼';
+
+  @override
+  String get backupEncrypted => '備份將用它加密';
+
+  @override
+  String get backupNotEncrypted => '未設定：檔案備份為明文，且同步需要密碼';
+
+  @override
+  String get backupEncryptedTip => '此備份已加密';
+
+  @override
+  String get backupPasswordRequired => '請先設定備份密碼：同步的備份一律加密';
+
+  @override
+  String get passwordWrong => '密碼錯誤，或備份已損壞';
+
+  @override
+  String get backupTooNew => '此備份來自較新版本的應用程式，請更新後再還原。';
+
+  @override
+  String get syncAppSettings => '同步應用程式設定';
+
+  @override
+  String get syncAppSettingsTip => '視窗大小和標題列始終依裝置保存';
+
+  @override
+  String get webdavManualTip => '在同步檔案旁保存帶日期的副本';
+
+  @override
+  String get exportFile => '匯出到檔案';
+
+  @override
+  String get importFile => '從檔案還原';
+
+  @override
+  String get copyBackup => '複製到剪貼簿';
+
+  @override
+  String get pasteBackup => '從剪貼簿還原';
 }

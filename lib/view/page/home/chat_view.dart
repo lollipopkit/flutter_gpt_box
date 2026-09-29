@@ -1,43 +1,160 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:fl_pi_llm/fl_pi_llm.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_box/core/llm/chats.dart';
+import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
+import 'package:gpt_box/view/page/home/chat_list.dart';
 import 'package:gpt_box/view/page/home/composer.dart';
 import 'package:gpt_box/view/page/home/message.dart';
+import 'package:gpt_box/view/page/home/share.dart';
+import 'package:gpt_box/view/widget/menu.dart';
+import 'package:gpt_box/view/widget/transitions.dart';
 
-/// The conversation on screen and the composer under it.
-class ChatView extends StatelessWidget {
-  const ChatView({super.key});
+/// The chat on screen: its title row (on a wide window), the thread and the
+/// composer.
+class ChatPane extends StatelessWidget {
+  const ChatPane({super.key, this.compact = false});
+
+  /// On a phone: the title is the home page's top bar.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     return Chats.current.listenVal((id) {
       return Column(
         children: [
+          if (!compact) _Header(chatId: id),
           Expanded(
-            child: id == null
-                ? EmptyPane(icon: Icons.chat_bubble_outline, title: l10n.newChat, label: l10n.startChatTip)
-                : _Conversation(key: ValueKey(id), chatId: id),
-          ),
-          SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(11, 5, 11, 11),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 860),
-                child: Composer(
-                  key: ValueKey(id),
-                  chatId: id,
-                  onChatCreated: (id) => Chats.current.value = id,
-                ),
-              ),
+            child: FadeThroughSwitcher(
+              child: id == null
+                  ? EmptyPane(
+                      key: const ValueKey('empty'),
+                      icon: Icons.chat_bubble_outline,
+                      title: l10n.newChat,
+                      label: l10n.startChatTip,
+                    )
+                  : _Conversation(key: ValueKey(id), chatId: id),
             ),
+          ),
+          LayoutBuilder(
+            builder: (context, cons) {
+              final side = (cons.maxWidth * 0.03).clamp(9.0, 20.0);
+              return SafeArea(
+                top: false,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(side, 0, side, 13),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 760),
+                    child: Composer(
+                      key: ValueKey(id),
+                      chatId: id,
+                      compact: compact,
+                      onChatCreated: (id) => Chats.current.value = id,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       );
     });
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({required this.chatId});
+
+  final String? chatId;
+
+  @override
+  Widget build(BuildContext context) {
+    final id = chatId;
+    return SizedBox(
+      height: 54,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 9, 0),
+        child: Row(
+          children: [
+            const Expanded(child: ChatTitle()),
+            if (id != null) ...[
+              Btn.icon(icon: const Icon(Icons.ios_share, size: 18), text: l10n.share, onTap: () => shareChat(context, id)),
+              if (Stores.chat.fetch(id) case final meta?)
+                MenuBtn(
+                  actions: chatActions(context, meta),
+                  builder: (toggle) => Btn.icon(icon: const Icon(Icons.more_vert, size: 18), text: l10n.more, onTap: toggle),
+                ),
+            ],
+          ].joinWith(const SizedBox(width: 3)),
+        ),
+      ),
+    );
+  }
+}
+
+/// The chat's name, a spinner while it replies, and under it the model — and
+/// how long the chat is, when [center] is off.
+class ChatTitle extends StatelessWidget {
+  const ChatTitle({super.key, this.center = false});
+
+  /// Centred in a phone's top bar, with only the model under it.
+  final bool center;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: Listenable.merge([Chats.current, Stores.chat.changes, Llm.providers]),
+      builder: (context, _) {
+        final id = Chats.current.value;
+        final meta = id == null ? null : Stores.chat.fetch(id);
+        final model = meta?.model ?? Llm.defaultModel;
+        final modelName = Llm.info(model)?.name ?? model?.id ?? '';
+        final title = id == null ? l10n.newChat : meta?.title ?? l10n.untitled;
+        if (id == null) return _build(title, modelName, running: false);
+        Widget live(OpenChat chat) => ListenableBuilder(
+          listenable: Listenable.merge([chat.running, chat.entries]),
+          builder: (_, _) {
+            final n = threadBlocks(chat.entries.value).where((b) => b is! SummaryBlock).length;
+            final sub = center || n == 0 ? modelName : '$modelName · ${l10n.messagesCountFmt(n)}';
+            return _build(title, sub, running: chat.running.value);
+          },
+        );
+        if (Chats.openOf(id) case final chat?) return live(chat);
+        // The thread opens it; until then, what the list knows.
+        return FutureBuilder<OpenChat>(
+          future: Chats.open(id),
+          builder: (_, snap) => snap.data == null ? _build(title, modelName, running: false) : live(snap.data!),
+        );
+      },
+    );
+  }
+
+  Widget _build(String title, String sub, {required bool running}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: center ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 15, height: 20 / 15, fontWeight: FontWeight.w500),
+              ),
+            ),
+            if (running) ...[
+              const SizedBox(width: 7),
+              const SizedLoading(20, padding: 3, builder: SizedLoading.circularBuilder),
+            ],
+          ],
+        ),
+        if (sub.isNotEmpty) Text(sub, maxLines: 1, overflow: TextOverflow.ellipsis, style: UIs.text12Grey),
+      ],
+    );
   }
 }
 
@@ -67,7 +184,8 @@ class _ConversationState extends State<_Conversation> {
     _open.then((c) {
       c.streaming.addListener(_follow);
       c.entries.addListener(_follow);
-      _jumpToEnd();
+      c.approvals.addListener(_follow);
+      if (Stores.setting.scrollAfterSwitch.get() || c.entries.value.length < 3) _jumpToEnd();
     }, onError: (_) {});
   }
 
@@ -76,6 +194,7 @@ class _ConversationState extends State<_Conversation> {
     _open.then((c) {
       c.streaming.removeListener(_follow);
       c.entries.removeListener(_follow);
+      c.approvals.removeListener(_follow);
     }, onError: (_) {});
     _scroll.dispose();
     super.dispose();
@@ -100,46 +219,52 @@ class _ConversationState extends State<_Conversation> {
           return EmptyPane(icon: Icons.error_outline, title: libL10n.error, label: '${snap.error}');
         }
         final chat = snap.data;
-        if (chat == null) return const Center(child: CircularProgressIndicator());
+        if (chat == null) return const Center(child: SizedLoading(25, builder: SizedLoading.circularBuilder));
         return ListenableBuilder(
-          listenable: Listenable.merge([chat.entries, chat.streaming, chat.error]),
+          listenable: Listenable.merge([chat.entries, chat.streaming, chat.error, chat.approvals, chat.running]),
           builder: (context, _) {
-            final entries = [
-              for (final e in chat.entries.value)
-                if (_visible(e)) e,
-            ];
+            final blocks = threadBlocks(chat.entries.value);
             final streaming = chat.streaming.value;
             final error = chat.error.value;
-            return Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 900),
-                child: ListView.builder(
-                  controller: _scroll,
-                  padding: const EdgeInsets.symmetric(vertical: 13),
-                  itemCount: entries.length + (streaming == null ? 0 : 1) + (error == null ? 0 : 1),
-                  itemBuilder: (_, i) {
-                    if (i < entries.length) {
-                      return MessageView(key: ValueKey(entries[i].id), chat: chat, entry: entries[i]);
-                    }
-                    if (streaming != null && i == entries.length) return StreamingView(reply: streaming);
-                    return Padding(
-                      padding: const EdgeInsets.all(13),
-                      child: Text('❌ $error', style: TextStyle(color: context.theme.colorScheme.error)),
-                    );
-                  },
+            final pending = chat.approvals.value.firstOrNull;
+            // The reply being written continues the last reply, or starts one.
+            final continues = streaming != null && blocks.lastOrNull is ReplyBlock;
+            final items = <Widget>[
+              for (final (i, b) in blocks.indexed)
+                ThreadBlockView(
+                  key: ValueKey(switch (b) {
+                    UserBlock(:final entry) || SummaryBlock(:final entry) => entry.id,
+                    ReplyBlock(:final entries) => entries.first.id,
+                  }),
+                  chat: chat,
+                  block: b,
+                  streaming: continues && i == blocks.length - 1 ? streaming : null,
+                  live: chat.running.value && i == blocks.length - 1,
                 ),
-              ),
+              if (streaming != null && !continues) StreamingView(reply: streaming),
+              if (pending != null) ApprovalCard(chatId: chat.id, pending: pending),
+              if (error != null) Text(error, style: TextStyle(fontSize: 13, color: context.theme.colorScheme.error)),
+            ];
+            return LayoutBuilder(
+              builder: (context, cons) {
+                final side = (cons.maxWidth * 0.04).clamp(13.0, 26.0);
+                return ListView.separated(
+                  controller: _scroll,
+                  padding: EdgeInsets.fromLTRB(side, 17, side, 26),
+                  itemCount: items.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 20),
+                  itemBuilder: (_, i) => Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 760),
+                      child: SizedBox(width: double.infinity, child: items[i]),
+                    ),
+                  ),
+                );
+              },
             );
           },
         );
       },
     );
   }
-
-  static bool _visible(LlmEntry e) => switch (e.type) {
-    'message' => const {'user', 'assistant', 'toolResult'}.contains(e.message?.role),
-    'compaction' || 'branch_summary' => true,
-    _ => false,
-  };
 }
