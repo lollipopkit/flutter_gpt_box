@@ -6,6 +6,7 @@ import 'package:gpt_box/core/llm/llm.dart';
 import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/view/page/home/model_picker.dart';
+import 'package:gpt_box/view/page/settings/custom_provider.dart';
 import 'package:gpt_box/view/widget/section_list.dart';
 import 'package:shortid/shortid.dart';
 
@@ -21,39 +22,29 @@ class ProvidersPage extends StatefulWidget {
 
   static const route = AppRouteNoArg(page: ProvidersPage.new, path: '/providers');
 
-  /// Adds the custom provider a deep link describes, after asking. A link
-  /// never carries a key.
+  /// Opens the custom provider a deep link describes, prefilled; nothing is
+  /// stored until the user saves it. A link never carries a key.
   static Future<void> addFromLink(BuildContext context, Map<String, String> p) async {
     final name = p['name'], baseUrl = p['baseUrl'];
     final api = LlmApi.fromWire(p['api']) ?? LlmApi.openaiCompletions;
-    final models = _splitIds(p['models'] ?? '');
+    final models = [
+      for (final m in (p['models'] ?? '').split(',')) if (m.trim().isNotEmpty) m.trim(),
+    ];
     final uri = baseUrl == null ? null : Uri.tryParse(baseUrl);
-    if (name == null ||
-        uri == null ||
-        !uri.isScheme('https') && !uri.isScheme('http') ||
-        !api.listsModels && models.isEmpty) {
+    if (name == null || uri == null || !uri.isScheme('https') && !uri.isScheme('http')) {
       Toast.show(l10n.invalidLinkFmt(p.toString()));
       return;
     }
-    final ok = await context.showRoundDialog<bool>(
-      title: l10n.customProvider,
-      child: Text(l10n.providerLinkFmt(name, baseUrl!)),
-      actions: Btnx.cancelOk,
+    await CustomProviderPage.route.go(
+      context,
+      args: LlmCustomProvider(
+        id: 'custom_${shortid.generate()}',
+        name: name,
+        api: api,
+        baseUrl: baseUrl!,
+        models: models.isEmpty ? null : models,
+      ),
     );
-    if (ok != true) return;
-    final id = 'custom_${shortid.generate()}';
-    await _saveCustom([
-      ...Stores.llm.customProviders.get() ?? const [],
-      LlmCustomProvider(id: id, name: name, api: api, baseUrl: baseUrl, models: models.isEmpty ? null : models),
-    ], id);
-    if (context.mounted) await route.go(context);
-  }
-
-  /// Stores [list] and lists the models of [changed] again.
-  static Future<void> _saveCustom(List<LlmCustomProvider> list, String? changed) async {
-    Stores.llm.customProviders.set(list);
-    await Llm.applyCustomProviders();
-    if (changed != null) await _refreshOne(changed);
   }
 
   /// Lists the models of [id] again; a failure is shown.
@@ -61,10 +52,6 @@ class ProvidersPage extends StatefulWidget {
     final err = (await Llm.refresh(only: [id]))[id];
     if (err != null) Toast.show('${Llm.provider(id)?.name ?? id}: $err');
   }
-
-  static List<String> _splitIds(String s) => [
-    for (final m in s.split(RegExp(r'[,\n]'))) if (m.trim().isNotEmpty) m.trim(),
-  ];
 
   @override
   State<ProvidersPage> createState() => _ProvidersPageState();
@@ -85,20 +72,19 @@ class _ProvidersPageState extends State<ProvidersPage> {
       listenable: Listenable.merge([Llm.providers, Llm.configured, Llm.modelErrors]),
       builder: (context, _) {
         final q = _query.text.trim().toLowerCase();
+        bool matches(LlmProviderInfo p) => q.isEmpty || p.name.toLowerCase().contains(q) || p.id.contains(q);
+        bool pinned(LlmProviderInfo p) => p.custom || Llm.configured.value.contains(p.id);
         final all = Llm.providers.value;
-        final configured = [for (final p in all) if (Llm.configured.value.contains(p.id)) p];
-        final others = [
-          for (final p in all)
-            if (!Llm.configured.value.contains(p.id) && (q.isEmpty || p.name.toLowerCase().contains(q) || p.id.contains(q)))
-              p,
+        // Custom providers and the ones with a key always come first.
+        final top = [
+          for (final p in all) if (p.custom && matches(p)) p,
+          for (final p in all) if (!p.custom && pinned(p) && matches(p)) p,
         ];
+        final others = [for (final p in all) if (!pinned(p) && matches(p)) p];
         return SectionList(
           children: [
             CenterGreyTitle(l10n.model),
             _buildDefaults(),
-            CenterGreyTitle(libL10n.configured),
-            if (configured.isEmpty) ListTile(title: Text(l10n.noProviderKey, style: UIs.textGrey)).cardx,
-            for (final p in configured) _tile(p),
             CenterGreyTitle(l10n.providers),
             Input(
               controller: _query,
@@ -109,8 +95,11 @@ class _ProvidersPageState extends State<ProvidersPage> {
             ListTile(
               leading: const Icon(Icons.add),
               title: Text(l10n.customProvider),
-              onTap: () => _editCustom(null),
+              onTap: () => CustomProviderPage.route.go(context),
             ).cardx,
+            if (top.isEmpty && q.isEmpty) ListTile(title: Text(l10n.noProviderKey, style: UIs.textGrey)).cardx,
+            for (final p in top) _tile(p),
+            if (top.isNotEmpty && others.isNotEmpty) const Divider(height: 27),
             for (final p in others) _tile(p),
           ],
         );
@@ -216,10 +205,8 @@ class _ProvidersPageState extends State<ProvidersPage> {
             ),
         ],
       ),
-      trailing: p.custom
-          ? IconButton(icon: const Icon(Icons.edit, size: 19), onPressed: () => _editCustom(p))
-          : null,
-      onTap: () => _editKey(p),
+      trailing: p.custom ? const Icon(Icons.chevron_right) : null,
+      onTap: () => p.custom ? _editCustom(p) : _editKey(p),
     ).cardx;
   }
 
@@ -268,77 +255,9 @@ class _ProvidersPageState extends State<ProvidersPage> {
     }
   }
 
-  Future<void> _editCustom(LlmProviderInfo? info) async {
-    final list = [...Stores.llm.customProviders.get() ?? const <LlmCustomProvider>[]];
-    final old = info == null ? null : list.firstWhereOrNull((e) => e.id == info.id);
-    final name = TextEditingController(text: old?.name);
-    final url = TextEditingController(text: old?.baseUrl);
-    final models = TextEditingController(text: old?.models?.join(', ') ?? '');
-    var api = old?.api ?? LlmApi.openaiCompletions;
-    final ret = await context.showRoundDialog<String>(
-      title: l10n.customProvider,
-      child: StatefulBuilder(
-        builder: (context, setState) => SizedBox(
-          width: 480,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Input(controller: name, label: libL10n.name, autoFocus: true),
-              Input(controller: url, label: libL10n.apiEndpoint, hint: 'https://api.example.com/v1'),
-              DropdownButtonFormField<LlmApi>(
-                initialValue: api,
-                decoration: InputDecoration(labelText: libL10n.apiProtocol),
-                items: [for (final a in LlmApi.values) DropdownMenuItem(value: a, child: Text(a.wire))],
-                onChanged: (v) => setState(() => api = v ?? api),
-              ).paddingSymmetric(horizontal: 7),
-              UIs.height13,
-              Input(controller: models, label: l10n.model, hint: 'model-a, model-b'),
-              Text(
-                api.listsModels ? l10n.modelsListedTip : l10n.modelsRequired,
-                style: UIs.text12Grey,
-              ).paddingSymmetric(horizontal: 7),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        if (old != null) Btn.text(text: libL10n.delete, onTap: () => context.pop('delete')),
-        Btn.ok(
-          onTap: () {
-            if (!api.listsModels && ProvidersPage._splitIds(models.text).isEmpty) {
-              Toast.show(l10n.modelsRequired);
-              return;
-            }
-            context.pop('save');
-          },
-        ),
-      ],
-    );
-    final n = name.text.trim(), u = url.text.trim();
-    final ms = ProvidersPage._splitIds(models.text);
-    name.dispose();
-    url.dispose();
-    models.dispose();
-    String? changed;
-    if (ret == 'delete' && old != null) {
-      list.removeWhere((e) => e.id == old.id);
-      await Llm.setCredential(old.id, null);
-    } else if (ret == 'save' && n.isNotEmpty && Uri.tryParse(u)?.hasScheme == true) {
-      final next = LlmCustomProvider(
-        id: old?.id ?? 'custom_${shortid.generate()}',
-        name: n,
-        api: api,
-        baseUrl: u,
-        models: ms.isEmpty ? null : ms,
-      );
-      changed = next.id;
-      final i = list.indexWhere((e) => e.id == next.id);
-      i < 0 ? list.add(next) : list[i] = next;
-    } else {
-      return;
-    }
-    if (!mounted) return;
-    await context.showLoadingDialog(fn: () => ProvidersPage._saveCustom(list, changed));
+  void _editCustom(LlmProviderInfo p) {
+    final spec = Stores.llm.customProviders.get()?.firstWhereOrNull((e) => e.id == p.id);
+    if (spec != null) CustomProviderPage.route.go(context, args: spec);
   }
 }
 

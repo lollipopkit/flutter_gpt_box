@@ -9,7 +9,7 @@
 | `/search` | | Focuses the chat search |
 | `/share` | `chatId` | Shares a chat (the current one without `chatId`) |
 | `/go` | `page=settings\|providers\|tools\|backup\|about` | Opens a page |
-| `/provider` | `name`, `api`, `baseUrl`, `models`? | Adds a custom provider, after asking. `api` is one of `openai-completions`, `openai-responses`, `anthropic-messages`, `google-generative-ai`. OpenAI-compatible endpoints list their models; the other APIs need `models` (comma-separated ids). A link never carries a key: you enter it yourself |
+| `/provider` | `name`, `api`, `baseUrl`, `models`? | Opens a new custom provider prefilled; nothing is stored until you save it. `api` is one of `openai-completions`, `openai-responses`, `anthropic-messages`, `google-generative-ai`. OpenAI-compatible endpoints list their models; the other APIs need `models` (comma-separated ids). A link never carries a key: you enter it yourself |
 
 ---
 
@@ -24,4 +24,4 @@
 | `/search` | | 聚焦对话搜索 |
 | `/share` | `chatId` | 分享对话（不带 `chatId` 时为当前对话） |
 | `/go` | `page=settings\|providers\|tools\|backup\|about` | 打开页面 |
-| `/provider` | `name`、`api`、`baseUrl`、`models`? | 询问后添加自定义服务商。`api` 取值为 `openai-completions`、`openai-responses`、`anthropic-messages`、`google-generative-ai`。OpenAI 兼容端点会自动获取模型列表；其他 API 需要 `models`（逗号分隔的 ID）。链接中不会包含 key，需要你自己填写 |
+| `/provider` | `name`、`api`、`baseUrl`、`models`? | 打开预填好的新自定义服务商页面，保存后才会添加。`api` 取值为 `openai-completions`、`openai-responses`、`anthropic-messages`、`google-generative-ai`。OpenAI 兼容端点会自动获取模型列表；其他 API 需要 `models`（逗号分隔的 ID）。链接中不会包含 key，需要你自己填写 |

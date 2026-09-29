@@ -15,6 +15,7 @@ import 'package:gpt_box/data/res/l10n.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:gpt_box/generated/l10n/l10n.dart';
 import 'package:gpt_box/view/page/home/home.dart';
+import 'package:gpt_box/view/page/settings/custom_provider.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
 
 import '../core/chats_test.dart' show mockServer, nativeLib;
@@ -31,6 +32,9 @@ Widget _app() => MaterialApp(
   ),
 );
 
+late HttpServer _server;
+final _credentials = MemoryCredentials({'mock': LlmCredential.apiKey('k')});
+
 void main() {
   setUpAll(() async {
     // No platform side in a test: app_links' stream would throw on listen.
@@ -42,6 +46,7 @@ void main() {
     // to reach the mock server for real.
     HttpOverrides.global = null;
     final (server, _) = await mockServer();
+    _server = server;
     SqliteDb.openInMemory();
     await Stores.init();
     SqlitePiSessionStore();
@@ -57,7 +62,7 @@ void main() {
       ),
     ]);
     await Llm.init(
-      credentials: MemoryCredentials({'mock': LlmCredential.apiKey('k')}),
+      credentials: _credentials,
       externalLibrary: nativeLib(),
     );
   });
@@ -79,6 +84,60 @@ void main() {
     await tester.tap(find.text(SettingsTab.providers.i18n));
     await tester.pumpAndSettle();
     expect(find.text('Mock'), findsWidgets);
+  });
+
+  testWidgets('a custom provider lists its models while being set up, and comes first once saved', (tester) async {
+    tester.view.physicalSize = const Size(1000, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(_app());
+    await tester.pump();
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(SettingsTab.providers.i18n));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.customProvider));
+    await tester.pumpAndSettle();
+    expect(find.byType(CustomProviderPage), findsOneWidget);
+
+    Finder field(String label) => find.byWidgetPredicate((w) => w is TextField && w.decoration?.labelText == label);
+    await tester.enterText(field(libL10n.name), 'Local');
+    await tester.enterText(field(libL10n.apiEndpoint), 'http://127.0.0.1:${_server.port}/v1');
+    await tester.enterText(field(libL10n.apiKey), 'sk-local');
+
+    final count = find.text(l10n.modelsCountFmt(1));
+    for (var i = 0; i < 50 && count.evaluate().isEmpty; i++) {
+      // The page waits for typing to settle (fake time), then asks the
+      // endpoint (real time).
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    }
+    expect(count, findsOneWidget, reason: 'the endpoint lists `echo`');
+
+    await tester.tap(find.byIcon(Icons.save));
+    for (var i = 0; i < 30 && find.byType(CustomProviderPage).evaluate().isNotEmpty; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    }
+    await tester.pumpAndSettle();
+    expect(find.byType(CustomProviderPage), findsNothing);
+    final saved = Stores.llm.customProviders.get()!.last;
+    expect(saved.name, 'Local');
+    expect((await tester.runAsync(() => _credentials.read(saved.id)))?.key, 'sk-local');
+
+    // Custom and keyed providers lead the list, ahead of pi-ai's catalog.
+    final names = [
+      for (final t in tester.widgetList<ListTile>(find.byType(ListTile)))
+        if (t.title case Text(:final data?)) data,
+    ];
+    final unpinned = {
+      for (final p in Llm.providers.value)
+        if (!p.custom && !Llm.configured.value.contains(p.id)) p.name,
+    };
+    final firstBuiltin = names.indexWhere(unpinned.contains);
+    expect(firstBuiltin, isNonNegative);
+    expect(names.indexOf('Mock'), allOf(isNonNegative, lessThan(firstBuiltin)));
+    expect(names.indexOf('Local'), allOf(isNonNegative, lessThan(firstBuiltin)));
   });
 
   for (final size in const [Size(400, 800), Size(1200, 800)]) {
