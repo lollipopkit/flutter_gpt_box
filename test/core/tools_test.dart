@@ -106,19 +106,21 @@ void main() {
     setUp(() async {
       SqliteDb.openInMemory();
       await Stores.init();
-      LlmStores.tool.enabled.set(true);
     });
     tearDown(() => SqliteDb.close());
 
     List<String> names() => [for (final t in Tools.enabled) t.name];
 
-    test('chat history is off until turned on; one switch per group', () {
-      expect(names(), isNot(contains('chat_search')));
-      Tools.setOn(TfChatSearch.instance, true);
-      expect(names(), containsAll(['chat_search', 'chat_read']));
+    test('every tool is on by default; one switch per group', () {
+      expect(LlmStores.tool.enabled.get(), isTrue);
+      expect(names(), containsAll(['memory_view', 'chat_search', 'chat_read', 'httpReq']));
+      Tools.setOn(TfChatSearch.instance, false);
+      expect(names(), isNot(contains('chat_read')));
       Tools.setOn(TfHttpReq.instance, false);
       expect(names(), isNot(contains('httpReq')));
       expect(Tools.groups.map((t) => t.group), ['memory', 'history', 'httpReq']);
+      LlmStores.tool.enabled.set(false);
+      expect(names(), isEmpty);
     });
   });
 
