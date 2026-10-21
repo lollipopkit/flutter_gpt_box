@@ -148,28 +148,14 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
   /// Soon, and once for a burst of edits.
   void syncSoon() {
     if (!enabled) return;
-    // At most one waits behind the one running, and every edit until it
-    // starts joins it: it syncs whatever changed by then.
-    _soonWaiting ??= _run(() => sync(milliDelay: 1000), onStart: () => _soonWaiting = null);
+    unawaited(_runs.soon(() => _runOnce(() => sync(milliDelay: 1000))));
   }
-
-  /// The [syncSoon] run waiting for its turn, if one is.
-  Future<void>? _soonWaiting;
 
   /// Now, with [rs] or the configured remote; for a button or a switch.
-  Future<void> syncNow({RemoteStorage? rs}) => _run(() => sync(throttleMilli: 0, rs: rs));
+  Future<void> syncNow({RemoteStorage? rs}) => _runs.run(() => _runOnce(() => sync(throttleMilli: 0, rs: rs)));
 
   /// One run at a time: each owns [_issue] and the status while it runs.
-  Future<void> _runs = Future.value();
-
-  Future<void> _run(Future<void> Function() body, {void Function()? onStart}) {
-    final run = _runs.then((_) {
-      onStart?.call();
-      return _runOnce(body);
-    });
-    _runs = run.catchError((_) {});
-    return run;
-  }
+  final _runs = SerialRuns();
 
   Future<void> _runOnce(Future<void> Function() body) async {
     if (await password == null) {
@@ -228,4 +214,28 @@ final class _Tracked implements Mergeable {
       rethrow;
     }
   }
+}
+
+/// Runs one after another, never two at once.
+final class SerialRuns {
+  Future<void> _tail = Future.value();
+
+  /// The [soon] run waiting for its turn, if one is.
+  Future<void>? _waiting;
+
+  /// [body], after every run before it.
+  Future<void> run(Future<void> Function() body, {void Function()? onStart}) {
+    final run = _tail.then((_) {
+      onStart?.call();
+      return body();
+    });
+    _tail = run.then((_) {}, onError: (_) {});
+    return run;
+  }
+
+  /// [body] after the run going on, unless a [soon] run already waits for
+  /// its turn: that one does it, so a burst of calls is one run, and at most
+  /// one waits behind the one running.
+  Future<void> soon(Future<void> Function() body) =>
+      _waiting ??= run(body, onStart: () => _waiting = null);
 }
