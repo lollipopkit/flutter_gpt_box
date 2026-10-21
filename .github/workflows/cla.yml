@@ -1,0 +1,37 @@
+# Checks that everyone who authored a commit in a pull request has signed the
+# CLA (see /CLA.md), and records a signature given as a pull request comment.
+# The job (`signatures`) is the check to require on `main`.
+
+name: CLA
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write # the cla-signatures branch
+  pull-requests: write # the "please sign" comment
+  actions: write # re-run the check after a signature
+
+concurrency:
+  # Never cancel: a cancelled run could drop a signature write.
+  group: cla-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  signatures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Cheap pre-filter; the action checks the comment body strictly.
+    if: >-
+      github.repository == 'lollipopkit/flutter_gpt_box' &&
+      (github.event_name == 'pull_request_target' ||
+       (github.event.issue.pull_request != null &&
+        (contains(github.event.comment.body, 'I have read the CLA Document and I hereby sign the CLA') ||
+         contains(github.event.comment.body, 'recheck'))))
+    steps:
+      - uses: lollipopkit/cla-actions@cb8ab238a96f2736f19a9bf258a49af3c6eed7bd # v2.0.0
+        with:
+          note: You keep the copyright to what you wrote.

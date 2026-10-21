@@ -1,0 +1,35 @@
+# Records a CLA signature given somewhere other than a pull request: a past
+# contributor signing in an issue, say. Run it from Actions → CLA record.
+# `reference` is the URL of the comment where the person agreed: that comment
+# is the signature, this only writes it down.
+
+name: CLA record
+
+on:
+  workflow_dispatch:
+    inputs:
+      login:
+        description: GitHub username of the person who signed
+        required: true
+        type: string
+      reference:
+        description: URL of the comment where they signed
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cla-signatures-write
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: lollipopkit/cla-actions/record@cb8ab238a96f2736f19a9bf258a49af3c6eed7bd # v2.0.0
+        with:
+          login: ${{ inputs.login }}
+          reference: ${{ inputs.reference }}
