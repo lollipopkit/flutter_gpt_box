@@ -27,9 +27,9 @@ dependencies:
   # A submodule, like fl_lib: developed alongside. Its ui package has the
   # chats, tools and provider settings, shared with Server Box.
   fl_pi_llm:
-    path: packages/fl_pi_llm
+    path: packages/fl_pi_llm/fl_pi_llm
   fl_pi_llm_ui:
-    path: packages/fl_pi_llm/ui
+    path: packages/fl_pi_llm/fl_pi_llm_ui
   fl_lib:
     path: packages/fl_lib
   animations: ^3.0.0

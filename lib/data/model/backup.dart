@@ -30,8 +30,9 @@ final class BackupTooNew implements Exception {
 /// Everything a user would miss on a new device, except keys: those stay in
 /// the keychain of the device they were entered on.
 ///
-/// Chats are pi sessions, append-only logs, so merging one is a question of
-/// which log extends which. See [merge].
+/// Chats are fl_pi_llm sessions, carried as their entries, each known by the
+/// same uid on every device: merging one writes what this device lacks
+/// ([Chats.importChat]). See [merge].
 final class Backup implements Mergeable {
   const Backup({
     required this.date,
@@ -43,7 +44,7 @@ final class Backup implements Mergeable {
     required this.sessions,
   });
 
-  static const formatVersion = 3;
+  static const formatVersion = 4;
 
   final int date;
   final Map<String, Object?> chats;
@@ -57,15 +58,15 @@ final class Backup implements Mergeable {
   /// settings"): then they are not touched on merge either.
   final Map<String, Object?> settings;
 
-  /// Session files by path: `{text, mtime}`.
-  final Map<String, ({String text, int mtime})> sessions;
+  /// Each chat's session by chat id: its entries ([Chats.exportChat]), and
+  /// the uid of the one it stands on.
+  final Map<String, ChatExport> sessions;
 
   static Future<Backup> fromStores({bool includeSettings = true}) async {
-    final files = SqlitePiSessionStore.instance;
-    final sessions = <String, ({String text, int mtime})>{};
-    for (final MapEntry(key: path, value: text) in files.dump().entries) {
-      final stat = await files.stat(path);
-      sessions[path] = (text: text, mtime: stat?.modified.millisecondsSinceEpoch ?? 0);
+    final chats = LlmStores.chat.keys().toSet();
+    final sessions = <String, ChatExport>{};
+    for (final s in await Llm.rt.sessions()) {
+      if (chats.contains(s.id)) sessions[s.id] = await Chats.exportChat(s.id);
     }
     return Backup(
       date: DateTime.now().millisecondsSinceEpoch,
@@ -94,7 +95,7 @@ final class Backup implements Mergeable {
 
   /// A stamp of everything [fromStores] reads: it changes whenever a backup
   /// would. Cheap, for deciding whether a sync has anything to do.
-  static String localStamp({required bool includeSettings}) {
+  static Future<String> localStamp({required bool includeSettings}) async {
     int newest(Map<String, int>? ts) => ts == null || ts.isEmpty ? 0 : ts.values.reduce((a, b) => a > b ? a : b);
     return [
       newest(LlmStores.chat.lastUpdateTs),
@@ -106,7 +107,7 @@ final class Backup implements Mergeable {
           for (final MapEntry(:key, :value) in (Stores.setting.lastUpdateTs ?? const <String, int>{}).entries)
             if (!SettingStore.deviceLocalKeys.contains(key)) key: value,
         }),
-      SqlitePiSessionStore.instance.latestMtime(),
+      newest({for (final s in await Llm.rt.sessions()) s.id: s.modifiedAt.millisecondsSinceEpoch}),
     ].join('.');
   }
 
@@ -122,7 +123,7 @@ final class Backup implements Mergeable {
     'memory': memory,
     'settings': settings,
     'sessions': {
-      for (final MapEntry(:key, :value) in sessions.entries) key: {'text': value.text, 'mtime': value.mtime},
+      for (final MapEntry(:key, :value) in sessions.entries) key: {'entries': value.entries, 'tip': value.tip},
     },
   };
 
@@ -140,7 +141,10 @@ final class Backup implements Mergeable {
       settings: map('settings'),
       sessions: {
         for (final MapEntry(:key, :value) in map('sessions').entries)
-          key: (text: (value as Map)['text'] as String, mtime: value['mtime'] as int? ?? 0),
+          key: (
+            entries: [for (final e in (value as Map)['entries'] as List) (e as Map).cast<String, Object?>()],
+            tip: value['tip'] as String?,
+          ),
       },
     );
   }
@@ -204,12 +208,10 @@ final class Backup implements Mergeable {
   /// for) takes the backup's side wherever both have the key, but never
   /// deletes what only this device has.
   ///
-  /// A session is taken from the backup when it is missing here, or when it
-  /// extends the local log. Two logs that have diverged — the same chat
-  /// continued on two devices — are joined ([PiSessionLog.union]): nothing said on
-  /// either is lost. With [force] the backup's is taken. A chat writing a
-  /// reply keeps its log until the next sync. Sessions of chats the merge
-  /// deleted go with them.
+  /// A session gets what the backup's has and it lacks: a chat continued on
+  /// two devices keeps what each said, the other device's as versions, with
+  /// or without [force]. A chat new here stands where it stood there.
+  /// Sessions of chats the merge deleted go with them.
   @override
   Future<void> merge({bool force = false}) async {
     final before = LlmStores.chat.keys().toSet();
@@ -223,28 +225,16 @@ final class Backup implements Mergeable {
     final alive = LlmStores.chat.keys().toSet();
     final gone = before.difference(alive);
 
-    final files = SqlitePiSessionStore.instance;
-    for (final MapEntry(key: path, value: remote) in sessions.entries) {
+    final here = {for (final s in await Llm.rt.sessions()) s.id};
+    for (final MapEntry(key: id, value: remote) in sessions.entries) {
       // A chat deleted here, or never synced: its session is not wanted.
-      final chatId = SqlitePiSessionStore.chatIdOf(path, alive);
-      if (chatId == null) continue;
-      final local = await files.read(path);
-      final text = switch (local) {
-        null => remote.text,
-        _ when local == remote.text || local.startsWith(remote.text) => null,
-        _ when remote.text.startsWith(local) || force => remote.text,
-        _ => PiSessionLog.union(local, remote.text) ?? await _newer(path, local, remote),
-      };
-      if (text == null || text == local) continue;
-      // An open chat carries on over the new log.
-      await Chats.rewrite(chatId, () => files.write(path, text));
+      if (!alive.contains(id)) continue;
+      await Chats.importChat(id, remote.entries, tip: here.contains(id) ? null : remote.tip);
     }
     if (gone.isNotEmpty) {
       for (final id in gone) {
         await Chats.close(id);
-      }
-      for (final path in files.dump().keys) {
-        if (SqlitePiSessionStore.chatIdOf(path, gone) != null) await files.remove(path);
+        if (here.contains(id)) await Llm.rt.deleteSession(id);
       }
       if (gone.contains(Chats.current.value)) Chats.current.value = null;
     }
@@ -253,12 +243,6 @@ final class Backup implements Mergeable {
     await Llm.applyCustomProviders();
     await Chats.reconfigure();
     RNodes.app.notify();
-  }
-
-  /// For logs [PiSessionLog.union] cannot join: the one written last.
-  static Future<String?> _newer(String path, String local, ({String text, int mtime}) remote) async {
-    final at = (await SqlitePiSessionStore.instance.stat(path))?.modified.millisecondsSinceEpoch ?? 0;
-    return remote.mtime > at ? remote.text : null;
   }
 
   /// One store, per key: see [merge]. Keys in [keep] are this device's alone

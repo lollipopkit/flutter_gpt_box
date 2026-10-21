@@ -1,33 +1,63 @@
-import 'dart:convert';
-
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gpt_box/data/model/backup.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
-void main() {
-  late SqlitePiSessionStore files;
+import '../core/chats_test.dart' show initLlm;
 
+void main() {
+  setUpAll(() async {
+    SqliteDb.openInMemory();
+    await Stores.init();
+    await initLlm();
+    SqliteDb.close();
+  });
+  tearDownAll(() async {
+    await Chats.closeAll();
+    await Llm.rt.dispose();
+  });
   setUp(() async {
     SqliteDb.openInMemory();
     await Stores.init();
-    files = SqlitePiSessionStore.instance;
-    // The instance made its table on an earlier database; make it here too.
-    SqlitePiSessionStore();
   });
   tearDown(() => SqliteDb.close());
 
-  /// A session file of chat [id], as pi names it.
-  String sessionOf(String id) => '/sessions/-/1_$id.jsonl';
+  // The runtime's sessions outlive each test's stores: every test its own chats.
+  var n = 0;
+  String chat(String name) {
+    final id = '$name-${n++}';
+    LlmStores.chat.put(ChatMeta(id: id, updatedAt: DateTime(2026)));
+    return id;
+  }
 
-  void chat(String id) => LlmStores.chat.put(ChatMeta(id: id, updatedAt: DateTime(2026)));
+  /// An exported entry: a message by [role] saying [text].
+  Map<String, Object?> said(String uid, String? parent, String text, {String role = 'user'}) => {
+    'uid': uid,
+    'parent': parent,
+    'type': 'message',
+    'timestamp': 1,
+    'message': {
+      'role': role,
+      'content': [
+        {'type': 'text', 'text': text},
+      ],
+      'timestamp': 1,
+    },
+  };
+
+  /// What chat [id]'s session says, every version.
+  Future<List<String>> saidIn(String id) async => [
+    for (final e in (await Chats.exportChat(id)).entries) ((e['message'] as Map)['content'] as List).first['text'] as String,
+  ];
+
+  Future<bool> hasSession(String id) async => (await Llm.rt.sessions()).any((s) => s.id == id);
 
   Backup backupWith({
     Map<String, Object?> chats = const {},
     Map<String, Object?> memory = const {},
     Map<String, Object?> settings = const {},
-    Map<String, ({String text, int mtime})> sessions = const {},
+    Map<String, ChatExport> sessions = const {},
   }) => Backup(date: 1, chats: chats, llm: const {}, tools: const {}, memory: memory, settings: settings, sessions: sessions);
 
   /// Store data as a backup carries it: values, and their times.
@@ -38,24 +68,25 @@ void main() {
 
   group('format', () {
     test('round-trips through JSON', () async {
-      chat('a');
-      await files.append(sessionOf('a'), 'h\n');
+      final a = chat('a');
+      await Chats.importChat(a, [said('1', null, 'h')]);
       final b = await Backup.fromStores();
       final back = Backup.fromJson(b.toJson().cast<String, Object?>());
-      expect(back.sessions[sessionOf('a')]!.text, 'h\n');
+      expect(back.sessions[a]!.entries.single['uid'], '1');
+      expect(back.sessions[a]!.tip, '1');
     });
 
     test('refuses an older format, and says so for a newer one', () {
-      expect(() => Backup.fromJson({'version': 2}), throwsFormatException);
+      expect(() => Backup.fromJson({'version': 3}), throwsFormatException);
       expect(() => Backup.fromJson({'version': Backup.formatVersion + 1}), throwsA(isA<BackupTooNew>()));
     });
 
     test('with a password it is encrypted, and opens only with it', () async {
-      chat('a');
+      final a = chat('a');
       final text = await (await Backup.fromStores()).encode(password: 'pw');
       expect(Backup.isEncrypted(text), isTrue);
       expect(text, isNot(contains('"chats"')));
-      expect((await Backup.parse(text, password: 'pw')).chats.keys, contains('a'));
+      expect((await Backup.parse(text, password: 'pw')).chats.keys, contains(a));
       await expectLater(Backup.parse(text), throwsA(isA<BackupPasswordNeeded>()));
       await expectLater(Backup.parse(text, password: 'wrong'), throwsA(anything));
     });
@@ -83,26 +114,26 @@ void main() {
     });
 
     test('the newer write wins; force takes the backup', () async {
-      chat('a');
-      final local = LlmStores.chat.lastUpdateTs!['a']!;
-      final old = data({'a': ChatMeta(id: 'a', title: 'old', updatedAt: DateTime(2020)).toJson()}, {'a': local - 1000});
+      final a = chat('a');
+      final local = LlmStores.chat.lastUpdateTs![a]!;
+      final old = data({a: ChatMeta(id: a, title: 'old', updatedAt: DateTime(2020)).toJson()}, {a: local - 1000});
       await backupWith(chats: old).merge();
-      expect(LlmStores.chat.fetch('a')!.title, isNull);
+      expect(LlmStores.chat.fetch(a)!.title, isNull);
       await backupWith(chats: old).merge(force: true);
-      expect(LlmStores.chat.fetch('a')!.title, 'old');
+      expect(LlmStores.chat.fetch(a)!.title, 'old');
     });
 
     test('a deletion there after the last write here deletes here', () async {
-      chat('a');
-      final local = LlmStores.chat.lastUpdateTs!['a']!;
-      await backupWith(chats: data({}, {'a': local + 1000})).merge();
-      expect(LlmStores.chat.fetch('a'), isNull);
+      final a = chat('a');
+      final local = LlmStores.chat.lastUpdateTs![a]!;
+      await backupWith(chats: data({}, {a: local + 1000})).merge();
+      expect(LlmStores.chat.fetch(a), isNull);
     });
 
     test('what only this device has is kept, even forced', () async {
-      chat('mine');
+      final mine = chat('mine');
       await backupWith(chats: data({}, {})).merge(force: true);
-      expect(LlmStores.chat.fetch('mine'), isNotNull);
+      expect(LlmStores.chat.fetch(mine), isNotNull);
     });
 
     test("this device's own settings are never set by a backup", () async {
@@ -115,83 +146,54 @@ void main() {
   });
 
   group('sessions', () {
-    test('a missing session is added, an extended one fast-forwarded', () async {
-      chat('new');
-      chat('old');
-      await files.write(sessionOf('old'), 'a\n');
+    test('a missing session is added, a continued one gets what it lacks', () async {
+      final fresh = chat('new');
+      final old = chat('old');
+      await Chats.importChat(old, [said('a', null, 'a')]);
       await backupWith(sessions: {
-        sessionOf('new'): (text: 'n\n', mtime: 1),
-        sessionOf('old'): (text: 'a\nb\n', mtime: 1),
+        fresh: (entries: [said('n', null, 'n')], tip: 'n'),
+        old: (entries: [said('a', null, 'a'), said('b', 'a', 'b', role: 'assistant')], tip: 'b'),
       }).merge();
-      expect(await files.read(sessionOf('new')), 'n\n');
-      expect(await files.read(sessionOf('old')), 'a\nb\n');
+      expect(await saidIn(fresh), ['n']);
+      expect(await saidIn(old), ['a', 'b']);
     });
 
-    test('a backup behind the local log changes nothing', () async {
-      chat('a');
-      await files.write(sessionOf('a'), 'a\nb\n');
-      await backupWith(sessions: {sessionOf('a'): (text: 'a\n', mtime: 9999999999999)}).merge(force: true);
-      expect(await files.read(sessionOf('a')), 'a\nb\n');
-    });
-
-    test('diverged logs keep the newer one, or the backup when forced', () async {
-      chat('a');
-      await files.write(sessionOf('a'), 'a\nlocal\n');
-      await backupWith(sessions: {sessionOf('a'): (text: 'a\nremote\n', mtime: 0)}).merge();
-      expect(await files.read(sessionOf('a')), 'a\nlocal\n');
-      await backupWith(sessions: {sessionOf('a'): (text: 'a\nremote\n', mtime: 0)}).merge(force: true);
-      expect(await files.read(sessionOf('a')), 'a\nremote\n');
+    test('diverged sessions keep both, forced or not', () async {
+      final a = chat('a');
+      await Chats.importChat(a, [said('a', null, 'a'), said('l', 'a', 'local', role: 'assistant')]);
+      final remote = (entries: [said('a', null, 'a'), said('r', 'a', 'remote', role: 'assistant')], tip: 'r');
+      await backupWith(sessions: {a: remote}).merge();
+      expect(await saidIn(a), ['a', 'local', 'remote']);
+      await backupWith(sessions: {a: remote}).merge(force: true);
+      expect(await saidIn(a), ['a', 'local', 'remote'], reason: 'nothing written twice');
     });
 
     test('a session of no chat here is not taken', () async {
-      await backupWith(sessions: {sessionOf('ghost'): (text: 'g\n', mtime: 1)}).merge();
-      expect(await files.read(sessionOf('ghost')), isNull);
+      await backupWith(sessions: {'ghost': (entries: [said('g', null, 'g')], tip: 'g')}).merge();
+      expect(await hasSession('ghost'), isFalse);
     });
 
     test('a chat deleted by the merge takes its session with it', () async {
-      chat('a');
-      await files.write(sessionOf('a'), 'a\n');
-      final local = LlmStores.chat.lastUpdateTs!['a']!;
-      await backupWith(chats: data({}, {'a': local + 1000})).merge();
-      expect(await files.read(sessionOf('a')), isNull);
+      final a = chat('a');
+      await Chats.importChat(a, [said('a', null, 'a')]);
+      final local = LlmStores.chat.lastUpdateTs![a]!;
+      await backupWith(chats: data({}, {a: local + 1000})).merge();
+      expect(await hasSession(a), isFalse);
     });
   });
 
-  group('diverged logs', () {
-    const header = '{"kind":"header","id":"s","storageVersion":1}';
-    String e(String id, int seq, [String? parent]) =>
-        '{"kind":"entry","id":"$id","parentId":${parent == null ? 'null' : '"$parent"'},"seq":$seq,"type":"message"}';
-    String log(List<String> lines) => '${[header, ...lines].join('\n')}\n';
-
-    test('are joined: remote-only entries after local ones, renumbered', () {
-      final local = log([e('a', 1), e('l', 2, 'a'), '{"kind":"value","key":"leaf","seq":3}']);
-      final remote = log([e('a', 1), e('r', 2, 'a'), e('r2', 3, 'r')]);
-      final joined = PiSessionLog.union(local, remote)!;
-      final lines = joined.trim().split('\n');
-      expect(lines.take(4), local.trim().split('\n'));
-      expect(lines.skip(4).map((l) => json.decode(l)['id']), ['r', 'r2']);
-      expect(lines.skip(4).map((l) => json.decode(l)['seq']), [4, 5]);
-    });
-
-    test('settle: joining twice adds nothing', () {
-      final a = log([e('a', 1), e('l', 2, 'a')]);
-      final b = log([e('a', 1), e('r', 2, 'a')]);
-      final ab = PiSessionLog.union(a, b)!;
-      final ba = PiSessionLog.union(b, a)!;
-      expect(PiSessionLog.union(ab, ba), ab);
-      expect(PiSessionLog.union(ba, ab), ba);
-    });
-
-    test('of different sessions, or not v4, are not joined', () {
-      expect(PiSessionLog.union(log([e('a', 1)]), '{"kind":"header","id":"other"}\n'), isNull);
-      expect(PiSessionLog.union('a\nlocal\n', 'a\nremote\n'), isNull);
-    });
-  });
-
-  test('the local stamp moves with an edit', () async {
-    final before = Backup.localStamp(includeSettings: false);
+  test('the local stamp moves with an edit, and a chat written to, not a backup', () async {
+    final before = await Backup.localStamp(includeSettings: false);
     await Future<void>.delayed(const Duration(milliseconds: 2));
-    chat('a');
-    expect(Backup.localStamp(includeSettings: false), isNot(before));
+    final a = chat('a');
+    final edited = await Backup.localStamp(includeSettings: false);
+    expect(edited, isNot(before));
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+    await Chats.importChat(a, [said('a', null, 'a')]);
+    final written = await Backup.localStamp(includeSettings: false);
+    expect(written, isNot(edited));
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+    await Backup.fromStores();
+    expect(await Backup.localStamp(includeSettings: false), written, reason: 'reading the chats for a backup is no change');
   });
 }

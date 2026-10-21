@@ -12,7 +12,7 @@ final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
 
 /// The name of the synced backup. Versioned, so a build that cannot read
 /// this format never finds the file, and so never overwrites it.
-const bakFileName = 'gptbox_bak_v3.json';
+const bakFileName = 'gptbox_bak_v4.json';
 
 /// Remote sync needs a backup password: what leaves the device is always
 /// encrypted.
@@ -126,7 +126,7 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
   @override
   Future<String?> get localVersionTag async {
     final settings = PrefProps.syncAppSettings.get();
-    return '${Backup.localStamp(includeSettings: settings)}/$settings';
+    return '${await Backup.localStamp(includeSettings: settings)}/$settings';
   }
 
   @override
@@ -148,19 +148,25 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
   /// Soon, and once for a burst of edits.
   void syncSoon() {
     if (!enabled) return;
-    unawaited(_run(() => sync(milliDelay: 1000)));
+    unawaited(_runs.soon(() => _runOnce(() => sync(milliDelay: 1000))));
   }
 
   /// Now, with [rs] or the configured remote; for a button or a switch.
-  Future<void> syncNow({RemoteStorage? rs}) => _run(() => sync(throttleMilli: 0, rs: rs));
+  Future<void> syncNow({RemoteStorage? rs}) => _runs.run(() => _runOnce(() => sync(throttleMilli: 0, rs: rs)));
 
-  Future<void> _run(Future<void> Function() body) async {
+  /// One run at a time: each owns [_issue] and the status while it runs.
+  final _runs = SerialRuns();
+
+  Future<void> _runOnce(Future<void> Function() body) async {
     if (await password == null) {
       lastError.value = l10n.backupPasswordRequired;
       return;
     }
     syncing.value = true;
     _issue = null;
+    // Set again by reading the remote's backup: a remote changed or emptied
+    // since takes this device's.
+    _remoteTooNew = false;
     try {
       await body();
       if (_issue case final e?) {
@@ -208,4 +214,28 @@ final class _Tracked implements Mergeable {
       rethrow;
     }
   }
+}
+
+/// Runs one after another, never two at once.
+final class SerialRuns {
+  Future<void> _tail = Future.value();
+
+  /// The [soon] run waiting for its turn, if one is.
+  Future<void>? _waiting;
+
+  /// [body], after every run before it.
+  Future<void> run(Future<void> Function() body, {void Function()? onStart}) {
+    final run = _tail.then((_) {
+      onStart?.call();
+      return body();
+    });
+    _tail = run.then((_) {}, onError: (_) {});
+    return run;
+  }
+
+  /// [body] after the run going on, unless a [soon] run already waits for
+  /// its turn: that one does it, so a burst of calls is one run, and at most
+  /// one waits behind the one running.
+  Future<void> soon(Future<void> Function() body) =>
+      _waiting ??= run(body, onStart: () => _waiting = null);
 }

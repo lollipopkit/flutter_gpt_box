@@ -26,7 +26,8 @@ void main() {
 
     setUpAll(() async {
       llm = await FlPiLlm.start(
-        store: MemorySessionStore(),
+        directory: Directory.systemTemp.createTempSync('llm_api').path,
+        key: null,
         credentials: MemoryCredentials({'live': LlmCredential.apiKey(apiKey!)}),
         externalLibrary: ExternalLibrary.open(switch (Platform.operatingSystem) {
           'macos' => 'build/native_assets/macos/libfl_pi_llm.dylib',
@@ -68,7 +69,8 @@ void main() {
 
     test('a wrong key fails the run with an error', () async {
       final bad = await FlPiLlm.start(
-        store: MemorySessionStore(),
+        directory: Directory.systemTemp.createTempSync('llm_api').path,
+        key: null,
         credentials: MemoryCredentials({'live': LlmCredential.apiKey('sk-invalid')}),
       );
       await bad.setCustomProviders([
