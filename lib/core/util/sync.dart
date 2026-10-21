@@ -147,13 +147,14 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
 
   /// Soon, and once for a burst of edits.
   void syncSoon() {
-    // One waiting is enough: it syncs whatever changed before it starts.
-    if (!enabled || _soonQueued) return;
-    _soonQueued = true;
-    unawaited(_run(() => sync(milliDelay: 1000), onStart: () => _soonQueued = false));
+    if (!enabled) return;
+    // At most one waits behind the one running, and every edit until it
+    // starts joins it: it syncs whatever changed by then.
+    _soonWaiting ??= _run(() => sync(milliDelay: 1000), onStart: () => _soonWaiting = null);
   }
 
-  var _soonQueued = false;
+  /// The [syncSoon] run waiting for its turn, if one is.
+  Future<void>? _soonWaiting;
 
   /// Now, with [rs] or the configured remote; for a button or a switch.
   Future<void> syncNow({RemoteStorage? rs}) => _run(() => sync(throttleMilli: 0, rs: rs));
