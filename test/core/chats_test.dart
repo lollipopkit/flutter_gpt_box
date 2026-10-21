@@ -1,7 +1,8 @@
-// The chat core against the real runtime: fl_pi_llm on QuickJS, pi's
-// sessions in the encrypted store, a mock OpenAI-compatible server.
+// The chat core against the real runtime: fl_pi_llm on QuickJS, its
+// encrypted session files, a mock OpenAI-compatible server.
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -84,6 +85,14 @@ ExternalLibrary nativeLib() => ExternalLibrary.open(switch (Platform.operatingSy
   _ => 'build/native_assets/linux/libfl_pi_llm.so',
 });
 
+/// [Llm.init] as a test has it: no keychain, no app directory.
+Future<void> initLlm({LlmCredentials? credentials}) => Llm.init(
+  directory: Directory.systemTemp.createTempSync('gpt_box_llm').path,
+  key: Uint8List.fromList(List.filled(32, 1)),
+  credentials: credentials ?? MemoryCredentials({'mock': LlmCredential.apiKey('k')}),
+  externalLibrary: nativeLib(),
+);
+
 void main() {
   late HttpServer server;
   late List<Map<String, Object?>> seen;
@@ -92,7 +101,6 @@ void main() {
     (server, seen) = await mockServer();
     SqliteDb.openInMemory();
     await Stores.init();
-    SqlitePiSessionStore();
     LlmStores.llm.customProviders.set([
       LlmCustomProvider(
         id: 'mock',
@@ -103,10 +111,7 @@ void main() {
       ),
     ]);
     Stores.setting.genTitle.set(false);
-    await Llm.init(
-      credentials: MemoryCredentials({'mock': LlmCredential.apiKey('k')}),
-      externalLibrary: nativeLib(),
-    );
+    await initLlm();
   });
 
   tearDownAll(() async {
@@ -237,38 +242,26 @@ void main() {
     await expectLater(TfChatRead.instance.run({'id': 'nope'}, ToolCtx(b, LlmCancelToken())), throwsArgumentError);
   });
 
-  test('a rewritten session is swapped into the same open chat', () async {
+  test('a chat continued on another device keeps both, the open one showing them', () async {
     final id = Chats.create();
     final chat = await Chats.open(id);
-    await Chats.send(id, 'before');
-    final files = SqlitePiSessionStore.instance;
-    final path = files.dump().keys.firstWhere((p) => SqlitePiSessionStore.chatIdOf(p, [id]) != null);
-    final text = (await files.read(path))!;
-    expect(await Chats.rewrite(id, () => files.write(path, text)), isTrue);
-    expect(Chats.openOf(id), same(chat));
-    await Chats.send(id, 'after');
-    expect(chat.entries.value.map((e) => e.message?.text), containsAllInOrder(['before', 'after']));
-  });
-
-  test('two continuations of one chat, joined, open with both', () async {
-    final id = Chats.create();
-    await Chats.open(id);
     await Chats.send(id, 'shared');
-    final files = SqlitePiSessionStore.instance;
-    final path = files.dump().keys.firstWhere((p) => SqlitePiSessionStore.chatIdOf(p, [id]) != null);
-    final base = (await files.read(path))!;
+    final base = await Chats.exportChat(id);
     await Chats.send(id, 'here');
-    final local = (await files.read(path))!;
-    await Chats.rewrite(id, () => files.write(path, base));
-    await Chats.send(id, 'there');
-    final remote = (await files.read(path))!;
-    final joined = PiSessionLog.union(local, remote);
-    expect(joined, isNotNull);
-    await Chats.rewrite(id, () => files.write(path, joined!));
-    final chat = Chats.openOf(id)!;
-    expect(chat.error.value, isNull);
-    final said = chat.tree.map((e) => e.message?.text).whereType<String>();
+
+    // The other device: the chat as it was, continued there.
+    final other = Chats.create();
+    expect(await Chats.importChat(other, base.entries, tip: base.tip), 2);
+    await Chats.open(other);
+    await Chats.send(other, 'there');
+    await Chats.close(other);
+
+    expect(await Chats.importChat(id, (await Chats.exportChat(other)).entries), 2);
+    expect(Chats.openOf(id), same(chat));
+    final said = [for (final e in await chat.session.tree()) e.message?.text];
     expect(said, containsAll(['shared', 'here', 'there']));
+    expect(chat.entries.value.map((e) => e.message?.text), containsAllInOrder(['shared', 'here']), reason: 'it stays where it stood');
+    expect(await Chats.importChat(id, (await Chats.exportChat(other)).entries), 0, reason: 'settled');
     // And it still takes a message.
     await Chats.send(id, 'next');
     expect(chat.entries.value.last.message?.text, 'Echo: next ');

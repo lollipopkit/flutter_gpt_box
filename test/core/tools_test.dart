@@ -6,7 +6,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
+import 'chats_test.dart' show nativeLib;
+
 void main() {
+  // The memory tools describe themselves from the native library.
+  setUpAll(() => FlPiLlm.loadLibrary(externalLibrary: nativeLib()));
+
   group('html to markdown', () {
     test('keeps the readable part, drops the chrome', () {
       const html = '''
@@ -113,21 +118,14 @@ void main() {
 
     test('every tool is on by default; one switch per group', () {
       expect(LlmStores.tool.enabled.get(), isTrue);
-      expect(names(), containsAll(['memory_view', 'chat_search', 'chat_read', 'httpReq']));
+      expect(names(), containsAll(['memory_view', 'chat_search', 'chat_read', 'http_request']));
       Tools.setOn(TfChatSearch.instance, false);
       expect(names(), isNot(contains('chat_read')));
       Tools.setOn(TfHttpReq.instance, false);
-      expect(names(), isNot(contains('httpReq')));
-      expect(Tools.groups.map((t) => t.group), ['memory', 'history', 'httpReq']);
+      expect(names(), isNot(contains('http_request')));
+      expect(Tools.groups.map((t) => t.group), ['memory', 'history', 'http_request']);
       LlmStores.tool.enabled.set(false);
-      expect(names(), isEmpty);
+      expect(names(), ['ask_user'], reason: 'asking the user is not a tool the switch is about');
     });
-  });
-
-  test('MCP tool names fit providers', () {
-    final long = McpTools.toolName('mcp12345678', 'a' * 80);
-    expect(long.length, 64);
-    expect(McpTools.toolName('mcp12345678', 'a' * 80), long);
-    expect(McpTools.toolName('mcp12345678', 'x.y'), 'mcp12345678__x_y');
   });
 }

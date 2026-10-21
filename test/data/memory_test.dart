@@ -4,8 +4,19 @@ import 'package:gpt_box/data/model/backup.dart';
 import 'package:gpt_box/data/store/all.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
+import '../core/chats_test.dart' show initLlm;
+
 void main() {
   late MemoryStore mem;
+
+  // A backup reads the chats from the runtime.
+  setUpAll(() async {
+    SqliteDb.openInMemory();
+    await Stores.init();
+    await initLlm();
+    SqliteDb.close();
+  });
+  tearDownAll(() => Llm.rt.dispose());
 
   setUp(() async {
     SqliteDb.openInMemory();
@@ -29,15 +40,15 @@ void main() {
 
     test('never leave it, nor reach the store bookkeeping', () {
       for (final p in ['../x', '/memories/../x', 'a/./b', r'a\b', '__lkpt_lastUpdateTs', 'a/_x', 'a\u202Eb']) {
-        expect(() => MemoryStore.keyOf(p), throwsA(isA<MemoryPathError>()), reason: p);
+        expect(() => MemoryStore.keyOf(p), throwsA(isA<MemoryError>()), reason: p);
       }
     });
 
     test('a file and a directory cannot share a name', () {
       mem.write('a', 'x');
-      expect(() => mem.write('a/b', 'y'), throwsA(isA<MemoryPathError>()));
+      expect(() => mem.write('a/b', 'y'), throwsA(isA<MemoryError>()));
       mem.write('d/e', 'x');
-      expect(() => mem.write('d', 'y'), throwsA(isA<MemoryPathError>()));
+      expect(() => mem.write('d', 'y'), throwsA(isA<MemoryError>()));
     });
   });
 
@@ -58,7 +69,7 @@ void main() {
       mem.write('u.md', 'x y x');
       await expectLater(
         run(TfMemoryEdit.instance, {'path': 'u.md', 'old_str': 'x', 'new_str': 'z'}),
-        throwsArgumentError,
+        throwsA(isA<MemoryError>()),
       );
       await run(TfMemoryEdit.instance, {'path': 'u.md', 'old_str': 'y', 'new_str': 'w'});
       await run(TfMemoryEdit.instance, {'path': 'u.md', 'old_str': 'x', 'new_str': 'z', 'replace_all': true});
@@ -79,7 +90,7 @@ void main() {
       mem.write('d/b.md', '2');
       await run(TfMemoryMove.instance, {'from': 'd', 'to': 'e'});
       expect(mem.files().keys, ['e/a.md', 'e/b.md']);
-      await expectLater(run(TfMemoryDelete.instance, {'path': '/memories'}), throwsA(isA<MemoryPathError>()));
+      await expectLater(run(TfMemoryDelete.instance, {'path': '/memories'}), throwsA(isA<MemoryError>()));
       await run(TfMemoryDelete.instance, {'path': 'e'});
       expect(mem.files(), isEmpty);
     });

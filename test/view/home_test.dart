@@ -14,7 +14,7 @@ import 'package:gpt_box/view/page/home/chat_list.dart';
 import 'package:gpt_box/view/page/home/home.dart';
 import 'package:gpt_box/view/page/settings/setting.dart';
 
-import '../core/chats_test.dart' show mockServer, nativeLib;
+import '../core/chats_test.dart' show initLlm, mockServer;
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 Widget _app() => MaterialApp(
@@ -55,7 +55,6 @@ void main() {
     _server = server;
     SqliteDb.openInMemory();
     await Stores.init();
-    SqlitePiSessionStore();
     Stores.setting.autoCheckUpdate.set(false);
     Stores.setting.genTitle.set(false);
     LlmStores.llm.customProviders.set([
@@ -67,10 +66,7 @@ void main() {
         models: const ['echo'],
       ),
     ]);
-    await Llm.init(
-      credentials: _credentials,
-      externalLibrary: nativeLib(),
-    );
+    await initLlm(credentials: _credentials);
   });
 
   testWidgets('every settings tab lays out', (tester) async {
@@ -129,7 +125,7 @@ void main() {
     }
     expect(count, findsOneWidget, reason: 'the endpoint lists `echo`');
 
-    await tester.tap(find.widgetWithText(Btn, libL10n.save));
+    await tester.tap(find.byIcon(Icons.save_outlined));
     for (var i = 0; i < 30 && find.byType(CustomProviderPage).evaluate().isNotEmpty; i++) {
       await tester.pump(const Duration(milliseconds: 100));
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
@@ -162,7 +158,10 @@ void main() {
       await tester.pumpWidget(_app());
       await tester.pump();
       expect(find.byType(TextField), findsWidgets);
-      expect(find.widgetWithText(Btn, 'echo'), findsOneWidget, reason: 'the default model is on the chip');
+      // `Mock · echo`: the provider saved above has an `echo` too.
+      final chip = Llm.modelLabel(Llm.defaultModel!);
+      expect(chip, endsWith('echo'));
+      expect(find.widgetWithText(Btn, chip), findsOneWidget, reason: 'the default model is on the chip');
 
       final input = find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText != null && w.minLines == 1);
       await tester.enterText(input, 'hello widget');

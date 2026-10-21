@@ -12,7 +12,7 @@ final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
 
 /// The name of the synced backup. Versioned, so a build that cannot read
 /// this format never finds the file, and so never overwrites it.
-const bakFileName = 'gptbox_bak_v3.json';
+const bakFileName = 'gptbox_bak_v4.json';
 
 /// Remote sync needs a backup password: what leaves the device is always
 /// encrypted.
@@ -126,7 +126,7 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
   @override
   Future<String?> get localVersionTag async {
     final settings = PrefProps.syncAppSettings.get();
-    return '${Backup.localStamp(includeSettings: settings)}/$settings';
+    return '${await Backup.localStamp(includeSettings: settings)}/$settings';
   }
 
   @override
