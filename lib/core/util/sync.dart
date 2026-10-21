@@ -147,9 +147,13 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
 
   /// Soon, and once for a burst of edits.
   void syncSoon() {
-    if (!enabled) return;
-    unawaited(_run(() => sync(milliDelay: 1000)));
+    // One waiting is enough: it syncs whatever changed before it starts.
+    if (!enabled || _soonQueued) return;
+    _soonQueued = true;
+    unawaited(_run(() => sync(milliDelay: 1000), onStart: () => _soonQueued = false));
   }
+
+  var _soonQueued = false;
 
   /// Now, with [rs] or the configured remote; for a button or a switch.
   Future<void> syncNow({RemoteStorage? rs}) => _run(() => sync(throttleMilli: 0, rs: rs));
@@ -157,8 +161,11 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
   /// One run at a time: each owns [_issue] and the status while it runs.
   Future<void> _runs = Future.value();
 
-  Future<void> _run(Future<void> Function() body) {
-    final run = _runs.then((_) => _runOnce(body));
+  Future<void> _run(Future<void> Function() body, {void Function()? onStart}) {
+    final run = _runs.then((_) {
+      onStart?.call();
+      return _runOnce(body);
+    });
     _runs = run.catchError((_) {});
     return run;
   }
