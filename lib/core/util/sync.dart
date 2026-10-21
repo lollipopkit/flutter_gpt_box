@@ -154,13 +154,25 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
   /// Now, with [rs] or the configured remote; for a button or a switch.
   Future<void> syncNow({RemoteStorage? rs}) => _run(() => sync(throttleMilli: 0, rs: rs));
 
-  Future<void> _run(Future<void> Function() body) async {
+  /// One run at a time: each owns [_issue] and the status while it runs.
+  Future<void> _runs = Future.value();
+
+  Future<void> _run(Future<void> Function() body) {
+    final run = _runs.then((_) => _runOnce(body));
+    _runs = run.catchError((_) {});
+    return run;
+  }
+
+  Future<void> _runOnce(Future<void> Function() body) async {
     if (await password == null) {
       lastError.value = l10n.backupPasswordRequired;
       return;
     }
     syncing.value = true;
     _issue = null;
+    // Set again by reading the remote's backup: a remote changed or emptied
+    // since takes this device's.
+    _remoteTooNew = false;
     try {
       await body();
       if (_issue case final e?) {
