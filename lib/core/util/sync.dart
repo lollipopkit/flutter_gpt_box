@@ -8,7 +8,7 @@ import 'package:llmbox/data/res/l10n.dart';
 import 'package:llmbox/data/store/all.dart';
 import 'package:llmbox/data/store/setting.dart';
 
-final icloud = ICloud(containerId: 'iCloud.com.lollipopkit.llmbox');
+final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
 
 /// The name of the synced backup. Versioned, so a build that cannot read
 /// this format never finds the file, and so never overwrites it.

@@ -22,7 +22,7 @@ Please refrain from using it in production environments or for critical data.
 - Many providers (OpenAI, Anthropic, Gemini, OpenRouter, … and any OpenAI-compatible endpoint), keys kept in the system keychain.
 - Tools
   - Memory: files the model keeps across chats, editable in the settings.
-  - Read web pages and APIs. [Video](https://cdn.lollipopkit.com/llmbox/screenshot/tools.mp4)
+  - Read web pages and APIs. [Video](https://cdn.lollipopkit.com/gptbox/screenshot/tools.mp4)
   - Search and read your other chats.
   - MCP servers.
 - Text / Image chat, text files as attachments.
@@ -38,10 +38,10 @@ Please refrain from using it in production environments or for critical data.
 ## 🏙️ Screenshots
 <table>
   <tr>
-    <td><img width="277px" src="https://cdn.lollipopkit.com/llmbox/screenshot/1.jpg"></td>
-    <td><img width="277px" src="https://cdn.lollipopkit.com/llmbox/screenshot/2.jpg"></td>
-    <td><img width="277px" src="https://cdn.lollipopkit.com/llmbox/screenshot/3.jpg"></td>
-    <td><img width="277px" src="https://cdn.lollipopkit.com/llmbox/screenshot/4.jpg"></td>
+    <td><img width="277px" src="https://cdn.lollipopkit.com/gptbox/screenshot/1.jpg"></td>
+    <td><img width="277px" src="https://cdn.lollipopkit.com/gptbox/screenshot/2.jpg"></td>
+    <td><img width="277px" src="https://cdn.lollipopkit.com/gptbox/screenshot/3.jpg"></td>
+    <td><img width="277px" src="https://cdn.lollipopkit.com/gptbox/screenshot/4.jpg"></td>
   </tr>
 </table>
 
@@ -52,8 +52,8 @@ Platform | From
 --- | ---
 iOS | [AppStore](https://apps.apple.com/app/id6476033062)
 macOS | [Github](https://github.com/lollipopkit/llmbox/releases) (`LLMBox-<version>-arm64.dmg` for Apple silicon, `-amd64.dmg` for Intel)
-Android | [Github](https://github.com/lollipopkit/llmbox/releases) / [CDN](https://cdn.lollipopkit.com/llmbox/pkg/?order=desc)
-Linux & Windows | [Github](https://github.com/lollipopkit/llmbox/releases) / [CDN](https://cdn.lollipopkit.com/llmbox/pkg/?order=desc)
+Android | [Github](https://github.com/lollipopkit/llmbox/releases) / [CDN](https://cdn.lollipopkit.com/gptbox/pkg/?order=desc)
+Linux & Windows | [Github](https://github.com/lollipopkit/llmbox/releases) / [CDN](https://cdn.lollipopkit.com/gptbox/pkg/?order=desc)
 
 Only download from the source **you trust**
 

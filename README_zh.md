@@ -22,7 +22,7 @@
 - 多个 provider (OpenAI、Anthropic、Gemini、OpenRouter……以及任意 OpenAI 兼容接口)，密钥保存在系统钥匙串
 - Tools
   - 记忆：模型跨对话保存的文件，可在设置中编辑
-  - 读取网页和 API。[视频](https://cdn.lollipopkit.com/llmbox/screenshot/tools.mp4)
+  - 读取网页和 API。[视频](https://cdn.lollipopkit.com/gptbox/screenshot/tools.mp4)
   - 搜索和读取其他对话
   - MCP 服务器
 - 文本 / 图片聊天，文本文件作为附件
@@ -38,10 +38,10 @@
 ## 🏙️ 截屏
 <table>
   <tr>
-    <td><img width="277px" src="https://cdn.lollipopkit.com/llmbox/screenshot/1.jpg"></td>
-    <td><img width="277px" src="https://cdn.lollipopkit.com/llmbox/screenshot/2.jpg"></td>
-    <td><img width="277px" src="https://cdn.lollipopkit.com/llmbox/screenshot/3.jpg"></td>
-    <td><img width="277px" src="https://cdn.lollipopkit.com/llmbox/screenshot/4.jpg"></td>
+    <td><img width="277px" src="https://cdn.lollipopkit.com/gptbox/screenshot/1.jpg"></td>
+    <td><img width="277px" src="https://cdn.lollipopkit.com/gptbox/screenshot/2.jpg"></td>
+    <td><img width="277px" src="https://cdn.lollipopkit.com/gptbox/screenshot/3.jpg"></td>
+    <td><img width="277px" src="https://cdn.lollipopkit.com/gptbox/screenshot/4.jpg"></td>
   </tr>
 </table>
 
@@ -52,8 +52,8 @@
 --- | ---
 iOS | [AppStore](https://apps.apple.com/app/id6476033062)
 macOS | [Github](https://github.com/lollipopkit/llmbox/releases)（Apple silicon 用 `LLMBox-<版本>-arm64.dmg`，Intel 用 `-amd64.dmg`）
-Android | [Github](https://github.com/lollipopkit/llmbox/releases) / [CDN](https://cdn.lollipopkit.com/llmbox/pkg/?order=desc)
-Linux & Windows | [Github](https://github.com/lollipopkit/llmbox/releases) / [CDN](https://cdn.lollipopkit.com/llmbox/pkg/?order=desc)
+Android | [Github](https://github.com/lollipopkit/llmbox/releases) / [CDN](https://cdn.lollipopkit.com/gptbox/pkg/?order=desc)
+Linux & Windows | [Github](https://github.com/lollipopkit/llmbox/releases) / [CDN](https://cdn.lollipopkit.com/gptbox/pkg/?order=desc)
 
 由于未完成备案，请移步 **AppStore 其他区** 下载。  
 请从你 **信任的** 来源下载。
