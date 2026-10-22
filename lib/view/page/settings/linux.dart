@@ -136,6 +136,10 @@ class LinuxPage extends StatelessWidget {
       actions: Btnx.cancelRedOk,
     );
     if (ok != true) return;
-    await Rootfs.removeProfile(p.id, expected: p);
+    try {
+      await Rootfs.removeProfile(p.id, expected: p);
+    } catch (e, s) {
+      if (context.mounted) context.showErrDialog(e, s);
+    }
   }
 }

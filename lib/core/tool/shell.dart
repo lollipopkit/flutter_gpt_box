@@ -142,7 +142,7 @@ The user approves each command before it runs. No prompts or terminal UIs: pass 
         _ when Platform.isWindows => await exec.run(command, cancel: stop.future),
         // sh reads the script, whatever the user's login shell is: fish is
         // not POSIX, and the model writes POSIX.
-        _ => await exec.run('cd "\$HOME" 2>/dev/null\n$command', entry: 'sh', cancel: stop.future),
+        _ => await exec.run('cd "\$HOME" || exit\n$command', entry: 'sh', cancel: stop.future),
       };
     } finally {
       timer.cancel();
