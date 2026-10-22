@@ -138,5 +138,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "shellTool": "Shell",
+  "shellToolTip": "Runs commands on this device, each after you approve it",
+  "linuxEnv": "Linux environment",
+  "linuxEnvTip": "Where the shell runs on this phone. It cannot see the phone's own files.",
+  "linuxInstallTip": "Download {distro} {version}, {size} MB?",
+  "@linuxInstallTip": {"placeholders": {"distro": {"type": "String"}, "version": {"type": "String"}, "size": {"type": "int"}}},
+  "linuxRemoveTip": "Delete {name} and everything installed in it?",
+  "@linuxRemoveTip": {"placeholders": {"name": {"type": "String"}}},
+  "linuxInUse": "A command is running in it",
+  "linuxNone": "Not installed"
 }

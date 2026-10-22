@@ -82,5 +82,13 @@
   "pullNewChat": "下拉新建对话",
   "releaseNewChat": "松开新建对话",
   "pullOlderChat": "上拉并按住,切换到上一个对话",
-  "holdOlderChatFmt": "继续按住:{title}"
+  "holdOlderChatFmt": "继续按住:{title}",
+  "shellTool": "Shell",
+  "shellToolTip": "在本机运行命令，每条命令都需要你批准",
+  "linuxEnv": "Linux 环境",
+  "linuxEnvTip": "手机上 Shell 运行的地方，无法访问手机自身的文件。",
+  "linuxInstallTip": "下载 {distro} {version}，{size} MB？",
+  "linuxRemoveTip": "删除 {name} 及其中安装的所有内容？",
+  "linuxInUse": "有命令正在其中运行",
+  "linuxNone": "未安装"
 }

@@ -82,5 +82,13 @@
   "pullNewChat": "Tarik ke bawah untuk chat baru",
   "releaseNewChat": "Lepaskan untuk chat baru",
   "pullOlderChat": "Tarik ke atas dan tahan untuk chat sebelumnya",
-  "holdOlderChatFmt": "Terus tahan: {title}"
+  "holdOlderChatFmt": "Terus tahan: {title}",
+  "shellTool": "Shell",
+  "shellToolTip": "Menjalankan perintah di perangkat ini, masing-masing setelah kamu setujui",
+  "linuxEnv": "Lingkungan Linux",
+  "linuxEnvTip": "Tempat shell berjalan di ponsel ini. Tidak dapat melihat file ponsel itu sendiri.",
+  "linuxInstallTip": "Unduh {distro} {version}, {size} MB?",
+  "linuxRemoveTip": "Hapus {name} dan semua yang terpasang di dalamnya?",
+  "linuxInUse": "Ada perintah yang sedang berjalan di dalamnya",
+  "linuxNone": "Belum terpasang"
 }

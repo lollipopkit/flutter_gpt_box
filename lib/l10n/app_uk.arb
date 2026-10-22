@@ -82,5 +82,13 @@
   "pullNewChat": "Потягніть униз для нового чату",
   "releaseNewChat": "Відпустіть для нового чату",
   "pullOlderChat": "Потягніть угору й утримуйте для попереднього чату",
-  "holdOlderChatFmt": "Утримуйте: {title}"
+  "holdOlderChatFmt": "Утримуйте: {title}",
+  "shellTool": "Оболонка",
+  "shellToolTip": "Виконує команди на цьому пристрої, кожну після вашого схвалення",
+  "linuxEnv": "Середовище Linux",
+  "linuxEnvTip": "Тут працює оболонка на цьому телефоні. Вона не бачить власних файлів телефону.",
+  "linuxInstallTip": "Завантажити {distro} {version}, {size} МБ?",
+  "linuxRemoveTip": "Видалити {name} і все, що в ньому встановлено?",
+  "linuxInUse": "У ній виконується команда",
+  "linuxNone": "Не встановлено"
 }

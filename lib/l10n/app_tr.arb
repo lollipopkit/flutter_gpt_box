@@ -82,5 +82,13 @@
   "pullNewChat": "Yeni sohbet için aşağı çekin",
   "releaseNewChat": "Yeni sohbet için bırakın",
   "pullOlderChat": "Önceki sohbet için yukarı çekip basılı tutun",
-  "holdOlderChatFmt": "Basılı tutun: {title}"
+  "holdOlderChatFmt": "Basılı tutun: {title}",
+  "shellTool": "Kabuk",
+  "shellToolTip": "Bu cihazda komutları çalıştırır, her biri onayınızdan sonra",
+  "linuxEnv": "Linux ortamı",
+  "linuxEnvTip": "Kabuğun bu telefonda çalıştığı yer. Telefonun kendi dosyalarını göremez.",
+  "linuxInstallTip": "{distro} {version} indirilsin mi, {size} MB?",
+  "linuxRemoveTip": "{name} ve içine kurulan her şey silinsin mi?",
+  "linuxInUse": "İçinde bir komut çalışıyor",
+  "linuxNone": "Kurulu değil"
 }

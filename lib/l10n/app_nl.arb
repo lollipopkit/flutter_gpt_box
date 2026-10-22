@@ -82,5 +82,13 @@
   "pullNewChat": "Omlaag trekken voor een nieuwe chat",
   "releaseNewChat": "Loslaten voor een nieuwe chat",
   "pullOlderChat": "Omhoog trekken en vasthouden voor de vorige chat",
-  "holdOlderChatFmt": "Blijf vasthouden: {title}"
+  "holdOlderChatFmt": "Blijf vasthouden: {title}",
+  "shellTool": "Shell",
+  "shellToolTip": "Voert opdrachten uit op dit apparaat, elk na jouw goedkeuring",
+  "linuxEnv": "Linux-omgeving",
+  "linuxEnvTip": "Waar de shell op deze telefoon draait. Hij ziet de eigen bestanden van de telefoon niet.",
+  "linuxInstallTip": "{distro} {version} downloaden, {size} MB?",
+  "linuxRemoveTip": "{name} en alles wat erin is geïnstalleerd verwijderen?",
+  "linuxInUse": "Er draait een opdracht in",
+  "linuxNone": "Niet geïnstalleerd"
 }

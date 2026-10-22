@@ -72,6 +72,15 @@ android {
         }
     }
 
+    packaging {
+        jniLibs {
+            // Extracted rather than mapped out of the APK: proot (fl_tty, for
+            // the shell tool) is executed as a file, and only the extracted
+            // native library directory may be executed from.
+            useLegacyPackaging = true
+        }
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release

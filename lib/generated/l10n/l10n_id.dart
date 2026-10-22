@@ -293,4 +293,34 @@ class AppLocalizationsId extends AppLocalizations {
   String holdOlderChatFmt(String title) {
     return 'Terus tahan: $title';
   }
+
+  @override
+  String get shellTool => 'Shell';
+
+  @override
+  String get shellToolTip =>
+      'Menjalankan perintah di perangkat ini, masing-masing setelah kamu setujui';
+
+  @override
+  String get linuxEnv => 'Lingkungan Linux';
+
+  @override
+  String get linuxEnvTip =>
+      'Tempat shell berjalan di ponsel ini. Tidak dapat melihat file ponsel itu sendiri.';
+
+  @override
+  String linuxInstallTip(String distro, String version, int size) {
+    return 'Unduh $distro $version, $size MB?';
+  }
+
+  @override
+  String linuxRemoveTip(String name) {
+    return 'Hapus $name dan semua yang terpasang di dalamnya?';
+  }
+
+  @override
+  String get linuxInUse => 'Ada perintah yang sedang berjalan di dalamnya';
+
+  @override
+  String get linuxNone => 'Belum terpasang';
 }

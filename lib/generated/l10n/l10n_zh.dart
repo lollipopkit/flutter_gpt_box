@@ -283,6 +283,34 @@ class AppLocalizationsZh extends AppLocalizations {
   String holdOlderChatFmt(String title) {
     return '继续按住:$title';
   }
+
+  @override
+  String get shellTool => 'Shell';
+
+  @override
+  String get shellToolTip => '在本机运行命令，每条命令都需要你批准';
+
+  @override
+  String get linuxEnv => 'Linux 环境';
+
+  @override
+  String get linuxEnvTip => '手机上 Shell 运行的地方，无法访问手机自身的文件。';
+
+  @override
+  String linuxInstallTip(String distro, String version, int size) {
+    return '下载 $distro $version，$size MB？';
+  }
+
+  @override
+  String linuxRemoveTip(String name) {
+    return '删除 $name 及其中安装的所有内容？';
+  }
+
+  @override
+  String get linuxInUse => '有命令正在其中运行';
+
+  @override
+  String get linuxNone => '未安装';
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
@@ -563,4 +591,32 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String holdOlderChatFmt(String title) {
     return '繼續按住:$title';
   }
+
+  @override
+  String get shellTool => 'Shell';
+
+  @override
+  String get shellToolTip => '在本機執行指令，每條指令都需要你核准';
+
+  @override
+  String get linuxEnv => 'Linux 環境';
+
+  @override
+  String get linuxEnvTip => '手機上 Shell 執行的地方，無法存取手機本身的檔案。';
+
+  @override
+  String linuxInstallTip(String distro, String version, int size) {
+    return '下載 $distro $version，$size MB？';
+  }
+
+  @override
+  String linuxRemoveTip(String name) {
+    return '刪除 $name 及其中安裝的所有內容？';
+  }
+
+  @override
+  String get linuxInUse => '有指令正在其中執行';
+
+  @override
+  String get linuxNone => '未安裝';
 }

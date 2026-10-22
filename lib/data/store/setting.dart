@@ -11,7 +11,21 @@ class SettingStore extends SqliteStore {
   ///
   /// TODO: drop `hideTitleBar` once no install has it: the setting is gone
   /// (the title bar is always hidden), and its stored value must not sync.
-  static const deviceLocalKeys = {'windowState', 'paneListWidth', 'hideTitleBar', 'introVer'};
+  /// The Linux userland's settings are too: what is installed, where it is
+  /// fetched from and which network it resolves on are this device's.
+  static const deviceLocalKeys = {
+    'windowState',
+    'paneListWidth',
+    'hideTitleBar',
+    'introVer',
+    'linuxProfile',
+    'linuxDistro',
+    'linuxMirrors',
+    'linuxDns',
+    'rootfsManifestSerial',
+    'rootfsManifestCache',
+    'rootfsManifestCacheSig',
+  };
 
   late final themeMode = propertyDefault('themeMode', 0);
 
@@ -53,4 +67,26 @@ class SettingStore extends SqliteStore {
 
   /// Width of the chat list beside the chat, in the two-column layout.
   late final paneListWidth = propertyDefault('paneListWidth', 264.0);
+
+  // fl_tty's, through `lib/core/tty.dart`: the Linux userland the `shell`
+  // tool runs in on Android and iOS. None of them stamps the sync clock.
+
+  late final linuxProfile = propertyDefault('linuxProfile', '', updateLastModified: false);
+
+  late final linuxDistro = propertyDefault('linuxDistro', 'alpine', updateLastModified: false);
+
+  late final linuxMirrors = propertyDefault<Map<String, String>>(
+    'linuxMirrors',
+    const {},
+    updateLastModified: false,
+    fromObj: (raw) => raw is Map ? raw.map((k, v) => MapEntry('$k', '$v')) : const {},
+  );
+
+  late final linuxDns = propertyDefault('linuxDns', '', updateLastModified: false);
+
+  late final rootfsManifestSerial = propertyDefault('rootfsManifestSerial', 0, updateLastModified: false);
+
+  late final rootfsManifestCache = propertyDefault('rootfsManifestCache', '', updateLastModified: false);
+
+  late final rootfsManifestCacheSig = propertyDefault('rootfsManifestCacheSig', '', updateLastModified: false);
 }

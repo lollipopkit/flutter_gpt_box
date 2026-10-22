@@ -616,6 +616,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Keep holding: {title}'**
   String holdOlderChatFmt(String title);
+
+  /// No description provided for @shellTool.
+  ///
+  /// In en, this message translates to:
+  /// **'Shell'**
+  String get shellTool;
+
+  /// No description provided for @shellToolTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs commands on this device, each after you approve it'**
+  String get shellToolTip;
+
+  /// No description provided for @linuxEnv.
+  ///
+  /// In en, this message translates to:
+  /// **'Linux environment'**
+  String get linuxEnv;
+
+  /// No description provided for @linuxEnvTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Where the shell runs on this phone. It cannot see the phone\'s own files.'**
+  String get linuxEnvTip;
+
+  /// No description provided for @linuxInstallTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Download {distro} {version}, {size} MB?'**
+  String linuxInstallTip(String distro, String version, int size);
+
+  /// No description provided for @linuxRemoveTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name} and everything installed in it?'**
+  String linuxRemoveTip(String name);
+
+  /// No description provided for @linuxInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'A command is running in it'**
+  String get linuxInUse;
+
+  /// No description provided for @linuxNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not installed'**
+  String get linuxNone;
 }
 
 class _AppLocalizationsDelegate
