@@ -1,7 +1,7 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:gpt_box/data/res/build_data.dart';
-import 'package:gpt_box/data/res/l10n.dart';
+import 'package:llmbox/data/res/build_data.dart';
+import 'package:llmbox/data/res/l10n.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 

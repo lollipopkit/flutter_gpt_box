@@ -3,16 +3,16 @@ import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
-import 'package:gpt_box/data/model/backup.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/data/store/setting.dart';
+import 'package:llmbox/data/model/backup.dart';
+import 'package:llmbox/data/res/l10n.dart';
+import 'package:llmbox/data/store/all.dart';
+import 'package:llmbox/data/store/setting.dart';
 
-final icloud = ICloud(containerId: 'iCloud.tech.lolli.gptbox');
+final icloud = ICloud(containerId: 'iCloud.com.lollipopkit.llmbox');
 
 /// The name of the synced backup. Versioned, so a build that cannot read
 /// this format never finds the file, and so never overwrites it.
-const bakFileName = 'gptbox_bak_v4.json';
+const bakFileName = 'llmbox_bak_v4.json';
 
 /// Remote sync needs a backup password: what leaves the device is always
 /// encrypted.
@@ -57,7 +57,7 @@ final class BakSync extends SyncIface<Mergeable, dynamic> {
 
   @override
   void init() {
-    Webdav.shared.prefix = 'gptbox/';
+    Webdav.shared.prefix = 'llmbox/';
     final at = _lastSyncAt.get();
     if (at != null) lastSyncAt.value = DateTime.fromMillisecondsSinceEpoch(at);
     // After any edit worth syncing. A sync's own merge writes too; the

@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
-		<string>iCloud.tech.lolli.gptbox</string>
+		<string>iCloud.com.lollipopkit.llmbox</string>
 	</array>
 	<key>com.apple.developer.icloud-services</key>
 	<array>
@@ -12,7 +12,7 @@
 	</array>
 	<key>com.apple.developer.ubiquity-container-identifiers</key>
 	<array>
-		<string>iCloud.tech.lolli.gptbox</string>
+		<string>iCloud.com.lollipopkit.llmbox</string>
 	</array>
 	<!-- macOS ships as a Developer ID DMG only (scripts/release/release-macos-dmg.sh),
 	     unsandboxed. The sandboxed Mac App Store build is no longer maintained. -->

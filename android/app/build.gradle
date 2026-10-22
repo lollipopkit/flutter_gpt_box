@@ -29,7 +29,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "tech.lolli.flutter_gpt"
+    namespace "com.lollipopkit.llmbox"
     compileSdk 36
     ndkVersion "28.2.13676358"
 
@@ -48,7 +48,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "tech.lolli.flutter_gpt"
+        applicationId "com.lollipopkit.llmbox"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
@@ -57,12 +57,18 @@ android {
         versionName flutterVersionName
     }
 
+    // The release key: android/app/llmbox.p12 (EC P-384, PKCS12, one
+    // password for store and key). Its password comes from the environment
+    // (ANDROID_KEYSTORE_PASSWORD, locally read from the keychain item
+    // "llmbox-android-keystore"), or from key.properties in CI; never from a
+    // file in the repository.
     signingConfigs {
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+            def password = System.getenv('ANDROID_KEYSTORE_PASSWORD') ?: keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias'] ?: 'llmbox'
+            keyPassword keystoreProperties['keyPassword'] ?: password
+            storeFile file(keystoreProperties['storeFile'] ?: 'llmbox.p12')
+            storePassword password
         }
     }
 
@@ -74,11 +80,11 @@ android {
         }
 
         debug {
-            resValue "string", "app_name", "GPTBoxD"
+            resValue "string", "app_name", "LLMBoxD"
         }
 
         profile {
-            resValue "string", "app_name", "GPTBoxP"
+            resValue "string", "app_name", "LLMBoxP"
         }
     }
 }

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:gpt_box/data/res/build_data.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/view/page/home/share.dart';
+import 'package:llmbox/data/res/build_data.dart';
+import 'package:llmbox/data/res/l10n.dart';
+import 'package:llmbox/data/store/all.dart';
+import 'package:llmbox/view/page/home/share.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 

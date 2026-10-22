@@ -1,1 +1,1 @@
-A third-party GPT Client for OpenAI API.
+A cross-platform LLM client.

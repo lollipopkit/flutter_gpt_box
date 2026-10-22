@@ -3,8 +3,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-if [[ -n "${GPTBOX_RELEASE_ENV_FILE:-}" ]]; then
-  ENV_FILE="$GPTBOX_RELEASE_ENV_FILE"
+if [[ -n "${LLMBOX_RELEASE_ENV_FILE:-}" ]]; then
+  ENV_FILE="$LLMBOX_RELEASE_ENV_FILE"
 elif [[ -f "$REPO_ROOT/.env.release" ]]; then
   ENV_FILE="$REPO_ROOT/.env.release"
 else
@@ -16,7 +16,7 @@ if [[ -n "$ENV_FILE" && -f "$ENV_FILE" ]]; then
   # shellcheck disable=SC1090
   source "$ENV_FILE"
   set +a
-elif [[ "${GPTBOX_RELEASE_ENV_FILE:-}" != "" ]]; then
+elif [[ "${LLMBOX_RELEASE_ENV_FILE:-}" != "" ]]; then
   echo "release environment file not found: $ENV_FILE" >&2
   exit 1
 fi
@@ -380,7 +380,7 @@ APP_ASSET_NAME="${APP_ASSET_NAME:-LLMBox}"
 APP_BUNDLE_ID="${APP_BUNDLE_ID:-com.lollipopkit.gpt}"
 VOLUME_NAME="${VOLUME_NAME:-LLMBox}"
 SIGNING_IDENTITY="${SIGNING_IDENTITY:-Developer ID Application}"
-APP_PROFILE_NAME="${APP_PROFILE_NAME:-GPTBox DMG Profile}"
+APP_PROFILE_NAME="${APP_PROFILE_NAME:-LLMBox DMG Profile}"
 BUILD_ROOT="${BUILD_ROOT:-$REPO_ROOT/build/release}"
 ARTIFACTS_PATH="${ARTIFACTS_PATH:-$REPO_ROOT/build/artifacts}"
 EXPORT_OPTIONS_PATH="${EXPORT_OPTIONS_PATH:-$BUILD_ROOT/ExportOptions-${APP_ASSET_NAME}.plist}"
@@ -389,7 +389,7 @@ RUNNER_PROJECT_FILE="${RUNNER_PROJECT_FILE:-$REPO_ROOT/macos/Runner.xcodeproj/pr
 RUNNER_PROJECT_BACKUP="${RUNNER_PROJECT_BACKUP:-$BUILD_ROOT/Runner.project.pbxproj.backup}"
 DMG_STAGING_PATH="${DMG_STAGING_PATH:-$REPO_ROOT/build/dmg-root}"
 PUBLISH_GITHUB_RELEASE="${PUBLISH_GITHUB_RELEASE:-1}"
-APP_REPO_SLUG="${APP_REPO_SLUG:-lollipopkit/flutter_gpt_box}"
+APP_REPO_SLUG="${APP_REPO_SLUG:-lollipopkit/llmbox}"
 RELEASE_TITLE="${RELEASE_TITLE:-}"
 
 if [[ "$PUBLISH_GITHUB_RELEASE" == "1" ]]; then

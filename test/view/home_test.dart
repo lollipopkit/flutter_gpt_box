@@ -7,12 +7,12 @@ import 'package:fl_lib/generated/l10n/lib_l10n.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/generated/l10n/l10n.dart';
-import 'package:gpt_box/view/page/home/chat_list.dart';
-import 'package:gpt_box/view/page/home/home.dart';
-import 'package:gpt_box/view/page/settings/setting.dart';
+import 'package:llmbox/data/res/l10n.dart';
+import 'package:llmbox/data/store/all.dart';
+import 'package:llmbox/generated/l10n/l10n.dart';
+import 'package:llmbox/view/page/home/chat_list.dart';
+import 'package:llmbox/view/page/home/home.dart';
+import 'package:llmbox/view/page/settings/setting.dart';
 
 import '../core/chats_test.dart' show initLlm, mockServer;
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';

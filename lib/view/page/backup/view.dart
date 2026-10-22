@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:gpt_box/core/util/sync.dart';
-import 'package:gpt_box/data/model/backup.dart';
-import 'package:gpt_box/data/res/l10n.dart';
+import 'package:llmbox/core/util/sync.dart';
+import 'package:llmbox/data/model/backup.dart';
+import 'package:llmbox/data/res/l10n.dart';
 import 'package:webdav_client_plus/webdav_client_plus.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 

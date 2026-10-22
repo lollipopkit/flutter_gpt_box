@@ -1,5 +1,5 @@
-name: gpt_box
-description: "A third-party GPT Client for OpenAI API."
+name: llmbox
+description: "A cross-platform LLM client."
 publish_to: 'none'
 version: 1.0.397+397
 

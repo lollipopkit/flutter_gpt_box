@@ -45,8 +45,9 @@ app.*.map.json
 /android/app/release
 
 /android/app/app.key
+/android/app/*.p12
 linux.AppDir
-GPTBox*.AppImage
+LLMBox*.AppImage
 
 **/*.bak
 a.txt

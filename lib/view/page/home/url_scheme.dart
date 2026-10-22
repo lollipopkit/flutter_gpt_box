@@ -1,6 +1,6 @@
 part of 'home.dart';
 
-/// Handles `lollipopkit.com://gptbox/...`. See [AppLink] for the paths.
+/// Handles `lollipopkit.com://llmbox/...`. See [AppLink] for the paths.
 extension on _HomePageState {
   void _handleLink(Uri uri, [BuildContext? context]) {
     if (uri.host != AppLink.host) return;
