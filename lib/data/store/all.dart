@@ -1,6 +1,6 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
-import 'package:gpt_box/data/store/setting.dart';
+import 'package:llmbox/data/store/setting.dart';
 
 /// The app's settings; the chats, providers, tools and memory are
 /// [LlmStores], fl_pi_llm_ui's.

@@ -1,9 +1,9 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/view/page/home/chat_list.dart';
-import 'package:gpt_box/view/page/home/share.dart';
-import 'package:gpt_box/view/widget/transitions.dart';
+import 'package:llmbox/data/res/l10n.dart';
+import 'package:llmbox/view/page/home/chat_list.dart';
+import 'package:llmbox/view/page/home/share.dart';
+import 'package:llmbox/view/widget/transitions.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 /// The chat on screen: its title row (on a wide window), the thread and the

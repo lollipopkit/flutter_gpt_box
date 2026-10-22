@@ -1,10 +1,10 @@
 # Individual Contributor License Agreement
 
-**Project:** Flutter GPT Box (GPT Box)
-**Repository:** <https://github.com/lollipopkit/flutter_gpt_box>
+**Project:** LLMBox
+**Repository:** <https://github.com/lollipopkit/llmbox>
 **Maintainer:** lollipopkit (`10864310+lollipopkit@users.noreply.github.com`)
 
-Thank you for your interest in contributing to GPT Box.
+Thank you for your interest in contributing to LLMBox.
 
 This document is the agreement you accept when you contribute. Please read it
 before you sign — it is short, and it is the only legal paperwork this project
@@ -12,7 +12,7 @@ asks of you.
 
 ## Why this agreement exists
 
-GPT Box is released under the **GNU General Public License v3**. It is also
+LLMBox is released under the **GNU General Public License v3**. It is also
 distributed through the Apple App Store and other channels whose terms cannot
 all be satisfied at the same time as every GPLv3 condition. Shipping in both
 places is only possible for a party who holds rights beyond those the GPLv3
@@ -26,7 +26,7 @@ What it does **not** do:
 - It does not transfer your copyright. You keep it.
 - It does not restrict you. You may use, publish, sell, or relicense your own
   contribution however you like, in any other project.
-- It does not change the license of the Project. GPT Box stays GPLv3, and
+- It does not change the license of the Project. LLMBox stays GPLv3, and
   the source of every released version stays public.
 
 If you are not comfortable with this, that is a legitimate position — please
@@ -57,7 +57,7 @@ managed by, or on behalf of, the Maintainer for the purpose of discussing and
 improving the Project — excluding communication that is conspicuously marked or
 otherwise designated in writing by You as "Not a Contribution."
 
-**"Project"** means the GPT Box repository identified above, including the
+**"Project"** means the LLMBox repository identified above, including the
 Flutter application and any other work distributed from that repository.
 
 ### 2. Grant of copyright license

@@ -1,6 +1,6 @@
 # URL scheme
 
-`lollipopkit.com://gptbox/<path>?<params>`
+`lollipopkit.com://llmbox/<path>?<params>`
 
 | Path | Params | What |
 |---|---|---|
@@ -15,7 +15,7 @@
 
 # URL scheme（中文）
 
-`lollipopkit.com://gptbox/<路径>?<参数>`
+`lollipopkit.com://llmbox/<路径>?<参数>`
 
 | 路径 | 参数 | 作用 |
 |---|---|---|

@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/data/store/all.dart';
+import 'package:llmbox/data/store/all.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 /// Streams `Echo: <last user text>` one word at a time.
@@ -87,7 +87,7 @@ ExternalLibrary nativeLib() => ExternalLibrary.open(switch (Platform.operatingSy
 
 /// [Llm.init] as a test has it: no keychain, no app directory.
 Future<void> initLlm({LlmCredentials? credentials}) => Llm.init(
-  directory: Directory.systemTemp.createTempSync('gpt_box_llm').path,
+  directory: Directory.systemTemp.createTempSync('llmbox_llm').path,
   key: Uint8List.fromList(List.filled(32, 1)),
   credentials: credentials ?? MemoryCredentials({'mock': LlmCredential.apiKey('k')}),
   externalLibrary: nativeLib(),
@@ -168,7 +168,7 @@ void main() {
   });
 
   test('images reach the model; text files are inlined', () async {
-    final dir = await Directory.systemTemp.createTemp('gptbox');
+    final dir = await Directory.systemTemp.createTemp('llmbox');
     addTearDown(() => dir.delete(recursive: true));
     final img = File('${dir.path}/a.png')
       ..writeAsBytesSync(base64Decode(

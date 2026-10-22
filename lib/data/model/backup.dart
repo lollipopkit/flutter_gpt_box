@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/data/store/setting.dart';
+import 'package:llmbox/data/store/all.dart';
+import 'package:llmbox/data/store/setting.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 /// A backup is encrypted and there is no password to open it with.

@@ -1,15 +1,15 @@
 
 import 'package:fl_lib/fl_lib.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:gpt_box/core/util/update.dart';
-import 'package:gpt_box/data/res/build_data.dart';
-import 'package:gpt_box/data/res/github_id.dart';
-import 'package:gpt_box/data/res/l10n.dart';
-import 'package:gpt_box/data/res/url.dart';
-import 'package:gpt_box/data/store/all.dart';
-import 'package:gpt_box/generated/l10n/l10n.dart';
-import 'package:gpt_box/view/page/backup/view.dart';
-import 'package:gpt_box/view/widget/transitions.dart';
+import 'package:llmbox/core/util/update.dart';
+import 'package:llmbox/data/res/build_data.dart';
+import 'package:llmbox/data/res/github_id.dart';
+import 'package:llmbox/data/res/l10n.dart';
+import 'package:llmbox/data/res/url.dart';
+import 'package:llmbox/data/store/all.dart';
+import 'package:llmbox/generated/l10n/l10n.dart';
+import 'package:llmbox/view/page/backup/view.dart';
+import 'package:llmbox/view/widget/transitions.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 

@@ -31,7 +31,7 @@ jobs:
           BASIC_AUTH: ${{ secrets.BASIC_AUTH }}
           URL_PREFIX: ${{ secrets.URL_PREFIX }}
         run: |
-          curl -fsS -u "$BASIC_AUTH" -o android/app/app.key "${URL_PREFIX}app.key"
+          curl -fsS -u "$BASIC_AUTH" -o android/app/llmbox.p12 "${URL_PREFIX}llmbox.p12"
           curl -fsS -u "$BASIC_AUTH" -o android/key.properties "${URL_PREFIX}key.properties"
       - name: Build
         run: dart run fl_build -p android

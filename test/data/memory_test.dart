@@ -1,7 +1,7 @@
 import 'package:fl_lib/fl_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/data/model/backup.dart';
-import 'package:gpt_box/data/store/all.dart';
+import 'package:llmbox/data/model/backup.dart';
+import 'package:llmbox/data/store/all.dart';
 import 'package:fl_pi_llm_ui/fl_pi_llm_ui.dart';
 
 import '../core/chats_test.dart' show initLlm;

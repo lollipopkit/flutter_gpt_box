@@ -1,8 +1,8 @@
 abstract final class AppLink {
   static const scheme = 'lollipopkit.com';
-  static const host = 'gptbox';
+  static const host = 'llmbox';
 
-  /// lollipopkit.com://gptbox
+  /// lollipopkit.com://llmbox
   static const prefix = '$scheme://$host';
 
   /// `?msg=...&send=true`

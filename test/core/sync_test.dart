@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gpt_box/core/util/sync.dart';
+import 'package:llmbox/core/util/sync.dart';
 
 void main() {
   test('runs one at a time; a burst during one is one more', () async {

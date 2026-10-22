@@ -1,4 +1,4 @@
-package tech.lolli.flutter_gpt
+package com.lollipopkit.llmbox
 
 import io.flutter.embedding.android.FlutterActivity
 
