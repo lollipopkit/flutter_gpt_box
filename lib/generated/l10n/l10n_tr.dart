@@ -292,4 +292,34 @@ class AppLocalizationsTr extends AppLocalizations {
   String holdOlderChatFmt(String title) {
     return 'Basılı tutun: $title';
   }
+
+  @override
+  String get shellTool => 'Kabuk';
+
+  @override
+  String get shellToolTip =>
+      'Bu cihazda komutları çalıştırır, her biri onayınızdan sonra';
+
+  @override
+  String get linuxEnv => 'Linux ortamı';
+
+  @override
+  String get linuxEnvTip =>
+      'Kabuğun bu telefonda çalıştığı yer. Telefonun kendi dosyalarını göremez.';
+
+  @override
+  String linuxInstallTip(String distro, String version, int size) {
+    return '$distro $version indirilsin mi, $size MB?';
+  }
+
+  @override
+  String linuxRemoveTip(String name) {
+    return '$name ve içine kurulan her şey silinsin mi?';
+  }
+
+  @override
+  String get linuxInUse => 'İçinde bir komut çalışıyor';
+
+  @override
+  String get linuxNone => 'Kurulu değil';
 }

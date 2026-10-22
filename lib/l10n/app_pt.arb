@@ -82,5 +82,13 @@
   "pullNewChat": "Puxe para baixo para um novo chat",
   "releaseNewChat": "Solte para um novo chat",
   "pullOlderChat": "Puxe para cima e segure para o chat anterior",
-  "holdOlderChatFmt": "Continue segurando: {title}"
+  "holdOlderChatFmt": "Continue segurando: {title}",
+  "shellTool": "Shell",
+  "shellToolTip": "Executa comandos neste dispositivo, cada um após sua aprovação",
+  "linuxEnv": "Ambiente Linux",
+  "linuxEnvTip": "Onde o shell roda neste telefone. Ele não vê os arquivos do próprio telefone.",
+  "linuxInstallTip": "Baixar {distro} {version}, {size} MB?",
+  "linuxRemoveTip": "Excluir {name} e tudo o que foi instalado nele?",
+  "linuxInUse": "Há um comando em execução nele",
+  "linuxNone": "Não instalado"
 }

@@ -32,6 +32,11 @@ dependencies:
     path: packages/fl_pi_llm/fl_pi_llm_ui
   fl_lib:
     path: packages/fl_lib
+  # The shell on this device, for the `shell` tool: processes on desktop, an
+  # Alpine userland under proot (Android) or ish-arm64 (iOS). Shared with
+  # Server Box; its hook builds its native code.
+  fl_tty:
+    path: packages/fl_tty
   animations: ^3.0.0
   material_ui: ^1.5.0
 

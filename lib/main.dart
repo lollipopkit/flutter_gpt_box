@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:llmbox/app.dart';
+import 'package:llmbox/core/tool/shell.dart';
+import 'package:llmbox/core/tty.dart';
 import 'package:llmbox/core/util/sync.dart';
 import 'package:llmbox/data/res/build_data.dart';
 import 'package:llmbox/data/store/all.dart';
@@ -88,6 +90,7 @@ Future<void> _initWindow() async {
 
 Future<void> _initAppComponents() async {
   _configLlmUi();
+  await initTty();
   await Llm.init();
   // Open chats follow the tool settings and the MCP servers.
   LlmStores.tool.watch().listen((_) => Chats.reconfigureSoon());
@@ -117,4 +120,5 @@ void _configLlmUi() {
     return true;
   };
   LlmUi.openProviders = (context) => SettingsNav.open(context, SettingsTab.providers);
+  LlmUi.appTools = () => [if (TfShell.isSupported) const TfShell()];
 }

@@ -6,3 +6,6 @@
 	path = packages/fl_pi_llm
 	url = https://github.com/lollipopkit/fl_pi_llm
 	branch = main
+[submodule "packages/fl_tty"]
+	path = packages/fl_tty
+	url = https://github.com/lollipopkit/fl_tty

@@ -313,4 +313,34 @@ class AppLocalizationsNl extends AppLocalizations {
   String holdOlderChatFmt(String title) {
     return 'Blijf vasthouden: $title';
   }
+
+  @override
+  String get shellTool => 'Shell';
+
+  @override
+  String get shellToolTip =>
+      'Voert opdrachten uit op dit apparaat, elk na jouw goedkeuring';
+
+  @override
+  String get linuxEnv => 'Linux-omgeving';
+
+  @override
+  String get linuxEnvTip =>
+      'Waar de shell op deze telefoon draait. Hij ziet de eigen bestanden van de telefoon niet.';
+
+  @override
+  String linuxInstallTip(String distro, String version, int size) {
+    return '$distro $version downloaden, $size MB?';
+  }
+
+  @override
+  String linuxRemoveTip(String name) {
+    return '$name en alles wat erin is geïnstalleerd verwijderen?';
+  }
+
+  @override
+  String get linuxInUse => 'Er draait een opdracht in';
+
+  @override
+  String get linuxNone => 'Niet geïnstalleerd';
 }

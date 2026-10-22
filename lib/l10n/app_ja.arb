@@ -82,5 +82,13 @@
   "pullNewChat": "下に引いて新しいチャット",
   "releaseNewChat": "離すと新しいチャット",
   "pullOlderChat": "上に引いて長押しで前のチャット",
-  "holdOlderChatFmt": "そのまま押し続ける: {title}"
+  "holdOlderChatFmt": "そのまま押し続ける: {title}",
+  "shellTool": "シェル",
+  "shellToolTip": "このデバイスでコマンドを実行します。各コマンドは承認後に実行されます",
+  "linuxEnv": "Linux 環境",
+  "linuxEnvTip": "この端末でシェルが動く場所です。端末自体のファイルにはアクセスできません。",
+  "linuxInstallTip": "{distro} {version}（{size} MB）をダウンロードしますか？",
+  "linuxRemoveTip": "{name} とその中にインストールしたものをすべて削除しますか？",
+  "linuxInUse": "コマンドが実行中です",
+  "linuxNone": "未インストール"
 }

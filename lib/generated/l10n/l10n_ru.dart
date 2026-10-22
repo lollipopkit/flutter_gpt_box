@@ -293,4 +293,34 @@ class AppLocalizationsRu extends AppLocalizations {
   String holdOlderChatFmt(String title) {
     return 'Удерживайте: $title';
   }
+
+  @override
+  String get shellTool => 'Оболочка';
+
+  @override
+  String get shellToolTip =>
+      'Выполняет команды на этом устройстве, каждую после вашего одобрения';
+
+  @override
+  String get linuxEnv => 'Среда Linux';
+
+  @override
+  String get linuxEnvTip =>
+      'Здесь работает оболочка на этом телефоне. Она не видит собственные файлы телефона.';
+
+  @override
+  String linuxInstallTip(String distro, String version, int size) {
+    return 'Загрузить $distro $version, $size МБ?';
+  }
+
+  @override
+  String linuxRemoveTip(String name) {
+    return 'Удалить $name и всё, что в нём установлено?';
+  }
+
+  @override
+  String get linuxInUse => 'В ней выполняется команда';
+
+  @override
+  String get linuxNone => 'Не установлено';
 }

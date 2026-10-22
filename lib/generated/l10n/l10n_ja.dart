@@ -284,4 +284,32 @@ class AppLocalizationsJa extends AppLocalizations {
   String holdOlderChatFmt(String title) {
     return 'そのまま押し続ける: $title';
   }
+
+  @override
+  String get shellTool => 'シェル';
+
+  @override
+  String get shellToolTip => 'このデバイスでコマンドを実行します。各コマンドは承認後に実行されます';
+
+  @override
+  String get linuxEnv => 'Linux 環境';
+
+  @override
+  String get linuxEnvTip => 'この端末でシェルが動く場所です。端末自体のファイルにはアクセスできません。';
+
+  @override
+  String linuxInstallTip(String distro, String version, int size) {
+    return '$distro $version（$size MB）をダウンロードしますか？';
+  }
+
+  @override
+  String linuxRemoveTip(String name) {
+    return '$name とその中にインストールしたものをすべて削除しますか？';
+  }
+
+  @override
+  String get linuxInUse => 'コマンドが実行中です';
+
+  @override
+  String get linuxNone => '未インストール';
 }

@@ -82,5 +82,13 @@
   "pullNewChat": "Потяните вниз для нового чата",
   "releaseNewChat": "Отпустите для нового чата",
   "pullOlderChat": "Потяните вверх и удерживайте для предыдущего чата",
-  "holdOlderChatFmt": "Удерживайте: {title}"
+  "holdOlderChatFmt": "Удерживайте: {title}",
+  "shellTool": "Оболочка",
+  "shellToolTip": "Выполняет команды на этом устройстве, каждую после вашего одобрения",
+  "linuxEnv": "Среда Linux",
+  "linuxEnvTip": "Здесь работает оболочка на этом телефоне. Она не видит собственные файлы телефона.",
+  "linuxInstallTip": "Загрузить {distro} {version}, {size} МБ?",
+  "linuxRemoveTip": "Удалить {name} и всё, что в нём установлено?",
+  "linuxInUse": "В ней выполняется команда",
+  "linuxNone": "Не установлено"
 }
